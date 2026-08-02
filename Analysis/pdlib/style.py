@@ -183,7 +183,10 @@ def savefig(fig, name: str, *, dpi: int = 400, subdir: str | None = None) -> Non
     """Write <name>.png and <name>.pdf into Analysis/figures[/subdir]."""
     out = FIGDIR if subdir is None else FIGDIR / subdir
     out.mkdir(parents=True, exist_ok=True)
-    for ext, kw in (("png", {"dpi": dpi}), ("pdf", {})):
+    # Suppressing CreationDate makes the PDF byte-reproducible, so rerunning
+    # the pipeline does not produce a diff in every figure.
+    for ext, kw in (("png", {"dpi": dpi}),
+                    ("pdf", {"metadata": {"CreationDate": None}})):
         fig.savefig(out / f"{name}.{ext}", **kw)
     plt.close(fig)
     print(f"  [fig] {out.name}/{name}.png  +  .pdf")
