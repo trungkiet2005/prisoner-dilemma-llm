@@ -27,6 +27,7 @@ STEPS = [
     ("08_fig_synthesis.py", "F17-F20 signatures and invariances", False),
     ("09_fig_supplementary.py", "F21-F24 supplementary analyses", False),
     ("10_hybrid_eval.py", "F25-F26 hybrid rule+LSTM read-out", False),
+    ("11_fig_residual.py", "F27-F29 mining the unexplained residual", False),
 ]
 
 

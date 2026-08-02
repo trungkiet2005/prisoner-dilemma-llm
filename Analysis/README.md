@@ -19,8 +19,9 @@ python Analysis/run_all.py --no-train   # reuse Analysis/models/*.pt (~2 min)
 | `pdlib/metrics.py` | reciprocity, memory-one fingerprints, fairness gaps, bootstrap CIs |
 | `pdlib/seqcode.py` | the token alphabet shared by the synthetic corpus and LLM play |
 | `pdlib/rulebase.py` | exact memory-one rule matching (no learning) |
+| `pdlib/residual.py` | the widened hypothesis classes and their permutation null |
 | `pdlib/lstm.py` | the learned fallback read-out |
-| `scripts/00…10` | one script per figure group |
+| `scripts/00…11` | one script per figure group |
 | `data/` | derived parquet/npz (regenerated, safe to delete) |
 | `models/` | trained classifier checkpoints |
 | `figures/`, `tables/` | the deliverables |
@@ -87,6 +88,9 @@ python Analysis/run_all.py --no-train   # reuse Analysis/models/*.pt (~2 min)
 | **F24** | openings, and whether a cooperative opening pays |
 | **F25** | hybrid evaluation: single-label ceiling, set-valued escape, division of labour |
 | **F26** | rule-survival curves on LLM play, and distance to the nearest canonical rule |
+| **F27** | the residual: how far a widening rule vocabulary gets, against a shuffled null |
+| **F28** | memory depth of the residual, and its position in memory-one profile space |
+| **F29** | mid-game regime switching |
 
 ## The read-out: exact rules first, LSTM second
 
@@ -193,3 +197,51 @@ through a neutral grey midpoint. Never a rainbow, never a dual axis.
    which inflated Qwen3's WSLS share to 0.218 and Gemma's to 0.119. Exact WSLS
    matches are 0.3% (frontier) and 0.0% (open-weight): **no model in this corpus
    plays Win-Stay-Lose-Shift**. Those games are now labelled *Ambiguous*.
+
+## Mining the residual: what the 67% actually is
+
+Two thirds of LLM play matches no canonical rule exactly, so `scripts/11`
+widens the hypothesis class in steps and attaches a permutation null to each
+(the focal player's own actions are shuffled, holding its cooperation rate and
+the opponent's real sequence fixed).
+
+| hypothesis class | frontier obs / null | open-weight obs / null |
+|---|---|---|
+| the 4 canonical rules | 0.00 / 0.00 | 0.00 / 0.00 |
+| all 32 deterministic memory-one rules | 0.18 / 0.05 | 0.07 / 0.01 |
+| …plus one mid-game regime switch | 0.59 / 0.31 | 0.18 / 0.02 |
+| **still unexplained** | **0.41** | **0.82** |
+
+Read the 30-round column: it is the stronger test, because a two-segment fit
+over ten rounds has enough freedom to explain 31% of *shuffled* play.
+
+Four things fall out:
+
+1. **The canonical vocabulary is not merely incomplete, it is the wrong
+   shape.** Widening from 4 to all 32 deterministic memory-one rules recovers
+   only 7% of the 30-round residual. What is missing is not more rules.
+
+2. **The residual is genuinely history-dependent, and deeper than memory-one.**
+   On rounds 3+, memory-two beats memory-one beats memoryless by BIC for every
+   model (T22). Per-round ΔBIC against the memoryless baseline ranges from
+   −1.04 (Gemma-3-12B) to **−0.05 (Llama-3.1-8B)** — Llama's play is close to a
+   biased coin, which is the same story its 9.4 deviations tell.
+
+3. **There are no discrete non-canonical archetypes.** Silhouette declines
+   monotonically from k=2 (T23), and in memory-one profile space the residual
+   is one dense cloud sitting *between* the canonical corners rather than near
+   any of them (F28c). Reporting "LLMs play strategy X" is the wrong frame;
+   they occupy a continuum.
+
+4. **Regime switching is the one real structure.** 41% of the frontier residual
+   and 11% of the open-weight residual is two canonical rules with a single
+   switch, over null rates of 31% and 2%. Switches cluster in the first third
+   of the game, and the dominant transitions are AllC→AllD (0.080) and
+   AllD→AllC (0.046). Mistral-Large switches in 47% of its residual games,
+   GPT-4o 43%, Gemma 41%; **Llama-3.1-8B never does (0.00)** — consistent with
+   its play carrying almost no history.
+
+Deviations also land in a state-dependent way (T21): Gemma violates its nearest
+rule on only 3% of R rounds but 16% of S rounds, while Llama violates at
+~0.30 in every state, i.e. uniformly, which is what noise rather than a rule
+looks like.
