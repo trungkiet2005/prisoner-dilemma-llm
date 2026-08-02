@@ -1,0 +1,7 @@
+model,exact,ambiguous,approx
+Claude-3.5-Haiku,0.125,0.012,0.862
+GPT-4o,0.172,0.104,0.723
+Mistral-Large,0.389,0.126,0.485
+Gemma-3-12B,0.56,0.102,0.338
+Llama-3.1-8B,0.002,0.0,0.998
+Qwen3-8B,0.17,0.17,0.66
