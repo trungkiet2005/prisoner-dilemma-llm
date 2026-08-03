@@ -1,0 +1,32 @@
+# --- secrets: KHÔNG BAO GIỜ commit -------------------------------------------
+.env
+.env.*
+!.env.example
+*.key
+kaggle.json
+access_token
+
+# --- kaggle-benchmarks: artefact chạy cục bộ ---------------------------------
+# SDK ghi <task>.task.json / <task>-run_id_*.run.json vào cwd — có thể là repo root.
+kaggle/benchmarks/results/
+kaggle/benchmarks/checkpoints/
+*.run.json
+*.task.json
+
+# --- output khi chạy thử FAIRGAME tại máy ------------------------------------
+FAIRGAME/resources/results/
+pd_results/
+pd_results.zip
+
+# --- python ------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# --- OS ----------------------------------------------------------------------
+.DS_Store
+Thumbs.db

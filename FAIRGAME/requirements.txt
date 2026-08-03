@@ -1,0 +1,8 @@
+# FAIRGAME — LLM cục bộ (transformers / vLLM) trên Kaggle hoặc máy local.
+#
+# Đã bỏ: OpenAI, Anthropic, Mistral, httpx, pydantic (chuỗi SDK cloud), python-dotenv, v.v.
+#
+# Kaggle GPU: thường có sẵn torch, transformers, numpy, pandas — không cần pip.
+# Chỉ cài file này khi môi trường thiếu dependency (venv mới, import lỗi).
+
+pandas>=2.0,<3
