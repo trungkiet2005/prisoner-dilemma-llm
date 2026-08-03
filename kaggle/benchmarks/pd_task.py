@@ -69,7 +69,7 @@ import re
 import subprocess
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 import contextvars
@@ -347,8 +347,14 @@ def _call_llm(prompt, seed, max_attempts=6):
     while True:
         attempt += 1
         try:
+            max_out = int(os.environ.get("PD_MAX_OUTPUT_TOKENS", "16"))
             with kbench.chats.new("turn", orphan=True) as chat:
-                text = _LLM.prompt(prompt, temperature=TEMPERATURE, seed=seed)
+                text = _LLM.prompt(
+                    prompt,
+                    temperature=TEMPERATURE,
+                    seed=seed,
+                    extra_api_params={"max_tokens": max_out},
+                )
             if text is not None:
                 return text, chat.usage
             # Nhánh song song: contexts.enter có thể NUỐT lỗi proxy trong worker
@@ -614,6 +620,8 @@ def prisoner_dilemma_fairgame(llm) -> dict:
 
     total = len(LAMBDAS) * len(LANGS) * len(PERSONALITY_PERMS) * REPS
     print(f"[plan] model={MODEL} tag={model_tag}")
+    print(f"[plan] Output target: {out_dir}/<lambda>/<model>/x<lambda>_<lang>_<model>.csv "
+          f"+ {ckpt_dir}/checkpoints/*.json (resume)")
     print(f"[plan] {len(LAMBDAS)} λ × {len(LANGS)} lang × {len(PERSONALITY_PERMS)} tổ hợp "
           f"× {REPS} rep = {total} game × {N_ROUNDS} vòng × 2 agent = "
           f"{total * N_ROUNDS * 2} lượt gọi model (concurrency={CONCURRENCY}).")
@@ -659,8 +667,14 @@ def prisoner_dilemma_fairgame(llm) -> dict:
         done += 1
         coop = sum(s == "OptionA" for s in ast.literal_eval(row["agent1_strategies"])
                    + ast.literal_eval(row["agent2_strategies"]))
-        print(f"[{done}/{total}] {row['game_id']}  coop={coop}/{N_ROUNDS * 2} "
-              f"parse_fail={stats['parse_failed']} fallback={stats['fell_back']}",
+        elapsed = time.time() - t0
+        pct = (done / total) * 100 if total else 100.0
+        n_calls_done = done * N_ROUNDS * 2
+        calls_per_sec = n_calls_done / elapsed if elapsed > 0 else 0
+        eta_sec = ((total - done) * N_ROUNDS * 2 / calls_per_sec) if calls_per_sec > 0 else None
+        eta_txt = f"{int(eta_sec)}s" if eta_sec is not None else "n/a"
+        print(f"[{done}/{total} | {pct:.1f}%] {row['game_id']}  coop={coop}/{N_ROUNDS * 2} "
+              f"parse_fail={stats['parse_failed']} fallback={stats['fell_back']} eta={eta_txt}",
               flush=True)
 
     if CONCURRENCY <= 1:
@@ -672,7 +686,7 @@ def prisoner_dilemma_fairgame(llm) -> dict:
             # contexts.enter nuốt lỗi proxy và _call_llm không retry được. Duyệt futures
             # theo THỨ TỰ SUBMIT → commit/ghi file vẫn tuần tự và tất định.
             futs = [ex.submit(contextvars.copy_context().run, _run_one, c) for c in pending]
-            for fut in futs:
+            for fut in as_completed(futs):
                 _commit(*fut.result())
 
     final_games, final_turns = _ordered()
