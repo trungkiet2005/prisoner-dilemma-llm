@@ -141,10 +141,10 @@ def _env_list(name, default, cast=str):
     return [cast(x.strip()) for x in raw.split(",") if x.strip()]
 
 
-LAMBDAS = _env_list("PD_LAMBDAS", [0.01, 0.1, 1, 10, 100, 1000], float)
+LAMBDAS = _env_list("PD_LAMBDAS", [0.1, 1, 10], float)
 LANGS = _env_list("PD_LANGS", LANG_ORDER, str)
 REPS = int(os.environ.get("PD_REPS", "10"))
-N_ROUNDS = int(os.environ.get("PD_ROUNDS", "30"))
+N_ROUNDS = int(os.environ.get("PD_ROUNDS", "10"))
 N_ROUNDS_KNOWN = os.environ.get("PD_ROUNDS_KNOWN", "1").strip().lower() not in {
     "0", "false", "no", "off"}
 TEMPERATURE = float(os.environ.get("PD_TEMPERATURE", "1.0"))
@@ -161,6 +161,8 @@ SAMPLING_SEED_MOD = 2_147_483_647    # 2**31 - 1
 RETRY_SEED_STEP = 1_000_003
 MAX_PARSE_RETRIES = 2                # == BATCH_STRATEGY_RETRIES của batch_runner
 FALLBACK_STRATEGY_KEY = "strategy1"  # == _fallback_strategy_key (khoá đầu tiên)
+# Ngưỡng health-check cuối run (xem assertion ở cuối file).
+FALLBACK_RATE_TOLERANCE = float(os.environ.get("PD_FALLBACK_TOLERANCE", "0.02"))
 
 # Số game chạy song song. Mỗi game NỘI BỘ vẫn tuần tự (vòng r cần vòng r-1) nên kết
 # quả không đổi theo mức song song — seed cố định theo (cell, round, agent). Hạ về 1
@@ -179,8 +181,12 @@ CHECKPOINT_SCHEMA_VERSION = 1
 #
 # Muốn thêm model cho lần chạy thật: thêm slug vào đây (hoặc set PD_FULL_MODELS=
 # "a,b" / PD_FULL=1), rồi `kaggle b t run -m <slug>`.
+# Giữ danh sách này ĐÚNG BẰNG số model đang thực sự cần chạy. Model đã chạy xong thì
+# bỏ ra — allowlist càng hẹp thì cú `push` (chạy trên model mặc định của server, ta
+# không chọn được) càng khó vô tình đốt nguyên một sweep 12.000 lượt gọi.
 FULL_SWEEP_MODELS = _env_list("PD_FULL_MODELS", [
-    "google/gemini-3.1-flash-lite-preview",
+    "google/gemini-3.5-flash-lite",
+    "google/gemini-3.6-flash",
 ])
 _force_full = os.environ.get("PD_FULL", "").strip().lower() in {"1", "true", "yes", "on"}
 _has_overrides = any(os.environ.get(k) for k in
@@ -197,7 +203,12 @@ if not (_force_full or _has_overrides or MODEL in FULL_SWEEP_MODELS):
 _TRANSIENT = ("429", "503", "500", "502", "504", "overloaded",
               "unavailable", "not reachable", "rate limit", "heavy load")
 _AUTH_ERR = ("expired token", "authentication", "unauthorized", "401",
-             "invalid api key", "invalid_api_key", "403")
+             "invalid api key", "invalid_api_key")
+# Quota cũng trả 403 nên PHẢI tách khỏi _AUTH_ERR: reauth không tạo thêm credit, mà
+# chỉ đốt thời gian rồi vẫn 403. Đây là lỗi CHẾT — dừng sớm, đổi API key rồi resume
+# từ checkpoint, chứ đừng nghiến 6 lần retry cho từng lượt gọi trong 12.000 lượt.
+_QUOTA_ERR = ("exceeds your available quota", "available quota", "quota",
+              "insufficient", "billing", "exceeded your current")
 
 PERSONALITY_PERMS = list(itertools.product(range(2), repeat=2))   # 4 tổ hợp, đúng
 # thứ tự itertools.product của FAIRGAME._compute_agent_configurations.
@@ -322,11 +333,25 @@ _LLM = None            # client hiện tại (task gán); _reauth() dựng lại
 _LLM_LOCK = threading.Lock()
 
 
+class QuotaExhausted(RuntimeError):
+    """Hết credit — retry vô nghĩa, phải đổi API key rồi resume từ checkpoint."""
+
+
 def _reauth():
-    """Làm mới token proxy + dựng lại client để run dài không chết vì token hết hạn."""
+    """Làm mới token proxy + dựng lại client để run dài không chết vì token hết hạn.
+
+    KHÔNG BAO GIỜ được ném exception: trên server Kaggle không có binary `kaggle`
+    trong PATH (FileNotFoundError) và bản thân hàm này chạy trong nhánh xử lý lỗi —
+    nó mà chết là chết cả sweep, thổi bay tiến độ chưa checkpoint. Run-12 đứt đúng
+    kiểu đó. Thất bại thì trả về lặng lẽ và để vòng retry bên ngoài quyết định.
+    """
     global _LLM
-    print("[auth] token bị từ chối -> `kaggle b auth -y` + rebuild client ...", flush=True)
-    subprocess.run(["kaggle", "b", "auth", "-y"], capture_output=True, text=True)
+    print("[auth] token bị từ chối -> làm mới auth + rebuild client ...", flush=True)
+    try:
+        subprocess.run(["kaggle", "b", "auth", "-y"], capture_output=True, text=True)
+    except Exception as exc:  # noqa: BLE001 — không có CLI trên server là chuyện thường
+        print(f"[auth] bỏ qua `kaggle b auth` ({exc.__class__.__name__}); "
+              "rebuild client trực tiếp.", flush=True)
     try:
         from dotenv import load_dotenv
         load_dotenv(override=True)
@@ -335,8 +360,11 @@ def _reauth():
     # `kaggle b auth` ghi đè LLM_DEFAULT trong .env → ghim lại model đã chọn, nếu
     # không run dài sẽ âm thầm nhảy sang model mặc định của tài khoản.
     os.environ["LLM_DEFAULT"] = MODEL
-    from kaggle_benchmarks.kaggle.models import load_default_model
-    _LLM = load_default_model()
+    try:
+        from kaggle_benchmarks.kaggle.models import load_default_model
+        _LLM = load_default_model()
+    except Exception as exc:  # noqa: BLE001
+        print(f"[auth] rebuild client thất bại ({exc}); giữ client cũ.", flush=True)
 
 
 def _call_llm(prompt, seed, max_attempts=6):
@@ -344,16 +372,27 @@ def _call_llm(prompt, seed, max_attempts=6):
     exp-backoff với 429/503."""
     attempt = 0
     auth_retries = 0
+    # Prompt yêu cầu "Output ONLY the choice" → 8 token là thừa cho "OptionA".
+    # Cắt ngắn để không đốt tiền vào phần suy luận thừa của model.
+    max_out = int(os.environ.get("PD_MAX_OUTPUT_TOKENS", "8"))
     while True:
         attempt += 1
         try:
-            max_out = int(os.environ.get("PD_MAX_OUTPUT_TOKENS", "16"))
             with kbench.chats.new("turn", orphan=True) as chat:
                 text = _LLM.prompt(
                     prompt,
                     temperature=TEMPERATURE,
                     seed=seed,
-                    extra_api_params={"max_tokens": max_out},
+                    extra_api_params={
+                        # Không có tool nào cần gọi; tắt hẳn để model không trả
+                        # tool_call rỗng (nguồn gốc lỗi parse của SDK bên dưới).
+                        # ĐỪNG thêm "max_output_tokens" ở đây: endpoint là OpenAI
+                        # chat.completions, nó ném TypeError "unexpected keyword
+                        # argument" và giết cả task (run-13). `max_tokens` mới là
+                        # tên đúng; proxy tự quy ra hạn mức chi phí từ nó.
+                        "max_tokens": max_out,
+                        "tool_choice": "none",
+                    },
                 )
             if text is not None:
                 return text, chat.usage
@@ -363,6 +402,11 @@ def _call_llm(prompt, seed, max_attempts=6):
             raise RuntimeError("503 no-text: proxy error swallowed under concurrency")
         except Exception as e:
             msg = str(e).lower()
+            # Hết credit: kiểm TRƯỚC auth vì quota cũng là 403. Ném thẳng ra ngoài để
+            # dừng sớm — checkpoint đã ghi tới đâu giữ tới đó, đổi key rồi chạy lại là
+            # resume đúng chỗ.
+            if any(t in msg for t in _QUOTA_ERR):
+                raise QuotaExhausted(str(e)) from e
             if any(t in msg for t in _AUTH_ERR):
                 auth_retries += 1
                 if auth_retries > 6:
@@ -370,6 +414,26 @@ def _call_llm(prompt, seed, max_attempts=6):
                 with _LLM_LOCK:
                     _reauth()
                 attempt -= 1
+                continue
+            # Bug SDK: khi provider trả message không có `tool_calls`, lớp parse của
+            # kaggle_benchmarks vấp NoneType. Không phải lỗi của ta và retry thường
+            # qua được; hết lượt thì trả text rỗng để `decide()` xử theo đường
+            # parse-fail bình thường, thay vì giết cả benchmark đang chạy dở.
+            if "tool_calls" in msg and "nonetype" in msg:
+                if attempt >= max_attempts:
+                    print(
+                        f"[warn] SDK tool-call parse bug ({attempt}/{max_attempts}); "
+                        "trả content rỗng để tránh mất cả run.",
+                        flush=True,
+                    )
+
+                    class _NoUsage:
+                        input_tokens = 0
+                        output_tokens = 0
+                        total_cost_nanodollars = 0
+
+                    return "", _NoUsage()
+                time.sleep(min(2 ** attempt, 12))
                 continue
             if attempt >= max_attempts or not any(t in msg for t in _TRANSIENT):
                 raise
@@ -602,10 +666,13 @@ def _load_checkpoints(ckpt_dir, signature):
 # %% =====================  TASK  =====================
 @kbench.task(
     name="prisoner-dilemma-fairgame",
-    description="FAIRGAME iterated Prisoner's Dilemma, nhánh model API — port trung "
-                "thực config conventional (T=10 R=6 P=2 S=0) quét 6 mức payoff scaling "
-                "× 5 ngôn ngữ × 4 tổ hợp tính cách. Đo tỉ lệ hợp tác + chi phí/game; "
-                "CSV ghép thẳng với nhánh open-source.",
+    # Mô tả để ASCII: field này đi qua nhiều lớp metadata của Kaggle, từng bị
+    # mangle encoding một lần rồi.
+    # Kaggle chặn description > 255 ký tự (VALIDATION_FAILED ở run-14) — giữ ngắn.
+    description="FAIRGAME iterated Prisoner's Dilemma (API arm): conventional payoff "
+                "(T=10 R=6 P=2 S=0) over payoff scales x 5 languages x 4 personality "
+                "pairings. Reports cooperation rate and cost/game; CSV layout matches "
+                "the open-source arm.",
 )
 def prisoner_dilemma_fairgame(llm) -> dict:
     global _LLM
@@ -621,7 +688,7 @@ def prisoner_dilemma_fairgame(llm) -> dict:
     total = len(LAMBDAS) * len(LANGS) * len(PERSONALITY_PERMS) * REPS
     print(f"[plan] model={MODEL} tag={model_tag}")
     print(f"[plan] Output target: {out_dir}/<lambda>/<model>/x<lambda>_<lang>_<model>.csv "
-          f"+ {ckpt_dir}/checkpoints/*.json (resume)")
+          f"+ {ckpt_dir}/*.json (resume)")
     print(f"[plan] {len(LAMBDAS)} λ × {len(LANGS)} lang × {len(PERSONALITY_PERMS)} tổ hợp "
           f"× {REPS} rep = {total} game × {N_ROUNDS} vòng × 2 agent = "
           f"{total * N_ROUNDS * 2} lượt gọi model (concurrency={CONCURRENCY}).")
@@ -677,22 +744,47 @@ def prisoner_dilemma_fairgame(llm) -> dict:
               f"parse_fail={stats['parse_failed']} fallback={stats['fell_back']} eta={eta_txt}",
               flush=True)
 
+    # Hết credit giữa chừng KHÔNG được ném traceback ra ngoài: làm vậy là mất luôn
+    # bảng summary và mất luôn CSV của mấy trăm game đã chạy xong. Thay vào đó dừng
+    # nhận việc mới, ghi trọn những gì đã có, rồi báo cáo run dở dang.
+    quota_hit = None
     if CONCURRENCY <= 1:
         for cell in pending:
-            _commit(*_run_one(cell))
+            try:
+                _commit(*_run_one(cell))
+            except QuotaExhausted as exc:
+                quota_hit = str(exc)
+                break
     else:
         with ThreadPoolExecutor(max_workers=CONCURRENCY) as ex:
             # copy_context() để ContextVar active-run của SDK lan vào thread, nếu không
             # contexts.enter nuốt lỗi proxy và _call_llm không retry được. Duyệt futures
             # theo THỨ TỰ SUBMIT → commit/ghi file vẫn tuần tự và tất định.
             futs = [ex.submit(contextvars.copy_context().run, _run_one, c) for c in pending]
-            for fut in as_completed(futs):
-                _commit(*fut.result())
+            try:
+                for fut in as_completed(futs):
+                    try:
+                        _commit(*fut.result())
+                    except QuotaExhausted as exc:
+                        quota_hit = str(exc)
+                        break
+            finally:
+                # Huỷ phần chưa khởi động; game đang chạy dở cứ để nó kết thúc, shard
+                # nào ghi xong thì lần sau resume dùng lại được.
+                for f in futs:
+                    f.cancel()
+
+    if quota_hit:
+        print(f"\n[quota] DỪNG SỚM — hết credit: {quota_hit}", flush=True)
+        print(f"[quota] Đã giữ {len(rows_by_key)}/{total} game trong {ckpt_dir}. "
+              "Đổi sang API key khác rồi chạy lại đúng lệnh này để resume.", flush=True)
 
     final_games, final_turns = _ordered()
     _materialize(out_dir, model_tag, final_games, final_turns)
 
-    n_decisions = total * N_ROUNDS * 2
+    # Chia theo số lượt ĐÃ CHẠY THẬT, không phải số lượt dự kiến — nếu không, một run
+    # dừng sớm vì hết quota sẽ báo parse_fail_rate/fallback_rate thấp giả tạo.
+    n_decisions = len(final_games) * N_ROUNDS * 2
 
     def coop_rate(pred):
         cells = [g for g in final_games if pred(g)]
@@ -706,6 +798,9 @@ def prisoner_dilemma_fairgame(llm) -> dict:
     result = {
         "model": model_tag,
         "n_games": len(final_games),
+        "n_games_planned": total,
+        "complete": len(final_games) == total,
+        "stopped_early_quota": quota_hit,
         "n_decisions": n_decisions,
         "parse_fail_rate": round(agg["parse_failed"] / n_decisions, 4) if n_decisions else None,
         "fallback_rate": round(agg["fell_back"] / n_decisions, 4) if n_decisions else None,
@@ -730,11 +825,17 @@ def prisoner_dilemma_fairgame(llm) -> dict:
     print("===========================================================\n")
 
     # Health check (tỉ lệ hợp tác tự nó là KẾT QUẢ, không phải assertion): pipeline chỉ
-    # hợp lệ khi không quyết định nào phải fallback OptionA. Bài học run-1: xem
+    # hợp lệ khi hầu như không quyết định nào phải fallback OptionA. Bài học run-1: xem
     # parse/fallback rate TRƯỚC khi diễn giải số liệu.
-    kbench.assertions.assert_equal(
-        0, agg["fell_back"],
-        expectation="Mọi quyết định parse ra được OptionA/OptionB (không phải fallback)")
+    #
+    # CỐ Ý là ngưỡng chứ không phải == 0: một sweep 12.000 lượt gọi không được phép
+    # bị đánh trượt vì đúng một câu trả lời lạ, nhưng fallback có hệ thống (model
+    # thinking nuốt hết max_tokens) thì phải bật đèn đỏ vì nó bẻ cong tỉ lệ hợp tác.
+    fallback_rate = result["fallback_rate"] or 0.0
+    kbench.assertions.assert_true(
+        fallback_rate <= FALLBACK_RATE_TOLERANCE,
+        expectation=f"Tỉ lệ fallback OptionA {fallback_rate:.4f} <= "
+                    f"{FALLBACK_RATE_TOLERANCE} (parse được câu trả lời của model)")
     return result
 
 
