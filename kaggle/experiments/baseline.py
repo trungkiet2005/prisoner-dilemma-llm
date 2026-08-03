@@ -338,32 +338,41 @@ print(f"Repo input: {KAGGLE_CODE_INPUT}  (exists={Path(KAGGLE_CODE_INPUT).exists
 
 def apply_game_round_no_retry_patch(fairgame_dir: Path) -> None:
     """
-    Ghi đè FAIRGAME/src/game_round.py bằng bản KHÔNG cần PyPI ``retry``.
-    Dataset Kaggle Input đôi khi là snapshot cũ vẫn còn ``from retry import retry``;
-    patch chạy sau copy để luôn đúng dù Internet OFF.
-      (1) offline_patch_assets/game_round.py nếu có;
-      (2) kaggle_game_round_patch.b64 (base64) nếu có;
-      (3) bỏ qua nếu game_round.py đã sạch ``retry``.
+    Gỡ phụ thuộc PyPI ``retry`` khỏi FAIRGAME/src/game_round.py khi Internet OFF.
+
+    ⚠️ CHỈ patch KHI CẦN. `offline_patch_assets/game_round.py` là snapshot CŨ hơn
+    src/ (matcher của nó chỉ so chuỗi con, không hiểu "Option A"/"A"/"1" và không có
+    fallback). Bản notebook cũ copy đè vô điều kiện → tự hạ cấp chính file đang tốt.
+    Thứ tự đúng: nếu src/ đã sạch ``retry`` thì KHÔNG đụng vào.
+      (1) src/ đã sạch  → không làm gì;
+      (2) kaggle_game_round_patch.b64 (bản mới, base64) nếu có;
+      (3) offline_patch_assets/game_round.py — phương án chót, có cảnh báo.
     """
     import base64
 
     dest = fairgame_dir / "src" / "game_round.py"
-    bundled = fairgame_dir / "offline_patch_assets" / "game_round.py"
-    if bundled.is_file():
-        shutil.copyfile(bundled, dest)
-        print("✅ Đã áp patch offline: FAIRGAME/src/game_round.py ← offline_patch_assets/")
-        return
     text = dest.read_text(encoding="utf-8") if dest.is_file() else ""
     if "from retry import retry" not in text:
+        print("✅ src/game_round.py đã sạch ``retry`` — không cần patch.")
         return
+
     b64_path = fairgame_dir / "kaggle_game_round_patch.b64"
     if b64_path.is_file():
         dest.write_bytes(base64.b64decode(b64_path.read_text(encoding="ascii").strip()))
-        print("✅ Đã áp patch offline: FAIRGAME/src/game_round.py ← kaggle_game_round_patch.b64")
+        print("✅ Đã áp patch offline: src/game_round.py ← kaggle_game_round_patch.b64")
         return
+
+    bundled = fairgame_dir / "offline_patch_assets" / "game_round.py"
+    if bundled.is_file():
+        shutil.copyfile(bundled, dest)
+        print("⚠️  Đã áp patch offline: src/game_round.py ← offline_patch_assets/ "
+              "(snapshot CŨ — matcher yếu hơn; batched runner không dùng matcher này "
+              "nên vẫn chạy đúng, nhưng nên cập nhật Kaggle Input từ repo mới nhất).")
+        return
+
     raise RuntimeError(
-        "FAIRGAME/src/game_round.py vẫn import ``retry`` nhưng thiếu offline_patch_assets/ "
-        "hoặc kaggle_game_round_patch.b64 — cập nhật Kaggle Code Input từ repo mới nhất.")
+        "src/game_round.py vẫn import ``retry`` nhưng thiếu kaggle_game_round_patch.b64 "
+        "và offline_patch_assets/ — cập nhật Kaggle Code Input từ repo mới nhất.")
 
 
 if WORK_COPY.exists():
