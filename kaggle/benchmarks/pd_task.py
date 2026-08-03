@@ -161,6 +161,32 @@ SAMPLING_SEED_MOD = 2_147_483_647    # 2**31 - 1
 RETRY_SEED_STEP = 1_000_003
 MAX_PARSE_RETRIES = 2                # == BATCH_STRATEGY_RETRIES của batch_runner
 FALLBACK_STRATEGY_KEY = "strategy1"  # == _fallback_strategy_key (khoá đầu tiên)
+
+# --- Elicitation: TẮT reasoning, và vì sao (đọc trước khi chỉnh) ----------------
+# Model "thinking" (gemini-3.6-flash, gemini-3-flash-preview...) tiêu token vào phần
+# suy luận ẨN trước khi nói. Với max_tokens nhỏ, quota bị phần suy luận ăn hết và
+# content trả về bị cắt cụt thành "Option" → parse fail → retry → FALLBACK OptionA.
+# Đo thực tế trên gemini-3.6-flash, prompt PD round 1:
+#     max_tokens=8                        -> out=4 tok,  text='Option'  KHÔNG parse được
+#     max_tokens=64                       -> out=59 tok, text='OptionB'
+#     max_tokens=8  + reasoning_effort=none -> out=2 tok,  text='OptionB'
+# Hậu quả nếu bỏ qua: smoke gemini-3-flash-preview ra fallback_rate=1.0 và
+# overall_coop_rate=1.0 — con số "hợp tác 100%" đó là RÁC do fallback, không phải
+# hành vi model.
+#
+# Chọn reasoning_effort="none" chứ không phải nới max_tokens vì: (1) rẻ hơn nhiều
+# (2 token thay vì ~500), (2) khớp với nhánh baseline FAIRGAME vốn dùng model không
+# thinking (Claude 3.5 Haiku, GPT, Mistral) trả lời thẳng — so sánh mới có nghĩa.
+# Muốn CHO PHÉP thinking thì đặt PD_REASONING_EFFORT="" và nâng PD_MAX_OUTPUT_TOKENS
+# lên >=1024, nhưng khi đó KHÔNG so trực tiếp được với dữ liệu cũ.
+REASONING_EFFORT = os.environ.get("PD_REASONING_EFFORT", "none").strip()
+# 16 (không phải 8): thừa cho "OptionA" mà vẫn còn biên nếu model nào đó không chịu
+# reasoning_effort và lỡ nói thêm vài token.
+MAX_OUTPUT_TOKENS = int(os.environ.get("PD_MAX_OUTPUT_TOKENS", "16"))
+# Provider nào không nhận `reasoning_effort` thì bật cờ này và thôi gửi kèm.
+_NO_REASONING_PARAM = threading.Event()
+_UNSUPPORTED_PARAM = ("reasoning_effort", "unsupported", "unrecognized",
+                      "unexpected keyword", "invalid_request_error")
 # Ngưỡng health-check cuối run (xem assertion ở cuối file).
 FALLBACK_RATE_TOLERANCE = float(os.environ.get("PD_FALLBACK_TOLERANCE", "0.02"))
 
@@ -372,27 +398,26 @@ def _call_llm(prompt, seed, max_attempts=6):
     exp-backoff với 429/503."""
     attempt = 0
     auth_retries = 0
-    # Prompt yêu cầu "Output ONLY the choice" → 8 token là thừa cho "OptionA".
-    # Cắt ngắn để không đốt tiền vào phần suy luận thừa của model.
-    max_out = int(os.environ.get("PD_MAX_OUTPUT_TOKENS", "8"))
     while True:
         attempt += 1
         try:
+            params = {
+                # Không có tool nào cần gọi; tắt hẳn để model không trả tool_call
+                # rỗng (nguồn gốc lỗi parse của SDK bên dưới).
+                # ĐỪNG thêm "max_output_tokens" ở đây: endpoint là OpenAI
+                # chat.completions, nó ném TypeError "unexpected keyword argument"
+                # và giết cả task (run-13). `max_tokens` mới là tên đúng.
+                "max_tokens": MAX_OUTPUT_TOKENS,
+                "tool_choice": "none",
+            }
+            if REASONING_EFFORT and not _NO_REASONING_PARAM.is_set():
+                params["reasoning_effort"] = REASONING_EFFORT
             with kbench.chats.new("turn", orphan=True) as chat:
                 text = _LLM.prompt(
                     prompt,
                     temperature=TEMPERATURE,
                     seed=seed,
-                    extra_api_params={
-                        # Không có tool nào cần gọi; tắt hẳn để model không trả
-                        # tool_call rỗng (nguồn gốc lỗi parse của SDK bên dưới).
-                        # ĐỪNG thêm "max_output_tokens" ở đây: endpoint là OpenAI
-                        # chat.completions, nó ném TypeError "unexpected keyword
-                        # argument" và giết cả task (run-13). `max_tokens` mới là
-                        # tên đúng; proxy tự quy ra hạn mức chi phí từ nó.
-                        "max_tokens": max_out,
-                        "tool_choice": "none",
-                    },
+                    extra_api_params=params,
                 )
             if text is not None:
                 return text, chat.usage
@@ -407,6 +432,16 @@ def _call_llm(prompt, seed, max_attempts=6):
             # resume đúng chỗ.
             if any(t in msg for t in _QUOTA_ERR):
                 raise QuotaExhausted(str(e)) from e
+            # Provider không nhận `reasoning_effort`: bỏ tham số đó rồi thử lại (một
+            # lần cho cả run) thay vì để cả sweep chết vì một tham số tuỳ chọn.
+            if (REASONING_EFFORT and not _NO_REASONING_PARAM.is_set()
+                    and any(t in msg for t in _UNSUPPORTED_PARAM)):
+                _NO_REASONING_PARAM.set()
+                print("[warn] provider từ chối `reasoning_effort` -> bỏ tham số này. "
+                      "CẢNH BÁO: model thinking có thể ăn hết max_tokens rồi trả text "
+                      "cụt -> kiểm tra fallback_rate cuối run.", flush=True)
+                attempt -= 1
+                continue
             if any(t in msg for t in _AUTH_ERR):
                 auth_retries += 1
                 if auth_retries > 6:
