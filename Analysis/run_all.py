@@ -28,6 +28,7 @@ STEPS = [
     ("09_fig_supplementary.py", "F21-F24 supplementary analyses", False),
     ("10_hybrid_eval.py", "F25-F26 hybrid rule+LSTM read-out", False),
     ("11_fig_residual.py", "F27-F29 mining the unexplained residual", False),
+    ("12_fig_unclassified.py", "F30-F34 mining the abstention set", False),
 ]
 
 

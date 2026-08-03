@@ -245,3 +245,70 @@ Deviations also land in a state-dependent way (T21): Gemma violates its nearest
 rule on only 3% of R rounds but 16% of S rounds, while Llama violates at
 ~0.30 in every state, i.e. uniformly, which is what noise rather than a rule
 looks like.
+
+## The abstention set: play the network itself declines to name
+
+`scripts/11` carves the residual by the *rules* failing. `scripts/12` carves a
+stricter subset by the *network* failing: no canonical rule fits **and** the
+LSTM's top posterior stays under 0.90. That is **1,836 trajectories, 17.0% of
+the corpus** and a quarter of the residual.
+
+The floor is not tuned. Posterior confidence on the residual is strongly
+bimodal — 68% of it sits above 0.95 and the mass between 0.5 and 0.9 is a thin
+shoulder — so 0.90 cuts through a gap rather than through a crowd. On the
+synthetic test sets, where truth is known, it keeps 97% of the 10-round corpus
+at 0.9957 accuracy and 94% of the 30-round corpus at 0.9933 (`T25`).
+
+Three hypotheses are separable, and the data rejects the first outright:
+
+1. **It is not a shrug.** 90% of the abstention set puts more than 0.90 of its
+   posterior on just **two** labels, and only 0.4% is near-uniform over four.
+   The network is not lost; it is caught between two rules. The tie is
+   AllC-vs-TFT 39% of the time and TFT-vs-AllD 32%, with **TFT in 77%** of all
+   ties (F30d, F30e).
+
+2. **It is not the fifth rule we already know about.** GTFT was held out of
+   training entirely, so it is a positive control for what an unseen strategy
+   does to this classifier: it is absorbed as WSLS, leaving an **AllC-vs-WSLS**
+   signature in 60% of cases. The observed abstention set shows that signature
+   only 10% of the time (F30f, `T27`). Whatever this is, it is not GTFT.
+
+3. **It is genuinely outside the vocabulary.** In the reactive square
+   (p = P(C | opponent C), q = P(C | opponent D)), median distance to the
+   nearest canonical corner is **0.54** for the abstention set against 0.40 for
+   confidently-labelled play and 0 for exact matches (`T28`). It fills the
+   interior.
+
+A library of 15 named non-canonical strategies plus every two-phase clock rule
+names **26.5% of it exactly, against a 5.0% shuffled null** — and does better
+on the abstention set than on the confident one (30-round: 0.23 vs 0.07). The
+rules that land are `AllC→AllD` (0.17), **Suspicious TFT** (0.16), `TFT→AllD`
+(0.14) and `AllD→AllC` (0.13); among the 486 exact fits in the 30-round corpus,
+Suspicious TFT alone takes 62%. Between 84% and 95% of every model's abstention
+set has a non-canonical nearest rule.
+
+Two negative results worth stating:
+
+* **No backward induction.** Only 5% of fitted regime switches fall in the last
+  quarter of the game; they cluster at the opening. The endgame cooperation
+  drop that does exist belongs to the *confident* bucket, not this one (F33b).
+* **No discrete archetype.** Silhouette is flat at ≈0.35–0.37 for every k from
+  2 to 8 (`T33`). Bootstrap ARI is high at k=2–3 only because two clusters are
+  trivially reproducible, not because they are well separated.
+
+The sharpest finding is that unnameable play is **not** degraded play. Within
+both families it beats confidently-labelled play on efficiency (0.72 vs 0.66
+frontier, 0.72 vs 0.65 open-weight) and on payoff per round (4.30 vs 3.97,
+5.77 vs 5.17). Abstention is also a model trait rather than a context effect:
+it ranges from **0.36 for Claude-3.5-Haiku to 0.10 for Mistral-Large** (`T26`),
+while language, persona, dyad and payoff scale all stay inside 0.15–0.19.
+
+The caveat that keeps this honest is `T32`. Split the games in half and
+correlate the reactive coordinates across halves: exact matches give r = 1.00,
+confident play r ≈ 0.51–0.55, and the abstention set **r = 0.13 for p and
+−0.13 for q** — the first half barely predicts the second. Replicate agreement
+tells the same story: cells with no abstention agree on a modal archetype 88%
+of the time, cells that are 25–50% abstention only 59% (`T31`). So the honest
+summary is a split verdict: about a quarter of this play is a real strategy
+outside the canonical four — most often Suspicious TFT or a one-shot regime
+switch — and the rest is within-game drift that no fixed rule will ever name.
