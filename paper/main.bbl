@@ -1,4 +1,4 @@
-\begin{thebibliography}{36}
+\begin{thebibliography}{35}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -19,16 +19,84 @@ Iyad Rahwan, Manuel Cebrian, Nick Obradovich, Josh Bongard, Jean-Fran{\c c}ois
 \newblock \emph{Nature}, 568:\penalty0 477--486, 2019.
 \newblock \doi{10.1038/s41586-019-1138-y}.
 
+\bibitem[Dafoe et~al.(2021)Dafoe, Bachrach, Hadfield, Horvitz, Larson, and
+  Graepel]{dafoe2021cooperative}
+Allan Dafoe, Yoram Bachrach, Gillian Hadfield, Eric Horvitz, Kate Larson, and
+  Thore Graepel.
+\newblock Cooperative {AI}: machines must learn to find common ground.
+\newblock \emph{Nature}, 593:\penalty0 33--36, 2021.
+\newblock \doi{10.1038/d41586-021-01170-0}.
+
+\bibitem[Akata et~al.(2025)Akata, Schulz, Coda-Forno, Oh, Bethge, and
+  Schulz]{akata2023playing}
+Elif Akata, Lion Schulz, Julian Coda-Forno, Seong~Joon Oh, Matthias Bethge, and
+  Eric Schulz.
+\newblock Playing repeated games with large language models.
+\newblock \emph{Nature Human Behaviour}, 9:\penalty0 1380--1390, 2025.
+\newblock \doi{10.1038/s41562-025-02172-y}.
+
+\bibitem[Phelps and Russell(2023)]{phelps2023investigating}
+Steve Phelps and Yvan~I. Russell.
+\newblock Investigating emergent goal-like behaviour in large language models
+  using experimental economics.
+\newblock \emph{arXiv preprint arXiv:2305.07970}, 2023.
+
+\bibitem[Fontana et~al.(2025)Fontana, Pierri, and Aiello]{fontana2024nicer}
+Nicol{\`o} Fontana, Francesco Pierri, and Luca~Maria Aiello.
+\newblock Nicer than humans: How do large language models behave in the
+  prisoner's dilemma?
+\newblock In \emph{Proceedings of the International AAAI Conference on Web and
+  Social Media (ICWSM)}, pages 522--535, 2025.
+\newblock \doi{10.1609/icwsm.v19i1.35829}.
+
+\bibitem[Mei et~al.(2024)Mei, Xie, Yuan, and Jackson]{mei2024turing}
+Qiaozhu Mei, Yutong Xie, Walter Yuan, and Matthew~O. Jackson.
+\newblock A {T}uring test of whether {AI} chatbots are behaviorally similar to
+  humans.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 121\penalty0
+  (9):\penalty0 e2313925121, 2024.
+\newblock \doi{10.1073/pnas.2313925121}.
+
+\bibitem[Lor{\`e} and Heydari(2024)]{lore2024strategic}
+Nunzio Lor{\`e} and Babak Heydari.
+\newblock Strategic behavior of large language models and the role of game
+  structure versus contextual framing.
+\newblock \emph{Scientific Reports}, 14:\penalty0 18490, 2024.
+\newblock \doi{10.1038/s41598-024-69032-z}.
+
+\bibitem[Binz and Schulz(2023)]{binz2023using}
+Marcel Binz and Eric Schulz.
+\newblock Using cognitive psychology to understand {GPT-3}.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 120\penalty0
+  (6):\penalty0 e2218523120, 2023.
+\newblock \doi{10.1073/pnas.2218523120}.
+
+\bibitem[Horton(2023)]{horton2023large}
+John~J. Horton.
+\newblock Large language models as simulated economic agents: What can we learn
+  from homo silicus?
+\newblock NBER Working Paper 31122, National Bureau of Economic Research, 2023.
+
+\bibitem[Aher et~al.(2023)Aher, Arriaga, and Kalai]{aher2023using}
+Gati~V. Aher, Rosa~I. Arriaga, and Adam~Tauman Kalai.
+\newblock Using large language models to simulate multiple humans and replicate
+  human subject studies.
+\newblock In \emph{Proceedings of the 40th International Conference on Machine
+  Learning (ICML)}, pages 337--371, 2023.
+
+\bibitem[Argyle et~al.(2023)Argyle, Busby, Fulda, Gubler, Rytting, and
+  Wingate]{argyle2023out}
+Lisa~P. Argyle, Ethan~C. Busby, Nancy Fulda, Joshua~R. Gubler, Christopher
+  Rytting, and David Wingate.
+\newblock Out of one, many: Using language models to simulate human samples.
+\newblock \emph{Political Analysis}, 31\penalty0 (3):\penalty0 337--351, 2023.
+\newblock \doi{10.1017/pan.2023.2}.
+
 \bibitem[Axelrod and Hamilton(1981)]{axelrod1981evolution}
 Robert Axelrod and William~D. Hamilton.
 \newblock The evolution of cooperation.
 \newblock \emph{Science}, 211\penalty0 (4489):\penalty0 1390--1396, 1981.
 \newblock \doi{10.1126/science.7466396}.
-
-\bibitem[Axelrod(1984)]{axelrod1984evolution}
-Robert Axelrod.
-\newblock \emph{The Evolution of Cooperation}.
-\newblock Basic Books, New York, 1984.
 
 \bibitem[Nowak and Sigmund(1992)]{nowak1992tit}
 Martin~A. Nowak and Karl Sigmund.
@@ -77,28 +145,6 @@ Matja{\v z} Perc, Jillian~J. Jordan, David~G. Rand, Zhen Wang, Stefano
 \newblock \emph{Physics Reports}, 687:\penalty0 1--51, 2017.
 \newblock \doi{10.1016/j.physrep.2017.05.004}.
 
-\bibitem[Paiva et~al.(2018)Paiva, Santos, and Santos]{paiva2018engineering}
-Ana Paiva, Fernando~P. Santos, and Francisco~C. Santos.
-\newblock Engineering pro-sociality with autonomous agents.
-\newblock \emph{Proceedings of the AAAI Conference on Artificial Intelligence},
-  32, 2018.
-\newblock \doi{10.1609/aaai.v32i1.12215}.
-
-\bibitem[Santos et~al.(2018)Santos, Santos, and Pacheco]{santos2018social}
-Fernando~P. Santos, Francisco~C. Santos, and Jorge~M. Pacheco.
-\newblock Social norm complexity and past reputations in the evolution of
-  cooperation.
-\newblock \emph{Nature}, 555:\penalty0 242--245, 2018.
-\newblock \doi{10.1038/nature25763}.
-
-\bibitem[Dafoe et~al.(2021)Dafoe, Bachrach, Hadfield, Horvitz, Larson, and
-  Graepel]{dafoe2021cooperative}
-Allan Dafoe, Yoram Bachrach, Gillian Hadfield, Eric Horvitz, Kate Larson, and
-  Thore Graepel.
-\newblock Cooperative {AI}: machines must learn to find common ground.
-\newblock \emph{Nature}, 593:\penalty0 33--36, 2021.
-\newblock \doi{10.1038/d41586-021-01170-0}.
-
 \bibitem[Han et~al.(2011)Han, Pereira, and Santos]{han2011intention}
 The~Anh Han, Lu{\'i}s~Moniz Pereira, and Francisco~C. Santos.
 \newblock Intention recognition promotes the emergence of cooperation.
@@ -110,61 +156,6 @@ The~Anh Han, Lu{\'i}s~Moniz Pereira, Francisco~C. Santos, and Tom Lenaerts.
 \newblock Good agreements make good friends.
 \newblock \emph{Scientific Reports}, 3:\penalty0 2695, 2013.
 \newblock \doi{10.1038/srep02695}.
-
-\bibitem[Binz and Schulz(2023)]{binz2023using}
-Marcel Binz and Eric Schulz.
-\newblock Using cognitive psychology to understand {GPT-3}.
-\newblock \emph{Proceedings of the National Academy of Sciences}, 120\penalty0
-  (6):\penalty0 e2218523120, 2023.
-\newblock \doi{10.1073/pnas.2218523120}.
-
-\bibitem[Mei et~al.(2024)Mei, Xie, Yuan, and Jackson]{mei2024turing}
-Qiaozhu Mei, Yutong Xie, Walter Yuan, and Matthew~O. Jackson.
-\newblock A {T}uring test of whether {AI} chatbots are behaviorally similar to
-  humans.
-\newblock \emph{Proceedings of the National Academy of Sciences}, 121\penalty0
-  (9):\penalty0 e2313925121, 2024.
-\newblock \doi{10.1073/pnas.2313925121}.
-
-\bibitem[Horton(2023)]{horton2023large}
-John~J. Horton.
-\newblock Large language models as simulated economic agents: What can we learn
-  from homo silicus?
-\newblock NBER Working Paper 31122, National Bureau of Economic Research, 2023.
-
-\bibitem[Aher et~al.(2023)Aher, Arriaga, and Kalai]{aher2023using}
-Gati~V. Aher, Rosa~I. Arriaga, and Adam~Tauman Kalai.
-\newblock Using large language models to simulate multiple humans and replicate
-  human subject studies.
-\newblock In \emph{Proceedings of the 40th International Conference on Machine
-  Learning (ICML)}, pages 337--371, 2023.
-
-\bibitem[Argyle et~al.(2023)Argyle, Busby, Fulda, Gubler, Rytting, and
-  Wingate]{argyle2023out}
-Lisa~P. Argyle, Ethan~C. Busby, Nancy Fulda, Joshua~R. Gubler, Christopher
-  Rytting, and David Wingate.
-\newblock Out of one, many: Using language models to simulate human samples.
-\newblock \emph{Political Analysis}, 31\penalty0 (3):\penalty0 337--351, 2023.
-\newblock \doi{10.1017/pan.2023.2}.
-
-\bibitem[Akata et~al.(2023)Akata, Schulz, Coda-Forno, Oh, Bethge, and
-  Schulz]{akata2023playing}
-Elif Akata, Lion Schulz, Julian Coda-Forno, Seong~Joon Oh, Matthias Bethge, and
-  Eric Schulz.
-\newblock Playing repeated games with large language models.
-\newblock \emph{arXiv preprint arXiv:2305.16867}, 2023.
-
-\bibitem[Phelps and Russell(2023)]{phelps2023investigating}
-Steve Phelps and Yvan~I. Russell.
-\newblock Investigating emergent goal-like behaviour in large language models
-  using experimental economics.
-\newblock \emph{arXiv preprint arXiv:2305.07970}, 2023.
-
-\bibitem[Fontana et~al.(2024)Fontana, Pierri, and Aiello]{fontana2024nicer}
-Nicol{\`o} Fontana, Francesco Pierri, and Luca~Maria Aiello.
-\newblock Nicer than humans: How do large language models behave in the
-  prisoner's dilemma?
-\newblock \emph{arXiv preprint arXiv:2406.13605}, 2024.
 
 \bibitem[Lu et~al.(2022)Lu, Bartolo, Moore, Riedel, and
   Stenetorp]{lu2022fantastically}
@@ -201,12 +192,6 @@ Leonard Salewski, Stephan Alaniz, Isabel Rio-Torto, Eric Schulz, and Zeynep
 \newblock In \emph{Advances in Neural Information Processing Systems
   (NeurIPS)}, volume~36, 2023.
 
-\bibitem[Lor{\`e} and Heydari(2023)]{lore2024strategic}
-Nunzio Lor{\`e} and Babak Heydari.
-\newblock Strategic behavior of large language models and the role of game
-  structure versus contextual framing.
-\newblock \emph{arXiv preprint arXiv:2309.05898}, 2023.
-
 \bibitem[von Neumann and Morgenstern(1944)]{vonneumann1944theory}
 John von Neumann and Oskar Morgenstern.
 \newblock \emph{Theory of Games and Economic Behavior}.
@@ -217,12 +202,25 @@ R.~Duncan Luce and Howard Raiffa.
 \newblock \emph{Games and Decisions: Introduction and Critical Survey}.
 \newblock Wiley, New York, 1957.
 
-\bibitem[Buscemi et~al.(2025)]{fairgame2025}
-Alessio Buscemi et~al.
+\bibitem[Huynh et~al.(2026)Huynh, Duy-Minh, Cao, Le, Nguyen, Nguyen-Lam,
+  Nguyen-Vo, Pham, Pham, Than, Tran, Tran, Tran-Le, Buscemi, Trang, and
+  Han]{huynh2026payoff}
+Trung-Kiet Huynh, Dao-Sy Duy-Minh, Thanh-Bang Cao, Phong-Hao Le, Hong-Dan
+  Nguyen, Phu-Quy Nguyen-Lam, Minh-Luan Nguyen-Vo, Hong-Phat Pham, Phu-Hoa
+  Pham, Thien-Kim Than, Chi-Nguyen Tran, Huy Tran, Gia-Thoai Tran-Le, Alessio
+  Buscemi, Le~Hong Trang, and The~Anh Han.
+\newblock Payoff scaling shapes cooperation in {LLM} agents across languages.
+\newblock \emph{arXiv preprint arXiv:2601.19082}, 2026.
+
+\bibitem[Buscemi et~al.(2025)Buscemi, Proverbio, Di~Stefano, Han, Castignani,
+  and Li{\`o}]{fairgame2025}
+Alessio Buscemi, Daniele Proverbio, Alessandro Di~Stefano, The~Anh Han, German
+  Castignani, and Pietro Li{\`o}.
 \newblock {FAIRGAME}: A framework for {AI} agents bias recognition using game
   theory.
-\newblock AI Readiness and Assessment group, Luxembourg Institute of Science
-  and Technology. \url{https://github.com/SOM-Research/FAIRGAME}, 2025.
+\newblock In \emph{ECAI 2025 --- Proceedings of the 28th European Conference on
+  Artificial Intelligence}, pages 4097--4104. IOS Press, 2025.
+\newblock \doi{10.3233/FAIA251300}.
 
 \bibitem[Hochreiter and Schmidhuber(1997)]{hochreiter1997long}
 Sepp Hochreiter and J{\"u}rgen Schmidhuber.
@@ -235,13 +233,6 @@ Bradley Efron and Robert~J. Tibshirani.
 \newblock \emph{An Introduction to the Bootstrap}.
 \newblock Chapman and Hall/CRC, New York, 1993.
 
-\bibitem[Schwarz(1978)]{schwarz1978estimating}
-Gideon Schwarz.
-\newblock Estimating the dimension of a model.
-\newblock \emph{The Annals of Statistics}, 6\penalty0 (2):\penalty0 461--464,
-  1978.
-\newblock \doi{10.1214/aos/1176344136}.
-
 \bibitem[Tversky and Kahneman(1981)]{tversky1981framing}
 Amos Tversky and Daniel Kahneman.
 \newblock The framing of decisions and the psychology of choice.
@@ -253,5 +244,19 @@ Daniel Kahneman and Amos Tversky.
 \newblock Prospect theory: An analysis of decision under risk.
 \newblock \emph{Econometrica}, 47\penalty0 (2):\penalty0 263--291, 1979.
 \newblock \doi{10.2307/1914185}.
+
+\bibitem[Paiva et~al.(2018)Paiva, Santos, and Santos]{paiva2018engineering}
+Ana Paiva, Fernando~P. Santos, and Francisco~C. Santos.
+\newblock Engineering pro-sociality with autonomous agents.
+\newblock \emph{Proceedings of the AAAI Conference on Artificial Intelligence},
+  32, 2018.
+\newblock \doi{10.1609/aaai.v32i1.12215}.
+
+\bibitem[Santos et~al.(2018)Santos, Santos, and Pacheco]{santos2018social}
+Fernando~P. Santos, Francisco~C. Santos, and Jorge~M. Pacheco.
+\newblock Social norm complexity and past reputations in the evolution of
+  cooperation.
+\newblock \emph{Nature}, 555:\penalty0 242--245, 2018.
+\newblock \doi{10.1038/nature25763}.
 
 \end{thebibliography}
