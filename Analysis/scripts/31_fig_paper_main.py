@@ -118,6 +118,11 @@ def fig_design():
     ax.set_ylim(-0.95, 2.05)
     ax.axis("off")
 
+    # The agent is shown penalties and told to minimise them, so the
+    # cooperative action is the one with the *lower* symmetric number.  Rows
+    # and columns are labelled with the option names the agent actually sees,
+    # because the gap between those labels and the game-theoretic roles is
+    # itself one of the findings.
     cell = {("C", "C"): (m["R"], m["R"]), ("C", "D"): (m["S"], m["T"]),
             ("D", "C"): (m["T"], m["S"]), ("D", "D"): (m["P"], m["P"])}
     tint = {("C", "C"): "#dcebf6", ("C", "D"): "#f6f6f6",
@@ -134,25 +139,25 @@ def fig_design():
             ax.text(x, y - 0.20, own + opp, ha="center", va="center",
                     fontsize=6, color=MUTED, zorder=3)
 
-    for j, lab in enumerate(("cooperate", "defect")):
-        ax.text(j, 1.66, lab, ha="center", va="center", fontsize=6.5, color=INK2)
-    ax.text(0.5, 1.98, "opponent", ha="center", va="center", fontsize=6.5,
+    for j, lab in enumerate(("Option B\ncooperate", "Option A\ndefect")):
+        ax.text(j, 1.72, lab, ha="center", va="center", fontsize=6.2,
+                color=INK2, linespacing=1.35)
+    ax.text(0.5, 2.10, "opponent", ha="center", va="center", fontsize=6.5,
             color=MUTED, style="italic")
-    for i, lab in enumerate(("cooperate", "defect")):
-        ax.text(-0.60, 1 - i, lab, ha="right", va="center", fontsize=6.5,
-                color=INK2)
-    ax.text(-1.20, 0.5, "focal player", ha="center", va="center", fontsize=6.5,
+    for i, lab in enumerate(("Option B\ncooperate", "Option A\ndefect")):
+        ax.text(-0.58, 1 - i, lab, ha="right", va="center", fontsize=6.2,
+                color=INK2, linespacing=1.35)
+    ax.text(-1.24, 0.5, "focal player", ha="center", va="center", fontsize=6.5,
             color=MUTED, style="italic", rotation=90)
 
-    ax.text(-1.30, -0.60,
-            f"$T$>$R$>$P$>$S$ and $2R$>$T$+$S$    "
-            f"greed $=(T-R)/(T-S)=${m['greed']:.2f}    "
-            f"fear $=(P-S)/(T-S)=${m['fear']:.2f}",
+    ax.text(-1.30, -0.58,
+            f"cells are $\\bf{{penalties}}$ to be minimised: $T$<$R$<$P$<$S$    "
+            f"greed $=${m['greed']:.2f}    fear $=${m['fear']:.2f}",
             ha="left", va="center", fontsize=5.8, color=MUTED)
-    ax.text(-1.30, -0.88, "payoffs shown at $\\lambda=1$; every cell is "
-            "multiplied by $\\lambda \\in \\{0.1, 1, 10\\}$",
+    ax.text(-1.30, -0.86, "shown at $\\lambda=1$; every cell is multiplied by "
+            "$\\lambda \\in \\{0.1, 1, 10\\}$, which leaves the game unchanged",
             ha="left", va="center", fontsize=5.8, color=MUTED)
-    ax.set_title("Stage game (one round)", color=INK, pad=12)
+    ax.set_title("Stage game (one round)", color=INK, pad=16)
 
     # (b) the factorial ladder ----------------------------------------------
     ax = pb = fig.add_subplot(gs[0, 1])
@@ -231,8 +236,9 @@ def fig_invariance():
                        fontsize=6.0)
     ax.tick_params(axis="y", length=0)
     ax.set_ylim(-1.05, len(sl) - 0.35)
-    ax.set_xlim(sl.lo.min() - 0.015, 0.075)
-    ax.set_xticks([-0.15, -0.10, -0.05, 0.0])
+    lo, hi = min(sl.lo.min(), 0.0), max(sl.hi.max(), 0.0)
+    pad = 0.06 * (hi - lo)
+    ax.set_xlim(lo - pad, hi + 5.5 * pad)   # right margin holds the swing labels
     ax.set_xlabel("$\\Delta$ cooperation per\ndecade of $\\lambda$")
     ax.set_title("Payoff magnitude", pad=13)
 
@@ -306,6 +312,10 @@ def fig_invariance():
                        fontsize=6.0)
     ax.tick_params(axis="y", length=0)
     ax.set_ylim(-1.05, len(eff) - 0.35)
+    lo = min(eff.own_lo.min(), eff.opp_lo.min(), 0.0)
+    hi = max(eff.own_hi.max(), eff.opp_hi.max(), 0.0)
+    pad = 0.06 * (hi - lo)
+    ax.set_xlim(lo - pad, hi + pad)
     ax.set_xlabel("$\\Delta$ cooperation,\ncooperative $-$ selfish persona")
     handles = [plt.Line2D([], [], ls="none", marker="o", ms=4.0, mfc=MUTED,
                           mec=PAGE, mew=0.6, label="own persona (stated)"),
@@ -339,7 +349,7 @@ def fig_strategy():
     ax.set_ylim(0.05, 0.80)
     ax.set_xlabel("round")
     ax.set_ylabel("cooperation rate")
-    ax.set_title("No unravelling", pad=6)
+    ax.set_title("Endgame decay, with one exception", pad=6)
 
     # (b) the memory-one fingerprint -----------------------------------------
     fpd = pd.read_csv(TABDIR / "T_FR13_memory1_fingerprint.csv", index_col=0)

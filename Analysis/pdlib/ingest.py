@@ -9,16 +9,30 @@ Two long tables come out of `build_master()`:
 
 Coding conventions
 ------------------
-OptionA == Cooperate (C), OptionB == Defect (D).   Base payoff matrix, in
-"base units" (i.e. after dividing by the payoff scale of the run):
+**OptionA == Defect (D), OptionB == Cooperate (C).**
 
-                      opponent C     opponent D
-        focal C          R              S = 0
-        focal D          T = 10         P = 2
+The FAIRGAME prisoner's-dilemma templates state the numbers as *penalties*
+(years of imprisonment) and instruct the agent to **minimise** them, so a
+smaller number is a better outcome.  Under that framing the recorded cells are
 
-with R = 6 for the frontier runs and R = 8 for the small open-weight runs.
-Both satisfy T > R > P > S and 2R > T + S, so both are proper PDs, but the
-greed/fear geometry differs -- see `payoff_matrix()`.
+                      opponent C      opponent D
+        focal C          R = 2           S = 10
+        focal D          T = 0           P = 6
+
+with P = 6 for the frontier runs and P = 8 for the small open-weight runs.
+Reading these as penalties gives T < R < P < S, which is the penalty-space
+image of the usual T > R > P > S: mutual cooperation (B,B) carries the lowest
+symmetric penalty, defecting on a cooperator carries none at all, and A is
+therefore the dominant -- that is, the defecting -- action.
+
+This polarity is not cosmetic.  Mapping OptionA to Cooperate inverts every
+cooperation rate in the corpus (x -> 1 - x) and reverses the sign of the
+payoff-scale and endgame effects; it was the convention used here until it was
+caught by reproducing Fig. 2a of arXiv:2601.19082 from these tables, which
+matches to a mean absolute error of 0.002 under the mapping above and 0.171
+under the inverted one.  `payoff_matrix()` returns these raw penalties
+together with the greed/fear indices, which are computed on the negated
+(utility) scale so they remain comparable with the standard PD literature.
 """
 from __future__ import annotations
 
@@ -34,7 +48,7 @@ from .style import DATASET
 # --------------------------------------------------------------------------
 # label dictionaries
 # --------------------------------------------------------------------------
-ACTION_MAP = {"OptionA": "C", "OptionB": "D"}
+ACTION_MAP = {"OptionA": "D", "OptionB": "C"}
 
 PERSONALITY_MAP = {
     # english
@@ -65,25 +79,37 @@ FAMILY_DIR = {
     "data_fairgame_small_llm": "small",
 }
 
-# base (scale = 1) payoff matrices, keyed by family
+# base (scale = 1) PENALTY matrices, keyed by family: these are the numbers
+# the agent is actually shown and told to minimise, so T < R < P < S.  They
+# are also what `build_master` divides the recorded scores by to recover the
+# realised payoff scale, so they must stay in raw recorded units.
 _BASE_MATRIX = {
-    "frontier": {"T": 10.0, "R": 6.0, "P": 2.0, "S": 0.0},
-    "small": {"T": 10.0, "R": 8.0, "P": 2.0, "S": 0.0},
+    "frontier": {"T": 0.0, "R": 2.0, "P": 6.0, "S": 10.0},
+    "small": {"T": 0.0, "R": 2.0, "P": 8.0, "S": 10.0},
 }
 
 
 def payoff_matrix(family: str) -> dict:
-    """T/R/P/S in base units, plus the two classic PD indices.
+    """T/R/P/S as raw penalties, plus the two classic PD indices.
 
-    greed = (T - R) / (T - S)   incentive to defect against a cooperator
-    fear  = (P - S) / (T - S)   incentive to defect against a defector
+    The indices are defined on the *utility* scale u = -penalty, where the
+    familiar ordering T > R > P > S holds, so they can be read against the
+    standard literature:
+
+        greed = (T - R) / (T - S)   incentive to defect against a cooperator
+        fear  = (P - S) / (T - S)   incentive to defect against a defector
+
+    Substituting u = -penalty turns those into the penalty-space expressions
+    below, which is why the signs look flipped relative to a reward matrix.
     """
     m = dict(_BASE_MATRIX[family])
-    span = m["T"] - m["S"]
-    m["greed"] = (m["T"] - m["R"]) / span
-    m["fear"] = (m["P"] - m["S"]) / span
+    span = m["S"] - m["T"]                       # = T_u - S_u
+    m["greed"] = (m["R"] - m["T"]) / span
+    m["fear"] = (m["S"] - m["P"]) / span
     # k-index of Rapoport: how far R sits between P and T
-    m["k"] = (m["R"] - m["P"]) / (m["T"] - m["S"])
+    m["k"] = (m["P"] - m["R"]) / span
+    # utilities, for anything that needs a higher-is-better scale
+    m["u"] = {k: -m[k] for k in ("T", "R", "P", "S")}
     return m
 
 
@@ -198,13 +224,19 @@ def build_master(families: tuple[str, ...] | None = None
     rounds["prev_letter"] = rounds["prev_outcome"].map(OUTCOME_LETTER).fillna("E")
     rounds["token"] = rounds["prev_letter"] + rounds["action"]
 
-    # normalised payoff in [0, 1] on the S..T span of that family
+    # normalised outcome in [0, 1] on the S..T span, oriented so that higher is
+    # better: the worst penalty S maps to 0 and the best penalty T maps to 1.
     span = rounds["family"].map(lambda f: _BASE_MATRIX[f]["T"] - _BASE_MATRIX[f]["S"])
     smin = rounds["family"].map(lambda f: _BASE_MATRIX[f]["S"])
     rounds["payoff_norm"] = (rounds["payoff_base"] - smin) / span
-    # efficiency relative to the mutual-cooperation benchmark R
-    rmax = rounds["family"].map(lambda f: _BASE_MATRIX[f]["R"])
-    rounds["efficiency"] = rounds["payoff_base"] / rmax
+    # Efficiency against the mutual-cooperation benchmark, again higher-is-
+    # better: 1.0 is the penalty a dyad pays when it cooperates every round,
+    # 0.5 is mutual defection, and a round of successful exploitation exceeds
+    # 1.0.  Dividing the raw penalty by R would invert this, because under the
+    # penalty framing a *smaller* number is the better outcome.
+    rben = rounds["family"].map(lambda f: _BASE_MATRIX[f]["R"])
+    swst = rounds["family"].map(lambda f: _BASE_MATRIX[f]["S"])
+    rounds["efficiency"] = (swst - rounds["payoff_base"]) / (swst - rben)
 
     # ---- per-game aggregates ------------------------------------------------
     keys = ["family", "model", "language", "scale_nominal", "game_uid", "game_id",

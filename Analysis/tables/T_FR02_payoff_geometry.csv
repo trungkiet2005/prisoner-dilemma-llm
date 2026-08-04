@@ -1,2 +1,2 @@
-family,T,R,P,S,greed,fear,k
-frontier,10.0,6.0,2.0,0.0,0.4,0.2,0.4
+family,T,R,P,S,greed,fear,k,u
+frontier,0.0,2.0,6.0,10.0,0.2,0.4,0.4,"{'T': -0.0, 'R': -2.0, 'P': -6.0, 'S': -10.0}"

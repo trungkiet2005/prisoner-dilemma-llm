@@ -1,5 +1,5 @@
 model,dyads,agent_games,scales,languages,rounds_per_game,coop,decisions,horizon
-Claude-3.5-Haiku,600,1200,3,5,10,0.375,12000,unknown
-Gemini-3.5-Flash-Lite,600,1200,3,5,10,0.25958333333333333,12000,known
-GPT-4o,600,1200,3,5,10,0.5523333333333333,12000,unknown
-Mistral-Large,600,1200,3,5,10,0.47575,12000,unknown
+Claude-3.5-Haiku,600,1200,3,5,10,0.625,12000,unknown
+Gemini-3.5-Flash-Lite,600,1200,3,5,10,0.7404166666666666,12000,known
+GPT-4o,600,1200,3,5,10,0.4476666666666667,12000,unknown
+Mistral-Large,600,1200,3,5,10,0.52425,12000,unknown
