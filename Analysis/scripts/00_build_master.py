@@ -10,11 +10,25 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import pandas as pd
 
 from pdlib.ingest import build_master, payoff_matrix
-from pdlib.style import DATADIR, TABDIR
+from pdlib.style import DATADIR, MODEL_ORDER, TABDIR
+
+# The F01-F34 figures and every number quoted in README.md were computed on
+# these six models.  Gemini joined the frontier arm later; including it here
+# would silently move published figures, so the legacy pipeline is pinned and
+# the fourth frontier model is covered by the FR suite instead
+# (Analysis/run_frontier.py, README_frontier.md).
+LEGACY_MODELS = list(MODEL_ORDER)
 
 
 def main():
     rounds, games = build_master()
+
+    dropped = sorted(set(games.model.unique()) - set(LEGACY_MODELS))
+    if dropped:
+        print(f"pinned to the legacy six; not in this pipeline: {dropped}")
+        print("   (these are analysed by Analysis/run_frontier.py)\n")
+        rounds = rounds[rounds.model.isin(LEGACY_MODELS)].copy()
+        games = games[games.model.isin(LEGACY_MODELS)].copy()
 
     rounds.to_parquet(DATADIR / "rounds.parquet", index=False)
     games.to_parquet(DATADIR / "games.parquet", index=False)

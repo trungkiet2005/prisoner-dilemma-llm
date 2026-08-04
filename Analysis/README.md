@@ -1,5 +1,10 @@
 # Analysis — FAIRGAME prisoner's dilemma with LLM agents
 
+> Looking for the **frontier-only, journal-format figures (FR1–FR12)**? They
+> are a separate suite: see [README_frontier.md](README_frontier.md) and
+> `python Analysis/run_frontier.py`. This page documents the legacy F01–F34
+> set, which spans both the frontier and open-weight arms.
+
 Everything here is generated from `Dataset/` by plain Python scripts. No web
 rendering: every figure is written as **both `.png` (400 dpi)** and **`.pdf`
 (vector, Type-42 fonts)** into `figures/`, and every number that appears in a

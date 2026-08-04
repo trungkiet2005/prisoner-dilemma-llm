@@ -79,6 +79,9 @@ MODEL = {
     "Gemma-3-12B": "#4a3aa7",
     "Llama-3.1-8B": "#eda100",
     "Qwen3-8B": "#e87ba4",
+    # Gemini joined the frontier arm later; the legacy figures below keep the
+    # original trio, the frontier-only suite (pdlib.natstyle) plots all four.
+    "Gemini-3.5-Flash-Lite": "#4a3aa7",
 }
 FRONTIER_MODELS = ["Claude-3.5-Haiku", "GPT-4o", "Mistral-Large"]
 SMALL_MODELS = ["Gemma-3-12B", "Llama-3.1-8B", "Qwen3-8B"]

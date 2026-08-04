@@ -54,6 +54,7 @@ MODEL_MAP = {
     "claude": "Claude-3.5-Haiku",
     "gpt": "GPT-4o",
     "mistra": "Mistral-Large",
+    "gemini-3.5-flash-lite": "Gemini-3.5-Flash-Lite",
     "gemma_3_12b": "Gemma-3-12B",
     "llama-3-1-8b": "Llama-3.1-8B",
     "qwen3_8b": "Qwen3-8B",
@@ -103,8 +104,10 @@ def _lit(x):
     return x
 
 
-def _iter_files():
+def _iter_files(families: tuple[str, ...] | None = None):
     for famdir, family in FAMILY_DIR.items():
+        if families is not None and family not in families:
+            continue
         root = DATASET / famdir
         if not root.exists():
             continue
@@ -114,10 +117,12 @@ def _iter_files():
                     yield family, float(scale_dir.name), MODEL_MAP[model_dir.name], csv
 
 
-def build_master() -> tuple[pd.DataFrame, pd.DataFrame]:
+def build_master(families: tuple[str, ...] | None = None
+                 ) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Parse the logs. `families` restricts to a subset of FAMILY_DIR values."""
     round_rows: list[dict] = []
 
-    for family, scale_nominal, model, csv in _iter_files():
+    for family, scale_nominal, model, csv in _iter_files(families):
         lang = re.match(r"^x[\d.]+_([a-z]{2})_", csv.name).group(1)
         df = pd.read_csv(csv)
         base = _BASE_MATRIX[family]

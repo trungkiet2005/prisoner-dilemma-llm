@@ -1,0 +1,5 @@
+model,n_two_regime_only,median_switch
+Claude-3.5-Haiku,374,4.0
+Gemini-3.5-Flash-Lite,329,5.0
+GPT-4o,377,4.0
+Mistral-Large,273,3.0

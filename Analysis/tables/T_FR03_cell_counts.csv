@@ -1,0 +1,13 @@
+model,scale_nominal,en,fr,vn,cn,ar
+Claude-3.5-Haiku,0.1,40,40,40,40,40
+Claude-3.5-Haiku,1.0,40,40,40,40,40
+Claude-3.5-Haiku,10.0,40,40,40,40,40
+GPT-4o,0.1,40,40,40,40,40
+GPT-4o,1.0,40,40,40,40,40
+GPT-4o,10.0,40,40,40,40,40
+Gemini-3.5-Flash-Lite,0.1,40,40,40,40,40
+Gemini-3.5-Flash-Lite,1.0,40,40,40,40,40
+Gemini-3.5-Flash-Lite,10.0,40,40,40,40,40
+Mistral-Large,0.1,40,40,40,40,40
+Mistral-Large,1.0,40,40,40,40,40
+Mistral-Large,10.0,40,40,40,40,40
