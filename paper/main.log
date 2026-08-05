@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2026.7.17)  4 AUG 2026 22:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2026.7.17)  6 AUG 2026 00:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -606,7 +606,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 92.
+(Font)              <10.95> on input line 96.
 
 
 [1
@@ -616,9 +616,12 @@ n/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc}]
 
 [2{D:/Application/MiKTeX/fonts/enc/dvips/lm/lm-mathit.enc}{D:/Application/MiKTe
 X/fonts/enc/dvips/lm/lm-rm.enc}]
+
+[3{D:/Application/MiKTeX/fonts/enc/dvips/lm/lm-mathsy.enc}]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
-14.
- (D:\Application\MiKTeX\tex/latex/lm\t1lmtt.fd
+21.
+
+(D:\Application\MiKTeX\tex/latex/lm\t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 Package microtype Info: Loading generic protrusion settings for font family
@@ -627,69 +630,91 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             See the microtype manual for details.
 
 
-[3{D:/Application/MiKTeX/fonts/enc/dvips/lm/lm-mathsy.enc}]
-
 [4{D:/Application/MiKTeX/fonts/enc/dvips/lm/lm-mathex.enc}]
-<figures/fig1_design.pdf, id=182, 520.6395pt x 176.70467pt>
+<figures/fig1_design.pdf, id=189, 520.6395pt x 176.70467pt>
 File: figures/fig1_design.pdf Graphic file (type pdf)
 <use figures/fig1_design.pdf>
-Package pdftex.def Info: figures/fig1_design.pdf  used on input line 294.
+Package pdftex.def Info: figures/fig1_design.pdf  used on input line 319.
 (pdftex.def)             Requested size: 452.9679pt x 153.7399pt.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 304.
+(Font)              <10> on input line 329.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 304.
+(Font)              <7> on input line 329.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 304.
+(Font)              <5> on input line 329.
+<figures/fig2_aggregate.pdf, id=190, 520.52751pt x 195.9911pt>
+File: figures/fig2_aggregate.pdf Graphic file (type pdf)
+<use figures/fig2_aggregate.pdf>
+Package pdftex.def Info: figures/fig2_aggregate.pdf  used on input line 343.
+(pdftex.def)             Requested size: 452.9679pt x 170.5617pt.
+
+
+[5]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 350.
-<figures/fig2_invariance.pdf, id=184, 520.52818pt x 181.96068pt>
+(Font)              <9> on input line 398.
+<figures/fig2_invariance.pdf, id=202, 520.52818pt x 181.96068pt>
 File: figures/fig2_invariance.pdf Graphic file (type pdf)
 <use figures/fig2_invariance.pdf>
-Package pdftex.def Info: figures/fig2_invariance.pdf  used on input line 372.
+Package pdftex.def Info: figures/fig2_invariance.pdf  used on input line 420.
 (pdftex.def)             Requested size: 452.9679pt x 158.3517pt.
 
 
-[5 <./figures/fig1_design.pdf>]
+[6 <./figures/fig1_design.pdf>]
 
-[6]
+[7 <./figures/fig2_aggregate.pdf>]
 
-[7 <./figures/fig2_invariance.pdf>]
-<figures/fig3_strategy.pdf, id=284, 520.37784pt x 203.44814pt>
+[8 <./figures/fig2_invariance.pdf>]
+<figures/fig6_misread.pdf, id=322, 520.52611pt x 233.88103pt>
+File: figures/fig6_misread.pdf Graphic file (type pdf)
+<use figures/fig6_misread.pdf>
+Package pdftex.def Info: figures/fig6_misread.pdf  used on input line 537.
+(pdftex.def)             Requested size: 452.9679pt x 203.5355pt.
+
+
+[9 <./figures/fig6_misread.pdf>]
+<figures/fig3_strategy.pdf, id=347, 520.37802pt x 203.44814pt>
 File: figures/fig3_strategy.pdf Graphic file (type pdf)
 <use figures/fig3_strategy.pdf>
-Package pdftex.def Info: figures/fig3_strategy.pdf  used on input line 533.
+Package pdftex.def Info: figures/fig3_strategy.pdf  used on input line 605.
 (pdftex.def)             Requested size: 452.9679pt x 177.09157pt.
 
 
-[8]
-
-[9 <./figures/fig3_strategy.pdf>]
-
 [10]
+<figures/fig7_residual.pdf, id=359, 520.52611pt x 198.67964pt>
+File: figures/fig7_residual.pdf Graphic file (type pdf)
+<use figures/fig7_residual.pdf>
+Package pdftex.def Info: figures/fig7_residual.pdf  used on input line 657.
+(pdftex.def)             Requested size: 452.9679pt x 172.90141pt.
 
-[11] (main.bbl
 
-[12]
+[11 <./figures/fig3_strategy.pdf>]
+
+[12 <./figures/fig7_residual.pdf>]
 
 [13]
 
-[14])
+[14] (main.bbl
 
-[15] (main.aux)
+[15]
+
+[16]
+
+[17])
+
+[18] (main.aux)
  ***********
 LaTeX2e <2026-06-01>
 L3 programming layer <2026-04-28>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: BF66DBCAED196751AEBD07ED0175C0CF;4409.
+(rerunfilecheck)             Checksum: 9455C124D3DBCA5380C9F88ECA7DB69A;4609.
  ) 
 Here is how much of TeX's memory you used:
- 15277 strings out of 467830
- 239956 string characters out of 5438750
- 697577 words of memory out of 5000000
- 43627 multiletter control sequences out of 15000+600000
- 724247 words of font info for 234 fonts, out of 8000000 for 9000
+ 15344 strings out of 467830
+ 241219 string characters out of 5438750
+ 701665 words of memory out of 5000000
+ 43653 multiletter control sequences out of 15000+600000
+ 725691 words of font info for 251 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  74i,9n,79p,1332b,626s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <D:/Application/MiKTeX/fonts/type1/public/lm/lmbx10.pfb><D:/Application/MiKTe
@@ -703,9 +728,9 @@ b><D:/Application/MiKTeX/fonts/type1/public/lm/lmsy10.pfb><D:/Application/MiKTe
 X/fonts/type1/public/lm/lmsy6.pfb><D:/Application/MiKTeX/fonts/type1/public/lm/
 lmsy8.pfb><D:/Application/MiKTeX/fonts/type1/public/lm/lmsy9.pfb><D:/Applicatio
 n/MiKTeX/fonts/type1/public/lm/lmtt10.pfb>
-Output written on main.pdf (15 pages, 528734 bytes).
+Output written on main.pdf (18 pages, 687648 bytes).
 PDF statistics:
- 472 PDF objects out of 1000 (max. 8388607)
- 89 named destinations out of 1000 (max. 500000)
- 51912 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 566 PDF objects out of 1000 (max. 8388607)
+ 96 named destinations out of 1000 (max. 500000)
+ 51935 words of extra memory for PDF output out of 61914 (max. 10000000)
 

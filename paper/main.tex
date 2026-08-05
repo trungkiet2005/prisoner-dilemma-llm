@@ -59,8 +59,12 @@ selfish do so 91\%, in every model and language. This inversion, the direction
 of the payoff-scale effect and the shape of the memory-one fingerprints are
 jointly explained if the models read the stated penalties as rewards,
 pattern-matching the matrix to a canonical prisoner's dilemma rather than
-solving the stated problem. Cooperation rates and strategy labels reported
-without an invariance audit may describe the prompt rather than the agent.
+solving the stated problem. Strategy labels fare no better: no canonical rule
+fits in half to seven-eighths of agent-games, and widening the vocabulary to
+all 32 memory-one rules and to one regime switch still leaves 15--42\%
+unexplained while beating a shuffled null by only about 0.2. Cooperation rates
+and strategy labels reported without an invariance audit may describe the
+prompt rather than the agent.
 \end{abstract}
 
 \noindent\textbf{Keywords:} machine behaviour; large language models; iterated
@@ -149,9 +153,12 @@ the stated penalties as rewards --- which explains the persona inversion, the
 direction of the payoff-scale effect and the shape of the memory-one
 fingerprints together (\S\ref{sec:misread}); and \textbf{(iv)} a deductive
 audit of strategy attribution showing that in half to seven-eighths of
-agent-games no memory-one rule fits at all, so that an archetype label
-reports the resolution of the classifier rather than the behaviour of the
-model (\S\ref{sec:strategy}).
+agent-games no canonical rule fits at all, so that an archetype label reports
+the resolution of the classifier rather than the behaviour of the model, and
+that widening the vocabulary does not rescue it --- all 32 memory-one rules
+plus one regime switch still leave 15--42\% unexplained and exceed a shuffled
+null by only about 0.2, because the play conditions on two rounds of history
+rather than one (\S\ref{sec:strategy}--\S\ref{sec:residual}).
 
 \section{Material and methods}
 
@@ -246,15 +253,33 @@ $p(C \mid C_{-1}) - p(C \mid D_{-1})$.
 
 Assigning a strategy label was done in two stages, kept distinct because they
 license different claims. The first is exact and deductive: for each
-agent-game we enumerated all 32 deterministic memory-one rules and retained
-those consistent with every observed transition. A game may be matched by
-exactly one rule, by several, or by none, and only the first case supports the
-statement that the agent played that rule. The second is inductive and applies
-only where the first fails: a long short-term memory classifier
-\citep{hochreiter1997long} trained on synthetic play from known generating
-strategies returns a posterior over archetypes, whose argmax we take as the
-nearest neighbour. We also record, for each agent-game, the minimum number of
-rounds on which play departs from its own nearest rule.
+agent-game we asked which of the four canonical rules --- AllC, AllD,
+tit-for-tat and win-stay lose-shift --- reproduces every observed transition.
+A game may be matched by exactly one, by several, or by none, and only the
+first case supports the statement that the agent played that rule. Matching by
+several is an answer rather than a failure: an agent that cooperates for ten
+rounds against a cooperator \emph{is} AllC and tit-for-tat and win-stay
+lose-shift at once, so we report the set and do not break the tie. The second
+stage is inductive and applies only where the first returns nothing: a long
+short-term memory classifier \citep{hochreiter1997long} trained on synthetic
+play from known generating strategies returns a posterior over archetypes,
+whose argmax we take as the nearest neighbour. We also record, for each
+agent-game, the minimum number of rounds on which play departs from its own
+nearest rule. Because the two stages license different claims, we never report
+a single pooled label distribution: the share reached deductively and the
+share reached by nearest neighbour are always separated
+(figure~\ref{fig:strategy}c).
+
+The four canonical rules are a small vocabulary, and a rule may fail to fit
+simply because the vocabulary is too narrow rather than because the play has
+no rule in it. We therefore widen the hypothesis class in controlled steps and
+pair every coverage figure with a null (\S\ref{sec:residual}): first to all 32
+deterministic memory-one rules, then to trajectories explained by two such
+rules in sequence with a single switch between them. The null shuffles the
+focal agent's own action sequence in place, holding its cooperation rate and
+the opponent's realised sequence fixed. It is not a formality: a two-segment
+fit over ten rounds has enough freedom to reproduce a large share of shuffled
+play by chance, so raw coverage on its own is not evidence of structure.
 
 \subsection{Statistical procedures}
 
@@ -313,14 +338,36 @@ Large and 0.45 for GPT-4o. Read naively this is the headline of a conventional
 benchmark report, and it is the form in which such results are usually
 communicated.
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig2_aggregate.pdf}
+\caption{\textbf{What the pooled cooperation rate hides.}
+(\textbf{a}) The distribution of within-game cooperation. Ten rounds admit only
+eleven values, so this is the discrete distribution, not a histogram. Each row
+is normalised to its own maximum, so shapes are comparable but heights are not
+counts. The vertical rule marks the pooled mean, drawn through the
+distribution it is meant to summarise; the coloured percentages give the share
+of games played entirely one way.
+(\textbf{b}) Sequential (Type I) variance decomposition of the agent-game
+cooperation rate, entered in the order shown, so each factor is credited only
+with what the factors above it leave unexplained. Entering model identity
+first makes its 9.5\% an upper bound.
+(\textbf{c}) What the unexplained share is made of. Bars give the standard
+deviation of cooperation across the ten replicates of a byte-identical prompt,
+against the floor that ten independent rounds would already impose; the
+annotation is their ratio.}
+\label{fig:aggregate}
+\end{figure}
+
 It is worth establishing immediately how little that number carries. The
 distribution of within-game cooperation is not concentrated near its mean for
-any model. Mistral Large plays 25.0\% of its games entirely cooperatively and
-24.3\% entirely defecting, so its mean of 0.52 describes a bimodal mixture
-rather than a typical game; Gemini reaches 36.9\% wholly cooperative games and
-GPT-4o 14.9\% wholly defecting ones.
+any model (figure~\ref{fig:aggregate}a). Mistral Large plays 25.0\% of its
+games entirely cooperatively and 24.3\% entirely defecting, so its mean of
+0.52 describes a bimodal mixture rather than a typical game; Gemini reaches
+36.9\% wholly cooperative games and GPT-4o 14.9\% wholly defecting ones.
 
-How much of this spread does the design account for? Very little. In a
+How much of this spread does the design account for? Very little
+(figure~\ref{fig:aggregate}b). In a
 sequential decomposition, model identity explains 9.5\% of the variance in
 dyad-level cooperation, persona pairing 5.5\%, payoff scale 3.6\% and language
 0.2\%, for a total of 18.7\%. The remaining 81.3\% is within-cell: ten
@@ -344,8 +391,9 @@ framing. ``Opening C'' gives $p$(cooperate on round 1) for an agent told it is
 cooperative and for one told it is selfish; the ordering is reversed in every
 model. Distance is Euclidean, in the four-dimensional memory-one fingerprint
 space, to the nearest canonical rule, which are themselves at most 2.0 apart.
-``Exact rule'' is the share of agent-games in which exactly one of the 32
-deterministic memory-one rules reproduces the whole trajectory.}
+``Exact rule'' is the share of agent-games in which exactly one of the four
+canonical rules reproduces the whole trajectory; the wider 32-rule vocabulary
+is treated in \S\ref{sec:residual}.}
 \label{tab:profile}
 \begin{tabular}{@{}lccccccc@{}}
 \toprule
@@ -484,17 +532,41 @@ instruction.
 \subsection{One account of all three: the frame is misread}
 \label{sec:misread}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig6_misread.pdf}
+\caption{\textbf{One account of all three failures: the frame is read
+backwards.}
+(\textbf{a}) The same four numbers under the two readings, shaded by how good
+each cell is for the focal player, whose action indexes the rows. Under the
+stated objective the agent minimises a penalty, so the 0 is the prize; under a
+reward reading the 10 is. Every action the two readings prescribe is the
+inverse of the other, for both personas.
+(\textbf{b}) The prediction at the opening move, where no history exists and
+the prompt is the only input. Agents told they are selfish open cooperatively
+far more often than agents told they are cooperative, in all four models, with
+95\% bootstrap intervals resampling whole dyads.
+(\textbf{c}) The prediction inside the memory-one fingerprint. State labels
+carry the penalty the focal agent received. All four cooperate readily after
+CD, where the agent has just collected the largest entry on the table and every
+canonical rule except AllC prescribes 0; three of four cooperate less after DC,
+where it collected nothing. Dashes mark tit-for-tat.}
+\label{fig:misread}
+\end{figure}
+
 The three failures above look like three separate sensitivities. They are
 jointly explained by a single hypothesis: that the models treat the displayed
 numbers as rewards to be maximised rather than as penalties to be minimised,
 pattern-matching the matrix to the canonical reward-framed prisoner's dilemma
 in which the largest entry is the prize.
 
-Under a reward reading of the same table, Option A yields the symmetric pair
+Under a reward reading of the same table (figure~\ref{fig:misread}a), Option A
+yields the symmetric pair
 $(6,6)$ and Option B can yield the single largest number, 10. An agent told it
 is cooperative and reaching for the outcome that looks mutually good would
 therefore choose A; an agent told it is selfish and reaching for the largest
-attainable number would choose B. Both are exactly what we observe, and both
+attainable number would choose B. Both are exactly what we observe
+(figure~\ref{fig:misread}b), and both
 are the opposite of what the stated objective implies, because under
 minimisation A is the dominant defecting action and the 10 is the sucker's
 penalty. The hypothesis also predicts the sign of the payoff-scale effect:
@@ -503,7 +575,7 @@ conspicuous, so the share of B should rise with $\lam$, which is what
 figure~\ref{fig:invariance}a shows.
 
 The memory-one fingerprints carry the same signature
-(figure~\ref{fig:strategy}b). All four models cooperate readily after having
+(figure~\ref{fig:misread}c). All four models cooperate readily after having
 been exploited --- $p(C \mid S)$ is 0.48, 0.81, 0.63 and 0.96 for Claude,
 Gemini, GPT-4o and Mistral --- where tit-for-tat, grim and win-stay lose-shift
 all prescribe 0. Being ``exploited'' in this corpus means receiving the
@@ -536,16 +608,17 @@ the models are optimising.
 models decay towards the endgame, consistent with backward induction; Claude
 is the exception, rising from 0.47 to 0.74. Gemini is the single arm that was
 told the round count.
-(\textbf{b}) The memory-one fingerprint: probability of cooperating after each
-joint outcome of the previous round, the complete description of a memory-one
-strategy. Dashes mark tit-for-tat. All four cooperate readily after being
-exploited (CD), where every canonical rule except AllC prescribes 0, and three
-of four cooperate less after exploiting (DC) than after being exploited.
+(\textbf{b}) Euclidean distance from each model's memory-one fingerprint to
+every canonical rule, not only to the nearest one, since ``nearest'' hides
+whether the runner-up was a close second. Markers ring each model's nearest
+rule. The dashed line is the greatest distance between any two canonical rules
+in this space, which is the scale on which 0.7--1.0 should be read.
 (\textbf{c}) How an archetype label is actually reached. Dark: exactly one of
-the 32 deterministic memory-one rules reproduces the whole trajectory. Mid:
-several do. Grey: none does, and the label is a nearest-neighbour statement.
-The right-hand column gives the mean number of rounds out of ten on which play
-departs from its own nearest rule.}
+the four canonical rules reproduces the whole trajectory. Mid: several do, and
+the game does not distinguish them. Grey: none does, and the label is a
+nearest-neighbour statement from the classifier. The right-hand column gives
+the mean number of rounds out of ten on which play departs from its own
+nearest rule.}
 \label{fig:strategy}
 \end{figure}
 
@@ -558,22 +631,86 @@ This reproduces the endgame pattern reported for the same corpus by
 \citet{huynh2026payoff}, including the Claude exception.
 
 \paragraph{No memory-one rule.} The fingerprints place every model far from
-every canonical strategy. The nearest archetype is tit-for-tat for Claude at
-Euclidean distance 0.76, and grim trigger for GPT-4o (0.71), Gemini (0.90) and
-Mistral (1.01). For scale, the canonical rules are at most 2.0 apart from one
-another in this space, so a distance of 0.7--1.0 is not a near miss.
+every canonical strategy (figure~\ref{fig:strategy}b). The nearest archetype is
+tit-for-tat for Claude at Euclidean distance 0.76, and grim trigger for GPT-4o
+(0.71), Gemini (0.90) and Mistral (1.01). For scale, the canonical rules are at
+most 2.0 apart from one another in this space, so a distance of 0.7--1.0 is not
+a near miss. Nor is the nearest rule nearest by much: the runner-up is only
+0.11 to 0.33 further away, a margin smaller in every model than the distance to
+the nearest rule itself, so which archetype a label names is decided by much
+less than the error that label already carries.
 
-\paragraph{A label is mostly not a description.} Exactly one of the 32
-deterministic memory-one rules reproduces the entire trajectory in 9.7\% of
-Claude's agent-games, 21.8\% of GPT-4o's, 21.9\% of Gemini's and 48.7\% of
-Mistral's (figure~\ref{fig:strategy}c). In the remaining 86\%, 72\%, 56\% and
-50\% respectively no rule in the class fits and the label is a
-nearest-neighbour statement; where a label is assigned this way, play departs
-from the rule it names on 1.0 to 2.0 rounds out of ten. A further caveat
-limits even the deductive fraction: ten rounds rarely visit all four
-conditioning states, so rules differing only in an unvisited state cannot be
-distinguished, and coverage figures for the wider class are statements about a
-\emph{set} of rules rather than about a rule.
+\paragraph{A label is mostly not a description.} Exactly one of the four
+canonical rules reproduces the entire trajectory in 9.7\% of Claude's
+agent-games, 21.8\% of GPT-4o's, 21.9\% of Gemini's and 48.7\% of Mistral's
+(figure~\ref{fig:strategy}c). A further 4.7\%, 5.8\%, 21.7\% and 1.2\% are
+matched by more than one rule at once, which the ten rounds do not separate. In
+the remaining 85.7\%, 72.4\%, 56.4\% and 50.2\% no canonical rule fits and the
+label is a nearest-neighbour statement; where a label is assigned this way,
+play departs from the rule it names on 1.0 to 2.0 rounds out of ten.
+
+\subsection{What the unmatched play is}
+\label{sec:residual}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig7_residual.pdf}
+\caption{\textbf{The residual is real, and it is not in the class.}
+(\textbf{a}) Coverage as the hypothesis class is widened. The classes are
+nested, so the segments are disjoint and stack to one. The tick is where the
+same three classes reach on shuffled play, in which the focal agent's own
+action sequence is permuted in place while its cooperation rate and the
+opponent's realised sequence are held fixed; coverage to the left of the tick
+is what the fit buys by chance.
+(\textbf{b}) How much history the next move uses. $\Delta$BIC of nested
+predictors of the next action against a memoryless model, scored on identical
+rows so the comparison is about history and not sample size. The ring marks
+each model's selected depth; all four select memory-two.
+(\textbf{c}) Why even a fit rarely names a rule. Ten rounds seldom visit all
+four conditioning states, so rules differing only in an unvisited state are
+indistinguishable on that game. Bars pool all 4{,}800 agent-games.}
+\label{fig:residual}
+\end{figure}
+
+The result above is negative, and a negative result of this kind invites an
+easy dismissal: that the residual is noise, and no label was ever going to fit
+noise. It is worth answering, because the answer decides whether the strategy
+vocabulary is too small or simply the wrong one.
+
+Widening the class does not close the gap (figure~\ref{fig:residual}a).
+Admitting all 32 deterministic memory-one rules rather than the canonical four
+adds 12.3, 8.8, 14.0 and 12.3 percentage points for Claude, Gemini, GPT-4o and
+Mistral; admitting trajectories built from two such rules with a single switch
+between them adds a further 31.2, 27.4, 31.4 and 22.8. Even then 42.3\% of
+Claude's agent-games, 27.0\% of GPT-4o's, 20.2\% of Gemini's and 15.2\% of
+Mistral's are not reproduced by anything in the class. And the coverage that is
+achieved must be read against its null: the same three classes fit shuffled
+play up to 0.38, 0.57, 0.49 and 0.65, so the excess attributable to structure
+rather than to the flexibility of a two-segment fit over ten rounds is only
+0.20, 0.23, 0.24 and 0.20. Roughly one agent-game in five is explained by the
+widened vocabulary beyond chance.
+
+The reason is not that the play is unstructured but that the structure uses
+more history than the class allows (figure~\ref{fig:residual}b). Scoring nested
+predictors of the next action on identical rows, all four models select
+memory-two: $\Delta$BIC against a memoryless baseline improves from $-1685$ to
+$-2399$ for Claude, $-4334$ to $-4792$ for Gemini, $-3684$ to $-4865$ for
+GPT-4o and $-6652$ to $-9158$ for Mistral. Allowing the memory-one rule to
+change with the phase of the game instead --- an equally sized extension in the
+direction of time rather than of history --- is worse than memory-two for every
+model. Whatever these agents are doing conditions on the last two rounds, so a
+memory-one vocabulary is not a coarse description of it but a description of
+something else.
+
+A final limit applies to the deductive fraction itself
+(figure~\ref{fig:residual}c). Over ten rounds a trajectory rarely visits all
+four conditioning states, so rules that differ only in an unvisited state
+cannot be told apart. Of the 4{,}800 agent-games, 2{,}608 match no memory-one
+rule, and of those that do match, most are matched by four or eight rules at
+once; exactly 89 --- 1.9\% of the corpus --- are pinned to a single one of the
+32. A coverage figure for the wider class is therefore a statement about a
+\emph{set} of rules and not about a rule, and the ten-round horizon is what
+makes it so.
 
 \subsection{What is stable}
 
@@ -582,7 +719,8 @@ quantities we compare are reliable even though individual games are not:
 split-half reliability of the cell means is 0.90 for Claude, 0.91 for GPT-4o,
 0.95 for Gemini and 0.97 for Mistral. What is unstable is the individual game.
 Ten replicates of an identical prompt have a standard deviation 1.3 to 1.6
-times what independent rounds would produce. The correct summary is that these
+times what independent rounds would produce (figure~\ref{fig:aggregate}c).
+The correct summary is that these
 systems have reproducible \emph{propensities} and irreproducible
 \emph{episodes}.
 
@@ -644,6 +782,20 @@ in which a rule was deductively established rather than assigned by nearest
 neighbour, and by the number of rounds on which play departs from its assigned
 label. On our corpus those numbers are 10--49\% and 1.0--2.0 rounds out of ten.
 
+The natural repair --- enlarge the strategy set until the labels fit --- does
+not work either, and the way it fails is informative. Going from four rules to
+all 32 memory-one rules, and then to two of them in sequence, leaves 15--42\%
+of agent-games unexplained and buys only about 0.2 of coverage above a
+shuffled null, while the selected memory depth is two rounds rather than one
+for every model. The class is not too small; it is the wrong class. This
+matters for the hybrid read-out that is becoming standard practice in this
+literature, in which a learned classifier supplies a label wherever exact
+matching fails. Such a classifier will always return something, and on our
+corpus it is returning something for the majority of games --- 50\% to 86\%
+depending on the model. The remedy is not a better classifier but reporting
+the provenance of each label, which costs nothing once the deductive stage is
+run.
+
 The results also bear on efforts to model populations in which artificial and
 human agents interact
 \citep{paiva2018engineering,santos2018social,dafoe2021cooperative}. Such models
@@ -674,8 +826,14 @@ The horizon confound remains: the Gemini arm knew the round count and the
 others did not, so that column mixes model identity with horizon knowledge.
 And the framing-controlled language analysis rests on three languages rather
 than five, which reduces power, so the two null results should be read with
-that in mind. Finally, ten rounds is short: it under-identifies the memory-one
-vocabulary and compresses any endgame effect into a small number of rounds.
+that in mind. Finally, ten rounds is short, and this bounds
+\S\ref{sec:residual} in particular: it under-identifies the memory-one
+vocabulary, so most matched games are matched by a set of rules rather than by
+one; it gives a two-segment fit enough freedom that a shuffled null already
+reaches 0.38--0.65, which is why every coverage figure is reported against that
+null; and it compresses any endgame effect into a small number of rounds. The
+memory-two selection is the one result here that a longer horizon would sharpen
+rather than merely confirm.
 
 \subsection{Conclusion}
 
