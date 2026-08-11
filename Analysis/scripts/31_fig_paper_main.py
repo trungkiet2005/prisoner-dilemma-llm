@@ -12,15 +12,19 @@ per contribution claimed in the abstract:
     fig6_misread      one account of all three: the frame is read backwards (new)
 
 `fig2_aggregate` and `fig6_misread` cover the two claims that the manuscript
-currently makes in prose with no figure at all: that 81.3% of the variance is
-within-cell (so the mean is barely a function of the design), and that the
-models are optimising a reward reading of a penalty table.  The file names of
-the three older figures are left alone so `paper/main.tex` keeps compiling;
-renumber them once the final lineup is fixed.
+made in prose with no figure at all: that the pooled mean describes almost no
+game and that nearly all of the structure lives in interactions rather than in
+main effects, and that the models are optimising a reward reading of a penalty
+table.  The file names of the three older figures are left alone so
+`paper/main.tex` keeps compiling; renumber them once the final lineup is fixed.
 
 Panel-level numbers are read from `tables/T_FR*.csv`, which the frontier
-pipeline writes, so a panel here can never drift from the corresponding
-supplementary figure.  Run `python Analysis/run_frontier.py` first.
+pipeline writes, plus `tables/T_PAPER_*.csv` from `32_paper_revision_stats.py`
+for the three quantities the FR suite reports in a form the main text cannot
+use: the variance decomposition with interactions separated from replicate
+noise, the payoff scale as two adjacent contrasts rather than one slope, and
+the persona effect resolved by payoff scale.  Run `python
+Analysis/run_frontier.py` and then `scripts/32_paper_revision_stats.py` first.
 
 Captions are *not* baked into the canvas: in a manuscript the caption belongs
 to the LaTeX float, and duplicating it inside the PDF would print it twice.
@@ -229,21 +233,26 @@ def fig_invariance():
     gs = fig.add_gridspec(1, 3, width_ratios=[1.00, 1.16, 1.08])
 
     # (a) payoff scale --------------------------------------------------------
-    sl = pd.read_csv(TABDIR / "T_FR05_scale_sensitivity.csv")
+    # Two adjacent contrasts, not one slope.  Cooperation is a step in lambda:
+    # everything happens between x0.1 and x1 and nothing between x1 and x10, so
+    # a line fitted through the step reports a per-decade movement that no
+    # model produced, and for Gemini and Mistral the step is not even monotone.
+    sl = pd.read_csv(TABDIR / "T_PAPER_scale_contrasts.csv")
     sl = sl.set_index("model").reindex(FRONTIER).reset_index()
 
     ax = pa = fig.add_subplot(gs[0, 0])
     hgrid(ax, axis="x")
     y = np.arange(len(sl))[::-1].astype(float)
     ax.axvline(0.0, color=MUTED, lw=0.5, ls=(0, (2.5, 2)), zorder=1)
+    off = 0.17
     for yi, r in zip(y, sl.itertuples()):
         c = MODEL_C[r.model]
-        ax.hlines(yi, r.lo, r.hi, color=c, lw=1.1, zorder=3)
-        ax.plot(r.slope, yi, marker=MODEL_M[r.model], ms=4.2, mfc=c, mec=PAGE,
-                mew=0.6, ls="none", zorder=4)
-        ax.text(0.995, yi, f"swing {r.swing:.2f}",
-                transform=ax.get_yaxis_transform(), ha="right", va="center",
-                fontsize=5.6, color=MUTED)
+        ax.hlines(yi + off, r.step1_lo, r.step1_hi, color=c, lw=0.8, zorder=3)
+        ax.plot(r.step1, yi + off, marker=MODEL_M[r.model], ms=4.4, mfc=c,
+                mec=PAGE, mew=0.6, ls="none", zorder=4)
+        ax.hlines(yi - off, r.step2_lo, r.step2_hi, color=c, lw=0.8, zorder=3)
+        ax.plot(r.step2, yi - off, marker=MODEL_M[r.model], ms=4.4, mfc=PAGE,
+                mec=c, mew=1.0, ls="none", zorder=4)
     ax.text(0.0, -0.78, " no effect", ha="left", va="center", fontsize=5.6,
             color=MUTED)
     ax.set_yticks(y)
@@ -251,10 +260,19 @@ def fig_invariance():
                        fontsize=6.0)
     ax.tick_params(axis="y", length=0)
     ax.set_ylim(-1.05, len(sl) - 0.35)
-    lo, hi = min(sl.lo.min(), 0.0), max(sl.hi.max(), 0.0)
+    lo = min(sl.step1_lo.min(), sl.step2_lo.min(), 0.0)
+    hi = max(sl.step1_hi.max(), sl.step2_hi.max(), 0.0)
     pad = 0.06 * (hi - lo)
-    ax.set_xlim(lo - pad, hi + 5.5 * pad)   # right margin holds the swing labels
-    ax.set_xlabel("$\\Delta$ cooperation per\ndecade of $\\lambda$")
+    ax.set_xlim(lo - pad, hi + pad)
+    ax.set_xlabel("$\\Delta$ cooperation between\nadjacent payoff scales")
+    handles = [plt.Line2D([], [], ls="none", marker="o", ms=4.0, mfc=MUTED,
+                          mec=PAGE, mew=0.6,
+                          label="$\\times 0.1 \\rightarrow \\times 1$"),
+               plt.Line2D([], [], ls="none", marker="o", ms=4.0, mfc=PAGE,
+                          mec=MUTED, mew=1.0,
+                          label="$\\times 1 \\rightarrow \\times 10$")]
+    ax.legend(handles=handles, ncol=1, loc="upper right",
+              bbox_to_anchor=(1.04, 1.05), handlelength=0.8, labelspacing=0.28)
     ax.set_title("Payoff magnitude", pad=13)
 
     # (b) prompt language, with objective framing held fixed ------------------
@@ -303,41 +321,47 @@ def fig_invariance():
               handlelength=1.1, labelspacing=0.28)
     ax.set_title("Prompt language", pad=27)
 
-    # (c) assigned persona ----------------------------------------------------
-    eff = pd.read_csv(TABDIR / "T_FR10_persona_effects.csv")
-    eff = eff.set_index("model").reindex(FRONTIER).reset_index()
+    # (c) assigned persona, resolved by payoff scale --------------------------
+    # Pooling the three scales averages an effect of -0.49 against one of
+    # +0.06 and reports the mean of the two as though it described either.  It
+    # is also the wrong way round to plot: the panel exists to show that a
+    # manipulation which cannot matter decides the sign of one that could.
+    eff = pd.read_csv(TABDIR / "T_PAPER_persona_by_scale.csv")
+    eff = eff[eff.model.isin(FRONTIER) & eff.scale.notna()]
+    eff["model"] = pd.Categorical(eff.model, FRONTIER, ordered=True)
+    eff = eff.sort_values(["model", "scale"])
 
     ax = pc = fig.add_subplot(gs[0, 2])
     hgrid(ax, axis="x")
-    y = np.arange(len(eff))[::-1].astype(float)
+    y = np.arange(len(FRONTIER))[::-1].astype(float)
     ax.axvline(0, color=MUTED, lw=0.5, ls=(0, (2.5, 2)), zorder=1)
-    off = 0.17
-    for yi, r in zip(y, eff.itertuples()):
-        c = MODEL_C[r.model]
-        ax.hlines(yi + off, r.own_lo, r.own_hi, color=c, lw=0.8, zorder=3)
-        ax.plot(r.own_effect, yi + off, marker=MODEL_M[r.model], ms=4.4,
-                mfc=c, mec=PAGE, mew=0.6, ls="none", zorder=4)
-        ax.hlines(yi - off, r.opp_lo, r.opp_hi, color=c, lw=0.8, zorder=3)
-        ax.plot(r.opp_effect, yi - off, marker=MODEL_M[r.model], ms=4.4,
-                mfc=PAGE, mec=c, mew=1.0, ls="none", zorder=4)
-    ax.text(0.0, -0.78, " no effect", ha="left", va="center", fontsize=5.6,
+    # one row per model, three rungs per row: darkest is the smallest scale
+    alpha = {0.1: 1.00, 1.0: 0.62, 10.0: 0.34}
+    for yi, mdl in zip(y, FRONTIER):
+        c = MODEL_C[mdl]
+        for k, s in enumerate(SCALE_ORDER):
+            r = eff[(eff.model == mdl) & (eff.scale == s)].iloc[0]
+            yy = yi + 0.24 - 0.24 * k
+            ax.hlines(yy, r.lo, r.hi, color=c, lw=0.8, alpha=alpha[s], zorder=3)
+            ax.plot(r.effect, yy, marker=MODEL_M[mdl], ms=3.8, mfc=c, mec=PAGE,
+                    mew=0.5, alpha=alpha[s], ls="none", zorder=4)
+    ax.text(0.0, -0.80, " no effect", ha="left", va="center", fontsize=5.6,
             color=MUTED)
     ax.set_yticks(y)
-    ax.set_yticklabels([MODEL_LABEL[m].replace(" ", "\n", 1) for m in eff.model],
+    ax.set_yticklabels([MODEL_LABEL[m].replace(" ", "\n", 1) for m in FRONTIER],
                        fontsize=6.0)
     ax.tick_params(axis="y", length=0)
-    ax.set_ylim(-1.05, len(eff) - 0.35)
-    lo = min(eff.own_lo.min(), eff.opp_lo.min(), 0.0)
-    hi = max(eff.own_hi.max(), eff.opp_hi.max(), 0.0)
+    ax.set_ylim(-1.10, len(FRONTIER) - 0.30)
+    lo, hi = min(eff.lo.min(), 0.0), max(eff.hi.max(), 0.0)
     pad = 0.06 * (hi - lo)
     ax.set_xlim(lo - pad, hi + pad)
     ax.set_xlabel("$\\Delta$ cooperation,\ncooperative $-$ selfish persona")
-    handles = [plt.Line2D([], [], ls="none", marker="o", ms=4.0, mfc=MUTED,
-                          mec=PAGE, mew=0.6, label="own persona (stated)"),
-               plt.Line2D([], [], ls="none", marker="o", ms=4.0, mfc=PAGE,
-                          mec=MUTED, mew=1.0, label="opponent's (hidden)")]
-    ax.legend(handles=handles, ncol=1, loc="upper right",
-              bbox_to_anchor=(1.02, 1.05), handlelength=0.8)
+    handles = [plt.Line2D([], [], ls="none", marker="o", ms=3.6, mfc=MUTED,
+                          mec=PAGE, mew=0.5, alpha=alpha[s],
+                          label=f"$\\lambda={s:g}$") for s in SCALE_ORDER]
+    ax.legend(handles=handles, ncol=1, loc="upper left",
+              bbox_to_anchor=(-0.02, 1.06), handlelength=0.8,
+              labelspacing=0.24)
     ax.set_title("Assigned persona", pad=13)
 
     finalize(fig, [pa, pb, pc], ["a", "b", "c"], dx=-0.008)
@@ -452,15 +476,32 @@ def fig_strategy():
 # has three claims and no figure, which is the wrong way round: the reader is
 # asked to discount the headline number on the strength of prose.  The three
 # panels are the three claims, in the order the section makes them.
-VAR_FILL = {"model": "#0072b2", "payoff scale": "#7fb2d4",
-            "language": "#a1b792", "persona pairing": "#be9976",
-            "unexplained": "#dcdcdc"}
+# A main-effects fit leaves every interaction among the four factors in the
+# residual, so calling that residual "within-cell" credits the design with a
+# fifth of the variance it actually accounts for.  The rows below separate the
+# three things the old "unexplained" bar was hiding: interactions among the
+# same four factors, the asymmetry between the two seats of a dyad, and the
+# replicate spread that alone deserves the name.
+VAR_FILL = {"model (main effect)": "#0072b2",
+            "payoff scale (main effect)": "#7fb2d4",
+            "language (main effect)": "#a1b792",
+            "persona pairing (main effect)": "#be9976",
+            "interactions among the four": "#41618a",
+            "position within the dyad": "#b0b0b0",
+            "replicate (identical prompt)": "#dcdcdc"}
+VAR_SHORT = {"model (main effect)": "model",
+             "payoff scale (main effect)": "payoff scale",
+             "language (main effect)": "language",
+             "persona pairing (main effect)": "persona pairing",
+             "interactions among the four": "their interactions",
+             "position within the dyad": "seat in the dyad",
+             "replicate (identical prompt)": "replicate spread"}
 
 
 def fig_aggregate():
     games = pd.read_parquet(DATADIR / "frontier_games.parquet")
     pol = pd.read_csv(TABDIR / "T_FR20_polarisation.csv").set_index("model")
-    var = pd.read_csv(TABDIR / "T_FR17_variance_decomposition.csv")
+    var = pd.read_csv(TABDIR / "T_PAPER_variance_full.csv")
     rep = pd.read_csv(TABDIR / "T_FR24_replicate_spread.csv").set_index("model")
 
     fig = figure(W2, 2.60)
@@ -520,36 +561,35 @@ def fig_aggregate():
     hgrid(ax, axis="x")
     y = np.arange(len(var))[::-1].astype(float)
     for yi, r in zip(y, var.itertuples()):
-        ax.barh(yi, r.share, height=0.60, color=VAR_FILL[r.factor],
+        ax.barh(yi, r.share, height=0.58, color=VAR_FILL[r.component],
                 edgecolor=PAGE, linewidth=0.5, zorder=3)
-        ax.text(r.share + 0.014, yi, f"{r.share:.1%}", ha="left", va="center",
-                fontsize=6.2, color=INK2)
-    designed = 1 - float(var.share.iloc[-1])
-    # a bracket over the four deliberate manipulations, so the comparison the
-    # panel exists to make is legible without reading the four numbers
-    ax.plot([designed + 0.135] * 2, [y[3] - 0.32, y[0] + 0.32], color=SPINE,
-            lw=0.6, zorder=4)
-    ax.plot([designed + 0.115, designed + 0.135], [y[0] + 0.32] * 2,
-            color=SPINE, lw=0.6, zorder=4)
-    ax.plot([designed + 0.115, designed + 0.135], [y[3] - 0.32] * 2,
-            color=SPINE, lw=0.6, zorder=4)
-    ax.text(designed + 0.152, (y[0] + y[3]) / 2,
-            f"everything\nthe design\ncontrols:\n{designed:.1%}", ha="left",
-            va="center", fontsize=5.8, color=INK2, linespacing=1.35)
+        ax.text(r.share + 0.016, yi, f"{r.share:.1%}", ha="left", va="center",
+                fontsize=6.0, color=INK2)
+    # a bracket over the five rows the four crossed factors account for: the
+    # comparison the panel exists to make is design against replicate, and the
+    # main-effect rows on their own invite exactly the wrong reading
+    designed = float(var.share.iloc[:5].sum())
+    xb = 0.62
+    ax.plot([xb] * 2, [y[4] - 0.30, y[0] + 0.30], color=SPINE, lw=0.6, zorder=4)
+    for yy in (y[0] + 0.30, y[4] - 0.30):
+        ax.plot([xb - 0.02, xb], [yy] * 2, color=SPINE, lw=0.6, zorder=4)
+    ax.text(xb + 0.018, (y[0] + y[4]) / 2,
+            f"the four\ncrossed factors\nand their\ninteractions:\n{designed:.1%}",
+            ha="left", va="center", fontsize=5.6, color=INK2, linespacing=1.35)
     ax.set_yticks(y)
-    ax.set_yticklabels(var.factor, fontsize=6.2)
+    ax.set_yticklabels([VAR_SHORT[c] for c in var.component], fontsize=6.2)
     ax.tick_params(axis="y", length=0)
-    ax.set_ylim(-0.62, len(var) - 0.38)
+    ax.set_ylim(-0.60, len(var) - 0.40)
     ax.set_xlim(0, 1.02)
     ax.set_xticks([0, 0.25, 0.5, 0.75, 1.0])
     ax.set_xlabel("share of variance in agent-game\ncooperation rate")
     ax.set_title("Where the variance lives", pad=6)
 
-    # (c) what the unexplained share is made of ------------------------------
-    # Panel b says 81% is within-cell but not what within-cell means.  It is
-    # replicates of a byte-identical prompt: the observed spread among the ten
-    # is 1.3-1.6 times the floor that independent rounds would already impose,
-    # so the residual is not a rounding artefact of the ten-round horizon.
+    # (c) what the replicate share is made of --------------------------------
+    # Panel b puts 28% on replicates of a byte-identical prompt but not what
+    # that spread is: the observed SD among the ten is 1.3-1.6 times the floor
+    # that ten independent rounds would already impose, so the row is neither
+    # pure arithmetic nor pure caprice -- the floor is 42% of it.
     ax = pc = fig.add_subplot(gs[0, 2])
     hgrid(ax)
     rep = rep.reindex(FRONTIER)
@@ -576,7 +616,7 @@ def fig_aggregate():
                              lw=0.5, label="independent-round floor")]
     ax.legend(handles=handles, ncol=1, loc="upper right",
               bbox_to_anchor=(1.03, 1.04), handlelength=0.9, labelspacing=0.28)
-    ax.set_title("The residual is prompt-identical", pad=6)
+    ax.set_title("The last row is not only arithmetic", pad=6)
 
     finalize(fig, [pa, pb, pc], ["a", "b", "c"], dx=-0.008)
     save(fig, "fig2_aggregate")
