@@ -1,13 +1,28 @@
-# Frontier figure suite (FR1–FR26)
+# Frontier figure suite (FR1–FR29) and the manuscript figures
 
 A journal-grade figure set covering **only the four frontier LLMs** in
 `Dataset/data_fairgame_frontier_llm/`. Separate from the legacy `F01–F34` set
 in [README.md](README.md), which also carries the open-weight arm.
 
 ```bash
-python Analysis/run_frontier.py             # ~90 s, everything
+python Analysis/run_frontier.py             # ~5 min, everything
 python Analysis/run_frontier.py --no-build  # reuse the parsed parquet
 ```
+
+Two deliverables come out of the same pipeline:
+
+* **steps 20–30** → the supplementary suite `figures/frontier/FR1–FR29` and
+  `tables/T_FR*`;
+* **steps 33–34** → `tables/T_S01–T_S22` and the **six main-text figures**,
+  written straight into `paper/figures/`. Those figures read their panel
+  numbers out of the `T_S*` / `T_FR*` CSVs and compute nothing of their own, so
+  a main-text panel cannot drift from the table behind it. See
+  [../paper/README.md](../paper/README.md) for what each one carries.
+
+`33_strategy_stats.py` is the slow step (~3 min): it runs the 69-rule extended
+library plus its shuffled null over all 4,800 agent-games, the motif mining,
+the cluster sweep, and 2,000-draw dyad-level permutations for 32 mix-shift
+tests.
 
 FR18–FR26 read `models/strategy_lstm_h10.pt`, which
 `scripts/05_train_classifier.py` produces. Nothing is trained here; the
@@ -132,10 +147,13 @@ model × λ × language cell), 10 rounds per game.
    an upper bound.
 
 6. **An archetype label is the nearest canonical rule, not an identity.** Only
-   12–41 % of agent-games are a *provable* exact match (FR19b); the rest are a
+   9.7–48.7 % of agent-games are a *provable* exact match
+   (`T_FR27_assignment_mix.csv`, `T_FR34_provable_coverage.csv`); the rest are a
    nearest-neighbour statement from the LSTM, and play departs from its own
    nearest rule on 1.0–2.0 rounds out of ten. Any sentence of the form "model X
-   plays TFT" has to carry that qualifier.
+   plays TFT" has to carry that qualifier. Resolved **per label** rather than
+   per game the gap is far worse: 4.9 % of WSLS labels and 8.8 % of TFT labels
+   are deductions (`T_S03_label_provenance.csv`).
 
 7. **Ten rounds under-identify the wider vocabulary.** A game rarely visits all
    four conditioning states, so rules differing only in an unvisited state are
@@ -146,10 +164,36 @@ model × λ × language cell), 10 rounds per game.
 
 8. **The 0.90 confidence floor is a convention, not a valley.** It was chosen on
    the 30-round corpus, where the posterior is bimodal. Over ten rounds it is
-   not: moving the floor from 0.80 to 0.95 moves the abstained share from 0.16
-   to 0.28 (`T_FR40b_floor_sensitivity.csv`, shown in FR25b).
+   not: moving the floor from 0.80 to 0.90 to 0.95 moves the abstained share
+   from 0.200 to 0.257 to 0.324 (`T_FR40b_floor_sensitivity.csv` and
+   `T_S06_floor_sensitivity.csv`). The deduced and rule-set shares are 0.255 and
+   0.083 at every floor, because the deductive stage runs first, so no claim
+   about *provable* coverage depends on the cut. It is defended instead by the
+   risk-coverage curve in `T_S01`.
 
 9. **FR18 is measured on synthetic play, not on LLM play.** It is the
    instrument's calibration, where the generating strategy is known. It says
    nothing about how well an archetype label describes an LLM — that is FR19b
    and FR22.
+
+## `T_S*`: the manuscript tables (`scripts/33_strategy_stats.py`)
+
+| table | what it holds |
+|---|---|
+| `T_S01` | risk–coverage sweep of the abstention floor on synthetic play, at two noise levels |
+| `T_S02` | the deductive stage on synthetic play: unique / set / none, and truth recovery |
+| `T_S03`, `T_S04` | **provenance per label**, pooled and per model — the paper's headline |
+| `T_S05`, `T_S06` | the four-verdict census, and its sensitivity to the floor |
+| `T_S07`, `T_S08` | strategy mix by condition; mix-shift tests with dyad-level permutation nulls (incl. the four-strategy re-test) |
+| `T_S09`–`T_S12` | the 69-rule extended vocabulary vs its shuffled null, by bucket and model, and the rules that land |
+| `T_S13`, `T_S14` | switching and alternation statistics, with the alternation excess over 2p(1−p) |
+| `T_S15`, `T_S16` | cluster sweep on the abstained set: silhouette, bootstrap ARI, centres |
+| `T_S17` | distance to the nearest canonical corner of the reactive square, by bucket |
+| `T_S18` | within-game coherence: correlation between the two halves of a game |
+| `T_S19`, `T_S20` | four-round motif lift over a within-game shuffle; memory-one contingency |
+| `T_S21`, `T_S22` | **the two horizon controls** — per-rule deduction on synthetic play, and the opponent-affordance restriction |
+
+`T_S21`/`T_S22` are the answer to the first objection any reviewer raises: they
+show the deductive stage pins TFT and WSLS as often as AllC and AllD at ten
+rounds, and that restricting to games whose opponent actually varied its action
+does not rescue the reactive share.

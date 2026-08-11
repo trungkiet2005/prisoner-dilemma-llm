@@ -1,4 +1,4 @@
-\begin{thebibliography}{37}
+\begin{thebibliography}{33}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -171,50 +171,11 @@ Lisa~P. Argyle, Ethan~C. Busby, Nancy Fulda, Joshua~R. Gubler, Christopher
 \newblock \emph{Political Analysis}, 31\penalty0 (3):\penalty0 337--351, 2023.
 \newblock \doi{10.1017/pan.2023.2}.
 
-\bibitem[Lu et~al.(2022)Lu, Bartolo, Moore, Riedel, and
-  Stenetorp]{lu2022fantastically}
-Yao Lu, Max Bartolo, Alastair Moore, Sebastian Riedel, and Pontus Stenetorp.
-\newblock Fantastically ordered prompts and where to find them: Overcoming
-  few-shot prompt order sensitivity.
-\newblock In \emph{Proceedings of the 60th Annual Meeting of the Association
-  for Computational Linguistics (ACL)}, pages 8086--8098, 2022.
-\newblock \doi{10.18653/v1/2022.acl-long.556}.
-
-\bibitem[Sclar et~al.(2024)Sclar, Choi, Tsvetkov, and
-  Suhr]{sclar2024quantifying}
-Melanie Sclar, Yejin Choi, Yulia Tsvetkov, and Alane Suhr.
-\newblock Quantifying language models' sensitivity to spurious features in
-  prompt design, or: How i learned to start worrying about prompt formatting.
-\newblock In \emph{International Conference on Learning Representations
-  (ICLR)}, 2024.
-
-\bibitem[Deshpande et~al.(2023)Deshpande, Murahari, Rajpurohit, Kalyan, and
-  Narasimhan]{deshpande2023toxicity}
-Ameet Deshpande, Vishvak Murahari, Tanmay Rajpurohit, Ashwin Kalyan, and
-  Karthik Narasimhan.
-\newblock Toxicity in {ChatGPT}: Analyzing persona-assigned language models.
-\newblock In \emph{Findings of the Association for Computational Linguistics:
-  EMNLP 2023}, pages 1236--1270, 2023.
-\newblock \doi{10.18653/v1/2023.findings-emnlp.88}.
-
-\bibitem[Salewski et~al.(2023)Salewski, Alaniz, Rio-Torto, Schulz, and
-  Akata]{salewski2023context}
-Leonard Salewski, Stephan Alaniz, Isabel Rio-Torto, Eric Schulz, and Zeynep
-  Akata.
-\newblock In-context impersonation reveals large language models' strengths and
-  biases.
-\newblock In \emph{Advances in Neural Information Processing Systems
-  (NeurIPS)}, volume~36, 2023.
-
-\bibitem[von Neumann and Morgenstern(1944)]{vonneumann1944theory}
-John von Neumann and Oskar Morgenstern.
-\newblock \emph{Theory of Games and Economic Behavior}.
-\newblock Princeton University Press, Princeton, NJ, 1944.
-
-\bibitem[Luce and Raiffa(1957)]{luce1957games}
-R.~Duncan Luce and Howard Raiffa.
-\newblock \emph{Games and Decisions: Introduction and Critical Survey}.
-\newblock Wiley, New York, 1957.
+\bibitem[Hochreiter and Schmidhuber(1997)]{hochreiter1997long}
+Sepp Hochreiter and J{\"u}rgen Schmidhuber.
+\newblock Long short-term memory.
+\newblock \emph{Neural Computation}, 9\penalty0 (8):\penalty0 1735--1780, 1997.
+\newblock \doi{10.1162/neco.1997.9.8.1735}.
 
 \bibitem[Buscemi et~al.(2025)Buscemi, Proverbio, Di~Stefano, Han, Castignani,
   and Li{\`o}]{fairgame2025}
@@ -226,11 +187,15 @@ Alessio Buscemi, Daniele Proverbio, Alessandro Di~Stefano, The~Anh Han, German
   Artificial Intelligence}, pages 4097--4104. IOS Press, 2025.
 \newblock \doi{10.3233/FAIA251300}.
 
-\bibitem[Hochreiter and Schmidhuber(1997)]{hochreiter1997long}
-Sepp Hochreiter and J{\"u}rgen Schmidhuber.
-\newblock Long short-term memory.
-\newblock \emph{Neural Computation}, 9\penalty0 (8):\penalty0 1735--1780, 1997.
-\newblock \doi{10.1162/neco.1997.9.8.1735}.
+\bibitem[von Neumann and Morgenstern(1944)]{vonneumann1944theory}
+John von Neumann and Oskar Morgenstern.
+\newblock \emph{Theory of Games and Economic Behavior}.
+\newblock Princeton University Press, Princeton, NJ, 1944.
+
+\bibitem[Luce and Raiffa(1957)]{luce1957games}
+R.~Duncan Luce and Howard Raiffa.
+\newblock \emph{Games and Decisions: Introduction and Critical Survey}.
+\newblock Wiley, New York, 1957.
 
 \bibitem[Schwarz(1978)]{schwarz1978estimating}
 Gideon Schwarz.
@@ -243,18 +208,6 @@ Gideon Schwarz.
 Bradley Efron and Robert~J. Tibshirani.
 \newblock \emph{An Introduction to the Bootstrap}.
 \newblock Chapman and Hall/CRC, New York, 1993.
-
-\bibitem[Tversky and Kahneman(1981)]{tversky1981framing}
-Amos Tversky and Daniel Kahneman.
-\newblock The framing of decisions and the psychology of choice.
-\newblock \emph{Science}, 211\penalty0 (4481):\penalty0 453--458, 1981.
-\newblock \doi{10.1126/science.7455683}.
-
-\bibitem[Kahneman and Tversky(1979)]{kahneman1979prospect}
-Daniel Kahneman and Amos Tversky.
-\newblock Prospect theory: An analysis of decision under risk.
-\newblock \emph{Econometrica}, 47\penalty0 (2):\penalty0 263--291, 1979.
-\newblock \doi{10.2307/1914185}.
 
 \bibitem[Paiva et~al.(2018)Paiva, Santos, and Santos]{paiva2018engineering}
 Ana Paiva, Fernando~P. Santos, and Francisco~C. Santos.
@@ -269,5 +222,17 @@ Fernando~P. Santos, Francisco~C. Santos, and Jorge~M. Pacheco.
   cooperation.
 \newblock \emph{Nature}, 555:\penalty0 242--245, 2018.
 \newblock \doi{10.1038/nature25763}.
+
+\bibitem[Tversky and Kahneman(1981)]{tversky1981framing}
+Amos Tversky and Daniel Kahneman.
+\newblock The framing of decisions and the psychology of choice.
+\newblock \emph{Science}, 211\penalty0 (4481):\penalty0 453--458, 1981.
+\newblock \doi{10.1126/science.7455683}.
+
+\bibitem[Kahneman and Tversky(1979)]{kahneman1979prospect}
+Daniel Kahneman and Amos Tversky.
+\newblock Prospect theory: An analysis of decision under risk.
+\newblock \emph{Econometrica}, 47\penalty0 (2):\penalty0 263--291, 1979.
+\newblock \doi{10.2307/1914185}.
 
 \end{thebibliography}

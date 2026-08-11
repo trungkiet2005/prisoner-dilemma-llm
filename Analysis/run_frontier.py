@@ -1,10 +1,15 @@
-"""Regenerate the frontier-only figure suite (FR1-FR26) from Dataset/.
+"""Regenerate the frontier suite and the manuscript figures from Dataset/.
 
     python Analysis/run_frontier.py             # everything
     python Analysis/run_frontier.py --no-build  # reuse the parsed parquet
 
-Output goes to `Analysis/figures/frontier/` (PDF + 600 dpi PNG) and
-`Analysis/tables/T_FR*`.  Nothing is trained here: FR18-FR26 read the strategy
+Two deliverables come out of this one pipeline.  Steps 20-30 write the
+supplementary suite FR1-FR29 to `Analysis/figures/frontier/` together with
+`Analysis/tables/T_FR*`.  Steps 33-34 then write `T_S*` and the six main-text
+figures straight into `paper/figures/`, reading their panel numbers from those
+tables so a main-text panel cannot drift from the table behind it.
+
+Nothing is trained here: everything downstream of step 26 reads the strategy
 classifier `models/strategy_lstm_h10.pt`, which `05_train_classifier.py`
 produces, and the frontier games are 10 rounds so that checkpoint's horizon
 matches exactly.
@@ -37,6 +42,8 @@ STEPS = [
     ("28_fig_frontier_residual.py", "FR23-FR26 the residual and the abstention set", False),
     ("29_fig_frontier_payoff_rules.py", "FR27-FR28 payoff space, distance to each rule", False),
     ("30_fig_frontier_latent.py", "FR29 what the read-out model has learned", False),
+    ("33_strategy_stats.py", "T_S01-T_S22 statistics for the manuscript", False),
+    ("34_fig_paper_strategy.py", "the six main-text figures -> paper/figures/", False),
 ]
 
 

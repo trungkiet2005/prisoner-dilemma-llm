@@ -1,4 +1,4 @@
-# Manuscript: "Framing, not structure: an invariance audit of LLM cooperation in the IPD"
+# Manuscript: "Deduce before you label: strategy attribution for large language model agents in the iterated prisoner's dilemma"
 
 Revision of **arXiv:2601.19082** ("Payoff scaling shapes cooperation in LLM
 agents across languages") prepared for the *Interface Focus* theme issue
@@ -13,69 +13,99 @@ cd paper
 pdflatex main && bibtex main && pdflatex main && pdflatex main
 ```
 
-Compiles clean: 0 errors, 0 undefined references, 0 overfull boxes above
-10 pt, 19 pages.
+Compiles clean: 0 errors, 0 undefined references, one overfull box of 4.6 pt,
+21 pages.
 
-## What changed relative to the arXiv version
+## The spine of the paper
 
-1. **A polarity bug in the analysis pipeline was found and fixed.**
-   `Analysis/pdlib/ingest.py` mapped `OptionA -> Cooperate`. The FAIRGAME
-   templates state the cells as *penalties* to be *minimised*, so OptionA is
-   the dominant, **defecting** action and OptionB is cooperation - exactly as
-   §2.2 of the arXiv paper says. The arXiv paper was right; the pipeline was
-   wrong. Every cooperation rate in the repo was `1 - x`, and the payoff-scale
-   and endgame effects had reversed signs.
+The manuscript is organised around **strategy attribution**, not around a
+cooperation rate. Its claim is that a strategy label is a claim about the
+process that produced a trajectory, and that the procedures normally used to
+assign one return an answer for every input, so the label and the evidence for
+it have to be reported separately.
 
-   Verified by reproducing Fig. 2a of the arXiv paper from these tables:
-   mean absolute error **0.002** under the corrected mapping, **0.171** under
-   the old one. Independent confirmations: greed/fear come out 0.20/0.40 as the
-   penalty framing requires (they were swapped before), and the endgame now
-   shows decay in three of four models with Claude the exception - the exact
-   pattern §2.2 of the arXiv paper reports.
+The read-out has four verdicts and they are never pooled:
 
-   Both figure suites (`run_frontier.py`, `run_all.py`) were rebuilt.
+| verdict | how it is reached | share of the 4,800 agent-games |
+|---|---|---|
+| **deduced** | exactly one canonical rule reproduces the whole trajectory | 25.5% |
+| **rule set** | several do, and ten rounds cannot separate them | 8.3% |
+| **nearest rule** | none does; the LSTM is above the 0.90 floor | 40.5% |
+| **abstained** | none does; the LSTM is below the floor | 25.7% |
 
-2. **New finding: the assigned persona inverts.** Agents told they are
-   cooperative open cooperatively 31% of the time; told they are selfish, 91%.
-   Holds in every model, every language and every payoff scale, strongest at
-   the opening move and decaying to nothing by round ten.
+Headline results, in the order the paper makes them:
 
-3. **New account tying the failures together**: the models appear to read the
-   stated penalties as rewards. This explains the persona inversion, the
-   direction of the payoff-scale effect, and why all four models cooperate
-   readily after being handed the largest number on the table.
-
-4. **Framing-controlled language test.** The templates do not state the
-   objective identically across languages (en/fr/vn: minimise a penalty;
-   ar/cn: maximise a reward). Re-testing within the three languages that share
-   one framing leaves the effect significant for two of four models, not three.
+1. **The read-out is worth something.** On synthetic play with known generating
+   rules the deductive stage fires on 80.3% of trajectories and is right 99.8%
+   of the time; the LSTM reaches 0.984 at ten rounds against a Bayes ceiling of
+   0.993; the 0.90 floor removes 59% of the residual error on unseen 10% noise.
+   Generous tit-for-tat, held out of training, is absorbed as TFT 90% of the
+   time, which is what a read-out without an abstention will do to any unknown
+   strategy.
+2. **92% of what is deduced is constant play.** A *reactive* rule (TFT or WSLS)
+   is proved in 2.0% of agent-games and a reactive label is assigned to 30.3%,
+   a factor of 15.3. 95% of WSLS labels and 91% of TFT labels are
+   nearest-neighbour statements. Mistral Large is labelled WSLS in 14.3% of its
+   games and plays an exact WSLS game in none of its 1,200.
+3. **Not a horizon artefact.** Two controls: at ten rounds the same matcher
+   pins 80.8% of TFT-generated and 79.6% of WSLS-generated synthetic play, and
+   restricting to the 66.1% of agent-games whose opponent history affords the
+   distinction moves the deduced-reactive share only from 2.0% to 2.5%.
+4. **The mix is a property of the prompt.** All 16 model x factor comparisons
+   move the strategy distribution beyond a dyad-level permutation null.
+   Rescaling payoffs, whose irrelevance is a theorem, moves it by up to 0.34 in
+   total variation; GPT-4o's AllD share goes 0.57 -> 0.27 -> 0.24 across the
+   three scales. The persona runs backwards: Mistral told it is cooperative is
+   labelled AllD in 57% of games, told it is selfish in 17%.
+5. **The abstained quarter has structure.** An extended vocabulary of 69
+   candidates reproduces 43.3% of it exactly against a 10.1% shuffled null; two
+   thirds of the fits are two-phase rules with a median switch at round two;
+   65.5% of switches run *towards* cooperation. Motif mining rejects the
+   obvious alternative: alternation sits at chance (CDCD lift 1.08) while runs
+   and single switches are enriched (DDDD 1.59, CCCC 1.46, DDCC 1.25).
+6. **Split verdict.** No fifth archetype: silhouette falls monotonically in `k`.
+   Within-game coherence is 0.985 for deduced play and 0.32 for everything
+   else, so the majority of unnamed play is drift rather than a missing rule.
 
 ## Files
 
 | Path | What it is |
 |---|---|
 | `main.tex` | The manuscript. Venue-neutral: `article` class, single column, numbered references. |
-| `references.bib` | 38 entries. All previously flagged citations are now resolved against the arXiv paper's reference list. |
-| `figures/fig1_design.pdf` | Figure 1 - penalty-framed stage game and crossed design. |
-| `figures/fig2_invariance.pdf` | Figure 2 - the three invariance violations. |
-| `figures/fig3_strategy.pdf` | Figure 3 - what the play is not. |
+| `references.bib` | 37 entries. |
+| `figures/fig1_setup.pdf` | Fig. 1 - stage game, crossed design, and the read-out with its four verdicts. |
+| `figures/fig2_readout.pdf` | Fig. 2 - validation on synthetic play: identifiability, risk-coverage, the held-out rule. |
+| `figures/fig3_labels.pdf` | Fig. 3 - what a strategy label is made of. **The headline figure.** |
+| `figures/fig4_conditions.pdf` | Fig. 4 - the mix moves with payoff scale, language and persona. |
+| `figures/fig5_abstention.pdf` | Fig. 5 - anatomy of the abstained set: tied pairs, corner distance, motifs. |
+| `figures/fig6_hidden.pdf` | Fig. 6 - the extended vocabulary, the rules that land, strategy vs drift. |
 
-Figures are regenerated by `Analysis/scripts/31_fig_paper_main.py`, which reads
-the tables written by `Analysis/run_frontier.py`. Captions live in the LaTeX
-float, not baked into the PDF canvas.
+The six `fig*_*.pdf` files above are regenerated by
+`Analysis/scripts/34_fig_paper_strategy.py`, which reads `tables/T_S*` (written
+by `33_strategy_stats.py`) and `tables/T_FR*` (written by `run_frontier.py`).
+Both steps are wired into `python Analysis/run_frontier.py`. Captions live in
+the LaTeX float, not baked into the PDF canvas.
+
+The six figures of the **previous, invariance-audit draft** (`fig1_design`,
+`fig2_aggregate`, `fig2_invariance`, `fig3_strategy`, `fig6_misread`,
+`fig7_residual`) were deleted from this directory on 2026-08-12. They remain
+regenerable by `scripts/31_fig_paper_main.py`, which is kept for provenance and
+is **not** wired into `run_frontier.py`.
 
 ## Budget against the journal's guidance
 
 | Item | Guidance | Current |
 |---|---|---|
-| Body words | ~8000 | ~5800 |
-| Abstract | ≤200 | 195 |
-| Figures | ~3 medium | 3 |
-| Tables | ~250 words | 1 table, ~140 words |
+| Body words | ~8000 | 8005 |
+| Abstract | <=200 | 200 |
+| Figures | ~3 medium | 6 (kept deliberately) |
+| Tables | ~250 words | 1 table, ~250 words |
 
-Roughly 2000 words of headroom remain if reviewers ask for expansion - the
-obvious candidates are an EGT baseline section (as in the arXiv version) and
-the open-weight replication.
+Six figures is a deliberate choice: the argument has six steps and each figure
+carries one. If the editor pushes back, the demotion order is fig. 2 (read-out
+validation) then fig. 5 (abstention anatomy), which takes the main text to four
+without removing a claim - the validation numbers are already quoted in §3.1 and
+the SI carries FR18-FR29 on the same material.
 
 ## Before submission
 
@@ -84,20 +114,27 @@ the open-weight replication.
 2. **Deposit the data.** The journal requires code and data available to
    reviewers at first submission and in a DOI-issuing archive on publication.
 3. **Supplementary material.** The frontier suite
-   (`Analysis/figures/frontier/FR1`-`FR29`) and the CSV tables in
-   `Analysis/tables/` are the intended SI.
-4. **Decide how to handle the arXiv version.** The polarity correction does
-   not change the arXiv paper's own claims - its Figure 2 is already correct -
-   but the repository it points to now produces different numbers than it did.
-   A note on the arXiv listing would be prudent.
+   (`Analysis/figures/frontier/FR1`-`FR29`) plus the CSV tables in
+   `Analysis/tables/` (`T_FR*` and `T_S*`) are the intended SI. Cross-reference
+   at least `T_S01` (risk-coverage), `T_S03`/`T_S04` (label provenance),
+   `T_S08` (mix-shift tests), `T_S11` (rules that fit), `T_S19` (motifs) and
+   `T_S21`/`T_S22` (the two horizon controls).
+4. **Decide how to handle the arXiv version.** The polarity correction recorded
+   in `Analysis/pdlib/ingest.py` does not change the arXiv paper's own claims,
+   but the repository it points to now produces different numbers. A note on
+   the arXiv listing would be prudent.
 5. **AI-usage disclosure**: the LSTM strategy classifier is part of the
    *method*, not a writing tool; describe the two separately.
 
-## Highest-value next experiment
+## Highest-value next experiments
 
-Restate the identical matrix in explicit **reward** form, where the
-cooperative action no longer carries the largest number, and re-run. If the
-payoff-scale effect and the persona inversion both vanish, the
-frame-misreading account in §3.5 is confirmed and the "LLMs are more
-cooperative than EGT predicts" result needs re-reading. This is cheap: it is
-one template change and one sweep.
+1. **Reasoning models.** The read-out is the contribution; running it on models
+   with explicit reasoning procedures is what decides whether the 2.0% figure
+   is about this generation of models or about LLM agents generally.
+2. **Reward-framed replication.** Restate the identical matrix in explicit
+   reward form, where the cooperative action no longer carries the largest
+   number. If the payoff-scale shift and the persona inversion both vanish, the
+   reward-reading account in §3.4 is confirmed. One template change, one sweep.
+3. **A longer horizon.** Thirty rounds would pin single memory-one rules
+   instead of sets (1.9% of games are pinned at ten) and would let the
+   two-phase finding be tested against a genuine endgame.
