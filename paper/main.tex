@@ -1,7 +1,7 @@
 % ---------------------------------------------------------------------------
 % Framing, not structure: an invariance audit of LLM cooperation in the IPD
 %
-% Revision of arXiv:2601.19082 prepared for the Interface Focus theme issue
+% Prepared for the Interface Focus theme issue
 % "Machine behaviour in the age of large language models".  Venue-neutral:
 % single column, standard article class, numbered references.
 %
@@ -138,13 +138,14 @@ Each of these results is stated in the vocabulary whose applicability we test
 - a rate, or an archetype - so what follows is not a competing measurement
 but a prior question about what such measurements are measurements of.
 
-The present study is a revision and extension of our earlier analysis of the
-same corpus \citep{huynh2026payoff}, which established that LLM cooperation
-rises with payoff magnitude, in direct contradiction to an evolutionary game
-theory (EGT) baseline, and attributed the divergence to alignment training and
-to the cooperative bias of human training data. That empirical result survives
-here, on a corpus extended by a fourth model; what we add is the prior
-question of whether the movement is a strategic response at all. Three
+One regularity in this corpus is easy to state and hard to place: in three of
+the four models, cooperation rises with payoff magnitude, where an evolutionary
+game theory (EGT) account of the same matrix predicts the opposite, that
+defection should take over as stakes grow. The reading such a result invites is
+that alignment training and the cooperative bias of human training data pull
+the models away from the EGT baseline in the prosocial direction, and we take
+that reading seriously in the discussion. The question we put first, however,
+is prior to it: whether the movement is a strategic response at all. Three
 questions organise the work:
 
 \begin{enumerate}
@@ -196,10 +197,10 @@ structures, game horizon, LLM backends and languages; at runtime FAIRGAME
 combines these with language-specific prompt templates, simulates repeated
 normal-form games and logs round-by-round trajectories. We adopt it for two
 reasons beyond convenience: its multilingual templates are the object of the
-language manipulation rather than an incidental choice of wording, and reusing
-them keeps this corpus commensurable with the one analysed in
-\citet{huynh2026payoff}, of which the present study is an extension. We add
-payoff scaling for the prisoner's dilemma.
+language manipulation rather than an incidental choice of wording, and taking
+them as given rather than authoring our own keeps the wording of the
+manipulation out of our hands. We add payoff scaling for the prisoner's
+dilemma.
 
 \subsection{Stage game and payoff framing}
 \label{sec:stage}
@@ -218,14 +219,18 @@ normalised descriptors of the dilemma are greed $(T-R)/(T-S) = 0.20$ and
 fear $(P-S)/(T-S) = 0.40$.
 
 The penalty framing is inherited from FAIRGAME rather than chosen here, and we
-retain it so that the corpus stays comparable with the earlier analysis;
+retain the templates unchanged rather than rewriting them;
 \S\ref{sec:misread} argues that the choice turns out to be considerably more
 consequential than it looks. We flag the polarity explicitly because it is easy
 to invert and because inverting it maps every cooperation rate
 $x \mapsto 1-x$ and reverses the sign of both the payoff-scale and the endgame
-effects. Our analysis pipeline reproduces the cooperation rates of
-\citet{huynh2026payoff} to a mean absolute error of 0.002 under the mapping
-above, against 0.171 under the inverted one.
+effects. It is not, however, a matter of interpretation. FAIRGAME logs the
+realised payoff alongside every action, and those values fix the assignment:
+mutual Option B returns the lower symmetric penalty $2\lam$ to both agents,
+mutual Option A returns $6\lam$, and Option A against Option B returns nothing
+to the defector and $10\lam$ to the victim. This assignment reproduces the
+logged payoff exactly on all 24{,}000 rounds of the corpus; the inverted
+assignment reproduces none of them.
 
 \subsection{The manipulations and their nulls}
 
@@ -531,10 +536,10 @@ total swings of 0.24 and 0.23. Gemini shows a smaller but non-zero slope of
 $0.030$ ($\ci{0.007}{0.053}$), and only Mistral Large is consistent with
 invariance at $0.015$ ($\ci{-0.012}{0.043}$).
 
-The direction reproduces the central empirical result of
-\citet{huynh2026payoff} on this corpus: cooperation \emph{rises} with the
-stated stakes, where an evolutionary account of the same matrix predicts that
-defection should take over as stakes grow. What the invariance framing adds is
+The direction is the one flagged in the introduction: cooperation \emph{rises}
+with the stated stakes, where an evolutionary account of the same matrix
+predicts that defection should take over as stakes grow. What the invariance
+framing adds is
 that the movement cannot be a strategic response in either direction, because
 there is no strategic difference to respond to. Note also that the effect is
 not monotone in the way a magnitude heuristic would predict: for Claude and
@@ -710,8 +715,10 @@ towards mutual defection. Three of four models show it
 (figure~\ref{fig:strategy}a): GPT-4o falls from 0.61 to 0.41 between rounds one
 and ten ($-0.20$), Gemini from 0.76 to 0.68 ($-0.08$) and Mistral from 0.60 to
 0.52 ($-0.08$). Claude is the exception, rising from 0.47 to 0.74 ($+0.27$).
-This reproduces the endgame pattern reported for the same corpus by
-\citet{huynh2026payoff}, including the Claude exception.
+The exception is not a marginal one: Claude's rise exceeds any of the three
+decays in magnitude, so a panel-level endgame trend would average to almost
+nothing and would report the composition of the panel rather than a shared
+mechanism.
 
 \paragraph{No memory-one rule.} The fingerprints place every model far from
 every canonical strategy (figure~\ref{fig:strategy}b). The nearest archetype is
@@ -836,8 +843,8 @@ per-manipulation profile that must be measured.
 
 \subsection{Reinterpreting the cooperative bias}
 
-Our earlier analysis of this corpus \citep{huynh2026payoff} read the rise of
-cooperation with stakes as evidence of alignment training and of the
+The natural reading of the rise of cooperation with stakes, and the one we
+began with, is that it is evidence of alignment training and of the
 cooperative bias of human training data, the LLM distribution pulling away
 from an EGT baseline in the prosocial direction. The persona inversion
 suggests a complementary and less flattering mechanism. If the models are

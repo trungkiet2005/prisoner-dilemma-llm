@@ -1,4 +1,4 @@
-\begin{thebibliography}{38}
+\begin{thebibliography}{37}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -215,16 +215,6 @@ John von Neumann and Oskar Morgenstern.
 R.~Duncan Luce and Howard Raiffa.
 \newblock \emph{Games and Decisions: Introduction and Critical Survey}.
 \newblock Wiley, New York, 1957.
-
-\bibitem[Huynh et~al.(2026)Huynh, Duy-Minh, Cao, Le, Nguyen, Nguyen-Lam,
-  Nguyen-Vo, Pham, Pham, Than, Tran, Tran, Tran-Le, Buscemi, Trang, and
-  Han]{huynh2026payoff}
-Trung-Kiet Huynh, Dao-Sy Duy-Minh, Thanh-Bang Cao, Phong-Hao Le, Hong-Dan
-  Nguyen, Phu-Quy Nguyen-Lam, Minh-Luan Nguyen-Vo, Hong-Phat Pham, Phu-Hoa
-  Pham, Thien-Kim Than, Chi-Nguyen Tran, Huy Tran, Gia-Thoai Tran-Le, Alessio
-  Buscemi, Le~Hong Trang, and The~Anh Han.
-\newblock Payoff scaling shapes cooperation in {LLM} agents across languages.
-\newblock \emph{arXiv preprint arXiv:2601.19082}, 2026.
 
 \bibitem[Buscemi et~al.(2025)Buscemi, Proverbio, Di~Stefano, Han, Castignani,
   and Li{\`o}]{fairgame2025}
