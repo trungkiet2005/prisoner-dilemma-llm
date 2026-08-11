@@ -178,7 +178,7 @@ unexplained and exceed a shuffled null by only about 0.2, because the play
 conditions on two rounds of history rather than one
 (\S\ref{sec:strategy}--\S\ref{sec:residual}).
 
-\section{Material and methods}
+\section{Methods}
 
 The design is built backwards from the tests. Each factor we cross - payoff
 magnitude, prompt language, assigned persona - is one whose effect on an
@@ -188,7 +188,8 @@ is no movement at all. Everything the manipulations do not touch is held
 fixed: the same stage game, the same horizon, the same interface between agent
 and game, the same decoding settings.
 
-\subsection{Framework}
+\subsection{The game and its manipulations}
+\label{sec:stage}
 
 FAIRGAME (Framework for AI Agents Bias Recognition using Game Theory)
 \citep{fairgame2025} provides the computational infrastructure. Experimental
@@ -201,9 +202,6 @@ language manipulation rather than an incidental choice of wording, and taking
 them as given rather than authoring our own keeps the wording of the
 manipulation out of our hands. We add payoff scaling for the prisoner's
 dilemma.
-
-\subsection{Stage game and payoff framing}
-\label{sec:stage}
 
 Agents played a symmetric two-player prisoner's dilemma (figure~\ref{fig:design}a).
 The templates state the cell values as \emph{penalties} - years of
@@ -232,10 +230,9 @@ to the defector and $10\lam$ to the victim. This assignment reproduces the
 logged payoff exactly on all 24{,}000 rounds of the corpus; the inverted
 assignment reproduces none of them.
 
-\subsection{The manipulations and their nulls}
-
-Three factors are manipulated, and what distinguishes the first two is that
-their predicted effect is not small but exactly zero.
+Three factors are manipulated on top of that fixed game, and what
+distinguishes the first two is that their predicted effect is not small but
+exactly zero.
 
 \paragraph{Payoff magnitude.} Every cell was multiplied by a payoff scale
 $\lam \in \{0.1, 1, 10\}$. Because $\lam > 0$ this is a positive affine
@@ -270,7 +267,7 @@ manipulation the focal agent can learn about only through play. Here it is the
 direction of the effect, rather than its size, that the semantics of the words
 predict.
 
-\subsection{Design, prompting and decoding}
+\subsection{Design and procedure}
 
 The design crossed four models - Claude 3.5 Haiku, Gemini 3.5 Flash-Lite,
 GPT-4o and Mistral Large - with three payoff scales, five prompt languages,
@@ -300,10 +297,22 @@ apparent cooperation rate of 1.0 that is an artefact of the parser rather than
 a measurement of the model. Parse-failure and fallback rates were logged for
 every cell and required to be below 0.02. Sampling temperature follows each
 provider's recommended default, as in the FAIRGAME protocol - 1.0 for
-Claude, Gemini and GPT-4o, 0.3 for Mistral Large - and is listed among the
-declared confounds in \S\ref{sec:confounds}.
+Claude, Gemini and GPT-4o, 0.3 for Mistral Large.
 
-\subsection{Behavioural measures}
+\label{sec:confounds}
+Two features of the design are confounded with model identity, and we declare
+them here rather than leave them to be discovered. The Gemini arm was run with
+the round count disclosed to the agents; the Claude, GPT-4o and Mistral arms
+with the horizon hidden, so the Gemini column is a ``model $\times$ horizon''
+column and is marked as such in figure~\ref{fig:design}b. Sampling temperature,
+fixed by the provider default above, likewise cannot be separated from model
+identity; because it is constant within a model it cannot generate any of the
+within-model effects reported below, but between-model comparisons carry it. A
+third candidate, the fact that the templates do not state the objective
+identically in every language, is a result rather than a nuisance and is
+treated in \S\ref{sec:language}.
+
+\subsection{Measures and strategy read-out}
 
 The primary measure is the cooperation rate, the proportion of a game's ten
 rounds on which an agent chose Option B. Because both agents of every dyad
@@ -319,8 +328,6 @@ canonical rule at a known point: AllC at $(1,1,1,1)$, AllD at $(0,0,0,0)$,
 tit-for-tat at $(1,0,1,0)$, win-stay lose-shift at $(1,0,0,1)$ and grim trigger
 at $(1,0,0,0)$. Niceness is $p(C)$ on round one and reciprocity is
 $p(C \mid C_{-1}) - p(C \mid D_{-1})$.
-
-\subsection{Strategy read-out}
 
 Assigning a strategy label was done in two stages, kept distinct because they
 license different claims. The first is exact and deductive: for each
@@ -364,7 +371,7 @@ of the game - against one another by the Bayesian information criterion
 \citep{schwarz1978estimating} on identical rows, so that the comparison is
 about history rather than sample size.
 
-\subsection{Statistical procedures}
+\subsection{Statistical analysis}
 
 All intervals are 95\% bootstrap confidence intervals over 2{,}000 resamples
 that resample whole dyads \citep{efron1993introduction}. This is
@@ -385,20 +392,6 @@ $+0.017$. The ten replicates of a cell share a prompt and their spread is
 1.3--1.6 times what independent rounds would produce. Cell means reproduce
 across a random split of the dyads with Spearman--Brown reliability of
 0.90--0.97.
-
-\subsection{Declared confounds}
-\label{sec:confounds}
-
-The Gemini arm was run with the round count disclosed to the agents; the
-Claude, GPT-4o and Mistral arms with the horizon hidden. The Gemini column is
-therefore ``model $\times$ horizon'' and is marked as such in
-figure~\ref{fig:design}b. Sampling temperature likewise varies with the
-provider's default and cannot be separated from model identity; because it is
-constant within a model it cannot generate any of the within-model effects
-reported below, but between-model comparisons carry it. The third candidate,
-the fact that the templates do not state the objective identically in every
-language, is a result rather than a nuisance and is treated in
-\S\ref{sec:language}.
 
 \section{Results}
 
