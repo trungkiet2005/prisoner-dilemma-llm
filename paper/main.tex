@@ -44,27 +44,24 @@ language model cooperation in the iterated prisoner's dilemma}
 
 \begin{abstract}
 \noindent
-Large language models increasingly act as agents that negotiate and
-coordinate, making their cooperation an AI governance question. We ask not how
-much they cooperate but whether what we call cooperation is a property of the
-game at all. Using a fully crossed corpus of 2{,}400 iterated
-prisoner's dilemma dyads across four frontier models, three payoff magnitudes,
-five languages and four persona pairings, we test two manipulations whose
-irrelevance is a theorem rather than a hypothesis. Multiplying every payoff by
-a positive constant leaves the game strategically identical, yet moves
-cooperation by up to 0.24; changing the prompt language with objective framing
-held fixed moves it by up to 0.15. Stranger still: agents told they are
-cooperative open cooperatively 31\% of the time, while agents told they are
-selfish do so 91\%, in every model and language. This inversion, the direction
-of the payoff-scale effect and the shape of the memory-one fingerprints are
-jointly explained if the models read the stated penalties as rewards,
-pattern-matching the matrix to a canonical prisoner's dilemma rather than
-solving the stated problem. Strategy labels fare no better: no canonical rule
-fits in half to seven-eighths of agent-games, and widening the vocabulary to
-all 32 memory-one rules and to one regime switch still leaves 15--42\%
-unexplained while beating a shuffled null by only about 0.2. Cooperation rates
-and strategy labels reported without an invariance audit may describe the
-prompt rather than the agent.
+Large language models increasingly negotiate and coordinate as agents, making
+their cooperation a governance question. The literature answers with a
+cooperation rate, or a strategy label like tit-for-tat. Both presuppose that
+what is measured is a property of the game; we test that presupposition.
+Across 2{,}400 iterated prisoner's dilemmas crossing four non-reasoning
+models, three payoff scales, five languages and four persona pairings, we
+rescale every payoff by a positive constant - whose irrelevance is a theorem
+- and restate the rules in another language. Both move cooperation in two of
+four models, by up to 0.24 and 0.15, while replicates of one prompt disagree
+more than all manipulations combined. Stranger still, the assigned persona
+moves behaviour against its own meaning: agents told they are selfish open
+cooperatively 91\% of the time, against 31\% told they are cooperative, in
+every model and language. One hypothesis covers the inversion, the sign of the
+scale effect and the memory-one fingerprints: the models read the stated
+penalties as rewards. Strategy labels fare no better; no canonical rule fits
+50--86\% of agent-games, and widening the vocabulary buys only 0.2 coverage
+above a shuffled null. Such numbers may describe the prompt rather than the
+agent.
 \end{abstract}
 
 \noindent\textbf{Keywords:} machine behaviour; large language models; iterated
@@ -73,63 +70,82 @@ multi-agent systems
 
 \section{Introduction}
 
-Large language models (LLMs) are increasingly deployed as \emph{agents} in
-recommendation systems, negotiation tools and multi-agent assistants. In these
-settings they face cooperation dilemmas in which behaviour emerges from
-strategic interaction rather than from isolated model outputs, and the
-resulting behaviour is shaped by training, prompting, role assignment and
-linguistic framing, with direct implications for safety and governance
-\citep{rahwan2019machine,dafoe2021cooperative}. The proposal that machines be
-studied as behaving entities, with the observational tools of ethology and the
-experimental discipline of the behavioural sciences, has become considerably
-more urgent as the population of interacting artificial agents has grown
-\citep{rahwan2019machine}.
+Large language models (LLMs) are increasingly deployed as \emph{agents}: they
+negotiate, coordinate and act on behalf of users in recommendation systems,
+negotiation tools and multi-agent assistants
+\citep{park2023generative,dafoe2021cooperative}. In these settings behaviour
+emerges from strategic interaction rather than from isolated model outputs,
+and it is shaped by training, prompting, role assignment and linguistic
+framing, with direct implications for safety and governance. The proposal that
+machines be studied as behaving entities - with the observational tools of
+ethology and the experimental discipline of the behavioural sciences - has
+become considerably more urgent as the population of interacting artificial
+agents has grown \citep{rahwan2019machine}.
 
-A rapidly expanding literature evaluates LLMs through game-theoretic lenses,
-particularly via matrix and repeated games, revealing systematic departures
-from Nash equilibria, persistent cooperative biases and sensitivity to
-contextual factors such as language and incentives
-\citep{akata2023playing,phelps2023investigating,fontana2024nicer,mei2024turing,lore2024strategic}.
-Models have been probed with the instruments of cognitive psychology
-\citep{binz2023using} and used as simulated economic subjects
-\citep{horton2023large,aher2023using,argyle2023out}. The prisoner's dilemma is
-the natural testbed: a two-by-two matrix with $T > R > P > S$ and $2R > T + S$
-generates a well-mapped strategic landscape in which reciprocity, forgiveness
-and exploitation are defined precisely and their evolutionary fates computed
-\citep{axelrod1981evolution,nowak1992tit,nowak1993strategy,nowak2006five,press2012iterated},
-a landscape that underpins a large body of work on the statistical physics of
+The iterated prisoner's dilemma is the natural testbed for that programme. A
+two-by-two matrix with $T > R > P > S$ and $2R > T + S$ generates a strategic
+landscape that half a century of work has mapped in detail: reciprocity,
+forgiveness, provocability and exploitation are defined precisely and their
+evolutionary fates computed
+\citep{axelrod1981evolution,axelrod1984evolution,nowak1992tit,nowak1993strategy,nowak2006five,press2012iterated}.
+The same landscape underpins a large body of work on the statistical physics of
 cooperation \citep{szabo2007evolutionary,perc2010coevolutionary,perc2017statistical}
-and on mechanisms such as intention recognition and commitment that shift the
-cooperative equilibrium \citep{han2011intention,han2013good}.
+and on mechanisms such as intention recognition and commitment that displace
+the cooperative equilibrium \citep{han2011intention,han2013good}. It is no
+surprise that the map has been imported wholesale. A rapidly expanding
+literature now evaluates LLMs through game-theoretic lenses, reporting
+systematic departures from Nash equilibria, persistent cooperative biases and
+sensitivity to contextual factors such as language and incentives
+\citep{akata2023playing,phelps2023investigating,fontana2024nicer,mei2024turing,lore2024strategic},
+alongside probes with the instruments of cognitive psychology
+\citep{binz2023using} and the use of models as simulated economic subjects
+\citep{horton2023large,aher2023using,argyle2023out}.
 
-Most existing evaluations report one of two things: a scalar, that model $X$
-cooperates at rate $p$; or a label, that model $X$ plays tit-for-tat. Both
-presuppose something that has not been established. A cooperation rate is a
-property of an agent only if it is stable under transformations that do not
-change the problem. A strategy label is informative only if the behaviour it
-names is actually generated by something in the family from which the label is
-drawn. Neither presupposition is safe for a system whose input is a
-natural-language string and whose behaviour is known to depend on the surface
-form of that string in ways carrying no task content
+Read across, that literature reports one of two things. A scalar: model $X$
+cooperates at rate $p$. Or a label: model $X$ plays tit-for-tat. Both are
+useful summaries, and both carry a presupposition that has not been
+established. A cooperation rate is a property of an agent only if it is stable
+under transformations that leave the problem unchanged; otherwise it is a
+property of the particular way the problem was written down. A strategy label
+is informative only if the behaviour it names was in fact generated by
+something in the family from which the label was drawn; otherwise it reports
+the resolution of the classifier that assigned it. Neither presupposition is
+safe for a system whose input is a natural-language string and whose behaviour
+is known to move with features of that string that carry no task content -
+option order, formatting, an assigned persona
 \citep{lu2022fantastically,sclar2024quantifying,deshpande2023toxicity,salewski2023context}.
 
-This paper takes those presuppositions as the object of study. We adopt two
-invariance principles as the test. The first is the affine invariance of
-von Neumann--Morgenstern utility: multiplying every payoff by the same
-positive constant leaves best replies, equilibria and evolutionary dynamics
-unchanged \citep{vonneumann1944theory,luce1957games}. The second is the
-invariance of a game to the language in which its rules are stated. These give
-manipulations with an unusual property for behavioural work --- the null
-hypothesis is a theorem, not a convenient default --- so that any movement is
-a failure rather than merely an observation.
+This paper takes those presuppositions as its object of study rather than as
+its foundation, and the instrument is an invariance audit. We adopt two
+principles as the test. The first is the affine invariance of von
+Neumann--Morgenstern utility: multiplying every payoff by the same positive
+constant leaves best replies, equilibria and evolutionary dynamics unchanged
+\citep{vonneumann1944theory,luce1957games}. The second is the invariance of a
+game to the language in which its rules are stated; a prisoner's dilemma
+described in French is the same prisoner's dilemma. Manipulations built on
+these principles have a property that is unusual in behavioural work: the null
+hypothesis is a theorem rather than a convenient default. There is no effect
+size to argue about and no prior to elicit, and any movement at all is a
+failure - of the agent, or of the measurement - rather than one more
+observation to be added to the tally.
+
+The value of that framing is easiest to see against the closest neighbours.
+\citet{lore2024strategic} separate game structure from contextual framing and
+find that framing carries comparable weight; \citet{fontana2024nicer} recover
+rich strategic archetypes from long-horizon play; \citet{akata2023playing}
+report stable, model-specific cooperative signatures across repeated games.
+Each of these results is stated in the vocabulary whose applicability we test
+- a rate, or an archetype - so what follows is not a competing measurement
+but a prior question about what such measurements are measurements of.
 
 The present study is a revision and extension of our earlier analysis of the
 same corpus \citep{huynh2026payoff}, which established that LLM cooperation
-rises with payoff magnitude in direct contradiction to an evolutionary game
+rises with payoff magnitude, in direct contradiction to an evolutionary game
 theory (EGT) baseline, and attributed the divergence to alignment training and
-the cooperative bias of human training data. Here we retain that empirical
-result, add a fourth model, and ask a prior question: whether the movement is
-a strategic response at all. Three questions organise the work:
+to the cooperative bias of human training data. That empirical result survives
+here, on a corpus extended by a fourth model; what we add is the prior
+question of whether the movement is a strategic response at all. Three
+questions organise the work:
 
 \begin{enumerate}
 \item Do LLM agents satisfy the invariances that any game-theoretic
@@ -148,19 +164,28 @@ holds the objective framing fixed and thereby separates a language effect from
 a framing effect (\S\ref{sec:lambda}--\S\ref{sec:language}); \textbf{(ii)} the
 finding that the assigned persona inverts, moving behaviour opposite to its
 semantic content at the opening move in every model and every language
-(\S\ref{sec:persona}); \textbf{(iii)} a single account --- that the models read
-the stated penalties as rewards --- which explains the persona inversion, the
+(\S\ref{sec:persona}); \textbf{(iii)} a single account - that the models read
+the stated penalties as rewards - which explains the persona inversion, the
 direction of the payoff-scale effect and the shape of the memory-one
 fingerprints together (\S\ref{sec:misread}); and \textbf{(iv)} a deductive
 audit of strategy attribution showing that in half to seven-eighths of
-agent-games no canonical rule fits at all, so that an archetype label reports
-the resolution of the classifier rather than the behaviour of the model, and
-that widening the vocabulary does not rescue it --- all 32 memory-one rules
-plus one regime switch still leave 15--42\% unexplained and exceed a shuffled
-null by only about 0.2, because the play conditions on two rounds of history
-rather than one (\S\ref{sec:strategy}--\S\ref{sec:residual}).
+agent-games none of the four canonical rules fits at all, so that an archetype
+label reports the resolution of the classifier rather than the behaviour of the
+model, and that widening the vocabulary does not rescue it - all 32
+deterministic memory-one rules plus one regime switch still leave 15--42\%
+unexplained and exceed a shuffled null by only about 0.2, because the play
+conditions on two rounds of history rather than one
+(\S\ref{sec:strategy}--\S\ref{sec:residual}).
 
 \section{Material and methods}
+
+The design is built backwards from the tests. Each factor we cross - payoff
+magnitude, prompt language, assigned persona - is one whose effect on an
+agent that is playing the game is known before any data are collected, so the
+corpus is sized and balanced to detect movement precisely where the prediction
+is no movement at all. Everything the manipulations do not touch is held
+fixed: the same stage game, the same horizon, the same interface between agent
+and game, the same decoding settings.
 
 \subsection{Framework}
 
@@ -169,15 +194,19 @@ FAIRGAME (Framework for AI Agents Bias Recognition using Game Theory)
 conditions are defined via JSON configuration files specifying payoff
 structures, game horizon, LLM backends and languages; at runtime FAIRGAME
 combines these with language-specific prompt templates, simulates repeated
-normal-form games and logs round-by-round trajectories. We extend it with
+normal-form games and logs round-by-round trajectories. We adopt it for two
+reasons beyond convenience: its multilingual templates are the object of the
+language manipulation rather than an incidental choice of wording, and reusing
+them keeps this corpus commensurable with the one analysed in
+\citet{huynh2026payoff}, of which the present study is an extension. We add
 payoff scaling for the prisoner's dilemma.
 
 \subsection{Stage game and payoff framing}
 \label{sec:stage}
 
 Agents played a symmetric two-player prisoner's dilemma (figure~\ref{fig:design}a).
-The templates state the cell values as \emph{penalties} --- years of
-imprisonment in the prisoner's-dilemma narrative --- and instruct the agent to
+The templates state the cell values as \emph{penalties} - years of
+imprisonment in the prisoner's-dilemma narrative - and instruct the agent to
 \emph{minimise} them, so a smaller number is a better outcome. Under that
 framing the base cells are $T = 0$, $R = 2$, $P = 6$, $S = 10$, satisfying
 $T < R < P < S$, which is the penalty-space image of the usual
@@ -188,49 +217,86 @@ carries none at all. On the utility scale $u = -\text{penalty}$ the two
 normalised descriptors of the dilemma are greed $(T-R)/(T-S) = 0.20$ and
 fear $(P-S)/(T-S) = 0.40$.
 
-We flag this polarity explicitly because it is easy to invert and because
-inverting it maps every cooperation rate $x \mapsto 1-x$ and reverses the sign
-of both the payoff-scale and the endgame effects. Our analysis pipeline
-reproduces the cooperation rates of \citet{huynh2026payoff} to a mean absolute
-error of 0.002 under the mapping above, against 0.171 under the inverted one.
+The penalty framing is inherited from FAIRGAME rather than chosen here, and we
+retain it so that the corpus stays comparable with the earlier analysis;
+\S\ref{sec:misread} argues that the choice turns out to be considerably more
+consequential than it looks. We flag the polarity explicitly because it is easy
+to invert and because inverting it maps every cooperation rate
+$x \mapsto 1-x$ and reverses the sign of both the payoff-scale and the endgame
+effects. Our analysis pipeline reproduces the cooperation rates of
+\citet{huynh2026payoff} to a mean absolute error of 0.002 under the mapping
+above, against 0.171 under the inverted one.
 
-Every cell was multiplied by a payoff scale $\lam \in \{0.1, 1, 10\}$. Because
-$\lam > 0$ this is a positive affine rescaling: the outcome ordering, the
-best-reply correspondence and the equilibrium set are unchanged, so the three
-games are the same game presented with different numbers. The realised scale
-was recovered per game from the payoff values actually recorded rather than
-assumed from the directory: 80 rounds (0.17\% of the corpus) carry $\times 1$
-payoffs inside a folder labelled $\times 10$, and are labelled by their
-realised scale throughout.
+\subsection{The manipulations and their nulls}
 
-\subsection{Design and prompting}
+Three factors are manipulated, and what distinguishes the first two is that
+their predicted effect is not small but exactly zero.
 
-The design crossed four models --- Claude 3.5 Haiku, Gemini 3.5 Flash-Lite,
-GPT-4o and Mistral Large --- with three payoff scales, five prompt languages
-(English, French, Vietnamese, Chinese, Arabic), four persona pairings and ten
-replicates, giving 600 dyads per model and 2{,}400 in total
+\paragraph{Payoff magnitude.} Every cell was multiplied by a payoff scale
+$\lam \in \{0.1, 1, 10\}$. Because $\lam > 0$ this is a positive affine
+rescaling of a von Neumann--Morgenstern utility
+\citep{vonneumann1944theory,luce1957games}: the outcome ordering, the
+best-reply correspondence, the equilibrium set and the replicator dynamics are
+all unchanged, so the three games are one game presented with different
+numbers. The realised scale was recovered per game from the payoff values
+actually recorded rather than assumed from the directory: 80 rounds (0.17\% of
+the corpus) carry $\times 1$ payoffs inside a folder labelled $\times 10$, and
+are labelled by their realised scale throughout.
+
+\paragraph{Prompt language.} The same game was instantiated in English,
+French, Vietnamese, Chinese and Arabic from the FAIRGAME templates. A game is
+not changed by the language its rules are stated in, so here too the predicted
+effect is exactly zero. One caveat is a finding rather than a nuisance, and we
+treat it as such: the templates do not state the objective identically in every
+language - English, French and Vietnamese instruct the agent to minimise a
+penalty, Chinese and Arabic to maximise a reward - so a five-language
+comparison mixes a language manipulation with an objective-framing
+manipulation, and every language test is therefore repeated within the three
+languages that share a single framing (\S\ref{sec:language}).
+
+\paragraph{Assigned persona.} Each agent received a system-prompt persona,
+either \emph{cooperative} or \emph{selfish}, and the four ordered pairings
+were crossed with everything else. This manipulation differs in kind from the
+other two: a persona is not irrelevant by theorem, and could in principle be
+read as an instruction about how to play. But it carries no information about
+the game - the four pairings present identical payoff matrices - and an
+agent was never told its opponent's persona, so the opponent's persona is a
+manipulation the focal agent can learn about only through play. Here it is the
+direction of the effect, rather than its size, that the semantics of the words
+predict.
+
+\subsection{Design, prompting and decoding}
+
+The design crossed four models - Claude 3.5 Haiku, Gemini 3.5 Flash-Lite,
+GPT-4o and Mistral Large - with three payoff scales, five prompt languages,
+four persona pairings and ten replicates:
+$4 \times 3 \times 5 \times 4 \times 10 = 2{,}400$ dyads, 600 per model
 (figure~\ref{fig:design}b). Each dyad ran for ten rounds and both agents are
 recorded, so the corpus contains 4{,}800 agent-games and 48{,}000 binary
 decisions, with exactly 40 dyads in every model $\times$ scale $\times$
-language cell.
+language cell. The cell is the unit of the design: none is more replicated
+than another, and no result below depends on pooling across an unbalanced
+margin.
 
 On each round an agent received the full payoff table, its persona, the round
 index and the complete history of both players' choices, and returned a single
 token naming one of two options. Communication was disabled, so the only
 channel between agents is the action history. Actions were labelled
 \texttt{OptionA} and \texttt{OptionB} in all languages, avoiding the
-connotations that the words ``cooperate'' and ``defect'' would carry. Each
-agent received a system-prompt persona, either \emph{cooperative} or
-\emph{selfish}; an agent was never told its opponent's persona, so the
-opponent's persona is a manipulation the focal agent can learn about only
-through play.
+connotations that the words ``cooperate'' and ``defect'' would carry; which
+label denotes cooperation was never stated to the agent, and has to be read off
+the payoff table.
 
-Decoding used a fixed low token budget with reasoning traces disabled. This is
-not cosmetic: models that emit hidden reasoning can exhaust a small output
-budget inside the trace and return a truncated string that fails to parse,
-and a harness that then falls back to a default action produces an apparent
-cooperation rate of 1.0 that is an artefact of the parser. Parse-failure and
-fallback rates were logged for every cell and required to be below 0.02.
+Decoding used a fixed low output-token budget with reasoning traces disabled.
+This is not cosmetic: models that emit hidden reasoning can exhaust a small
+output budget inside the trace and return a truncated string that fails to
+parse, and a harness that then falls back to a default action produces an
+apparent cooperation rate of 1.0 that is an artefact of the parser rather than
+a measurement of the model. Parse-failure and fallback rates were logged for
+every cell and required to be below 0.02. Sampling temperature follows each
+provider's recommended default, as in the FAIRGAME protocol - 1.0 for
+Claude, Gemini and GPT-4o, 0.3 for Mistral Large - and is listed among the
+declared confounds in \S\ref{sec:confounds}.
 
 \subsection{Behavioural measures}
 
@@ -253,8 +319,8 @@ $p(C \mid C_{-1}) - p(C \mid D_{-1})$.
 
 Assigning a strategy label was done in two stages, kept distinct because they
 license different claims. The first is exact and deductive: for each
-agent-game we asked which of the four canonical rules --- AllC, AllD,
-tit-for-tat and win-stay lose-shift --- reproduces every observed transition.
+agent-game we asked which of the four canonical rules - AllC, AllD,
+tit-for-tat and win-stay lose-shift - reproduces every observed transition.
 A game may be matched by exactly one, by several, or by none, and only the
 first case supports the statement that the agent played that rule. Matching by
 several is an answer rather than a failure: an agent that cooperates for ten
@@ -280,6 +346,18 @@ focal agent's own action sequence in place, holding its cooperation rate and
 the opponent's realised sequence fixed. It is not a formality: a two-segment
 fit over ten rounds has enough freedom to reproduce a large share of shuffled
 play by chance, so raw coverage on its own is not evidence of structure.
+Coverage is always reported against the vocabulary that produced it and the
+two are never pooled - the share of games matched by the canonical four and
+the share matched by the 32-rule class are different quantities, and they
+differ by an order of magnitude once ambiguity is taken into account.
+
+A vocabulary can fail in two ways: by being too small, or by conditioning on
+the wrong thing. To separate them we ask how much history the next action
+actually uses, scoring nested predictors of the next action - memoryless,
+memory-one, memory-two, and a memory-one rule allowed to change with the phase
+of the game - against one another by the Bayesian information criterion
+\citep{schwarz1978estimating} on identical rows, so that the comparison is
+about history rather than sample size.
 
 \subsection{Statistical procedures}
 
@@ -303,14 +381,19 @@ $+0.017$. The ten replicates of a cell share a prompt and their spread is
 across a random split of the dyads with Spearman--Brown reliability of
 0.90--0.97.
 
-\subsection{Declared confound}
+\subsection{Declared confounds}
+\label{sec:confounds}
 
 The Gemini arm was run with the round count disclosed to the agents; the
 Claude, GPT-4o and Mistral arms with the horizon hidden. The Gemini column is
 therefore ``model $\times$ horizon'' and is marked as such in
-figure~\ref{fig:design}b. A second issue, the fact that the templates do not
-state the objective identically in every language, is a result rather than a
-nuisance and is treated in \S\ref{sec:language}.
+figure~\ref{fig:design}b. Sampling temperature likewise varies with the
+provider's default and cannot be separated from model identity; because it is
+constant within a model it cannot generate any of the within-model effects
+reported below, but between-model comparisons carry it. The third candidate,
+the fact that the templates do not state the objective identically in every
+language, is a result rather than a nuisance and is treated in
+\S\ref{sec:language}.
 
 \section{Results}
 
@@ -457,8 +540,8 @@ there is no strategic difference to respond to. Note also that the effect is
 not monotone in the way a magnitude heuristic would predict: for Claude and
 GPT-4o almost the entire swing occurs between $\times 0.1$ and $\times 1$,
 with $\times 1$ and $\times 10$ nearly indistinguishable, which points to
-sensitivity to the appearance of the numbers --- fractional versus integral,
-single- versus multi-digit --- rather than to magnitude as such.
+sensitivity to the appearance of the numbers - fractional versus integral,
+single- versus multi-digit - rather than to magnitude as such.
 
 \subsection{Prompt language changes behaviour, with framing held fixed}
 \label{sec:language}
@@ -487,7 +570,7 @@ across models ($-0.093$ to $+0.064$), so it does not act as a simple main
 effect either.
 
 The surviving effects are substantial: Mistral cooperates at 0.61 in English
-and 0.46 in Vietnamese --- three languages, one objective framing, one payoff
+and 0.46 in Vietnamese - three languages, one objective framing, one payoff
 matrix, a gap of 0.15. We emphasise that this is a claim about two of four
 models rather than three, and that the more cautious claim is the one the data
 support. Because the disparity is a range, it is invariant under
@@ -508,8 +591,8 @@ the time and an agent told it is selfish 0.651. The effect is concentrated in
 the opening move and is then eroded by the interaction: at round one the two
 groups cooperate at 0.312 and 0.908 respectively, a gap of $-0.60$; by round
 ten the gap has closed to $+0.01$. The inversion at the opening holds in every
-model --- Claude 0.14 against 0.81, Mistral 0.19 against 1.00, GPT-4o 0.38
-against 0.84, Gemini 0.54 against 0.98 --- in every language, with gaps from
+model - Claude 0.14 against 0.81, Mistral 0.19 against 1.00, GPT-4o 0.38
+against 0.84, Gemini 0.54 against 0.98 - in every language, with gaps from
 $-0.42$ to $-0.73$, and at every payoff scale, with gaps of $-0.81$, $-0.49$
 and $-0.48$ at $\lam = 0.1, 1, 10$. Mistral Large told it is selfish opens
 cooperatively in 100\% of its 600 games; told it is cooperative, in 19\%.
@@ -522,8 +605,8 @@ four models (figure~\ref{fig:invariance}c): $-0.354$ for Mistral
 ($+0.018$, $\ci{-0.028}{0.067}$).
 
 One further observation complicates any reading in which persona simply
-installs a disposition. The opponent's persona --- never disclosed, inferable
-only from play --- has a detectable effect for Gemini, which cooperates 0.080
+installs a disposition. The opponent's persona - never disclosed, inferable
+only from play - has a detectable effect for Gemini, which cooperates 0.080
 less against a cooperative opponent, and marginally for Claude. For Gemini
 this indirect effect is larger than its own-persona effect, which is the
 signature of an agent responding to the interaction rather than to the
@@ -576,8 +659,8 @@ figure~\ref{fig:invariance}a shows.
 
 The memory-one fingerprints carry the same signature
 (figure~\ref{fig:misread}c). All four models cooperate readily after having
-been exploited --- $p(C \mid S)$ is 0.48, 0.81, 0.63 and 0.96 for Claude,
-Gemini, GPT-4o and Mistral --- where tit-for-tat, grim and win-stay lose-shift
+been exploited - $p(C \mid S)$ is 0.48, 0.81, 0.63 and 0.96 for Claude,
+Gemini, GPT-4o and Mistral - where tit-for-tat, grim and win-stay lose-shift
 all prescribe 0. Being ``exploited'' in this corpus means receiving the
 penalty 10, the largest number on the table; an agent that has just been
 handed the biggest number and repeats the action that produced it is behaving
@@ -591,9 +674,9 @@ We present this as the most parsimonious account rather than as a
 demonstration. A competing explanation is ordinal: ``Option A'' is listed
 first, and a cooperative persona may be reaching for the default rather than
 for the larger symmetric number. Distinguishing the two requires a
-manipulation we did not run --- re-labelling or reordering the options, or
+manipulation we did not run - re-labelling or reordering the options, or
 restating the identical matrix in explicit reward form and testing whether
-behaviour mirrors --- and we regard that as the natural next experiment.
+behaviour mirrors - and we regard that as the natural next experiment.
 What the present data do establish is that the stated objective is not what
 the models are optimising.
 
@@ -696,8 +779,8 @@ predictors of the next action on identical rows, all four models select
 memory-two: $\Delta$BIC against a memoryless baseline improves from $-1685$ to
 $-2399$ for Claude, $-4334$ to $-4792$ for Gemini, $-3684$ to $-4865$ for
 GPT-4o and $-6652$ to $-9158$ for Mistral. Allowing the memory-one rule to
-change with the phase of the game instead --- an equally sized extension in the
-direction of time rather than of history --- is worse than memory-two for every
+change with the phase of the game instead - an equally sized extension in the
+direction of time rather than of history - is worse than memory-two for every
 model. Whatever these agents are doing conditions on the last two rounds, so a
 memory-one vocabulary is not a coarse description of it but a description of
 something else.
@@ -707,7 +790,7 @@ A final limit applies to the deductive fraction itself
 four conditioning states, so rules that differ only in an unvisited state
 cannot be told apart. Of the 4{,}800 agent-games, 2{,}608 match no memory-one
 rule, and of those that do match, most are matched by four or eight rules at
-once; exactly 89 --- 1.9\% of the corpus --- are pinned to a single one of the
+once; exactly 89 - 1.9\% of the corpus - are pinned to a single one of the
 32. A coverage figure for the wider class is therefore a statement about a
 \emph{set} of rules and not about a rule, and the ten-round horizon is what
 makes it so.
@@ -745,9 +828,9 @@ directly to the framing literature in human decision making
 \citep{tversky1981framing,kahneman1979prospect}. The disanalogy is
 instructive. Human framing effects are systematic, map to a compact set of
 psychological mechanisms and reproduce across populations. What we observe is
-heterogeneous across models --- Mistral is scale-invariant but the most
+heterogeneous across models - Mistral is scale-invariant but the most
 persona-inverted; GPT-4o is language-invariant and persona-inert but strongly
-scale-sensitive --- and sits on top of a within-cell variance that dwarfs it.
+scale-sensitive - and sits on top of a within-cell variance that dwarfs it.
 There is no single ``LLM framing effect'' to characterise, only a per-model,
 per-manipulation profile that must be measured.
 
@@ -765,9 +848,9 @@ entry on the table, and it becomes more attractive precisely as $\lam$ makes
 that entry larger.
 
 We do not claim this displaces the alignment account. The two are separable by
-experiment --- restate the identical game in explicit reward form, in which
+experiment - restate the identical game in explicit reward form, in which
 the cooperative action no longer carries the largest number, and see whether
-the stake effect survives --- and we regard that as the most valuable single
+the stake effect survives - and we regard that as the most valuable single
 extension of this work. What the present data do establish is that a
 cooperation rate measured under a penalty framing cannot be read as
 prosociality without that control.
@@ -782,7 +865,7 @@ in which a rule was deductively established rather than assigned by nearest
 neighbour, and by the number of rounds on which play departs from its assigned
 label. On our corpus those numbers are 10--49\% and 1.0--2.0 rounds out of ten.
 
-The natural repair --- enlarge the strategy set until the labels fit --- does
+The natural repair - enlarge the strategy set until the labels fit - does
 not work either, and the way it fails is informative. Going from four rules to
 all 32 memory-one rules, and then to two of them in sequence, leaves 15--42\%
 of agent-games unexplained and buys only about 0.2 of coverage above a
@@ -791,7 +874,7 @@ for every model. The class is not too small; it is the wrong class. This
 matters for the hybrid read-out that is becoming standard practice in this
 literature, in which a learned classifier supplies a label wherever exact
 matching fails. Such a classifier will always return something, and on our
-corpus it is returning something for the majority of games --- 50\% to 86\%
+corpus it is returning something for the majority of games - 50\% to 86\%
 depending on the model. The remedy is not a better classifier but reporting
 the provenance of each label, which costs nothing once the deductive stage is
 run.
@@ -843,8 +926,8 @@ Rescaling payoffs, which cannot change the game, moves cooperation by up to
 0.24. Changing the prompt language with the objective framing held fixed moves
 it by up to 0.15. And the assigned persona moves behaviour opposite to its
 semantic content: told they are cooperative, agents open cooperatively 31\% of
-the time; told they are selfish, 91\%. A single account --- that the models
-read the stated penalties as rewards --- covers the inversion, the direction
+the time; told they are selfish, 91\%. A single account - that the models
+read the stated penalties as rewards - covers the inversion, the direction
 of the scale effect and the shape of the memory-one fingerprints.
 
 We therefore propose a minimal standard. A cooperation rate reported for a
