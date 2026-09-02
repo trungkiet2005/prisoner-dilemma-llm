@@ -1,0 +1,8 @@
+arm,model,scales,scale_min,scale_max,languages,rounds,dyads,agent_games,decisions,cells,per_cell,coop_rate
+frontier,Claude-3.5-Haiku,3,0.1,10.0,5,10,600,1200,12000,15,80,0.6250000000000001
+frontier,GPT-4o,3,0.1,10.0,5,10,600,1200,12000,15,80,0.4476666666666666
+frontier,Gemini-3.5-Flash-Lite,3,0.1,10.0,5,10,600,1200,12000,15,80,0.7404166666666666
+frontier,Mistral-Large,3,0.1,10.0,5,10,600,1200,12000,15,80,0.52425
+open-weight,Gemma-3-12B,6,0.01,1000.0,5,30,1200,2400,72000,30,80,0.5350694444444444
+open-weight,Llama-3.1-8B,6,0.01,1000.0,5,30,1200,2400,72000,30,80,0.4200694444444445
+open-weight,Qwen3-8B,6,0.01,1000.0,5,30,1200,2400,72000,30,80,0.473625

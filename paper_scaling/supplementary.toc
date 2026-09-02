@@ -1,0 +1,6 @@
+\contentsline {section}{\numberline {S1}Validating the strategy read-out}{1}{section.1}%
+\contentsline {paragraph}{Validation corpus.}{1}{section*.2}%
+\contentsline {paragraph}{Accuracy.}{1}{section*.3}%
+\contentsline {paragraph}{The identifiability floor.}{2}{section*.4}%
+\contentsline {paragraph}{Where the corpus sits relative to the training distribution.}{2}{section*.5}%
+\contentsline {section}{\numberline {S2}Supplementary tables}{2}{section.2}%

@@ -1,0 +1,1247 @@
+% ---------------------------------------------------------------------------
+% Units matter: cooperation in LLM agents tracks how the payoff matrix is
+% written rather than what it means.
+%
+% Venue-neutral: single column, standard article class, numbered references.
+%
+%   pdflatex main && bibtex main && pdflatex main && pdflatex main
+% ---------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{authblk}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{microtype}
+\usepackage{xcolor}          % must precede hyperref: allcolors uses a mixed colour
+\usepackage[colorlinks=true,allcolors=blue!55!black]{hyperref}
+
+\captionsetup{font=small,labelfont=bf,width=\textwidth}
+\setlength{\parskip}{0pt}
+\renewcommand{\baselinestretch}{1.15}
+
+\newcommand{\lam}{\lambda}
+\newcommand{\ci}[2]{[#1,\,#2]}
+
+\title{\bfseries Units matter: cooperation in large language model agents
+tracks how the payoff matrix is written, not what it means}
+
+\author[1]{Author One}
+\author[1,2]{Author Two}
+\affil[1]{Affiliation One}
+\affil[2]{Affiliation Two}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+Multiplying every payoff by a positive constant leaves the outcome ordering,
+the dominant action, the equilibrium set and the replicator dynamics
+untouched, so for any agent playing the game the predicted effect is zero by
+theorem rather than by convention. We apply it to seven language models in the
+iterated prisoner's dilemma, across six payoff scales spanning five orders of
+magnitude, five prompt languages and 12{,}000 agent-games. Cooperation moves
+in six of the seven, by up to 0.32, and not monotonically: lowest where the
+cells print as decimals, highest where they print as short integers,
+intermediate where they print as thousands. A three-level factor built from
+how the numbers are written beats any polynomial in the log scale and matches
+one saturated in it. The effect is already open on the first move, before any
+history exists. It reaches the strategy label selectively, moving the
+unconditional rules but not the reciprocal ones or the coordination structure,
+and shifts how far a persona instruction is obeyed in every model. Two
+frontier models change places in the cooperation ranking, so a cooperation
+rate reported for a language model is a statement about one arbitrary choice
+of units, and should be published with its scale sensitivity.
+\end{abstract}
+
+\noindent\textbf{Keywords:} machine behaviour; large language models; iterated
+prisoner's dilemma; payoff scaling; utility invariance; benchmark validity
+
+\section{Introduction}
+
+Language models are now deployed as \emph{agents} that negotiate, coordinate
+and decide on behalf of their
+users~\citep{park2023generative,dafoe2021cooperative}, and a fast-growing
+literature measures how they behave when they do. The instrument of choice is
+the classical game, and the prisoner's dilemma above all, because its strategy
+space is mapped and its predictions are
+sharp~\citep{axelrod1981evolution,axelrod1984evolution,nowak1992tit,nowak2006five,press2012iterated}.
+Studies in this vein report cooperation rates, departures from Nash play,
+model-specific signatures and archetypes recovered from long
+games~\citep{akata2023playing,phelps2023investigating,fontana2024nicer,mei2024turing,lore2024strategic},
+and the numbers they produce increasingly feed models of mixed human-machine
+populations~\citep{paiva2018engineering,santos2018social,rahwan2019machine}.
+
+Every one of those measurements is made at a particular payoff matrix. The
+matrix is written down once, in whatever units the experimenter chose, and the
+cooperation rate is then reported as a property of the model. The choice of
+units is not usually stated as a design decision at all, because in the theory
+it is not one. A payoff matrix is a von Neumann--Morgenstern utility, and such
+a utility is defined only up to a positive affine
+transformation~\citep{vonneumann1944theory,luce1957games}. Writing the same
+dilemma with cells ten times larger changes no preference, no best reply, no
+equilibrium and no replicator trajectory. Under the theory the two matrices are
+not two games written differently. They are one game.
+
+That makes a positive rescaling the sharpest possible probe of whether a
+language model is playing the game it was shown. Most manipulations one might
+apply to a game-theoretic prompt have arguable effects: a change of framing
+carries new words, a change of persona carries new information about the agent,
+a change of language carries a different training distribution. A rescaling
+carries none of these. It changes the numerals and nothing else. If behaviour
+is a function of the game, the effect is exactly zero, and the null needs no
+defending because it is a theorem. If behaviour moves, then whatever the model
+is responding to is not the game.
+
+This paper takes the rescaling itself as its object of study. We apply it
+across five orders of magnitude to seven models in the iterated prisoner's
+dilemma, crossed with five prompt languages and two persona instructions, and
+ask four questions.
+
+\begin{enumerate}
+\item Does the strategic behaviour of a language model survive multiplying every
+      payoff by a positive constant, and by how much does it fail to?
+\item If it moves, what does it move with? A rescaling changes the magnitude of
+      the numbers and the way they are printed at the same time. These are
+      different functions of $\lam$, and the data can tell them apart.
+\item Where in the game does the effect enter: at the opening move, before any
+      history exists, or through the course of play?
+\item What else does the scale carry with it, and what does it leave alone?
+\end{enumerate}
+
+Our contributions are the following. \textbf{(i)} We report a response curve
+over six payoff scales from $10^{-2}$ to $10^{3}$, and it is not monotone: it
+rises, plateaus and falls (\S\ref{sec:response}). \textbf{(ii)} We show that
+the response is better described by a three-level factor built from how the
+cells are \emph{printed} than by any polynomial in $\log_{10}\lam$, and no
+worse than a factor saturated in $\lam$ itself, at three fewer degrees of
+freedom (\S\ref{sec:notation}). \textbf{(iii)} We show that the effect is
+already open on the opening move, and that what moves is the level of
+cooperation and not the coordination structure of play, whose miscoordination
+rate is flat across all six scales (\S\ref{sec:opening}--\S\ref{sec:invariant}).
+\textbf{(iv)} We show that the payoff scale shifts how far a persona
+instruction is obeyed, in the same direction in every one of the seven models,
+while leaving the sign of that effect a property of the model; and that the
+scale interacts with the prompt language in both arms
+(\S\ref{sec:gating}--\S\ref{sec:language}). \textbf{(v)} We show that the
+strategy a read-out assigns to a run of play moves with the scale in all seven
+models, and that it moves on the unconditional rules while the conditional
+ones stay nearly still, which is the dissociation the coordination measure
+records read at the level of the sequence (\S\ref{sec:labels}).
+\textbf{(vi)} We show that the choice of $\lam$ reverses the cooperation
+ranking of two frontier models, and propose a reporting standard that costs
+one extra condition (\S\ref{sec:benchmark}, \S\ref{sec:standard}).
+
+An earlier preprint by the present authors reported that the cooperation rate
+of open-weight models varies with the payoff scale and with the prompt
+language~\citep{selfpreprint2026scaling}. That report established the
+phenomenon in one arm of the corpus. The present paper asks what the phenomenon
+is a function of, and every contribution numbered above is new to it: the
+frontier replication, the magnitude-against-notation comparison, the
+localisation of the effect at the opening move, the persona result, the
+coordination invariant, the strategy read-out, the ranking reversals and the
+reporting standard. The
+corpus is the same, re-analysed under the payoff polarity fixed in
+\S\ref{sec:corpus}.
+
+\section{Material and methods}
+
+\subsection{The invariance under test}
+\label{sec:invariance}
+
+Let $u$ be a von Neumann--Morgenstern utility over the four outcomes of a
+two-by-two game. The representation theorem says that $u$ and $a + b\,u$ with
+$b > 0$ describe the same preferences~\citep{vonneumann1944theory,luce1957games}.
+Every quantity a game theorist computes from the matrix is therefore invariant
+under that map: the ordering of the outcomes, the best-reply correspondence,
+the set of Nash equilibria, the dilemma indices greed $(T-R)/(T-S)$ and fear
+$(P-S)/(T-S)$, and the replicator flow, which is invariant under $b$ up to a
+rescaling of time and under $a$ exactly.
+
+We manipulate the multiplicative half of that map, $u \mapsto \lam u$ with
+$\lam > 0$, and we say so explicitly because the two halves are not equally
+demanding. The additive half moves every cell by the same amount and can be
+absorbed into a change of reference point; the multiplicative half changes the
+number of digits in every cell and is therefore the half that a system reading
+the matrix as text is most likely to notice. We do not test the additive half
+here, and we note in \S\ref{sec:limits} what that leaves open.
+
+Figure~\ref{fig:design}a states the stage game and the list of quantities that
+$\lam$ cannot touch. Figure~\ref{fig:design}b states what it does touch, which
+is the string the prompt prints.
+
+\subsection{The game, the two arms and the crossing}
+\label{sec:corpus}
+
+FAIRGAME (Framework for AI Agents Bias Recognition using Game
+Theory)~\citep{fairgame2025} provides the computational infrastructure.
+Conditions are written in JSON; at run time the framework combines them with
+language-specific prompt templates, simulates repeated normal-form games and
+logs every round of play. We adopt the framework and its multilingual templates
+as given, which keeps the wording of the manipulations out of our hands, and we
+add the payoff scaling.
+
+Agents played a symmetric two-player prisoner's dilemma. The templates state
+the cell values as \emph{penalties}, that is, years of imprisonment in the
+prisoner's-dilemma story, and instruct the agent to \emph{minimise} them, so a
+smaller number is a better outcome and the ordering is $T < R < P < S$. That is
+the penalty-space image of the usual $T > R > P > S$, and it makes Option A the
+dominant, defecting action and Option B cooperation. We state the direction
+explicitly because reversing it would reverse the sign of every result below.
+The assignment is not a matter of interpretation: FAIRGAME logs the realised
+payoff next to every action, and the assignment above reproduces the logged
+payoff on all 264{,}000 rounds of the corpus while the opposite assignment
+reproduces none of them.
+
+The corpus has two arms (figure~\ref{fig:design}c). The \emph{open-weight arm}
+is the one that carries the scale sweep. Three models, Gemma 3 12B, Llama 3.1
+8B and Qwen3 8B, each met six payoff scales, $\lam \in \{0.01, 0.1, 1, 10, 100,
+1000\}$, five prompt languages and four ordered persona pairings, over thirty
+rounds. The \emph{frontier arm} replicates the design at a shorter horizon and
+a narrower sweep. Four models, Claude 3.5 Haiku, Gemini 3.5 Flash-Lite, GPT-4o
+and Mistral Large, met three scales, $\lam \in \{0.1, 1, 10\}$, the same five
+languages and the same four pairings, over ten rounds. Both arms are balanced
+at exactly 80 agent-games in every model $\times$ language $\times$ scale cell,
+with none missing. That gives 3{,}600 dyads and 7{,}200 agent-games in the
+open-weight arm and 2{,}400 dyads and 4{,}800 agent-games in the frontier arm,
+for 6{,}000 dyads, 12{,}000 agent-games and 264{,}000 binary decisions in all.
+
+The base matrices differ between the arms. The frontier arm used $T = 0$, $R =
+2$, $P = 6$, $S = 10$, which is greed 0.20 and fear 0.40 on the utility scale
+$u = -\text{penalty}$; the open-weight arm used $P = 8$, which is greed 0.20
+and fear 0.20. The two arms are therefore two dilemmas rather than one, and we
+never pool them. Each is internally a single game shown at several scales,
+which is the comparison every result below is made within.
+
+On each round an agent received the full payoff table, its persona, the round
+index and the complete history of both players' choices, and returned a single
+token naming one of two options. Communication was disabled, so the only
+channel between agents is the action history. Actions carry the labels
+\texttt{OptionA} and \texttt{OptionB} in all five languages, which avoids the
+extra meaning that ``cooperate'' and ``defect'' would bring; the templates never
+say which label means cooperation, and the agent has to read it off the payoff
+table. That is what makes the payoff numbers the load-bearing part of the
+prompt, and it is why a change to them is the manipulation of interest.
+
+Decoding used a fixed low output-token budget with reasoning traces disabled.
+That setting is not a detail. A model that emits hidden reasoning can exhaust a
+small budget inside the trace and return an incomplete string, and a harness
+that then falls back to a default action turns that string into an apparent
+cooperation rate of 1.0 that the parser has created rather than the model. We
+logged parse-failure and fallback rates for every cell and required both to
+stay below 0.02. Every dyad ran its full horizon and every decision resolved to
+one of the two option tokens, so no cell loses games to a failure to parse.
+
+\subsection{Notation regimes}
+\label{sec:regimes}
+
+Because $\lam$ changes the magnitude of the payoffs and the way they are
+printed at the same time, we define the printed quantities in advance and let
+the model comparison of \S\ref{sec:notation} arbitrate between them. For each
+scale we take the four cell values as the template renders them and record
+three features: whether any of them carries a decimal point, the mean number of
+glyphs across the four, and a three-level \emph{notation regime} that
+partitions the sweep into \emph{fractional} ($\lam < 1$, at least one cell
+printed with a decimal point), \emph{unit} ($\lam \in \{1, 10\}$, largest cell
+two or three digits) and \emph{large} ($\lam \geq 100$, largest cell four or
+five digits). Figure~\ref{fig:design}b lists the six rows.
+
+One property of that partition has to be stated before any of it is
+interpreted. In this design $\lam < 1$ and ``the cell prints with a decimal
+point'' are the same event, so a fractional-notation account and an account
+based on sub-unit magnitude make identical predictions here and cannot be
+separated. What
+the design \emph{can} separate is either of them from a smooth function of
+$\log_{10}\lam$, and that is the comparison we run. We return to the
+experiment that would break the remaining confound in \S\ref{sec:limits}.
+
+\subsection{The strategy read-out, and where its labels come from}
+\label{sec:readout}
+
+A cooperation rate averages over a game. The second summary the literature
+reports, and the one that feeds evolutionary models, is the strategy assigned
+to a whole run of play, so we measure that too. Because the assignment is made
+by an instrument rather than observed, the instrument is described here in
+full and its output is reported by provenance rather than as a single label
+column.
+
+The vocabulary is the four canonical memory-one rules: AllC, AllD,
+tit-for-tat~\citep{axelrod1981evolution} and win-stay
+lose-shift~\citep{nowak1993strategy}. The read-out runs in two stages. Every
+one of the four prescribes an action as a function of the previous round's
+joint outcome alone, so the first stage checks by enumeration whether a
+trajectory is \emph{exactly} what a rule would have played, and returns the
+set of rules that fit; no learning is involved and the answer is a proof. The
+first stage has three outcomes: exactly one rule fits, and the label is
+provable; several fit, in which case the run is recorded as \emph{ambiguous},
+which happens whenever the realised history never discriminates them, as when
+an agent cooperates throughout against a cooperator and is thereby AllC, TFT
+and WSLS at once; or none fits. Where none fits, a second stage supplies the
+nearest rule: a single-layer long short-term memory
+network~\citep{hochreiter1997long} with a 24-dimensional embedding and 96
+hidden units, trained on synthetic play generated from the same four rules at
+zero and five per cent execution noise, returns a posterior over them and we
+take its argmax. Separate networks are trained for the two horizons, and each
+arm is read with the network matching its own.
+
+Two properties of that pipeline bear on how its output should be read, and
+both are reported rather than assumed away. The first is provenance. Over the
+open-weight arm 22.1\% of agent-games carry a provable rule, 11.8\% are
+ambiguous and 66.1\% are named by the network; over the frontier arm the
+shares are 25.5\%, 8.3\% and 66.2\%. Two thirds of the labels are therefore
+inferences and not deductions, and of those a further 16.5\% and 25.7\% of all
+agent-games sit below a posterior of 0.90, a floor at which a read-out
+designed to abstain would decline to answer at all. The second is validation.
+On held-out synthetic play the pipeline recovers the generating rule with
+accuracy 0.975 at ten rounds and 0.953 at thirty, against Bayes-optimal
+single-label ceilings of 0.987 and 0.966, and where a rule fires uniquely the
+label is right 99.5\% and 98.7\% of the time. The open-weight arm sits almost
+exactly at that validated operating point; the frontier arm departs from the
+canonical rules by more than the training distribution does, so its labels are
+nearest neighbours more often. The electronic supplementary material, \S S1,
+gives the full validation, including how the network degrades on noise levels
+it never saw.
+
+We therefore treat the strategy mix as a second, coarser dependent variable
+rather than as ground truth, and we report every test on it twice: once over
+the five categories the read-out emits, and once over the four named rules
+alone. The distinction matters because \emph{ambiguous} is a statement about
+how identifiable the play is and not about which strategy was played, so a
+shift into or out of that category is a shift in nameability. Where the two
+versions of a test disagree we say so.
+
+\subsection{Statistical analysis}
+\label{sec:stats}
+
+All intervals are 95\% bootstrap confidence intervals over 2{,}000 resamples
+that resample whole dyads~\citep{efron1993introduction}. The choice of unit
+matters: rounds within a game are autocorrelated and the two agent-rows of a
+dyad share a history, so a row-level resample would narrow the interval by
+roughly a factor of $\sqrt{2}$.
+
+Whether a factor moves a measure at all is answered against a permutation null
+that shuffles the factor label across \emph{dyads}, so a dyad keeps both of its
+agent-rows together and the null preserves the dependence the design creates.
+We report the observed largest between-level gap, the permutation $P$ value
+over 2{,}000 draws, and the null's 95th percentile, which doubles as the
+smallest shift the test could have detected. For distributions over strategy
+labels we use the largest total-variation distance between two levels, with the
+same dyad-level null.
+
+Whether the response is a function of the magnitude or of the notation is a
+model-comparison question, and we answer it with the Bayesian information
+criterion~\citep{schwarz1978estimating} over a ladder of specifications fitted
+to identical rows. Every specification carries the same controls for model,
+language, own persona and opponent persona, and they differ only in how $\lam$
+enters: not at all; linearly, quadratically or cubically in $\log_{10}\lam$; as
+the fractional flag; as the fractional flag plus the glyph count; as the
+three-level notation regime; or saturated, as a free level per scale. The
+saturated specification is the upper bound on fit that any function of $\lam$
+can reach, so a description that matches it at fewer parameters is a
+description that has found the right shape.
+
+We do not correct for multiple comparisons across models, and we say so rather
+than leave the point to be inferred. Each model is a separate system and is its
+own family, so the tests within a manipulation are seven families of one rather
+than one family of seven. The claims we draw are in any case about whether the
+rescaling moves behaviour at all, not about which model moves most.
+
+\subsection{Confounds we declare}
+\label{sec:confounds}
+
+Three features of the design are confounded with the arm, and one with a single
+cell. The two arms differ in horizon (thirty rounds against ten), in whether
+the round count was disclosed (it was in the open-weight arm, and in the
+frontier arm only for Gemini), in sampling temperature, which follows each
+provider's recommended default as in the FAIRGAME protocol, and in the base
+matrix as recorded in \S\ref{sec:corpus}. All four are constant within a model,
+so none of them can generate a within-model effect of $\lam$, which is what
+every result below is. They do mean that no coverage or level statistic is
+comparable across arms, and we compare none.
+
+Separately, four dyads in the Claude $\times$ English $\times$ $\lam = 10$ cell
+are logged with the payoffs of $\lam = 1$. We recovered the realised scale of
+every game from the logged values rather than assuming it from the directory
+name, which is how we found them; they are 8 agent-games out of 12{,}000, and
+dropping them moves Claude's cooperation rate at $\lam = 10$ from 0.708 to
+0.715. We retain them at their nominal scale and note that no conclusion turns
+on them.
+
+\section{Results}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig1_design.pdf}
+\caption{\textbf{The game, the rescaling and the corpus.}
+(\textbf{a}) The stage game of the frontier arm at $\lam = 1$. Cells are
+penalties the agent is told to minimise, so $T<R<P<S$ and Option A is the
+dominant, defecting action. Multiplying every cell by $\lam > 0$ is the
+multiplicative half of a positive affine transformation of a von
+Neumann--Morgenstern utility, and leaves every listed quantity where it was.
+The open-weight arm uses the same matrix with $P = 8$, which is fear 0.20
+rather than 0.40.
+(\textbf{b}) What the rescaling does change: the four cell values as the prompt
+prints them, at each of the six scales of the open-weight arm, with the
+three-level notation regime of \S\ref{sec:regimes} on the right. Greed and fear
+are identical on all six rows.
+(\textbf{c}) The corpus. Both arms are balanced at 80 agent-games in every
+model $\times$ language $\times$ scale cell.}
+\label{fig:design}
+\end{figure}
+
+\subsection{A rescaling that cannot matter, and does}
+\label{sec:response}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig2_response.pdf}
+\caption{\textbf{Cooperation against the payoff scale.}
+(\textbf{a}) The open-weight arm over six scales. Bands are 95\% bootstrap
+intervals over 2{,}000 resamples of whole dyads. The shaded strip marks the
+unit regime. The curve is not monotone in any of the three models: it rises to
+a maximum at $\lam = 1$ or $\lam = 10$ and falls again by $\lam = 100$.
+(\textbf{b}) The frontier arm over three scales, which sample only the rising
+limb.
+(\textbf{c}) The invariance test. Bars give the largest shift in cooperation
+between two scales; ticks give the 95th percentile of a permutation null that
+shuffles the scale label across whole dyads. The shift a theory of the game
+predicts is exactly zero. Six of the seven models exceed their null.}
+\label{fig:response}
+\end{figure}
+
+Multiplying every payoff by a positive constant moves the cooperation rate
+(figure~\ref{fig:response}). Pooled over the open-weight arm it runs 0.357
+$\ci{0.332}{0.382}$ at $\lam = 0.01$, 0.384 $\ci{0.357}{0.410}$ at $0.1$,
+0.573 $\ci{0.547}{0.599}$ at $1$, 0.567 $\ci{0.542}{0.592}$ at $10$, 0.476
+$\ci{0.451}{0.503}$ at $100$ and 0.502 $\ci{0.477}{0.529}$ at $1000$. Pooled
+over the frontier arm it runs 0.489 $\ci{0.467}{0.510}$, 0.633
+$\ci{0.616}{0.651}$ and 0.631 $\ci{0.612}{0.649}$ across its three scales. The
+same game, written with a different number of digits, is played differently.
+
+Per model the largest shift between two scales is 0.316 for Gemma 3 12B, 0.267
+for Qwen3 8B, 0.198 for Llama 3.1 8B, 0.240 for Claude 3.5 Haiku, 0.234 for
+GPT-4o, 0.080 for Gemini 3.5 Flash-Lite and 0.036 for Mistral Large. All but
+the last exceed a permutation null that shuffles the scale label across dyads:
+$P < 0.001$ for the first five and $P = 0.0075$ for Gemini, against null 95th
+percentiles between 0.047 and 0.121 (table~\ref{tab:sensitivity}). Mistral
+Large is the exception, at $P = 0.38$, and we report it as one: on this measure
+its behaviour is invariant to the rescaling in the way the theory says it
+should be. Its strategy mix is not, and we return to that in
+\S\ref{sec:labels}.
+
+The shape of the curve is the first substantive result, and it is only visible
+because the open-weight arm sweeps five orders of magnitude. The response is
+not monotone. In all three open-weight models cooperation rises from its
+minimum in the fractional regime to a maximum at $\lam = 1$ or $\lam = 10$ and
+then falls again by $\lam = 100$: Gemma from 0.345 to 0.661 and back to 0.512,
+Qwen3 from 0.334 to 0.601 and back to 0.465, Llama from 0.300 to 0.499 and back
+to 0.450. A three-scale window at
+$\{0.1, 1, 10\}$, which is what the frontier arm and most published designs
+sample, lies entirely on the rising limb and would support the conclusion that
+larger payoffs produce more cooperation. Over the wider sweep that conclusion
+is false.
+
+\subsection{Magnitude or notation}
+\label{sec:notation}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig3_notation.pdf}
+\caption{\textbf{What the response is a function of.}
+(\textbf{a}) Cooperation by notation regime, pooled within each arm. Whiskers
+are 95\% dyad bootstrap intervals. The frontier arm has no large regime,
+because its sweep stops at $\lam = 10$.
+(\textbf{b}) The description ladder for the open-weight arm. Bars give the BIC
+penalty each specification pays relative to the best one, with model, language
+and both personas controlled in every row. A three-level factor built from how
+the cells are printed beats every polynomial in $\log_{10}\lam$ and beats the
+factor saturated in $\lam$, which has three more parameters.
+(\textbf{c}) Cooperation by model across the sweep, on an evenly spaced scale
+index. Qwen3 8B cooperates more than Gemma 3 12B at $\lam = 0.01$ and less at
+every larger scale, so which of the two is the more cooperative model is a
+statement about the units.}
+\label{fig:notation}
+\end{figure}
+
+The response tracks the notation. Pooled over the open-weight arm, cooperation
+in the fractional regime is 0.370 $\ci{0.352}{0.388}$, in the unit regime
+0.570 $\ci{0.553}{0.588}$ and in the large regime 0.489
+$\ci{0.472}{0.508}$ (figure~\ref{fig:notation}a); the same ordering holds separately
+in all three models. In the frontier arm, which has no large regime,
+cooperation is 0.489 $\ci{0.467}{0.510}$ in the fractional regime against
+0.632 $\ci{0.619}{0.644}$ in the unit regime, and the ordering again holds
+separately in every model.
+
+The description ladder makes the point quantitatively
+(figure~\ref{fig:notation}b, table~\ref{tab:ladder}). On the open-weight arm,
+against the best specification, a model with no $\lam$ term at all pays 374 BIC
+points, a linear term in $\log_{10}\lam$ pays 247, a quadratic pays 110 and a
+cubic pays 118. A single binary feature, whether the cell prints with a decimal
+point, pays 56, and adding the glyph count brings that to 16. The best
+specification is the three-level notation regime, and the specification
+saturated in $\lam$, which spends three more parameters and is the ceiling on
+what any function of $\lam$ can fit, pays 20 points more than it. Two features
+of how the numbers are written therefore capture what a free parameter per
+scale captures, while a smooth function of the magnitude, at any of the three
+orders we fitted, does not.
+
+The frontier arm agrees where it can. With only two regimes present, the
+fractional flag and the notation regime are the same one-parameter
+specification there, and it beats the quadratic and the saturated model alike
+by 8.4 BIC points, and the linear term by 53.7.
+
+Per model (electronic supplementary material, table S3), five of the seven
+prefer a notation description: Llama and Qwen3 in
+the open-weight arm, by 258 and 149 BIC points over the quadratic, and Claude,
+GPT-4o and Gemini in the frontier arm. The two exceptions run in opposite
+directions and we report both, including the one that runs against us. Gemma
+3 12B prefers a cubic in $\log_{10}\lam$, with the saturated specification 3.3
+points behind it, the fractional flag plus glyph count 9.2 behind and the
+notation regime 24.3 behind; for that model a smooth function of the magnitude
+is the better description, and it is the single case in the corpus where the
+notation account loses to a polynomial. Mistral Large prefers no $\lam$ term
+at all, which is the correct description of a model whose cooperation rate did
+not move.
+
+\subsection{Which model looks more cooperative depends on the units}
+\label{sec:benchmark}
+
+The consequence for measurement is direct (figure~\ref{fig:notation}c). Within
+the open-weight arm, the smallest scale swing inside a model, 0.198 for Llama,
+is larger than the median spread between the three models at a fixed scale,
+0.114. Which $\lam$ the experimenter wrote down therefore matters more, for the
+number that comes out, than which of the three models was asked. The frontier
+arm does not reproduce that ordering, because its models are further apart:
+there the median between-model spread is 0.253 against a largest within-model
+swing of 0.240.
+
+Rankings reverse. Of the 45 model-pair by scale-pair comparisons available in
+the open-weight arm, 8 change sign, and of the 18 available in the frontier arm,
+2 do. Concretely, Qwen3 8B cooperates more than Gemma 3 12B at $\lam = 0.01$
+(0.387 against 0.345) and less at every larger scale, reaching 0.574 against
+0.661 at $\lam = 1$. In the frontier arm Mistral Large cooperates more than
+Claude 3.5 Haiku at $\lam = 0.1$ (0.502 against 0.468) and less at $\lam = 1$
+(0.538 against 0.700). A benchmark that fixes one scale reports one side of
+these comparisons and has no way to signal that the other side exists.
+
+\subsection{The effect is set at the opening move}
+\label{sec:opening}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig4_where.pdf}
+\caption{\textbf{Where the effect enters, and what it leaves alone.}
+(\textbf{a}) Cooperation by notation regime across the game. Solid lines are
+the open-weight arm, dashed the frontier arm; the four positions are round one
+and three equal blocks of the remaining rounds. The gap between the regimes is
+open at round one, before any history exists.
+(\textbf{b}) Opening-move cooperation against the payoff scale, one line per
+model, colours as in figure~\ref{fig:response}.
+(\textbf{c}) The largest shift across scales for six measures of the same
+games, against the same permutation null. Dark bars are the open-weight arm,
+pale the frontier arm; grey marks a measure whose shift does not clear its
+null. The level of cooperation moves in both arms; the rate at which the two
+agents fail to match does not.}
+\label{fig:where}
+\end{figure}
+
+A cooperation rate is an average over a game, so a difference between two
+scales could enter anywhere in it. It enters at the first move
+(figure~\ref{fig:where}a,b). In the open-weight arm the gap between the
+fractional and unit regimes is $-0.129$ on round one alone, against $-0.199$
+over the whole game, so the opening move already carries 65\% of it. In the
+frontier arm the round-one gap is $-0.199$ against $-0.142$ over the whole
+game: there the effect is \emph{larger} at the opening than on average, and
+shrinks as play proceeds, from $-0.199$ on round one to $-0.095$ over rounds
+seven to ten.
+
+Round one is the round on which no history exists. The agent has seen the
+payoff table, its persona and the round index, and nothing else. Whatever the
+rescaling does, therefore, it does to the prior over actions that the prompt
+induces, and not to anything the agent learns from its opponent. The two arms
+then diverge in what happens afterwards, which we report as a difference rather
+than a finding: over thirty rounds the open-weight gap widens slightly, from
+$-0.129$ to $-0.210$, while over ten rounds the frontier gap closes by half.
+Neither trajectory creates the effect, and the shorter horizon does not
+manufacture it.
+
+\subsection{What the rescaling does not move}
+\label{sec:invariant}
+
+A corpus in which every measure moves is a corpus one should be suspicious of.
+This one is not of that kind (figure~\ref{fig:where}c). Measured on the same
+games and against the same dyad-level null, the level of cooperation moves in
+both arms, and so do mutual cooperation, mutual defection, efficiency and the
+opening move, all at $P < 0.001$. The rate of miscoordination, that is, the
+share of rounds in which the two agents chose differently, does not: it swings
+by 0.039 across six scales in the open-weight arm ($P = 0.14$, null 95th
+percentile 0.047) and by 0.015 across three in the frontier arm ($P = 0.56$,
+null 0.035), while mutual cooperation over the same rows swings by 0.198 and
+0.139.
+
+The distinction is worth stating plainly. Scaling the payoffs moves how much
+the agents cooperate and leaves untouched how well they coordinate. Two agents
+at $\lam = 0.01$ and two at $\lam = 1$ agree with each other equally often;
+what differs is what they agree on. The asymmetry between the two positions in
+a dyad behaves the same way in the open-weight arm, where the first-listed
+agent cooperates between 0.054 and 0.099 less than the second at every one of
+the six scales, with no trend across them.
+
+\subsection{The scale shifts how far the persona instruction is obeyed}
+\label{sec:gating}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figures/fig5_gating.pdf}
+\caption{\textbf{What the payoff scale carries with it.}
+(\textbf{a}) The effect of being told to be cooperative rather than selfish,
+scale by scale, \emph{one line per model}; colours as in
+figure~\ref{fig:response}, solid the open-weight arm and dashed the frontier
+arm. Every model moves upward across the fractional-to-unit boundary and the
+three open-weight models move back down into the large regime, but only two of
+the seven cross zero: the sign of the effect is a property of the model. The
+average of these lines crosses zero although almost none of them does, which
+is why no pooled curve is drawn.
+(\textbf{b}) Cooperation by prompt language across the sweep, open-weight arm.
+The five languages do not move together: Arabic falls from $\lam = 10$ onward
+while Vietnamese rises.
+(\textbf{c}) The share of agent-games carrying each strategy label, against
+the payoff scale, with the arms encoded as in figure~\ref{fig:where}a. The two
+unconditional rules trace the cooperation curve of figure~\ref{fig:response}
+and its mirror image; the two conditional rules stay nearly flat.}
+\label{fig:gating}
+\end{figure}
+
+Each agent received a system-prompt persona, either \emph{cooperative} or
+\emph{selfish}. A persona is not irrelevant by theorem, but it carries no
+information about the game: the four pairings present identical payoff
+matrices, and an agent was never told its opponent's persona. What the persona
+does carry is an instruction, and how far that instruction is obeyed turns out
+to depend on the payoff scale (figure~\ref{fig:gating}a,
+table~\ref{tab:persona}).
+
+The result has to be stated at the level of the individual model, because the
+pooled average is misleading here in a way worth setting out. Pooled over the
+open-weight arm the effect of the cooperative persona is $-0.095$
+$\ci{-0.139}{-0.051}$ at $\lam = 0.01$, turns positive at $+0.113$
+$\ci{0.068}{0.159}$ at $\lam = 10$ and collapses to $-0.003$
+$\ci{-0.049}{0.044}$ at $1000$; the frontier pooled curve runs $-0.461$
+$\ci{-0.494}{-0.429}$, $+0.030$ $\ci{-0.005}{0.065}$ and $+0.073$
+$\ci{0.039}{0.109}$. Read alone, those two curves say that the instruction is
+inverted in the fractional regime, obeyed in the unit regime and inert in the
+large one. That reading does not survive disaggregation. In five of the seven
+models the effect keeps one sign across the entire sweep: it is positive at
+every scale for Gemma 3 12B and Llama 3.1 8B and negative at every scale for
+Qwen3 8B, Claude 3.5 Haiku and Mistral Large. Every one of those 21 estimates
+excludes zero except Gemma at $\lam = 0.01$, and every one of the five is
+signed consistently once the scales are pooled within a regime
+(table~\ref{tab:persona}). Only GPT-4o and Gemini 3.5 Flash-Lite cross zero. The pooled sign change is produced by three open-weight
+models whose constant-sign effects change in magnitude, not by any model
+reversing: Qwen3's inversion weakens from $-0.442$ to $-0.250$ while Gemma's
+compliance strengthens from $+0.138$ to $+0.382$. The apparent null in the
+large regime is the same arithmetic, since at $\lam = 100$ the three
+open-weight effects are $+0.152$, $+0.101$ and $-0.314$ and each of the three
+excludes zero. Consistent with that, the three-way interaction between model,
+regime and persona is itself significant, at $F(3, \cdot) = 50.8$,
+$P = 2.7\times10^{-32}$ in the frontier arm and $F(4, \cdot) = 7.6$,
+$P = 4.2\times10^{-6}$ in the open-weight arm, so the pooled two-way
+interaction is not a summary of a pattern the models share.
+
+What the models do share is the direction of the shift. Measured as a
+difference in differences with its own dyad bootstrap, the persona effect
+moves toward compliance across the fractional-to-unit boundary in every one of
+the seven, by $+0.244$, $+0.052$ and $+0.192$ in the open-weight arm and
+$+0.256$, $+0.691$, $+0.707$ and $+0.396$ in the frontier arm, and all seven
+intervals exclude zero. Where the sweep continues into the large regime all
+three open-weight models move back the other way, by $-0.205$, $-0.049$ and
+$-0.058$, the first two of which exclude zero. The persona effect therefore
+follows the same non-monotone course as the cooperation rate itself, rising
+into the unit regime and falling out of it, in seven of seven models and both
+arms.
+
+The two statements have to be kept apart, and separating them is what the
+result is. \emph{Whether} a model obeys a cooperative persona at all is a
+property of that model, stable across five orders of magnitude in the payoff
+scale, and nothing in this corpus suggests the units decide it. \emph{How
+strongly} it obeys is not a property of the model: it is shifted, in a common
+direction and by as much as 0.71, by a change to the payoff matrix that
+carries no instruction, no information about the task, and no game-theoretic
+content whatever. For two of the seven models that shift is large enough to
+carry the effect across zero, which is how the same system prompt comes to
+raise cooperation at one scale and lower it at another in the same model.
+
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption{\textbf{The persona instruction, by model and notation regime.} The
+effect is the cooperation rate of an agent told to be cooperative minus that
+of an agent told to be selfish, measured within a regime. ``Shift'' is the
+difference between two of those effects, with its own bootstrap over whole
+dyads. A dagger marks an entry whose 95\% interval excludes zero. The last
+column records whether the effect keeps one sign over the whole sweep. Read
+down the shift columns: every model moves toward compliance entering the unit
+regime and away from it leaving the unit regime, which is the shared pattern.
+Read down the effect columns: five of the seven never change sign, which is
+why the pooled curve of \S\ref{sec:gating} describes no individual model. The
+same effects scale by scale rather than regime by regime are in the electronic
+supplementary material, table S4.}
+\label{tab:persona}
+\begin{tabular}{@{}llccccccl@{}}
+\toprule
+ & & \multicolumn{3}{c}{Effect of the cooperative persona} & & \multicolumn{2}{c}{Shift} & \\
+\cmidrule(lr){3-5}\cmidrule(lr){7-8}
+Arm & Model & fractional & unit & large & & frac.$\to$unit & unit$\to$large & Sign \\
+\midrule
+open-weight & Gemma 3 12B & $+0.138^{\dagger}$ & $+0.382^{\dagger}$ & $+0.177^{\dagger}$ & & $+0.244^{\dagger}$ & $-0.205^{\dagger}$ & constant \\
+open-weight & Llama 3.1 8B & $+0.093^{\dagger}$ & $+0.145^{\dagger}$ & $+0.097^{\dagger}$ & & $+0.052^{\dagger}$ & $-0.049^{\dagger}$ & constant \\
+open-weight & Qwen3 8B & $-0.442^{\dagger}$ & $-0.250^{\dagger}$ & $-0.308^{\dagger}$ & & $+0.192^{\dagger}$ & $-0.058$\phantom{$^{\dagger}$} & constant \\
+\midrule
+frontier & Claude 3.5 Haiku & $-0.318^{\dagger}$ & $-0.062^{\dagger}$ & - & & $+0.256^{\dagger}$ & - & constant \\
+frontier & Gemini 3.5 Flash-Lite & $-0.489^{\dagger}$ & $+0.218^{\dagger}$ & - & & $+0.707^{\dagger}$ & - & \textbf{crosses} \\
+frontier & GPT-4o & $-0.438^{\dagger}$ & $+0.252^{\dagger}$ & - & & $+0.691^{\dagger}$ & - & \textbf{crosses} \\
+frontier & Mistral Large & $-0.599^{\dagger}$ & $-0.203^{\dagger}$ & - & & $+0.396^{\dagger}$ & - & constant \\
+\bottomrule
+\end{tabular}
+
+\vspace{3pt}
+{\footnotesize The frontier arm has no large regime, because its sweep stops
+at $\lam = 10$. Model $\times$ regime $\times$ persona interaction:
+$F(3, \cdot) = 50.8$, $P = 2.7\times10^{-32}$ (frontier);
+$F(4, \cdot) = 7.6$, $P = 4.2\times10^{-6}$ (open-weight).}
+\end{table}
+
+\subsection{Language and objective framing}
+\label{sec:language}
+
+The prompt language interacts with the scale as well
+(figure~\ref{fig:gating}b). In the open-weight arm the spread between the five
+languages ranges from 0.162 to 0.427 depending on which scale it is measured
+at, and the scale swing ranges from 0.191 to 0.383 depending on which language
+it is measured in (electronic supplementary material, table S8); the
+interaction between the notation regime and language is
+$F(8, \cdot) = 19.4$, $P = 3.5 \times 10^{-29}$. The frontier arm gives the
+same result at a smaller size, $F(4, \cdot) = 7.9$, $P = 2.3 \times 10^{-6}$.
+The
+languages do not move in parallel: cooperation in Arabic falls from 0.423 at
+$\lam = 10$ to 0.232 at $\lam = 1000$ while cooperation in Vietnamese rises
+from 0.565 to 0.659 over the same two scales.
+
+One feature of the FAIRGAME templates makes a partial mechanism test available,
+and we use it rather than treat it only as a limitation. The templates do not
+state the objective identically in every language: English, French and
+Vietnamese tell the agent to minimise a penalty, while Chinese and Arabic tell
+it to maximise a reward, with the cell values still described as penalties.
+Language is therefore confounded with objective framing in this corpus, which
+means the five-language contrast is an omnibus test and we report it as one.
+
+The confound is informative here because a natural account of the scale effect
+predicts something specific about it. If models were reading the displayed
+numbers as rewards to be maximised rather than penalties to be minimised, and
+if raising $\lam$ made the largest attainable number easier to notice, then the
+direction of the scale effect should differ between the two framings. It does
+not. Under both framings the open-weight response has the same non-monotone
+shape, rising from 0.302 to 0.494 and falling to 0.386 under the
+maximise-framed languages, and rising from 0.393 to 0.640 and falling to 0.579
+under the minimise-framed ones. Framing shifts the level of cooperation, by
+0.136 in the open-weight arm and by only $-0.007$ in the frontier arm, and does
+not reverse or reshape the response to $\lam$. The scale effect is therefore
+not a reward-reading effect, or at least not only one.
+
+\subsection{The strategy label moves, and it moves selectively}
+\label{sec:labels}
+
+Cooperation rate is one summary. A second, and the one that feeds evolutionary
+models of mixed populations, is the strategy a read-out assigns to a whole run
+of play. We pass every agent-game through the hybrid read-out of
+\S\ref{sec:readout}, which proves a label from the four canonical memory-one
+rules where one of them exactly reproduces the run, records the run as
+ambiguous where several do, and otherwise takes the argmax of an LSTM trained
+on synthetic play from the same four. The mix over those five categories is
+the dependent variable (figure~\ref{fig:gating}c).
+
+It moves with the scale in all seven models. The largest total-variation
+distance between the mixes at two scales is 0.375 for Gemma, 0.388 for Llama
+and 0.278 for Qwen3, against dyad-level permutation nulls of 0.143, 0.115 and
+0.123; and 0.263 for Claude, 0.338 for Gemini, 0.325 for GPT-4o and 0.125 for
+Mistral Large, against nulls of 0.115, 0.120, 0.103 and 0.098. Every one of the
+seven exceeds its null, at $P < 0.001$ for six and $P = 0.006$ for Mistral
+Large. Restricting the vocabulary to the four named rules, so that movement
+into and out of the ambiguous category cannot contribute, leaves all seven
+significant, at 0.205, 0.388, 0.275, 0.245, 0.304, 0.296 and 0.127 in the same
+order. One model changes materially under that restriction and we flag it:
+Gemma's shift falls from 0.375 to 0.205, because almost half of its
+five-category distance is movement into the ambiguous bucket rather than
+between strategies. For the other six the two versions agree to within 0.04.
+
+The shape of the movement is the substantive part, and a single distance
+cannot show it (figure~\ref{fig:gating}c, table~\ref{tab:strategy}). Resolved
+into one curve per label, the open-weight AllD share runs 0.531, 0.549, 0.326,
+0.332, 0.428 and 0.403 across the six scales and the AllC share runs 0.216,
+0.193, 0.335, 0.354, 0.279 and 0.284. These are the cooperation curve of
+figure~\ref{fig:response}a and its mirror image: the same rise into the unit
+regime, the same plateau across a full order of magnitude, the same fall above
+$\lam = 100$. The frontier arm reproduces the rising limb, AllD falling from
+0.388 to 0.185 and AllC rising from 0.303 to 0.393 between $\lam = 0.1$ and
+$\lam = 1$. The notation result therefore holds on a read-out that consumes
+the whole sequence, and not only on an average over rounds.
+
+The two conditional rules behave differently, and the contrast is the point.
+Over the open-weight sweep the TFT share moves by 0.049 and the WSLS share by
+0.020, against the 0.223 of AllD and the 0.161 of AllC; measured against the
+same dyad-level null, TFT clears it narrowly ($P = 0.0015$, null 0.038) and
+WSLS does not clear it at all ($P = 0.36$, null 0.029). The frontier arm gives
+the same ordering, with TFT at 0.050 and WSLS at 0.067 against AllD's 0.203.
+What the payoff scale moves is how often an agent is assigned an
+\emph{unconditional} rule, and which one; how often it is assigned a rule that
+responds to its opponent barely moves. That is the invariant of
+\S\ref{sec:invariant} seen at the level of the sequence rather than the round:
+reciprocal play is what produces coordination, and reciprocal play is what the
+rescaling leaves alone.
+
+Two further observations belong here because they qualify what the read-out
+can be asked to support. First, Mistral Large is the model whose cooperation
+rate did not move, and its strategy mix does, at $P = 0.006$ over the five
+categories and $P = 0.004$ over the four named rules. A model can cooperate at the same rate under two scales and
+still be assigned a different distribution over strategies, because the rate
+is an average and the label is a claim about the sequence; invariance on one
+summary is not invariance on the other. Second, the read-out's own coverage is
+not constant across the sweep. The share of open-weight agent-games carrying a
+provable rule falls from 0.284 at $\lam = 0.01$ to 0.172 at $\lam = 10$ and
+recovers to 0.207 at $\lam = 1000$, while the ambiguous share rises from 0.055
+to 0.173; in the frontier arm provable coverage falls from 0.360 to 0.190
+across three scales and the share below the posterior floor rises from 0.219
+to 0.290. Play is at its least exactly nameable at the scales where
+cooperation is highest, which is a property of the instrument as much as of
+the behaviour, and it is a further reason to read the named-vocabulary column
+of table~\ref{tab:sensitivity} alongside the five-category one rather than
+instead of it.
+
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption{\textbf{Each strategy label against the payoff scale.} Shares are of
+all agent-games in the arm at that scale. ``Swing'' is the largest difference
+between two scales, tested against a permutation null that shuffles the scale
+label across whole dyads, exactly as in table~\ref{tab:sensitivity}. The
+predicted swing is zero on every row. The two unconditional rules move by
+three to eleven times what the two conditional ones do, and win-stay
+lose-shift over six scales is the one label whose movement does not clear its
+null. ``Ambiguous'' is not a strategy: it records that several rules reproduce
+the run of play equally well, so its row measures how nameable the play is
+rather than what was played.}
+\label{tab:strategy}
+\begin{tabular}{@{}lcccccclccr@{}}
+\toprule
+ & \multicolumn{6}{c}{share of agent-games at $\lam =$} & & \multicolumn{3}{c}{across the sweep} \\
+\cmidrule(lr){2-7}\cmidrule(lr){9-11}
+Label & 0.01 & 0.1 & 1 & 10 & 100 & 1000 & & swing & null & $P$ \\
+\midrule
+\multicolumn{11}{@{}l}{\emph{open-weight arm, six scales, 30 rounds}}\\
+AllD      & 0.531 & 0.549 & 0.326 & 0.332 & 0.428 & 0.403 & & 0.223 & 0.063 & $<0.001$ \\
+AllC      & 0.216 & 0.193 & 0.335 & 0.354 & 0.279 & 0.284 & & 0.161 & 0.054 & $<0.001$ \\
+TFT       & 0.149 & 0.113 & 0.100 & 0.122 & 0.109 & 0.116 & & 0.049 & 0.038 & 0.0015 \\
+WSLS      & 0.049 & 0.051 & 0.066 & 0.066 & 0.053 & 0.069 & & 0.020 & 0.029 & 0.36 \\
+Ambiguous & 0.055 & 0.093 & 0.173 & 0.127 & 0.130 & 0.128 & & 0.118 & 0.052 & $<0.001$ \\
+\midrule
+\multicolumn{11}{@{}l}{\emph{frontier arm, three scales, 10 rounds}}\\
+AllD      & - & 0.388 & 0.185 & 0.196 & - & - & & 0.203 & 0.041 & $<0.001$ \\
+AllC      & - & 0.303 & 0.393 & 0.376 & - & - & & 0.089 & 0.039 & $<0.001$ \\
+TFT       & - & 0.097 & 0.147 & 0.141 & - & - & & 0.050 & 0.029 & $<0.001$ \\
+WSLS      & - & 0.131 & 0.197 & 0.198 & - & - & & 0.067 & 0.033 & $<0.001$ \\
+Ambiguous & - & 0.081 & 0.079 & 0.090 & - & - & & 0.011 & 0.032 & 0.69 \\
+\bottomrule
+\end{tabular}
+
+\vspace{3pt}
+{\footnotesize Provenance of the labels (\S\ref{sec:readout}), as a share of
+all agent-games in the arm: provable rule 22.1\% open-weight and 25.5\%
+frontier, ambiguous 11.8\% and 8.3\%, LSTM above the 0.90 posterior floor
+49.6\% and 40.5\%, LSTM below it 16.5\% and 25.7\%. None of these four shares
+is constant across the sweep; the breakdown by scale is in the electronic
+supplementary material, table S7, and the mix resolved by model in table S6.}
+\end{table}
+
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.2pt}
+\caption{\textbf{Scale sensitivity per model.} ``Swing'' is the largest
+difference in cooperation rate between two payoff scales and ``at'' names the
+scale where cooperation peaks. ``Monotone'' records whether the response
+increases or decreases throughout the sweep. ``Coop. shift'' repeats the swing
+as a test against a permutation null that shuffles the scale label across
+whole dyads, and ``mix shift'' is the same test on the largest total-variation
+distance between the strategy mixes at two scales, reported over the five
+categories the read-out emits and again over the four named rules alone, on
+which movement into the ambiguous category cannot contribute. ``Best
+description'' is the specification of table~\ref{tab:ladder} with the lowest
+BIC for that model. The predicted value of every shift column is exactly zero,
+because a positive rescaling of a von Neumann--Morgenstern utility leaves the
+game unchanged. Nothing in this table is comparable across the two arms, whose
+horizon, base matrix and decoding settings all differ (\S\ref{sec:confounds}).}
+\label{tab:sensitivity}
+\begin{tabular}{@{}llccccccccc@{}}
+\toprule
+ & & & \multicolumn{2}{c}{Cooperation} & & \multicolumn{2}{c}{Coop. shift} & \multicolumn{3}{c}{Mix shift} \\
+\cmidrule(lr){4-5}\cmidrule(lr){7-8}\cmidrule(lr){9-11}
+Arm & Model & Coop. & swing & at & Mono. & obs. & null & 5-cat. & named & null \\
+\midrule
+open-weight & Gemma 3 12B    & 0.535 & 0.316 & $\lam{=}1$  & no  & 0.316$^{***}$ & 0.121 & 0.375$^{***}$ & 0.205$^{***}$ & 0.143 \\
+open-weight & Llama 3.1 8B   & 0.420 & 0.198 & $\lam{=}10$ & no  & 0.198$^{***}$ & 0.047 & 0.388$^{***}$ & 0.388$^{***}$ & 0.115 \\
+open-weight & Qwen3 8B       & 0.474 & 0.267 & $\lam{=}10$ & no  & 0.267$^{***}$ & 0.095 & 0.278$^{***}$ & 0.275$^{***}$ & 0.123 \\
+\midrule
+frontier & Claude 3.5 Haiku     & 0.625 & 0.240 & $\lam{=}10$ & yes & 0.240$^{***}$ & 0.058 & 0.263$^{***}$ & 0.245$^{***}$ & 0.115 \\
+frontier & Gemini 3.5 Flash-Lite & 0.740 & 0.080 & $\lam{=}1$  & no  & 0.080$^{**}$  & 0.062 & 0.338$^{***}$ & 0.304$^{***}$ & 0.120 \\
+frontier & GPT-4o               & 0.448 & 0.234 & $\lam{=}10$ & yes & 0.234$^{***}$ & 0.062 & 0.325$^{***}$ & 0.296$^{***}$ & 0.103 \\
+frontier & Mistral Large        & 0.524 & 0.036 & $\lam{=}1$  & no  & 0.036\phantom{$^{***}$}       & 0.065 & 0.125$^{**}$  & 0.127$^{**}$  & 0.098 \\
+\bottomrule
+\end{tabular}
+
+\vspace{3pt}
+{\footnotesize $^{***}P < 0.001$, $^{**}P < 0.01$, blank $P \geq 0.05$, over
+2{,}000 dyad-level permutations; the null column is the 95th percentile of the
+five-category null, and the named-vocabulary nulls, which run from 0.094 to
+0.130, are given in the electronic supplementary material, table S5. Best
+description by BIC:
+notation regime for Llama, Qwen3, Claude, Gemini and GPT-4o; a cubic in
+$\log_{10}\lam$ for Gemma, the one model the notation account does not fit
+best; no $\lam$ term for Mistral Large.}
+\end{table}
+
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{6pt}
+\caption{\textbf{The description ladder.} Every specification predicts the
+cooperation rate of an agent-game from the same controls for model, prompt
+language, own persona and opponent persona, and differs only in how the payoff
+scale enters. $\Delta$BIC is measured from the best specification within each
+arm; $k$ counts the free parameters the specification adds to the controls.
+The saturated row is the ceiling on what any function of $\lam$ can fit, so a
+row that matches it at lower $k$ has found the shape of the response. In the
+frontier arm only two notation regimes are present, so the fractional flag and
+the regime factor are the same specification, and a cubic in $\log_{10}\lam$ is
+collinear with a quadratic over three scales.}
+\label{tab:ladder}
+\begin{tabular}{@{}lcrcr@{}}
+\toprule
+ & \multicolumn{2}{c}{open-weight, 6 scales} & \multicolumn{2}{c}{frontier, 3 scales} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+How $\lam$ enters & $k$ & $\Delta$BIC & $k$ & $\Delta$BIC \\
+\midrule
+not at all                                & 0 & 373.5 & 0 & 192.9 \\
+linear in $\log_{10}\lam$                 & 1 & 247.2 & 1 &  53.7 \\
+quadratic in $\log_{10}\lam$              & 2 & 109.6 & 2 &   8.4 \\
+cubic in $\log_{10}\lam$                  & 3 & 117.9 & - &   8.4 \\
+fractional flag                           & 1 &  56.1 & 1 &   \textbf{0.0} \\
+fractional flag $+$ glyph count           & 2 &  16.5 & 2 &   8.4 \\
+notation regime, 3 levels                 & 2 &   \textbf{0.0} & 1 & \textbf{0.0} \\
+saturated in $\lam$                       & 5 &  19.6 & 2 &   8.4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Discussion}
+
+\subsection{A cooperation rate is a statement about one choice of units}
+
+The central result is that the strategic behaviour of a language model is not
+invariant to the one manipulation whose null is a theorem. Six of seven models
+move, by up to 0.32 in cooperation rate and up to 0.39 in total variation over
+strategy labels, when every payoff is multiplied by a positive constant. This
+is not a framing effect in the sense the term usually carries, because no
+description changed. The words of the prompt, the ordering of the options, the
+identity of the dominant action and the structure of the dilemma are all
+identical between two conditions that differ by a factor of ten.
+
+The consequence for measurement is that a published cooperation rate for a
+language model is conditional on a design choice that the theory says is not a
+choice, and that is therefore almost never reported. The size of that
+conditioning is not small. In the open-weight arm the smallest within-model
+swing across the sweep exceeds the median spread between the three models at a
+fixed scale, and eight of forty-five model-pair comparisons change sign
+somewhere in the sweep. Two frontier models change places between $\lam = 0.1$
+and $\lam = 1$. A field that compares models on cooperation is comparing them
+at whichever scale each paper happened to write down.
+
+\subsection{Notation, and what the account can and cannot claim}
+
+The response is not a smooth function of the magnitude. A cubic in
+$\log_{10}\lam$ fits worse than a single binary feature of the printed string,
+and a two-parameter description built from how the cells are written matches
+what a free parameter per scale achieves. Read with the shape of the curve,
+which rises, plateaus and falls, the picture is a step function over notation
+regimes rather than a dose-response in the payoffs.
+
+We are explicit about the limit of that claim. In this design $\lam < 1$ and
+``the cells print with a decimal point'' are the same event, so the results are
+equally consistent with a notation account and with an account under which
+sub-unit magnitudes are simply treated as small stakes. The evidence that
+favours notation is indirect and comes from three directions. First, the
+response is flat between $\lam = 1$ and $\lam = 10$, a full order of magnitude,
+in both arms, which a stake-size account has to explain away. Second, the
+response turns down again above $\lam = 100$, so it is not monotone in stakes
+in either direction. Third, most of the effect is already there on the opening
+move, which is where a reading of the prompt lives and not where an evaluation
+of accumulated stakes could be.
+
+The decisive experiment is one restatement away and we did not run it. Print
+the $\lam = 1$ matrix as ``0.0, 2.0, 8.0, 10.0'' rather than ``0, 2, 8, 10'',
+which holds the magnitude fixed and changes only the notation, and print the
+$\lam = 0.1$ matrix in a unit where the cells are integers, which holds the
+notation fixed and changes only the magnitude. The two cells of that design
+separate the accounts completely. We regard the present results as establishing
+that the response is a step function over how the matrix is written, and as
+leaving open which feature of the writing does the work.
+
+\subsection{An instruction is only as good as the numbers next to it}
+
+The persona result is the one we would put first in front of anyone building
+agent systems, and it needs stating in two parts because the two carry
+different weight.
+
+The part that is common to every model is a shift. The strength with which a
+model follows a cooperative persona moves toward compliance when the payoffs
+next to that instruction are written as short integers rather than decimals,
+in all seven models, by between 0.05 and 0.71, and moves back away from
+compliance when they are written as thousands, in all three models whose sweep
+goes that far. Nothing about the instruction changed, nothing about the task
+changed, and nothing a game theorist can compute from the matrix changed.
+Instruction-following is normally treated as a property of a model, measured
+and reported as such; what this says is that it is a property of a model and
+its numeric context jointly, and that the relevant part of the context can be
+a part carrying no instruction and no information about the task beyond its
+units. An evaluation of whether a model follows a behavioural instruction, run
+at one payoff scale, does not transfer to another scale of the same task.
+
+The part that is \emph{not} common to every model is the sign, and we were
+careful in \S\ref{sec:gating} not to claim otherwise, because the pooled
+average invites it. Two of the seven models obey a cooperative persona at one
+payoff scale and invert it at another; the other five keep whatever
+disposition they have across five orders of magnitude. Whether a system prompt
+is followed or reversed therefore remains a model-level fact worth measuring
+once. How much it is followed is not, and cannot be reported without the scale
+it was measured at. A practitioner should read the first as a property to
+select a model on, and the second as a reason to test the prompt at the units
+the deployment will actually use.
+
+\subsection{Consequences for models of hybrid populations}
+
+Work that models populations in which artificial and human agents
+interact~\citep{paiva2018engineering,santos2018social,dafoe2021cooperative},
+and the evolutionary-game machinery it draws
+on~\citep{szabo2007evolutionary,perc2017statistical}, assigns agents
+strategies from a known family and computes the resulting dynamics. Three of
+our results bear on that programme directly. First, the assignment is not
+stable under a transformation the dynamics cannot see: the replicator equation
+is identical at $\lam$ and $10\lam$, and the strategy mix we would feed into it
+differs by up to 0.39 in total variation, or 0.39 over the four named rules
+alone. Two population models that a game theorist would call the same model
+therefore predict differently about the same agent.
+
+Second, the instability sits in exactly the coordinate such models are most
+sensitive to. What moves is the split between AllC and AllD, by 0.16 and 0.22
+over the open-weight sweep, and the seeded proportion of unconditional
+cooperators and defectors is what sets whether a replicator trajectory runs to
+fixation or to coexistence. Third, and cutting the other way, the reciprocal
+strategies are close to invariant: TFT moves by 0.05 and WSLS by 0.02, and
+WSLS does not clear its null at all. Since it is the reciprocal share that
+governs whether cooperation can be sustained against invasion at
+all~\citep{axelrod1981evolution,nowak1993strategy}, the part of the mix that
+carries the qualitative behaviour of the dynamics is the part the rescaling
+leaves alone, and the part it moves is the initial condition. That is a
+narrower problem than the raw total-variation number suggests, and a more
+tractable one.
+
+The practical implication is not that the programme is unworkable. It is that a
+population model built on measured LLM strategies inherits a free parameter
+that the theory does not contain, that the parameter enters through the
+initial mix rather than through the reciprocal core, and that it should be
+swept rather than fixed.
+
+\subsection{Relation to the prompt-sensitivity and framing literatures}
+
+That language model outputs move with features of the prompt that carry no
+task content is established: formatting choices, separators and option order
+all shift
+accuracy~\citep{sclar2024quantifying,lu2022fantastically}, and personas shift
+behaviour in ways that outrun what the persona
+states~\citep{deshpande2023toxicity,salewski2023context}. Our contribution is
+not that a spurious feature matters, but that the feature here is one the
+relevant theory has already declared to be spurious with a proof. In an
+accuracy benchmark, the claim that a separator should not matter is an
+intuition. In a game, the claim that units should not matter is the
+representation theorem, and that is what makes the size of the failure
+interpretable rather than merely surprising.
+
+The relation to the human framing literature runs the other
+way~\citep{tversky1981framing,kahneman1979prospect}. Human framing effects are
+produced by re-describing the same outcomes, and they map to a compact set of
+psychological mechanisms: reference points, loss aversion, the salience of a
+gain or a loss. Nothing is re-described here. Within an arm the two conditions
+differ by a multiplicative constant, which is the one change that prospect
+theory and expected utility theory agree in treating as inert once the units of
+the value function are fixed. Our closest neighbour in the LLM literature is
+the finding of~\citet{lore2024strategic} that contextual framing carries weight
+comparable to game structure; we document a sensitivity one step further out,
+to a change that is not a framing at all.
+
+\subsection{Limitations}
+\label{sec:limits}
+
+Six limitations bound these conclusions.
+
+The notation and magnitude accounts are not separated, for the reason given in
+\S\ref{sec:regimes}, and the experiment that would separate them is stated
+above. This bounds the interpretation of \S\ref{sec:notation} and not the
+result of \S\ref{sec:response}, which needs no account of the mechanism to
+stand.
+
+We test the multiplicative half of the affine invariance and not the additive
+half. Adding a constant to every cell is the weaker of the two demands, since
+it does not change the number of digits, and we would expect a smaller effect;
+but it has a cleaner interpretation, because it moves the reference point
+without touching the notation, and it is the natural companion experiment.
+
+The two arms differ in horizon, in horizon disclosure, in decoding temperature
+and in the base matrix, so nothing is comparable across them and we compare
+nothing. The replication we claim is of the direction and the shape of the
+response, both of which are measured within an arm and within a model.
+
+The sweep is coarse. Six scales at decade spacing locate the maximum only to
+within a decade, and the three-level regime partition is a coarse summary of a
+response that a denser sweep might resolve differently. The claim that a smooth
+function of $\log_{10}\lam$ is the wrong shape does not depend on the spacing;
+the claim that three regimes is the right partition does.
+
+The strategy result rests on an instrument, and the instrument is imperfect in
+a way that is worth naming rather than absorbing. Two thirds of the labels are
+supplied by a learned classifier rather than by a proof, and a sixth to a
+quarter of all agent-games sit below the posterior floor at which a read-out
+designed to abstain would decline to answer (\S\ref{sec:readout}). We have
+reported every test on the four named rules as well as on all five categories,
+and the conclusions of \S\ref{sec:labels} hold on both; but the exact-rule
+coverage of the frontier arm is lower than the classifier's training
+distribution, so the frontier labels in particular are nearest neighbours more
+often than they are recognitions. What would remove the caveat is an
+abstaining read-out, reported with its coverage, rather than a larger
+vocabulary.
+
+Finally, the model set is seven, none of them with an explicit reasoning
+procedure, and reasoning traces were disabled by design so that the parser
+could not manufacture cooperation. Whether a model that reasons at inference
+time recovers the invariance is the single most valuable extension, and it is
+the one experiment whose result we would not want to predict.
+
+\subsection{A reporting standard, and what it costs}
+\label{sec:standard}
+
+The remedy is cheap, and it follows from the first result alone. Any
+measurement of strategic behaviour in a language model should report the scale
+at which the payoff matrix was written, and should report the measurement at
+more than one scale. One decade of separation is enough to detect the effect
+(electronic supplementary material, table S9).
+Taking the single contrast $\lam = 0.1$ against $\lam = 1$, and holding it to
+the null of the full sweep, which is conservative because a two-level design
+generates a smaller one, the gap is 0.232, 0.226, 0.080 and 0.036 for the four
+frontier models and 0.145, 0.182 and 0.240 for the three open-weight ones,
+against nulls of 0.058, 0.062, 0.062, 0.065, 0.121, 0.047 and 0.095. Six of
+the seven clear it, and the one that does not is the model that does not move
+over the whole sweep either. Three conditions spanning two decades additionally
+recover the shape. The cost is a factor of two or three in sampling on a
+quantity that is otherwise reported as though it were a constant of the model.
+
+Concretely, we propose that a cooperation rate be published alongside its
+\emph{scale swing}, the largest difference between two scales, and its
+permutation null. On this corpus those pairs are 0.316 against 0.121, 0.198
+against 0.047, 0.267 against 0.095, 0.240 against 0.058, 0.080 against 0.062,
+0.234 against 0.062 and 0.036 against 0.065. Six of the seven exceed the null,
+and the seventh is a genuine and interesting negative that the current practice
+of reporting one number cannot express.
+
+\subsection{Conclusion}
+
+Seven language models played 6{,}000 iterated prisoner's dilemmas in which the
+only manipulation of the game was to multiply every payoff by a positive
+constant, a transformation whose effect on any theory of the game is exactly
+zero. Cooperation moved in six of the seven, by up to 0.32, and the strategy
+mix moved in all seven. The response is not monotone in the payoff magnitude,
+and it is better described by how the numbers are printed than by any
+polynomial in their logarithm. It is already open on the opening move, so it
+is a prior the notation induces and not something learned from play. It shifts
+how far a persona instruction is obeyed, in the same direction in every model,
+and it interacts with the prompt language. What it leaves alone is reciprocity:
+how well the two agents coordinate, and how often either is playing a rule
+that responds to the other.
+
+The reading we draw is not that these models fail to be rational agents, which
+would be a small claim about a well-known fact. It is that the quantity a
+benchmark reports is jointly determined by the game and by an arbitrary choice
+of units that the theory promised was free. Until that choice is swept rather
+than fixed, a cooperation rate attributed to a model is attributed too widely.
+
+\section*{Ethics}
+This work involved no human participants and no animal subjects, and required
+no ethical approval. The agents studied are commercial and open-weight
+language models, queried through their providers' interfaces under the
+respective terms of service. No personal data were collected, generated or
+processed at any stage: every prompt is a payoff matrix, a persona sentence
+and a history of prior moves, and every response is a single option token.
+
+\section*{Data accessibility}
+The full corpus of 6{,}000 dyads and 264{,}000 logged decisions, the analysis
+pipeline that produces every figure and table in this paper and in the
+electronic supplementary material, and the prompt templates are available at
+[REPOSITORY URL]. Every number appearing in a figure or a table is also
+written to a machine-readable CSV file in the same repository, and each figure
+and supplementary table is generated from those files rather than transcribed,
+so no displayed value can drift from the analysis that produced it. A
+permanent archive with a DOI will be deposited on acceptance.
+
+Additional material is deposited with the manuscript as electronic
+supplementary material: \S S1 there validates the strategy read-out, and
+tables S1--S10 give the per-model and per-cell breakdowns behind the summary
+statistics reported here.
+
+\section*{Declaration of AI use}
+Large language models are the object of study of this paper rather than a tool
+used to produce it: the corpus consists of their logged behaviour, and the
+models, versions and decoding settings are stated in
+\S\ref{sec:corpus}. [AUTHORS TO COMPLETE: declare here any use of generative
+AI in preparing the manuscript itself, for example in drafting, editing or
+code generation, in accordance with the journal's policy.]
+
+\section*{Authors' contributions}
+[A.O.]: conceptualization, methodology, software, formal analysis,
+investigation, data curation, visualization, writing - original draft;
+[A.T.]: conceptualization, methodology, validation, supervision, funding
+acquisition, writing - review and editing.
+
+Both authors gave final approval for publication and agreed to be held
+accountable for the work performed herein.
+
+\section*{Conflict of interest declaration}
+The authors declare no competing interests.
+
+\section*{Funding}
+[FUNDING STATEMENT]
+
+\section*{Acknowledgements}
+We thank the FAIRGAME developers at the Luxembourg Institute of Science and
+Technology for releasing the multilingual game templates on which the language
+manipulation is built.
+
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\end{document}

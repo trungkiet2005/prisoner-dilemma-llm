@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2026.7.17)  12 AUG 2026 00:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2026.7.17)  30 AUG 2026 22:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -606,7 +606,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 84.
+(Font)              <10.95> on input line 86.
 
 
 [1
@@ -616,9 +616,12 @@ n/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc}{D:/Application/MiKTeX/fonts/enc/dvips/lm
 /lm-mathit.enc}{D:/Application/MiKTeX/fonts/enc/dvips/lm/lm-rm.enc}]
 
 [2]
+
+[3{D:/Application/MiKTeX/fonts/enc/dvips/lm/lm-mathsy.enc}]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
-14.
- (D:\Application\MiKTeX\tex/latex/lm\t1lmtt.fd
+22.
+
+(D:\Application\MiKTeX\tex/latex/lm\t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 Package microtype Info: Loading generic protrusion settings for font family
@@ -626,12 +629,10 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 
-
-[3{D:/Application/MiKTeX/fonts/enc/dvips/lm/lm-mathsy.enc}]
-Overfull \hbox (4.59375pt too wide) in paragraph at lines 245--251
-\T1/lmr/m/n/10.95 (-20) A player's tra-jec-tory is en-coded as a se-quence of t
-wo-letter to-kens, $\OMS/lmsy/m/n/10.95 h$\T1/lmr/m/n/10.95 (-20) previous-roun
-d outcome$\OMS/lmsy/m/n/10.95 ih$\T1/lmr/m/n/10.95 (-20) action
+Overfull \hbox (6.50545pt too wide) in paragraph at lines 255--261
+\T1/lmr/m/n/10.95 (-20) We en-code a player's run of play as a se-quence of two
+-letter to-kens, $\OMS/lmsy/m/n/10.95 h$\T1/lmr/m/n/10.95 (-20) previous-round 
+outcome$\OMS/lmsy/m/n/10.95 ih$\T1/lmr/m/n/10.95 (-20) action
  []
 
 
@@ -639,65 +640,66 @@ d outcome$\OMS/lmsy/m/n/10.95 ih$\T1/lmr/m/n/10.95 (-20) action
 [4]
 
 [5]
-<figures/fig1_setup.pdf, id=180, 520.52611pt x 198.42572pt>
+<figures/fig1_setup.pdf, id=180, 498.663pt x 198.7425pt>
 File: figures/fig1_setup.pdf Graphic file (type pdf)
 <use figures/fig1_setup.pdf>
-Package pdftex.def Info: figures/fig1_setup.pdf  used on input line 385.
-(pdftex.def)             Requested size: 452.9679pt x 172.68044pt.
+Package pdftex.def Info: figures/fig1_setup.pdf  used on input line 402.
+(pdftex.def)             Requested size: 452.9679pt x 180.53146pt.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 400.
+(Font)              <10> on input line 417.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 400.
+(Font)              <7> on input line 417.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 400.
-<figures/fig2_readout.pdf, id=181, 520.52611pt x 173.70433pt>
-File: figures/fig2_readout.pdf Graphic file (type pdf)
-<use figures/fig2_readout.pdf>
-Package pdftex.def Info: figures/fig2_readout.pdf  used on input line 409.
-(pdftex.def)             Requested size: 452.9679pt x 151.16658pt.
+(Font)              <5> on input line 417.
 
 
 [6]
-<figures/fig3_labels.pdf, id=197, 524.75644pt x 191.92427pt>
-File: figures/fig3_labels.pdf Graphic file (type pdf)
-<use figures/fig3_labels.pdf>
-Package pdftex.def Info: figures/fig3_labels.pdf  used on input line 479.
-(pdftex.def)             Requested size: 452.9679pt x 165.66956pt.
+<figures/fig2_readout.pdf, id=187, 498.663pt x 169.8345pt>
+File: figures/fig2_readout.pdf Graphic file (type pdf)
+<use figures/fig2_readout.pdf>
+Package pdftex.def Info: figures/fig2_readout.pdf  used on input line 426.
+(pdftex.def)             Requested size: 452.9679pt x 154.27234pt.
 
 
 [7 <./figures/fig1_setup.pdf>]
+<figures/fig3_labels.pdf, id=237, 498.663pt x 184.28851pt>
+File: figures/fig3_labels.pdf Graphic file (type pdf)
+<use figures/fig3_labels.pdf>
+Package pdftex.def Info: figures/fig3_labels.pdf  used on input line 499.
+(pdftex.def)             Requested size: 452.9679pt x 167.40192pt.
+
 
 [8 <./figures/fig2_readout.pdf>]
 
 [9 <./figures/fig3_labels.pdf>]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 602.
-<figures/fig4_conditions.pdf, id=311, 520.57083pt x 196.62614pt>
+(Font)              <9> on input line 628.
+<figures/fig4_conditions.pdf, id=295, 498.663pt x 195.129pt>
 File: figures/fig4_conditions.pdf Graphic file (type pdf)
 <use figures/fig4_conditions.pdf>
-Package pdftex.def Info: figures/fig4_conditions.pdf  used on input line 628.
-(pdftex.def)             Requested size: 452.9679pt x 171.09335pt.
+Package pdftex.def Info: figures/fig4_conditions.pdf  used on input line 654.
+(pdftex.def)             Requested size: 452.9679pt x 177.24907pt.
 
 
 [10]
 
-[11 <./figures/fig4_conditions.pdf>]
-<figures/fig5_abstention.pdf, id=355, 520.52611pt x 176.1182pt>
+[11]
+
+[12 <./figures/fig4_conditions.pdf>]
+<figures/fig5_abstention.pdf, id=344, 498.663pt x 169.8345pt>
 File: figures/fig5_abstention.pdf Graphic file (type pdf)
 <use figures/fig5_abstention.pdf>
-Package pdftex.def Info: figures/fig5_abstention.pdf  used on input line 725.
-(pdftex.def)             Requested size: 452.9679pt x 153.26726pt.
-
-
-[12]
-<figures/fig6_hidden.pdf, id=364, 533.20543pt x 183.62793pt>
-File: figures/fig6_hidden.pdf Graphic file (type pdf)
-<use figures/fig6_hidden.pdf>
-Package pdftex.def Info: figures/fig6_hidden.pdf  used on input line 782.
-(pdftex.def)             Requested size: 452.9679pt x 155.9976pt.
+Package pdftex.def Info: figures/fig5_abstention.pdf  used on input line 756.
+(pdftex.def)             Requested size: 452.9679pt x 154.27234pt.
 
 
 [13 <./figures/fig5_abstention.pdf>]
+<figures/fig6_hidden.pdf, id=376, 498.663pt x 180.675pt>
+File: figures/fig6_hidden.pdf Graphic file (type pdf)
+<use figures/fig6_hidden.pdf>
+Package pdftex.def Info: figures/fig6_hidden.pdf  used on input line 814.
+(pdftex.def)             Requested size: 452.9679pt x 164.1195pt.
+
 
 [14 <./figures/fig6_hidden.pdf>]
 
@@ -705,9 +707,9 @@ Package pdftex.def Info: figures/fig6_hidden.pdf  used on input line 782.
 
 [16]
 
-[17] (main.bbl
+[17]
 
-[18]
+[18] (main.bbl
 
 [19]
 
@@ -719,16 +721,16 @@ LaTeX2e <2026-06-01>
 L3 programming layer <2026-04-28>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: EA1076F34DA3F2E372F2076AD8B1DC8A;4713.
+(rerunfilecheck)             Checksum: 0AEEDDE5DE0F9ED81D6F2A3587BB2787;4806.
  ) 
 Here is how much of TeX's memory you used:
- 15339 strings out of 467830
- 241043 string characters out of 5438750
- 701790 words of memory out of 5000000
+ 15345 strings out of 467830
+ 241107 string characters out of 5438750
+ 701850 words of memory out of 5000000
  43651 multiletter control sequences out of 15000+600000
- 725948 words of font info for 251 fonts, out of 8000000 for 9000
+ 726244 words of font info for 254 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 74i,8n,79p,1266b,626s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 74i,8n,79p,1240b,610s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <D:/Application/MiKTeX/fonts/type1/public/lm/lmbx10.pfb><D:/Application/MiKTe
 X/fonts/type1/public/lm/lmbx12.pfb><D:/Application/MiKTeX/fonts/type1/public/lm
 /lmmi10.pfb><D:/Application/MiKTeX/fonts/type1/public/lm/lmmi9.pfb><D:/Applicat
@@ -737,9 +739,9 @@ ublic/lm/lmr12.pfb><D:/Application/MiKTeX/fonts/type1/public/lm/lmr8.pfb><D:/Ap
 plication/MiKTeX/fonts/type1/public/lm/lmr9.pfb><D:/Application/MiKTeX/fonts/ty
 pe1/public/lm/lmri10.pfb><D:/Application/MiKTeX/fonts/type1/public/lm/lmsy10.pf
 b><D:/Application/MiKTeX/fonts/type1/public/lm/lmtt10.pfb>
-Output written on main.pdf (21 pages, 696077 bytes).
+Output written on main.pdf (21 pages, 509845 bytes).
 PDF statistics:
- 582 PDF objects out of 1000 (max. 8388607)
+ 547 PDF objects out of 1000 (max. 8388607)
  94 named destinations out of 1000 (max. 500000)
  51919 words of extra memory for PDF output out of 61914 (max. 10000000)
 

@@ -1,0 +1,137 @@
+% ---------------------------------------------------------------------------
+% Electronic supplementary material for
+%   "Units matter: cooperation in large language model agents tracks how the
+%    payoff matrix is written, not what it means"
+%
+% Tables S1-S10 are generated from tables/T_PS*.csv by
+% Analysis/scripts/42_supp_tables.py into supp_tables.tex, so no number here
+% is transcribed by hand.
+%
+%   pdflatex supplementary && bibtex supplementary && pdflatex supplementary
+%   pdflatex supplementary
+% ---------------------------------------------------------------------------
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,allcolors=blue!55!black]{hyperref}
+
+\captionsetup{font=small,labelfont=bf,width=\textwidth}
+\setlength{\parskip}{0pt}
+\renewcommand{\baselinestretch}{1.15}
+
+% Supplementary numbering: S1, S2, ... throughout.
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thesection}{S\arabic{section}}
+
+\newcommand{\lam}{\lambda}
+
+\title{\bfseries Electronic supplementary material\\[4pt]
+\large Units matter: cooperation in large language model agents tracks how
+the payoff matrix is written, not what it means}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\noindent
+This document holds the per-model and per-cell breakdowns behind the summary
+statistics of the main text, and the validation of the strategy read-out.
+Every table is generated directly from the machine-readable analysis output
+by \texttt{Analysis/scripts/42\_supp\_tables.py}; none of the numbers is
+transcribed by hand, and re-running the pipeline regenerates this document
+and the main text together.
+
+\begin{description}\itemsep2pt \parskip0pt
+\item[\S S1] Validating the strategy read-out: accuracy, the identifiability
+  floor, and where the corpus sits relative to the training distribution.
+\item[Table S1] The corpus, by model.
+\item[Table S2] What the rescaling changes, and what it cannot: the printed
+  cells at each scale beside the game-theoretic invariants.
+\item[Table S3] The description ladder, model by model.
+\item[Table S4] The persona instruction, model by model and scale by scale.
+\item[Table S5] Strategy-mix shifts on both vocabularies.
+\item[Table S6] The strategy mix, model by model.
+\item[Table S7] Where each strategy label came from.
+\item[Table S8] Cooperation by prompt language and payoff scale.
+\item[Table S9] What one decade of separation buys.
+\item[Table S10] Cooperation across the game, by notation regime.
+\end{description}
+
+\section{Validating the strategy read-out}
+\label{sec:S-readout}
+
+The read-out described in \S2.4 of the main text assigns each agent-game a
+label from the four canonical memory-one rules in two stages: an enumeration
+that proves whether a trajectory is exactly what a rule would have played, and
+where no rule fits, a long short-term memory
+network~\citep{hochreiter1997long} that returns the nearest one. This section
+records what each stage is worth, because the strategy results of \S3.8 rest
+on it and because two thirds of the labels come from the learned stage.
+
+\paragraph{Validation corpus.} The network is trained and evaluated on
+synthetic play generated from the same four rules, at execution-noise levels
+of 0 and 5 per cent, with a separate network for each of the two horizons in
+the corpus. Ten per cent and twenty per cent noise are held out entirely, and
+are reported below because real transcripts are noisier than the training
+distribution and it matters how the network degrades outside it.
+
+\paragraph{Accuracy.} At ten rounds the pipeline recovers the generating rule
+with accuracy 0.995 on noise-free play and 0.975 at five per cent noise,
+against Bayes-optimal single-label ceilings of 0.996 and 0.987. At thirty
+rounds the corresponding figures are 0.953 at five per cent noise against a
+ceiling of 0.966. Where exactly one rule fires the label is right 99.5 per
+cent of the time at ten rounds and 98.7 per cent at thirty, which is what
+makes the provable stage worth running first even though it covers a
+minority of games.
+
+\paragraph{The identifiability floor.} On noise-free thirty-round play the
+forced single-label ceiling is 0.625, and this is a property of the game
+rather than a failure of the method: an agent that cooperates throughout
+against a cooperator is exactly consistent with AllC, tit-for-tat and
+win-stay lose-shift at once, and no procedure can separate them. Allowing the
+first stage to return the \emph{set} of rules that fit, the answer is correct
+on 100 per cent of that file with a mean answer size of 2.13 labels. This is
+why the main text records such runs as \emph{ambiguous} rather than resolving
+them, and why the ambiguous share is treated throughout as a statement about
+identifiability rather than about strategy.
+
+\paragraph{Where the corpus sits relative to the training distribution.} The
+exact-rule coverage the read-out achieves on the real corpus locates it
+against the synthetic noise levels. In the open-weight arm 22.1 per cent of
+agent-games carry a provable rule, against 21.8 per cent for thirty-round
+synthetic play at five per cent noise, so that arm sits almost exactly at the
+validated operating point. In the frontier arm the figure is 25.5 per cent,
+below the 39.1 per cent of ten-round play at ten per cent noise and above the
+14.3 per cent at twenty per cent noise. Frontier transcripts therefore depart
+from the canonical rules by more than the training corpus does, and the
+network is extrapolating there more often. On those two held-out noise levels
+its accuracy where no rule fits is 0.908 and 0.788, which brackets what the
+frontier labels are worth and is the reason \S3.8 reports every test on the
+four named rules as well as on all five categories. Table~\ref{tab:S-source}
+gives the full provenance breakdown, scale by scale.
+
+\section{Supplementary tables}
+\label{sec:S-tables}
+
+\input{supp_tables}
+
+% flush every float before the reference list, so the tables are not printed
+% after the bibliography that follows them in the source
+\clearpage
+
+\bibliographystyle{unsrtnat}
+\bibliography{references}
+
+\end{document}

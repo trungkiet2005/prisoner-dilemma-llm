@@ -1,0 +1,233 @@
+\begin{thebibliography}{31}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Park et~al.(2023)Park, O'Brien, Cai, Morris, Liang, and
+  Bernstein]{park2023generative}
+Joon~Sung Park, Joseph~C. O'Brien, Carrie~J. Cai, Meredith~Ringel Morris, Percy
+  Liang, and Michael~S. Bernstein.
+\newblock Generative agents: Interactive simulacra of human behavior.
+\newblock In \emph{Proceedings of the 36th Annual ACM Symposium on User
+  Interface Software and Technology (UIST)}, 2023.
+\newblock \doi{10.1145/3586183.3606763}.
+
+\bibitem[Dafoe et~al.(2021)Dafoe, Bachrach, Hadfield, Horvitz, Larson, and
+  Graepel]{dafoe2021cooperative}
+Allan Dafoe, Yoram Bachrach, Gillian Hadfield, Eric Horvitz, Kate Larson, and
+  Thore Graepel.
+\newblock Cooperative {AI}: machines must learn to find common ground.
+\newblock \emph{Nature}, 593:\penalty0 33--36, 2021.
+\newblock \doi{10.1038/d41586-021-01170-0}.
+
+\bibitem[Axelrod and Hamilton(1981)]{axelrod1981evolution}
+Robert Axelrod and William~D. Hamilton.
+\newblock The evolution of cooperation.
+\newblock \emph{Science}, 211\penalty0 (4489):\penalty0 1390--1396, 1981.
+\newblock \doi{10.1126/science.7466396}.
+
+\bibitem[Axelrod(1984)]{axelrod1984evolution}
+Robert Axelrod.
+\newblock \emph{The Evolution of Cooperation}.
+\newblock Basic Books, New York, 1984.
+
+\bibitem[Nowak and Sigmund(1992)]{nowak1992tit}
+Martin~A. Nowak and Karl Sigmund.
+\newblock Tit for tat in heterogeneous populations.
+\newblock \emph{Nature}, 355:\penalty0 250--253, 1992.
+\newblock \doi{10.1038/355250a0}.
+
+\bibitem[Nowak(2006)]{nowak2006five}
+Martin~A. Nowak.
+\newblock Five rules for the evolution of cooperation.
+\newblock \emph{Science}, 314\penalty0 (5805):\penalty0 1560--1563, 2006.
+\newblock \doi{10.1126/science.1133755}.
+
+\bibitem[Press and Dyson(2012)]{press2012iterated}
+William~H. Press and Freeman~J. Dyson.
+\newblock Iterated {P}risoner's {D}ilemma contains strategies that dominate any
+  evolutionary opponent.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 109\penalty0
+  (26):\penalty0 10409--10413, 2012.
+\newblock \doi{10.1073/pnas.1206569109}.
+
+\bibitem[Akata et~al.(2025)Akata, Schulz, Coda-Forno, Oh, Bethge, and
+  Schulz]{akata2023playing}
+Elif Akata, Lion Schulz, Julian Coda-Forno, Seong~Joon Oh, Matthias Bethge, and
+  Eric Schulz.
+\newblock Playing repeated games with large language models.
+\newblock \emph{Nature Human Behaviour}, 9:\penalty0 1380--1390, 2025.
+\newblock \doi{10.1038/s41562-025-02172-y}.
+
+\bibitem[Phelps and Russell(2023)]{phelps2023investigating}
+Steve Phelps and Yvan~I. Russell.
+\newblock Investigating emergent goal-like behaviour in large language models
+  using experimental economics.
+\newblock \emph{arXiv preprint arXiv:2305.07970}, 2023.
+
+\bibitem[Fontana et~al.(2025)Fontana, Pierri, and Aiello]{fontana2024nicer}
+Nicol{\`o} Fontana, Francesco Pierri, and Luca~Maria Aiello.
+\newblock Nicer than humans: How do large language models behave in the
+  prisoner's dilemma?
+\newblock In \emph{Proceedings of the International AAAI Conference on Web and
+  Social Media (ICWSM)}, pages 522--535, 2025.
+\newblock \doi{10.1609/icwsm.v19i1.35829}.
+
+\bibitem[Mei et~al.(2024)Mei, Xie, Yuan, and Jackson]{mei2024turing}
+Qiaozhu Mei, Yutong Xie, Walter Yuan, and Matthew~O. Jackson.
+\newblock A {T}uring test of whether {AI} chatbots are behaviorally similar to
+  humans.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 121\penalty0
+  (9):\penalty0 e2313925121, 2024.
+\newblock \doi{10.1073/pnas.2313925121}.
+
+\bibitem[Lor{\`e} and Heydari(2024)]{lore2024strategic}
+Nunzio Lor{\`e} and Babak Heydari.
+\newblock Strategic behavior of large language models and the role of game
+  structure versus contextual framing.
+\newblock \emph{Scientific Reports}, 14:\penalty0 18490, 2024.
+\newblock \doi{10.1038/s41598-024-69032-z}.
+
+\bibitem[Paiva et~al.(2018)Paiva, Santos, and Santos]{paiva2018engineering}
+Ana Paiva, Fernando~P. Santos, and Francisco~C. Santos.
+\newblock Engineering pro-sociality with autonomous agents.
+\newblock \emph{Proceedings of the AAAI Conference on Artificial Intelligence},
+  32, 2018.
+\newblock \doi{10.1609/aaai.v32i1.12215}.
+
+\bibitem[Santos et~al.(2018)Santos, Santos, and Pacheco]{santos2018social}
+Fernando~P. Santos, Francisco~C. Santos, and Jorge~M. Pacheco.
+\newblock Social norm complexity and past reputations in the evolution of
+  cooperation.
+\newblock \emph{Nature}, 555:\penalty0 242--245, 2018.
+\newblock \doi{10.1038/nature25763}.
+
+\bibitem[Rahwan et~al.(2019)Rahwan, Cebrian, Obradovich, Bongard, Bonnefon,
+  Breazeal, Crandall, Christakis, Couzin, Jackson, Jennings, Kamar, Kloumann,
+  Larochelle, Lazer, McElreath, Mislove, Parkes, Pentland, Roberts, Shariff,
+  Tenenbaum, and Wellman]{rahwan2019machine}
+Iyad Rahwan, Manuel Cebrian, Nick Obradovich, Josh Bongard, Jean-Fran{\c c}ois
+  Bonnefon, Cynthia Breazeal, Jacob~W. Crandall, Nicholas~A. Christakis,
+  Iain~D. Couzin, Matthew~O. Jackson, Nicholas~R. Jennings, Ece Kamar,
+  Isabel~M. Kloumann, Hugo Larochelle, David Lazer, Richard McElreath, Alan
+  Mislove, David~C. Parkes, Alex Pentland, Margaret~E. Roberts, Azim Shariff,
+  Joshua~B. Tenenbaum, and Michael Wellman.
+\newblock Machine behaviour.
+\newblock \emph{Nature}, 568:\penalty0 477--486, 2019.
+\newblock \doi{10.1038/s41586-019-1138-y}.
+
+\bibitem[von Neumann and Morgenstern(1944)]{vonneumann1944theory}
+John von Neumann and Oskar Morgenstern.
+\newblock \emph{Theory of Games and Economic Behavior}.
+\newblock Princeton University Press, Princeton, NJ, 1944.
+
+\bibitem[Luce and Raiffa(1957)]{luce1957games}
+R.~Duncan Luce and Howard Raiffa.
+\newblock \emph{Games and Decisions: Introduction and Critical Survey}.
+\newblock Wiley, New York, 1957.
+
+\bibitem[One and Two(2026)]{selfpreprint2026scaling}
+Author One and Author Two.
+\newblock Payoff scaling shapes cooperation in {LLM} agents across languages,
+  2026.
+\newblock Preprint by the present authors.
+
+\bibitem[Buscemi et~al.(2025)Buscemi, Proverbio, Di~Stefano, Han, Castignani,
+  and Li{\`o}]{fairgame2025}
+Alessio Buscemi, Daniele Proverbio, Alessandro Di~Stefano, The~Anh Han, German
+  Castignani, and Pietro Li{\`o}.
+\newblock {FAIRGAME}: A framework for {AI} agents bias recognition using game
+  theory.
+\newblock In \emph{ECAI 2025 --- Proceedings of the 28th European Conference on
+  Artificial Intelligence}, pages 4097--4104. IOS Press, 2025.
+\newblock \doi{10.3233/FAIA251300}.
+
+\bibitem[Nowak and Sigmund(1993)]{nowak1993strategy}
+Martin~A. Nowak and Karl Sigmund.
+\newblock A strategy of win-stay, lose-shift that outperforms tit-for-tat in
+  the {P}risoner's {D}ilemma game.
+\newblock \emph{Nature}, 364:\penalty0 56--58, 1993.
+\newblock \doi{10.1038/364056a0}.
+
+\bibitem[Hochreiter and Schmidhuber(1997)]{hochreiter1997long}
+Sepp Hochreiter and J{\"u}rgen Schmidhuber.
+\newblock Long short-term memory.
+\newblock \emph{Neural Computation}, 9\penalty0 (8):\penalty0 1735--1780, 1997.
+\newblock \doi{10.1162/neco.1997.9.8.1735}.
+
+\bibitem[Efron and Tibshirani(1993)]{efron1993introduction}
+Bradley Efron and Robert~J. Tibshirani.
+\newblock \emph{An Introduction to the Bootstrap}.
+\newblock Chapman and Hall/CRC, New York, 1993.
+
+\bibitem[Schwarz(1978)]{schwarz1978estimating}
+Gideon Schwarz.
+\newblock Estimating the dimension of a model.
+\newblock \emph{The Annals of Statistics}, 6\penalty0 (2):\penalty0 461--464,
+  1978.
+\newblock \doi{10.1214/aos/1176344136}.
+
+\bibitem[Szab{\'o} and F{\'a}th(2007)]{szabo2007evolutionary}
+Gy{\"o}rgy Szab{\'o} and G{\'a}bor F{\'a}th.
+\newblock Evolutionary games on graphs.
+\newblock \emph{Physics Reports}, 446\penalty0 (4--6):\penalty0 97--216, 2007.
+\newblock \doi{10.1016/j.physrep.2007.04.004}.
+
+\bibitem[Perc et~al.(2017)Perc, Jordan, Rand, Wang, Boccaletti, and
+  Szolnoki]{perc2017statistical}
+Matja{\v z} Perc, Jillian~J. Jordan, David~G. Rand, Zhen Wang, Stefano
+  Boccaletti, and Attila Szolnoki.
+\newblock Statistical physics of human cooperation.
+\newblock \emph{Physics Reports}, 687:\penalty0 1--51, 2017.
+\newblock \doi{10.1016/j.physrep.2017.05.004}.
+
+\bibitem[Sclar et~al.(2024)Sclar, Choi, Tsvetkov, and
+  Suhr]{sclar2024quantifying}
+Melanie Sclar, Yejin Choi, Yulia Tsvetkov, and Alane Suhr.
+\newblock Quantifying language models' sensitivity to spurious features in
+  prompt design, or: How i learned to start worrying about prompt formatting.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2024.
+
+\bibitem[Lu et~al.(2022)Lu, Bartolo, Moore, Riedel, and
+  Stenetorp]{lu2022fantastically}
+Yao Lu, Max Bartolo, Alastair Moore, Sebastian Riedel, and Pontus Stenetorp.
+\newblock Fantastically ordered prompts and where to find them: Overcoming
+  few-shot prompt order sensitivity.
+\newblock In \emph{Proceedings of the 60th Annual Meeting of the Association
+  for Computational Linguistics (ACL)}, pages 8086--8098, 2022.
+\newblock \doi{10.18653/v1/2022.acl-long.556}.
+
+\bibitem[Deshpande et~al.(2023)Deshpande, Murahari, Rajpurohit, Kalyan, and
+  Narasimhan]{deshpande2023toxicity}
+Ameet Deshpande, Vishvak Murahari, Tanmay Rajpurohit, Ashwin Kalyan, and
+  Karthik Narasimhan.
+\newblock Toxicity in {ChatGPT}: Analyzing persona-assigned language models.
+\newblock In \emph{Findings of the Association for Computational Linguistics:
+  EMNLP 2023}, pages 1236--1270, 2023.
+\newblock \doi{10.18653/v1/2023.findings-emnlp.88}.
+
+\bibitem[Salewski et~al.(2023)Salewski, Alaniz, Rio-Torto, Schulz, and
+  Akata]{salewski2023context}
+Leonard Salewski, Stephan Alaniz, Isabel Rio-Torto, Eric Schulz, and Zeynep
+  Akata.
+\newblock In-context impersonation reveals large language models' strengths and
+  biases.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, volume~36, 2023.
+
+\bibitem[Tversky and Kahneman(1981)]{tversky1981framing}
+Amos Tversky and Daniel Kahneman.
+\newblock The framing of decisions and the psychology of choice.
+\newblock \emph{Science}, 211\penalty0 (4481):\penalty0 453--458, 1981.
+\newblock \doi{10.1126/science.7455683}.
+
+\bibitem[Kahneman and Tversky(1979)]{kahneman1979prospect}
+Daniel Kahneman and Amos Tversky.
+\newblock Prospect theory: An analysis of decision under risk.
+\newblock \emph{Econometrica}, 47\penalty0 (2):\penalty0 263--291, 1979.
+\newblock \doi{10.2307/1914185}.
+
+\end{thebibliography}
