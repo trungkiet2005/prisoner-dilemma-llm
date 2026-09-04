@@ -41,37 +41,44 @@ PAPERFIG.mkdir(parents=True, exist_ok=True)
 # Okabe-Ito, so the seven stay separable under the common dichromacies; the
 # two arms are additionally separated by line style, which survives greyscale.
 MODEL_C = {
-    "Claude-3.5-Haiku": "#0072b2",
+    # Ba model quet day duoc ve dam; ba model chi co 3 muc lambda ve nhat hon.
     "Gemini-3.5-Flash-Lite": "#009e73",
+    "Gemini-3.1-Flash-Lite-Preview": "#0072b2",
+    "GPT-5.4-Nano": "#cc79a7",
+    "Claude-3.5-Haiku": "#56b4e9",
     "GPT-4o": "#d55e00",
-    "Mistral-Large": "#cc79a7",
-    "Gemma-3-12B": "#e69f00",
-    "Llama-3.1-8B": "#56b4e9",
-    "Qwen3-8B": "#7a5195",
+    "Mistral-Large": "#e69f00",
 }
 MODEL_M = {
-    "Claude-3.5-Haiku": "o", "Gemini-3.5-Flash-Lite": "s",
+    "Gemini-3.5-Flash-Lite": "s", "Gemini-3.1-Flash-Lite-Preview": "v",
+    "GPT-5.4-Nano": "P", "Claude-3.5-Haiku": "o",
     "GPT-4o": "^", "Mistral-Large": "D",
-    "Gemma-3-12B": "o", "Llama-3.1-8B": "s", "Qwen3-8B": "^",
 }
 MODEL_LABEL = {
-    "Claude-3.5-Haiku": "Claude 3.5 Haiku",
     "Gemini-3.5-Flash-Lite": "Gemini 3.5 Flash-Lite",
+    "Gemini-3.1-Flash-Lite-Preview": "Gemini 3.1 Flash-Lite Preview",
+    "GPT-5.4-Nano": "GPT-5.4 Nano",
+    "Claude-3.5-Haiku": "Claude 3.5 Haiku",
     "GPT-4o": "GPT-4o", "Mistral-Large": "Mistral Large",
-    "Gemma-3-12B": "Gemma 3 12B", "Llama-3.1-8B": "Llama 3.1 8B",
-    "Qwen3-8B": "Qwen3 8B",
 }
-ARM_ORDER = ["open-weight", "frontier"]
-ARM_LABEL = {"open-weight": "open-weight arm (30 rounds)",
-             "frontier": "frontier arm (10 rounds)"}
+# Ba model co du 10 muc lambda: moi khang dinh ve HINH DANG cua duong cong chi
+# duoc dua tren ba model nay.
+FULL_SWEEP = ["Gemini-3.5-Flash-Lite", "Gemini-3.1-Flash-Lite-Preview",
+              "GPT-5.4-Nano"]
+THREE_SCALE = ["Claude-3.5-Haiku", "GPT-4o", "Mistral-Large"]
+ARM_ORDER = ["ten-scale", "three-scale"]
+ARM_LABEL = {"ten-scale": "ten scales, $10^{-2}$ to $10^{3}$",
+             "three-scale": "three scales, $0.1$ to $10$"}
 
 # The three notation regimes are an ordered ladder of how the cell values are
 # printed, so the ramp runs monotonically rather than categorically.
 REGIME_ORDER = ["fractional", "unit", "large"]
 REGIME_C = {"fractional": "#8c3800", "unit": "#0072b2", "large": "#7ba8c9"}
-REGIME_LABEL = {"fractional": "fractional\n$\\lambda<1$",
-                "unit": "unit\n$\\lambda\\in\\{1,10\\}$",
-                "large": "large\n$\\lambda\\geq100$"}
+# Nhan doc tu O IN RA chu khong tu lambda: tren luoi co diem ngoai decade thi hai
+# cach doc khong con trung nhau (lambda=0.5 in ra "0 / 1 / 3 / 5", tuc la unit).
+REGIME_LABEL = {"fractional": "fractional",
+                "unit": "unit",
+                "large": "large"}
 
 LANG_ORDER = ["en", "fr", "vn", "cn", "ar"]
 LANG_LABEL = {"en": "English", "fr": "French", "vn": "Vietnamese",
@@ -120,9 +127,21 @@ def logx(ax, lams) -> None:
     The decade minor ticks a log axis draws by default are noise here: the
     sweep visits six points and nothing lies between them.
     """
+    lams = list(lams)
     ax.set_xscale("log")
-    ax.set_xticks(list(lams))
-    ax.set_xticklabels([("%g" % v) for v in lams])
+    ax.set_xticks(lams)
+    # Ten scales over five decades put four of the ticks inside a single decade,
+    # so labelling every one of them horizontally overprints them.  Rotating is
+    # the only option that keeps the off-decade points visible, and they are the
+    # points the notation-against-magnitude comparison turns on.
+    crowded = len(lams) > 6
+    ax.set_xticklabels([("%g" % v) for v in lams],
+                       rotation=55 if crowded else 0,
+                       fontsize=FS["tiny"] if crowded else FS["tick"],
+                       ha="right" if crowded else "center")
+    if crowded:
+        for t in ax.get_xticklabels():
+            t.set_rotation_mode("anchor")
     ax.set_xticks([], minor=True)
     ax.set_xlabel("payoff scale $\\lambda$")
 
@@ -178,24 +197,24 @@ def fig1_design() -> None:
     panel_title(ax1, "b", "what the prompt prints")
     ax1.set_xlim(0, 1)
     ax1.set_ylim(0, 1)
-    ow = notation[notation.arm == "open-weight"].sort_values("lambda")
+    ow = notation[notation.arm == "ten-scale"].sort_values("lambda")
     ax1.text(0.0, 0.94, "$\\lambda$", fontsize=FS["tiny"], color=MUTED)
     ax1.text(0.17, 0.94, "the four cells, as printed",
              fontsize=FS["tiny"], color=MUTED)
     ax1.text(0.88, 0.94, "regime", fontsize=FS["tiny"], color=MUTED, ha="center")
     for k, (_, r) in enumerate(ow.iterrows()):
-        y = 0.80 - k * 0.125
+        y = 0.86 - k * 0.084
         ax1.text(0.0, y, "%g" % r["lambda"], fontsize=FS["tiny"], color=INK,
                  va="center")
         ax1.text(0.17, y, r.printed_cells, fontsize=FS["tiny"], color=INK,
                  va="center", family="monospace")
-        ax1.add_patch(Rectangle((0.76, y - 0.040), 0.24, 0.080,
+        ax1.add_patch(Rectangle((0.76, y - 0.030), 0.24, 0.060,
                                 facecolor=REGIME_C[r.regime], alpha=0.20,
                                 edgecolor="none"))
         ax1.text(0.88, y, r.regime, fontsize=FS["tiny"], ha="center",
                  va="center", color=REGIME_C[r.regime])
     ax1.text(0.0, 0.025,
-             "greed and fear are identical on all six rows",
+             "greed and fear are identical on all ten rows",
              fontsize=FS["tiny"], color=MUTED)
 
     # (c) the design ---------------------------------------------------------
@@ -213,14 +232,14 @@ def fig1_design() -> None:
                      color=MODEL_C[r.model], mec=PAGE, mew=0.4)
             ax2.text(0.11, y, MODEL_LABEL[r.model], fontsize=FS["tiny"],
                      va="center", color=INK)
-            ax2.text(0.72, y, f"{r.scales} scales", fontsize=FS["tiny"],
-                     va="center", color=MUTED)
+            ax2.text(1.0, y, f"{r.scales} scales", fontsize=FS["tiny"],
+                     va="center", ha="right", color=MUTED)
             y -= 0.072
         y -= 0.035
     ax2.text(0.0, y, "5 languages $\\times$ 4 persona pairings $\\times$ 10 replicates",
              fontsize=FS["tiny"], color=MUTED)
     ax2.text(0.0, y - 0.075,
-             "6,000 dyads, 12,000 agent-games, 264,000 decisions",
+             "7,800 dyads, 15,600 agent-games, 156,000 decisions",
              fontsize=FS["tiny"], color=INK)
     ax2.text(0.0, y - 0.150, "80 agent-games in every model $\\times$ language",
              fontsize=FS["tiny"], color=MUTED)
@@ -241,7 +260,7 @@ def fig2_response() -> None:
     gs = fig.add_gridspec(1, 3, width_ratios=[1.15, 0.85, 1.0])
     axo, axf, axs = (fig.add_subplot(gs[0, i]) for i in range(3))
 
-    for ax, arm in ((axo, "open-weight"), (axf, "frontier")):
+    for ax, arm in ((axo, "ten-scale"), (axf, "three-scale")):
         d = resp[(resp.arm == arm) & (resp.model != "pooled")]
         lams = sorted(d["lambda"].unique())
         for mdl, dm in d.groupby("model"):
@@ -253,14 +272,14 @@ def fig2_response() -> None:
                     label=MODEL_LABEL[mdl])
         grid(ax, "y")
         logx(ax, lams)
-        ax.set_ylim(0.22, 0.86)
+        ax.set_ylim(0.26, 0.92)
         ax.axvspan(1 / np.sqrt(10), 10 * np.sqrt(10), color=REGIME_C["unit"],
                    alpha=0.05, lw=0, zorder=0)
         fitted_legend(ax, loc="lower right", ncol=1, fontsize=FS["tiny"],
                       handlelength=1.2)
     axo.set_ylabel("cooperation rate")
-    panel_title(axo, "a", "open-weight arm, six scales")
-    panel_title(axf, "b", "frontier arm")
+    panel_title(axo, "a", "ten scales")
+    panel_title(axf, "b", "three scales")
 
     # (c) the invariance test: observed swing against its permutation null ---
     order = (sens.sort_values(["arm", "swing"], ascending=[True, True]))
@@ -273,8 +292,8 @@ def fig2_response() -> None:
     axs.set_yticks(ypos)
     axs.set_yticklabels(
         [f"{MODEL_LABEL[m]}" for m in order.model], fontsize=FS["tiny"])
-    axs.set_xlabel("largest shift in cooperation")
-    axs.set_xlim(0, 0.43)
+    axs.set_xlabel("largest shift in cooperation", fontsize=FS["tick"])
+    axs.set_xlim(0, 0.40)
     grid(axs, "x")
     panel_title(axs, "c", "the invariance test")
     axs.text(0.425, len(order) - 0.5, "| = null 95th pct.", ha="right",
@@ -301,13 +320,13 @@ def fig3_notation() -> None:
     lad = T("05_magnitude_or_notation")
     resp = T("03_response")
 
-    fig = figure(2.5)
-    gs = fig.add_gridspec(1, 3, width_ratios=[0.85, 1.25, 0.95])
+    fig = figure(2.7)
+    gs = fig.add_gridspec(1, 3, width_ratios=[0.80, 1.26, 1.05])
     axr, axb, axc = (fig.add_subplot(gs[0, i]) for i in range(3))
 
     # (a) the three regimes --------------------------------------------------
     pooled = reg[reg.model == "pooled"]
-    xs, labels, offset = [], [], {"open-weight": -0.17, "frontier": 0.17}
+    xs, labels, offset = [], [], {"ten-scale": -0.17, "three-scale": 0.17}
     for k, rg in enumerate(REGIME_ORDER):
         labels.append(REGIME_LABEL[rg])
         for arm in ARM_ORDER:
@@ -317,65 +336,76 @@ def fig3_notation() -> None:
             r = row.iloc[0]
             x = k + offset[arm]
             axr.bar(x, r.coop, width=0.30, color=REGIME_C[rg],
-                    alpha=1.0 if arm == "open-weight" else 0.45,
+                    alpha=1.0 if arm == "ten-scale" else 0.45,
                     edgecolor=PAGE, lw=0.5)
             axr.plot([x, x], [r.lo, r.hi], color=INK, lw=0.8)
         xs.append(k)
     axr.set_xticks(xs)
     axr.set_xticklabels(labels, fontsize=FS["tiny"])
     axr.set_ylabel("cooperation rate")
-    axr.set_ylim(0, 0.72)
+    axr.set_ylim(0, 0.78)
     grid(axr, "y")
     panel_title(axr, "a", "by notation regime")
+    axr.set_xlabel("read from the printed cells", fontsize=FS["tiny"])
     axr.legend(handles=[
-        Rectangle((0, 0), 1, 1, fc=MUTED, alpha=1.0, label="open-weight"),
-        Rectangle((0, 0), 1, 1, fc=MUTED, alpha=0.45, label="frontier")],
+        Rectangle((0, 0), 1, 1, fc=MUTED, alpha=1.0, label="ten scales"),
+        Rectangle((0, 0), 1, 1, fc=MUTED, alpha=0.45, label="three scales")],
         loc="upper left", fontsize=FS["tiny"], handlelength=1.0)
 
-    # (b) the description ladder --------------------------------------------
-    ow = (lad[(lad.arm == "open-weight") & (lad.scope == "pooled")]
-          .set_index("model_spec").reindex(SPEC_ORDER))
+    # (b) the description ladder, one bar per model ------------------------
+    # Pooling the ladder is what hid the result before: the three models that
+    # sweep ten scales prefer three different descriptions, and an average
+    # over them prefers none of the three.  One bar per model per rung is the
+    # only version that shows that.
+    ten = lad[(lad.arm == "ten-scale") & (lad.scope != "pooled")]
+    models = [m for m in FULL_SWEEP if m in set(ten.scope)]
     ypos = np.arange(len(SPEC_ORDER))[::-1]
-    for y, spec in zip(ypos, SPEC_ORDER):
-        r = ow.loc[spec]
-        fam = SPEC_FAMILY[spec]
-        axb.barh(y, r.delta_bic, height=0.62, color=FAMILY_C[fam],
-                 edgecolor=PAGE, lw=0.4)
-        axb.text(min(r.delta_bic + 8, 372), y,
-                 f"{r.delta_bic:.0f}" if r.delta_bic > 0 else "best",
-                 va="center", ha="left", fontsize=FS["tiny"], color=MUTED)
+    h = 0.78 / max(len(models), 1)
+    for j, mdl in enumerate(models):
+        d = ten[ten.scope == mdl].set_index("model_spec").reindex(SPEC_ORDER)
+        off = (j - (len(models) - 1) / 2) * h
+        for y, spec in zip(ypos, SPEC_ORDER):
+            r = d.loc[spec]
+            axb.barh(y + off, r.delta_bic, height=h * 0.86,
+                     color=MODEL_C[mdl], edgecolor=PAGE, lw=0.35,
+                     label=MODEL_LABEL[mdl] if y == ypos[0] else None)
+            if r.delta_bic == 0:
+                axb.plot([2.5], [y + off], marker="o", ms=2.2, color=MODEL_C[mdl])
     axb.set_yticks(ypos)
     axb.set_yticklabels([SPEC_SHORT[s] for s in SPEC_ORDER], fontsize=FS["tiny"])
-    axb.set_xlabel("$\\Delta$BIC from the best description")
-    axb.set_xlim(0, 415)
+    for y, spec in zip(ypos, SPEC_ORDER):
+        axb.axhspan(y - 0.5, y + 0.5, color=FAMILY_C[SPEC_FAMILY[spec]],
+                    alpha=0.055, lw=0, zorder=0)
+    axb.set_xlabel("$\\Delta$BIC from that model's best description")
+    axb.set_xlim(0, 330)
     grid(axb, "x")
-    panel_title(axb, "b", "what the response tracks")
-    axb.legend(handles=swatches(["reads the magnitude", "reads the printed string"],
-                                [FAMILY_C["magnitude"], FAMILY_C["notation"]]),
-               loc="lower right", fontsize=FS["tiny"], handlelength=1.0)
+    panel_title(axb, "b", "ten scales, per model")
+    fitted_legend(axb, loc="lower right", ncol=1, fontsize=FS["tiny"],
+                  handlelength=1.0, framealpha=0.0)
 
-    # (c) the ranking crossings ---------------------------------------------
-    # Cooperation is plotted against an evenly spaced scale index rather than
-    # against lambda itself, because what this panel is about is the ordering
-    # of the three models and not the shape of any one curve.
-    d = resp[(resp.arm == "open-weight") & (resp.model != "pooled")]
-    lams = sorted(d["lambda"].unique())
-    xi = np.arange(len(lams))
-    for mdl, dm in d.groupby("model"):
-        dm = dm.sort_values("lambda")
-        axc.plot(xi, dm.coop.to_numpy(), color=MODEL_C[mdl],
-                 marker=MODEL_M[mdl], ms=3.4, mec=PAGE, mew=0.5, lw=1.3,
-                 label=MODEL_LABEL[mdl])
-    axc.set_xticks(xi)
-    axc.set_xticklabels([("%g" % v) for v in lams], fontsize=FS["tick"])
-    axc.set_xlim(-0.4, len(lams) - 0.6)
-    axc.set_ylim(0.26, 0.78)
-    axc.set_xlabel("payoff scale $\\lambda$")
-    axc.set_ylabel("cooperation rate")
-    grid(axc, "y")
-    panel_title(axc, "c", "the model ranking")
-    fitted_legend(axc, loc="upper left", ncol=1, fontsize=FS["tiny"],
-                  handlelength=1.2)
+    # (c) the same ladder on three scales only -------------------------------
+    # Three points cannot separate the rungs: quadratic, cubic, glyph count and
+    # saturated all land on the same BIC, and the notation row wins by exactly
+    # the penalty BIC charges for one parameter at zero difference in fit.
+    thr = (lad[(lad.arm == "three-scale") & (lad.scope == "pooled")]
+           .set_index("model_spec").reindex(SPEC_ORDER))
+    for y, spec in zip(ypos, SPEC_ORDER):
+        r = thr.loc[spec]
+        axc.barh(y, r.delta_bic, height=0.62,
+                 color=FAMILY_C[SPEC_FAMILY[spec]], edgecolor=PAGE, lw=0.4)
+        axc.text(r.delta_bic + 4, y,
+                 f"{r.delta_bic:.1f}" if r.delta_bic > 0.05 else "best",
+                 va="center", ha="left", fontsize=FS["tiny"], color=MUTED)
+    axc.set_yticks(ypos)
+    axc.set_yticklabels([SPEC_SHORT[s] for s in SPEC_ORDER], fontsize=FS["tiny"])
+    axc.set_xlabel("$\\Delta$BIC")
+    axc.set_xlim(0, 310)
+    grid(axc, "x")
+    panel_title(axc, "c", "three scales")
+    axc.legend(handles=swatches(["reads the magnitude", "reads the printed string"],
+                                [FAMILY_C["magnitude"], FAMILY_C["notation"]]),
+               loc="center right", fontsize=FS["tiny"], handlelength=1.0,
+               framealpha=0.0)
 
     save(fig, PAPERFIG / "fig3_notation")
 
@@ -393,28 +423,29 @@ def fig4_where() -> None:
     axb, axo, axi = (fig.add_subplot(gs[0, i]) for i in range(3))
 
     # (a) the effect across the game ----------------------------------------
-    for arm, ls in (("open-weight", "-"), ("frontier", "--")):
+    for arm, ls in (("ten-scale", "-"), ("three-scale", "--")):
         d = blocks[blocks.arm == arm].sort_values("block_order")
         for rg, dr in d.groupby("regime"):
             n = dr.block_order.max() + 1
             x = dr.block_order / max(n - 1, 1)
             axb.plot(x, dr.coop, ls=ls, color=REGIME_C[rg], lw=1.3,
-                     marker="o" if arm == "open-weight" else "s",
+                     marker="o" if arm == "ten-scale" else "s",
                      ms=3.0, mec=PAGE, mew=0.4)
     axb.set_xticks([0, 1 / 3, 2 / 3, 1.0])
     axb.set_xticklabels(["round 1", "early", "middle", "late"],
                         fontsize=FS["tick"])
     axb.set_ylabel("cooperation rate")
-    axb.set_ylim(0.26, 0.72)
+    axb.set_ylim(0.30, 0.78)
     grid(axb, "y")
     panel_title(axb, "a", "across the game")
     axb.legend(handles=[Line2D([], [], color=REGIME_C[r], lw=1.3,
                                label=r) for r in REGIME_ORDER]
-               + [Line2D([], [], color=MUTED, lw=1.1, ls="--", label="frontier")],
+               + [Line2D([], [], color=MUTED, lw=1.1, ls="--",
+                         label="three scales")],
                loc="upper left", fontsize=FS["tiny"], handlelength=1.4, ncol=2)
 
     # (b) the opening move on its own ---------------------------------------
-    for arm, ls in (("open-weight", "-"), ("frontier", "--")):
+    for arm, ls in (("ten-scale", "-"), ("three-scale", "--")):
         d = first[(first.arm == arm) & (first.model != "pooled")]
         for mdl, dm in d.groupby("model"):
             dm = dm.sort_values("lambda")
@@ -433,11 +464,11 @@ def fig4_where() -> None:
     ypos = np.arange(len(order))[::-1]
     w = 0.36
     for y, meas in zip(ypos, order):
-        for arm, off in (("open-weight", +w / 2), ("frontier", -w / 2)):
+        for arm, off in (("ten-scale", +w / 2), ("three-scale", -w / 2)):
             r = inv[(inv.arm == arm) & (inv.measure == meas)].iloc[0]
             axi.barh(y + off, r.gap_obs, height=w * 0.92,
                      color=REGIME_C["unit"] if r.moves else "#c9c9c9",
-                     alpha=1.0 if arm == "open-weight" else 0.5,
+                     alpha=1.0 if arm == "ten-scale" else 0.5,
                      edgecolor=PAGE, lw=0.4)
             axi.plot([r.null95, r.null95], [y + off - w / 2, y + off + w / 2],
                      color=INK, lw=0.9, solid_capstyle="butt")
@@ -445,9 +476,9 @@ def fig4_where() -> None:
     axi.set_yticklabels([m.replace(" (", "\n(") for m in order],
                         fontsize=FS["tiny"])
     axi.set_xlabel("largest shift across $\\lambda$")
-    axi.set_xlim(0, 0.27)
+    axi.set_xlim(0, 0.215)
     grid(axi, "x")
-    panel_title(axi, "c", "what does not move")
+    panel_title(axi, "c", "six measures, same null")
 
     save(fig, PAPERFIG / "fig4_where")
 
@@ -465,12 +496,11 @@ def fig5_gating() -> None:
     axp, axl, axm = (fig.add_subplot(gs[0, i]) for i in range(3))
 
     # (a) the persona instruction, scale by scale, one line per model -------
-    # Pooling is what must not be drawn here.  The three open-weight models
-    # carry persona effects of opposite constant sign, so their average
-    # crosses zero although none of them does; the per-model lines are the
-    # only honest version of the panel.
+    # Pooling is what must not be drawn here.  The models carry persona
+    # effects of opposite sign, so their average crosses zero although half of
+    # them never do; the per-model lines are the only honest version.
     d = per[per.model != "pooled"]
-    for arm, ls in (("open-weight", "-"), ("frontier", "--")):
+    for arm, ls in (("ten-scale", "-"), ("three-scale", "--")):
         for mdl, dm in d[d.arm == arm].groupby("model"):
             dm = dm.sort_values("lambda")
             axp.plot(dm["lambda"], dm.effect, ls=ls, color=MODEL_C[mdl],
@@ -480,11 +510,11 @@ def fig5_gating() -> None:
     grid(axp, "y")
     logx(axp, sorted(d["lambda"].unique()))
     axp.set_ylabel("effect of the cooperative persona")
-    axp.set_ylim(-0.70, 0.50)
+    axp.set_ylim(-0.75, 0.98)
     panel_title(axp, "a", "the persona instruction")
     # colours are figure 2's, so only the arm needs a key here
     axp.legend(handles=[Line2D([], [], color=MUTED, lw=1.1, ls="--",
-                               label="frontier")],
+                               label="three scales")],
                loc="lower right", fontsize=FS["tiny"], handlelength=1.4)
     axp.text(0.03, 0.955, "instruction followed", transform=axp.transAxes,
              fontsize=FS["tiny"], color=REGIME_C["unit"], va="top")
@@ -492,7 +522,7 @@ def fig5_gating() -> None:
              fontsize=FS["tiny"], color=REGIME_C["fractional"], va="bottom")
 
     # (b) the language spread across the scale ------------------------------
-    d = cells[cells.arm == "open-weight"]
+    d = cells[cells.arm == "ten-scale"]
     for lang in LANG_ORDER:
         dl = d[d.language == lang].sort_values("scale_nominal")
         axl.plot(dl.scale_nominal, dl.coop_rate, color=LANG_C[lang],
@@ -501,7 +531,7 @@ def fig5_gating() -> None:
     grid(axl, "y")
     logx(axl, sorted(d.scale_nominal.unique()))
     axl.set_ylabel("cooperation rate")
-    axl.set_ylim(0.15, 0.88)
+    axl.set_ylim(0.45, 0.88)
     panel_title(axl, "b", "the five languages")
     fitted_legend(axl, loc="upper left", ncol=2, fontsize=FS["tiny"],
                   handlelength=1.1, columnspacing=0.7)
@@ -511,22 +541,23 @@ def fig5_gating() -> None:
     # the two unconditional labels trace the cooperation curve of fig. 2 while
     # the two conditional ones stay nearly flat, and only separate lines say
     # so.  Colour is the label, line style is the arm, as in fig. 4a.
-    for arm, ls, mk in (("open-weight", "-", "o"), ("frontier", "--", "s")):
+    for arm, ls, mk in (("ten-scale", "-", "o"), ("three-scale", "--", "s")):
         d = curves[curves.arm == arm]
         for strat in STRAT_ORDER:
             ds = d[d.archetype == strat].sort_values("lambda")
             axm.plot(ds["lambda"], ds.share, ls=ls, color=STRAT_C[strat],
                      marker=mk, ms=2.8, mec=PAGE, mew=0.4, lw=1.2,
                      zorder=4 if strat in ("AllC", "AllD") else 3,
-                     alpha=1.0 if arm == "open-weight" else 0.75)
+                     alpha=1.0 if arm == "ten-scale" else 0.75)
     grid(axm, "y")
     logx(axm, sorted(curves["lambda"].unique()))
     axm.set_ylabel("share of agent-games")
-    axm.set_ylim(0, 0.66)
+    axm.set_ylim(0, 0.52)
     panel_title(axm, "c", "the strategy label")
     axm.legend(handles=[Line2D([], [], color=STRAT_C[s], lw=1.4, label=s)
                         for s in STRAT_ORDER]
-               + [Line2D([], [], color=MUTED, lw=1.1, ls="--", label="frontier")],
+               + [Line2D([], [], color=MUTED, lw=1.1, ls="--",
+                         label="three scales")],
                loc="upper center", bbox_to_anchor=(0.5, -0.26), ncol=3,
                fontsize=FS["tiny"], handlelength=1.3, columnspacing=0.8)
 

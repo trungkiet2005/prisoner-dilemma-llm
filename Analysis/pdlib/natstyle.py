@@ -59,43 +59,60 @@ FILL = "#f2f2f2"       # neutral fill / reference band
 # --------------------------------------------------------------------------
 # the four frontier models (Okabe-Ito)
 # --------------------------------------------------------------------------
-FRONTIER = ["Claude-3.5-Haiku", "Gemini-3.5-Flash-Lite", "GPT-4o", "Mistral-Large"]
+# Thu tu nay quyet dinh model nao duoc GIU lai trong frontier_build.py: model khong
+# co trong danh sach bi loai voi mot dong canh bao, KHONG bao loi. Dang ky model moi
+# o day truoc khi phan tich, cung nhu voi MODEL_MAP trong ingest.py.
+FRONTIER = ["Claude-3.5-Haiku", "Gemini-3.5-Flash-Lite",
+            "Gemini-3.1-Flash-Lite-Preview", "GPT-4o", "GPT-5.4-Nano",
+            "Mistral-Large"]
 
 MODEL_C = {
     "Claude-3.5-Haiku": "#d55e00",       # vermillion
     "Gemini-3.5-Flash-Lite": "#0072b2",  # blue
+    "Gemini-3.1-Flash-Lite-Preview": "#56b4e9",  # sky blue
     "GPT-4o": "#009e73",                 # bluish green
+    "GPT-5.4-Nano": "#cc79a7",           # reddish purple
     "Mistral-Large": "#e69f00",          # orange
 }
 MODEL_M = {                              # redundant shape encoding
     "Claude-3.5-Haiku": "o",
     "Gemini-3.5-Flash-Lite": "s",
+    "Gemini-3.1-Flash-Lite-Preview": "v",
     "GPT-4o": "^",
+    "GPT-5.4-Nano": "P",
     "Mistral-Large": "D",
 }
 MODEL_LS = {
     "Claude-3.5-Haiku": "-",
     "Gemini-3.5-Flash-Lite": (0, (4, 1.4)),
+    "Gemini-3.1-Flash-Lite-Preview": (0, (3, 1, 1, 1)),
     "GPT-4o": (0, (1.2, 1.2)),
+    "GPT-5.4-Nano": (0, (2, 1)),
     "Mistral-Large": (0, (5, 1.3, 1, 1.3)),
 }
 MODEL_LABEL = {                          # what appears in legends and axes
     "Claude-3.5-Haiku": "Claude 3.5 Haiku",
     "Gemini-3.5-Flash-Lite": "Gemini 3.5 Flash-Lite",
+    "Gemini-3.1-Flash-Lite-Preview": "Gemini 3.1 Flash-Lite Preview",
     "GPT-4o": "GPT-4o",
+    "GPT-5.4-Nano": "GPT-5.4 Nano",
     "Mistral-Large": "Mistral Large",
 }
 MODEL_SLUG = {
     "Claude-3.5-Haiku": "claude35haiku",
     "Gemini-3.5-Flash-Lite": "gemini35flashlite",
+    "Gemini-3.1-Flash-Lite-Preview": "gemini31flashlitepreview",
     "GPT-4o": "gpt4o",
+    "GPT-5.4-Nano": "gpt54nano",
     "Mistral-Large": "mistrallarge",
 }
 # horizon condition each arm was actually run under -- see 20_frontier_build.py
 HORIZON = {
     "Claude-3.5-Haiku": "unknown",
     "Gemini-3.5-Flash-Lite": "known",
+    "Gemini-3.1-Flash-Lite-Preview": "known",
     "GPT-4o": "unknown",
+    "GPT-5.4-Nano": "known",
     "Mistral-Large": "unknown",
 }
 

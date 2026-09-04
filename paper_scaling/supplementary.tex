@@ -5,7 +5,9 @@
 %
 % Tables S1-S10 are generated from tables/T_PS*.csv by
 % Analysis/scripts/42_supp_tables.py into supp_tables.tex, so no number here
-% is transcribed by hand.
+% is transcribed by hand.  Table S11 is the open-weight corpus of the earlier
+% preprint, which the main text no longer uses; its numbers are transcribed
+% from the archived analysis output of that corpus and are marked as such.
 %
 %   pdflatex supplementary && bibtex supplementary && pdflatex supplementary
 %   pdflatex supplementary
@@ -47,15 +49,18 @@ the payoff matrix is written, not what it means}
 
 \noindent
 This document holds the per-model and per-cell breakdowns behind the summary
-statistics of the main text, and the validation of the strategy read-out.
-Every table is generated directly from the machine-readable analysis output
-by \texttt{Analysis/scripts/42\_supp\_tables.py}; none of the numbers is
-transcribed by hand, and re-running the pipeline regenerates this document
-and the main text together.
+statistics of the main text, the validation of the strategy read-out, and the
+open-weight corpus of the earlier preprint, which the main text no longer uses.
+Tables S1--S10 are generated directly from the machine-readable analysis output
+by \texttt{Analysis/scripts/42\_supp\_tables.py}; none of their numbers is
+transcribed by hand, and re-running the pipeline regenerates this document and
+the main text together.
 
 \begin{description}\itemsep2pt \parskip0pt
 \item[\S S1] Validating the strategy read-out: accuracy, the identifiability
   floor, and where the corpus sits relative to the training distribution.
+\item[\S S2] The open-weight corpus of the earlier preprint, and the two
+  conclusions drawn from it that the frontier sweep revises (table S11).
 \item[Table S1] The corpus, by model.
 \item[Table S2] What the rescaling changes, and what it cannot: the printed
   cells at each scale beside the game-theoretic invariants.
@@ -77,15 +82,18 @@ label from the four canonical memory-one rules in two stages: an enumeration
 that proves whether a trajectory is exactly what a rule would have played, and
 where no rule fits, a long short-term memory
 network~\citep{hochreiter1997long} that returns the nearest one. This section
-records what each stage is worth, because the strategy results of \S3.8 rest
+records what each stage is worth, because the strategy results of \S3.10 rest
 on it and because two thirds of the labels come from the learned stage.
 
 \paragraph{Validation corpus.} The network is trained and evaluated on
 synthetic play generated from the same four rules, at execution-noise levels
-of 0 and 5 per cent, with a separate network for each of the two horizons in
-the corpus. Ten per cent and twenty per cent noise are held out entirely, and
+of 0 and 5 per cent, with a separate network for each of the two horizons the
+project uses. Ten per cent and twenty per cent noise are held out entirely, and
 are reported below because real transcripts are noisier than the training
-distribution and it matters how the network degrades outside it.
+distribution and it matters how the network degrades outside it. Every game in
+the corpus of the main text runs ten rounds, so the ten-round network reads all
+of it; the thirty-round network is used only for the open-weight corpus of
+\S\ref{sec:S-openweight}.
 
 \paragraph{Accuracy.} At ten rounds the pipeline recovers the generating rule
 with accuracy 0.995 on noise-free play and 0.975 at five per cent noise,
@@ -109,18 +117,135 @@ identifiability rather than about strategy.
 
 \paragraph{Where the corpus sits relative to the training distribution.} The
 exact-rule coverage the read-out achieves on the real corpus locates it
-against the synthetic noise levels. In the open-weight arm 22.1 per cent of
-agent-games carry a provable rule, against 21.8 per cent for thirty-round
-synthetic play at five per cent noise, so that arm sits almost exactly at the
-validated operating point. In the frontier arm the figure is 25.5 per cent,
-below the 39.1 per cent of ten-round play at ten per cent noise and above the
-14.3 per cent at twenty per cent noise. Frontier transcripts therefore depart
-from the canonical rules by more than the training corpus does, and the
-network is extrapolating there more often. On those two held-out noise levels
-its accuracy where no rule fits is 0.908 and 0.788, which brackets what the
-frontier labels are worth and is the reason \S3.8 reports every test on the
-four named rules as well as on all five categories. Table~\ref{tab:S-source}
-gives the full provenance breakdown, scale by scale.
+against the synthetic noise levels. Over the corpus of the main text 19.4 per
+cent of agent-games carry a provable rule: 17.2 per cent over the three models
+that met ten scales and 26.7 per cent over the three that met three. Both
+figures sit below the 39.1 per cent of ten-round synthetic play at ten per cent
+noise and, for the ten-scale group, close to the 14.3 per cent at twenty per
+cent noise. Frontier transcripts therefore depart from the canonical rules by
+more than the training corpus does, and the network is extrapolating there more
+often. On those two held-out noise levels its accuracy where no rule fits is
+0.908 and 0.788, which brackets what these labels are worth and is the reason
+\S3.10 of the main text reports every test on the four named rules as well as
+on all five categories. Table~\ref{tab:S-source} gives the full provenance
+breakdown, scale by scale.
+
+\section{The open-weight corpus of the earlier preprint}
+\label{sec:S-openweight}
+
+An earlier preprint by the present authors reported that the cooperation rate
+of small open-weight models varies with the payoff scale and with the prompt
+language~\citep{selfpreprint2026scaling}. That corpus is not part of the
+analysis in the main text, is not pooled with it anywhere, and no claim in the
+main text rests on it. We report it here for two reasons: it is where two of
+the preprint's conclusions came from, and both are conclusions the frontier
+sweep revises, so a reader who knows the preprint should be able to see exactly
+where the two corpora part company.
+
+\paragraph{The corpus.} Gemma 3 12B, Llama 3.1 8B and Qwen3 8B each met six
+payoff scales, $\lam \in \{0.01, 0.1, 1, 10, 100, 1000\}$, the same five prompt
+languages and the same four ordered persona pairings, over thirty rounds rather
+than ten. Every model $\times$ language $\times$ scale cell holds 80
+agent-games, giving 3{,}600 dyads, 7{,}200 agent-games and 216{,}000 decisions.
+The base payoff matrix, the FAIRGAME templates and the notation regimes are
+those of \S2 of the main text. The horizon differs, so this corpus is read with
+the thirty-round network of \S\ref{sec:S-readout} rather than the ten-round
+one, and no level statistic here is comparable with a frontier number.
+
+\paragraph{What replicates.} All three models fail the invariance. The largest
+shift in cooperation between two payoff scales is 0.316 for Gemma 3 12B, 0.198
+for Llama 3.1 8B and 0.267 for Qwen3 8B, against dyad-level permutation nulls
+of 0.121, 0.047 and 0.095, each at $P < 0.001$. The smallest of those three
+swings exceeds the median spread between the three models at a fixed scale,
+0.114, and 8 of the 45 model-pair by scale-pair comparisons change sign
+somewhere in the sweep. That is the central result of the main text, obtained
+on a disjoint set of models at a different horizon, and it is the part of the
+preprint the denser frontier sweep strengthens rather than qualifies.
+
+\paragraph{What does not: the notation account.} Pooled over this arm, the
+three-level notation regime is the best specification in the description
+ladder, ahead of a specification with no $\lam$ term by 373.5 BIC points, a
+linear term in $\log_{10}\lam$ by 247.2, a quadratic by 109.6, the fractional
+flag by 56.1 and the specification saturated in $\lam$ by 19.6; it is also the
+best specification for Llama 3.1 8B and Qwen3 8B individually, with Gemma 3 12B
+preferring a cubic in $\log_{10}\lam$. On a six-point decade grid, however, the
+regime read from the printed cells and a step function of $\lam$ are the same
+variable: every scale that prints with a decimal point is also a small-stakes
+scale, with no exception anywhere on the grid. The ten-scale frontier grid
+breaks that coincidence at $\lam = 0.5$, whose cells print as integers although
+$\lam < 1$, and once it is broken no notation specification is the best one for
+any model (\S3.2 of the main text). The preprint's conclusion was what its grid
+could support; it is not what a grid that can separate the two accounts
+supports.
+
+\paragraph{What does not: the coordination invariant.} In this arm the rate of
+miscoordination, the share of rounds on which the two agents chose differently,
+swings by 0.039 across the six scales and does not clear its null
+($P = 0.14$, null 95th percentile 0.047), while mutual cooperation over the
+same rows swings 0.198, mutual defection 0.233 and the cooperation rate itself
+0.216. Read alone, that is an invariance. On the ten-scale frontier grid the
+same measure does clear its null, at 0.076 against 0.056 ($P = 0.0005$). What
+survives across both corpora is an ordering and not an invariance:
+miscoordination is the smallest mover of the six measures in both, and it is
+fixed in neither.
+
+\paragraph{The persona and the strategy mix.} The persona result is
+qualitatively the same here, and table~\ref{tab:S-ow} gives it per model. All
+three models move toward compliance across the fractional-to-unit boundary, by
+$+0.244$, $+0.052$ and $+0.192$, and all three move back away from it into the
+large regime, by $-0.205$, $-0.049$ and $-0.058$, the first two of which
+exclude zero. The second half of that pattern is what the frontier corpus does
+not reproduce: there the three shifts out of the unit regime are $-0.034$,
+$-0.033$ and $+0.018$, and none excludes zero. All three models here keep one
+sign across the whole sweep, positive for Gemma 3 12B and Llama 3.1 8B and
+negative for Qwen3 8B. The strategy mix moves in all three, by 0.375, 0.388 and
+0.278 in total variation against nulls of 0.143, 0.115 and 0.123, and the
+unconditional rules carry it: AllD swings 0.223 and AllC 0.161 across the six
+scales, against 0.049 for tit-for-tat and 0.020 for win-stay lose-shift, the
+last of which does not clear its null at all.
+
+% Numbered to follow the ten generated tables, so that S1-S10 keep the numbers
+% the main text cites.
+\setcounter{table}{10}
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.4pt}
+\caption{\textbf{The open-weight corpus of the earlier preprint, by model.}
+Three models, six payoff scales, five languages, thirty rounds, 80 agent-games
+per model $\times$ language $\times$ scale cell. ``Swing'' is the largest
+difference in cooperation rate between two payoff scales, against a permutation
+null that shuffles the scale label across whole dyads. The persona effect is
+the cooperation rate of an agent told to be cooperative minus that of an agent
+told to be selfish, measured within a notation regime, and a dagger marks an
+estimate whose 95\% dyad bootstrap interval excludes zero. ``Mix'' is the
+largest total-variation distance between the strategy mixes at two scales.
+Nothing in this table is comparable with a number from the main text: the
+horizon is thirty rounds rather than ten, and the read-out uses the
+corresponding network.}
+\label{tab:S-ow}
+\begin{tabular}{@{}lcccccccccc@{}}
+\toprule
+ & & \multicolumn{2}{c}{Coop. shift} & \multicolumn{3}{c}{Persona effect} & \multicolumn{2}{c}{Persona shift} & \multicolumn{2}{c}{Mix shift} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}
+Model & Coop. & swing & null & frac. & unit & large & f.$\to$u. & u.$\to$l. & obs. & null \\
+\midrule
+Gemma 3 12B  & 0.535 & 0.316$^{***}$ & 0.121 & $+0.138^{\dagger}$ & $+0.382^{\dagger}$ & $+0.177^{\dagger}$ & $+0.244^{\dagger}$ & $-0.205^{\dagger}$ & 0.375$^{***}$ & 0.143 \\
+Llama 3.1 8B & 0.420 & 0.198$^{***}$ & 0.047 & $+0.093^{\dagger}$ & $+0.145^{\dagger}$ & $+0.097^{\dagger}$ & $+0.052^{\dagger}$ & $-0.049^{\dagger}$ & 0.388$^{***}$ & 0.115 \\
+Qwen3 8B     & 0.474 & 0.267$^{***}$ & 0.095 & $-0.442^{\dagger}$ & $-0.250^{\dagger}$ & $-0.308^{\dagger}$ & $+0.192^{\dagger}$ & $-0.058$\phantom{$^{\dagger}$} & 0.278$^{***}$ & 0.123 \\
+\bottomrule
+\end{tabular}
+
+\vspace{3pt}
+{\footnotesize $^{***}P < 0.001$ over 2{,}000 dyad-level permutations. Best
+description by BIC: the three-level notation regime for Llama 3.1 8B and Qwen3
+8B, a cubic in $\log_{10}\lam$ for Gemma 3 12B. Per-strategy swings across the
+six scales: AllD 0.223, AllC 0.161, tit-for-tat 0.049, win-stay lose-shift
+0.020, ambiguous 0.118, against nulls of 0.063, 0.054, 0.038, 0.029 and 0.052.}
+\end{table}
+
+\clearpage
+\setcounter{table}{0}
 
 \section{Supplementary tables}
 \label{sec:S-tables}

@@ -1,0 +1,9 @@
+game,model,lam,printed_cells,notation,stag_rate,lo,hi,n_dyads
+stag_hunt,gemini-3.1-flash-lite-preview-rep2,0.1,0 / 0.4 / 0.6 / 0.8,decimal,0.805,0.7622,0.8458,200
+stag_hunt,gemini-3.5-flash-lite,0.1,0 / 0.4 / 0.6 / 0.8,decimal,0.629,0.5747,0.6825,200
+stag_hunt,gemini-3.1-flash-lite-preview-rep2,0.5,0 / 2 / 3 / 4,integer,0.6043,0.5475,0.6593,200
+stag_hunt,gemini-3.5-flash-lite,0.5,0 / 2 / 3 / 4,integer,0.512,0.4575,0.5693,200
+stag_hunt,gemini-3.1-flash-lite-preview-rep2,1.0,0 / 4 / 6 / 8,integer,0.6488,0.5945,0.7023,200
+stag_hunt,gemini-3.5-flash-lite,1.0,0 / 4 / 6 / 8,integer,0.5672,0.5182,0.6168,200
+stag_hunt,gemini-3.1-flash-lite-preview-rep2,10.0,0 / 40 / 60 / 80,integer,0.8237,0.7863,0.859,200
+stag_hunt,gemini-3.5-flash-lite,10.0,0 / 40 / 60 / 80,integer,0.5952,0.5418,0.6443,200

@@ -69,6 +69,14 @@ MODEL_MAP = {
     "gpt": "GPT-4o",
     "mistra": "Mistral-Large",
     "gemini-3.5-flash-lite": "Gemini-3.5-Flash-Lite",
+    # Added 2026-09-02 (E5). NOTE: `_iter_files` indexes MODEL_MAP directly, so an
+    # unregistered model directory raises KeyError and aborts the whole ingest - it
+    # is not skipped. Any new sweep must be registered here before analysis.
+    "gemini-3.1-flash-lite-preview": "Gemini-3.1-Flash-Lite-Preview",
+    # Added 2026-09-03 (F2). First non-Google model in the frontier corpus; it only
+    # became runnable after `pd_task.py` stopped sending `tool_choice`, which the
+    # OpenAI/xAI endpoints reject when no `tools` are supplied.
+    "gpt-5.4-nano-2026-03-17": "GPT-5.4-Nano",
     "gemma_3_12b": "Gemma-3-12B",
     "llama-3-1-8b": "Llama-3.1-8B",
     "qwen3_8b": "Qwen3-8B",

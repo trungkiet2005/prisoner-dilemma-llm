@@ -7,12 +7,15 @@ the best-reply correspondence, the equilibrium set and the replicator dynamics
 untouched, so the predicted effect is exactly zero for any agent whose
 behaviour is a function of the game.
 
-Two arms of the corpus answer it:
+The corpus is a single frontier arm, split by how densely each model samples
+the scale:
 
-    open-weight   3 models x 6 scales (1e-2 .. 1e3) x 5 languages, 30 rounds
-    frontier      4 models x 3 scales (1e-1 .. 1e1) x 5 languages, 10 rounds
+    ten-scale     3 models x 10 scales (1e-2 .. 1e3) x 5 languages, 10 rounds
+    three-scale   3 models x  3 scales (1e-1 .. 1e1) x 5 languages, 10 rounds
 
-Both are balanced at 80 agent-games per model x language x scale cell.
+Both are balanced at 80 agent-games per model x language x scale cell.  The
+open-weight arm of the earlier preprint is no longer read here; it lives in the
+electronic supplementary material only.
 
 Everything written here lands in ``tables/T_PS*.csv`` and is read back by
 ``41_fig_scaling.py``, so no figure panel computes a number of its own.
@@ -47,14 +50,20 @@ MINIMISE = ("en", "fr", "vn")
 
 # Base cells, in the penalty units the agent is shown, before the scale is
 # applied.  The two arms were run against different base matrices.
-BASE = {"open-weight": (0.0, 2.0, 8.0, 10.0),
-        "frontier": (0.0, 2.0, 6.0, 10.0)}
+# Mot ma tran goc duy nhat cho ca corpus: (T, R, P, S) trong khong gian HINH PHAT.
+# Hai khoa duoi day la hai NHOM DO PHAN GIAI, khong phai hai tro choi khac nhau, nen
+# chung tro toi cung mot bo so.
+_PD_BASE = (0.0, 2.0, 6.0, 10.0)
+BASE = {"ten-scale": _PD_BASE, "three-scale": _PD_BASE}
 
 ARM_MODELS = {
-    "open-weight": ["Gemma-3-12B", "Llama-3.1-8B", "Qwen3-8B"],
-    "frontier": ["Claude-3.5-Haiku", "Gemini-3.5-Flash-Lite", "GPT-4o",
-                 "Mistral-Large"],
+    "ten-scale": ["Gemini-3.5-Flash-Lite", "Gemini-3.1-Flash-Lite-Preview",
+                  "GPT-5.4-Nano"],
+    "three-scale": ["Claude-3.5-Haiku", "GPT-4o", "Mistral-Large"],
 }
+# Tra nguoc model -> nhom. Model chua dang ky se KeyError ngay o load(), co y: im
+# lang bo qua mot model moi la cach hong ma khong ai phat hien duoc.
+MODEL_ARM = {m: a for a, ms in ARM_MODELS.items() for m in ms}
 
 STRAT_ORDER = ["AllC", "TFT", "WSLS", "AllD", "Ambiguous"]
 # The four canonical memory-one rules.  "Ambiguous" is not one of them: it
@@ -85,21 +94,45 @@ def notation_features(arm: str, lam: float) -> dict:
         "mean_glyphs": float(np.mean([len(c) for c in cells])),
         "max_digits": int(max(digits)),
         "regime": ("fractional" if lam < 1 else "unit" if lam <= 10 else "large"),
+        # `regime` above is a function of lambda, not of what the prompt prints.  On
+        # the decade grid the two coincide, so the distinction never mattered; off
+        # the decade grid they come apart, and lambda = 0.5 is the case that matters:
+        # it prints 0 / 1 / 4 / 5, all integers, at sub-unit magnitude.  Labelling it
+        # "fractional" would throw away the one condition that separates a notation
+        # account from a magnitude account.  `regime_printed` reads the cells instead.
+        "regime_printed": _regime_printed(cells),
     }
 
 
+def _regime_printed(cells: list[str]) -> str:
+    """Regime read off the printed strings rather than off lambda.
+
+    Reproduces `regime` exactly on the decade grid: 0.01 and 0.1 carry a decimal
+    point; 1 and 10 top out at two and three digits; 100 and 1000 at four and five.
+    """
+    if any("." in c for c in cells):
+        return "fractional"
+    digits = max(len(c.replace("-", "").lstrip("0")) or 1 for c in cells)
+    return "unit" if digits <= 3 else "large"
+
+
 def load() -> pd.DataFrame:
-    """Both arms of the corpus in one agent-game table."""
-    small = pd.read_parquet(DATADIR / "games.parquet")
-    small = small[small.family == "small"].copy()
-    small["arm"] = "open-weight"
+    """Corpus frontier trong mot bang agent-game.
+
+    Nhanh open-weight da bi bo khoi bai (2026-09-02), nen ham nay khong doc
+    ``games.parquet`` nua. Cot ``arm`` giu lai ten cu nhung mang y nghia moi: no chia
+    corpus theo DO PHAN GIAI lambda, vi do la doi lap con lai duy nhat co that.
+    """
     front = pd.read_parquet(DATADIR / "frontier_games.parquet").copy()
-    front["arm"] = "frontier"
+    front["arm"] = front.model.map(MODEL_ARM)
+    unknown = sorted(front[front.arm.isna()].model.unique())
+    if unknown:
+        raise KeyError(f"model chua dang ky trong ARM_MODELS: {unknown}")
     keep = ["arm", "model", "language", "scale_nominal", "game_uid", "agent",
             "personality", "opp_personality", "dyad", "n_rounds", "coop_rate",
             "opp_coop_rate", "first_move_coop", "last_move_coop", "efficiency",
             "cc_rate", "dd_rate", "cd_rate", "dc_rate"]
-    df = pd.concat([small[keep], front[keep]], ignore_index=True)
+    df = front[keep].copy()
     df["loglam"] = np.log10(df.scale_nominal)
     df["framing"] = np.where(df.language.isin(MINIMISE), "minimise", "maximise")
     feats = {(a, l): notation_features(a, l)
@@ -112,16 +145,26 @@ def load() -> pd.DataFrame:
 
 
 def load_rounds() -> pd.DataFrame:
-    small = pd.read_parquet(DATADIR / "rounds.parquet")
-    small = small[small.family == "small"].copy()
-    small["arm"] = "open-weight"
     front = pd.read_parquet(DATADIR / "frontier_rounds.parquet").copy()
-    front["arm"] = "frontier"
+    front["arm"] = front.model.map(MODEL_ARM)
+    unknown = sorted(front[front.arm.isna()].model.unique())
+    if unknown:
+        raise KeyError(f"model chua dang ky trong ARM_MODELS: {unknown}")
     keep = ["arm", "model", "language", "scale_nominal", "scale_eff", "game_uid",
             "agent", "personality", "round", "coop", "opp_coop", "payoff_raw"]
-    out = pd.concat([small[keep], front[keep]], ignore_index=True)
+    out = front[keep].copy()
+    # CHU Y: nhan nay doc tu lambda chu khong tu o in ra, nen no SAI o lambda=0.5
+    # (in ra "0 / 1 / 3 / 5" - toan so nguyen, tuc la `unit`). Giu lai vi moi bang da
+    # cong bo deu dung no; cot `regime_printed` ngay duoi moi la cach doc dung, va
+    # phan tich nao noi ve notation thi phai dung cot do.
     out["regime"] = np.where(out.scale_nominal < 1, "fractional",
                              np.where(out.scale_nominal <= 10, "unit", "large"))
+    # Parallel column read off the printed cells (see `_regime_printed`).  Kept
+    # separate from `regime` so every published table stays byte-identical.
+    out["regime_printed"] = [
+        notation_features(a, s)["regime_printed"]
+        for a, s in zip(out.arm, out.scale_nominal)
+    ]
     return out
 
 
@@ -690,14 +733,16 @@ def t09_invariants(df):
 # T_PS10  the strategy mix a standard read-out returns
 # --------------------------------------------------------------------------
 def t10_mix():
-    small = pd.read_parquet(DATADIR / "llm_archetypes.parquet")
-    small = small[small.family == "small"].copy()
-    small["arm"] = "open-weight"
-    front = pd.read_parquet(DATADIR / "frontier_archetypes.parquet").copy()
-    front["arm"] = "frontier"
+    # Nhanh open-weight da bi bo khoi bai (2026-09-02): read-out chi chay tren
+    # corpus frontier, va chia theo dung hai nhom do phan giai nhu moi bang khac.
+    a = pd.read_parquet(DATADIR / "frontier_archetypes.parquet").copy()
+    a["arm"] = a.model.map(MODEL_ARM)
+    unknown = sorted(set(a.model[a.arm.isna()]))
+    if unknown:
+        raise KeyError(f"model chua dang ky trong ARM_MODELS: {unknown}")
     keep = ["arm", "model", "scale_nominal", "game_uid", "agent", "archetype",
             "assignment", "confidence", "language", "personality"]
-    a = pd.concat([small[keep], front[keep]], ignore_index=True)
+    a = a[keep]
 
     # Where each label came from.  `assignment` records the stage of the
     # read-out that produced it: an exact rule match, several rules at once,

@@ -1,0 +1,11 @@
+model,lam,printed_cells,notation,coop,lo,hi,n_dyads,source
+gemini-3.5-flash-lite,0.01,0 / 0.02 / 0.06 / 0.1,decimal,0.7918,0.7455,0.8362,200,E1/E3 new
+gemini-3.5-flash-lite,0.1,0 / 0.2 / 0.6 / 1,decimal,0.6938,0.6442,0.7445,200,existing
+gemini-3.5-flash-lite,0.25,0 / 0.5 / 1.5 / 2.5,decimal,0.872,0.8478,0.893,200,E1/E3 new
+gemini-3.5-flash-lite,0.5,0 / 1 / 3 / 5,integer,0.8005,0.7722,0.8285,200,E1/E3 new
+gemini-3.5-flash-lite,1.0,0 / 2 / 6 / 10,integer,0.7738,0.7505,0.7955,200,existing
+gemini-3.5-flash-lite,2.0,0 / 4 / 12 / 20,integer,0.7098,0.674,0.7433,200,E1/E3 new
+gemini-3.5-flash-lite,5.0,0 / 10 / 30 / 50,integer,0.697,0.6615,0.7323,200,E1/E3 new
+gemini-3.5-flash-lite,10.0,0 / 20 / 60 / 100,integer,0.7538,0.724,0.7835,200,existing
+gemini-3.5-flash-lite,100.0,0 / 200 / 600 / 1000,integer,0.734,0.698,0.769,200,E1/E3 new
+gemini-3.5-flash-lite,1000.0,0 / 2000 / 6000 / 10000,integer,0.6815,0.6435,0.7172,200,E1/E3 new

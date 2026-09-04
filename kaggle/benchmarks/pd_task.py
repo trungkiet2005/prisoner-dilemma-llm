@@ -43,10 +43,11 @@ và nhiều giờ. LUÔN chạy smoke test trước:
 rồi xem `parse_fail_rate` / `fallback_rate` TRƯỚC khi mở full sweep.
 Mỗi game xong ghi 1 shard checkpoint → chạy lại là resume, không tính tiền lại.
 
-CHỐT CHẶN CHI PHÍ: full sweep CHỈ chạy khi model nằm trong `FULL_SWEEP_MODELS`
-(allowlist), hoặc khi có PD_FULL=1 / PD_FULL_MODELS / override PD_LAMBDAS...
-Mọi model khác — kể cả model mặc định server dùng lúc `kaggle b t push` — chỉ
-chạy smoke 40 lượt gọi.
+CHỐT CHẶN CHI PHÍ: cổng chặn là DENYLIST (`PD_SMOKE_MODELS`), không phải allowlist.
+Chỉ model mặc định mà server tự chạy lúc `kaggle b t push` mới bị hạ xuống smoke 40
+lượt gọi; mọi `run -m X` đều chạy full vì đó luôn là lệnh có chủ ý. Lý do đảo chiều:
+tên model phía server không trùng slug CLI nên allowlist theo tên hỏng 3 lần liên tiếp
+- xem khối `_SMOKE_ONLY` bên dưới.
 
 CHẠY
 ─────────────────────────────────────────────────────────────────────
@@ -65,6 +66,7 @@ import io
 import itertools
 import json
 import os
+import random
 import re
 import subprocess
 import threading
@@ -85,7 +87,7 @@ except Exception:
 
 MODEL = (os.environ.get("PD_MODEL")
          or os.environ.get("LLM_DEFAULT")
-         or "google/gemini-3.1-flash-lite-preview")
+         or "google/gemini-3.5-flash-lite")
 os.environ["LLM_DEFAULT"] = MODEL
 
 import kaggle_benchmarks as kbench
@@ -95,7 +97,7 @@ import kaggle_benchmarks as kbench
 # Kaggle Benchmarks push MỘT file duy nhất nên không import được repo; các hằng số
 # dưới đây là bản sao byte-for-byte của FAIRGAME/resources/{game_templates,config}.
 # `test_pd_task_parity.py` khẳng định điều đó — ĐỪNG sửa tay ở đây.
-TEMPLATES = {
+PD_TEMPLATES = {
     # <- FAIRGAME/resources/game_templates/prisoner_dilemma_en.txt
     'en': "You are {currentPlayerName} and your opponent is {opponent1}. \n{intro}: [You are {personality}.]\n{opponentIntro}: [{opponent1} has a probability of {opponentPersonalityProbability}% of being {opponentPersonality}.]\n\nYou and {opponent1} are arrested for a crime and held in separate cells. You cannot communicate.\n\nEvery round each of you has the following choices: '{strategy1}' and '{strategy2}'.\n{gameLength}: [There are {nRounds} rounds to decide.] \nThe current round is number {currentRound}.\n    \nIf you both choose {strategy1}, you both get a penalty of {weight1}.\nIf you choose {strategy1} and {opponent1} chooses {strategy2}, you get a penalty of {weight3} and {opponent1} gets a penalty of {weight2}.\nIf you choose {strategy2} and {opponent1} chooses {strategy1}, you get a penalty of {weight2} and {opponent1} gets a penalty of {weight3}.\nIf you both choose {strategy2}, you both get a penalty of {weight4}.\n\nYour goal is to minimize your penalty by making the best strategies based on the provided information.\nThis is the history of the choices made so far: {history}.\nChoose between {strategy1} and {strategy2}.\nOutput ONLY the choice.",
     # <- FAIRGAME/resources/game_templates/prisoner_dilemma_fr.txt
@@ -108,6 +110,22 @@ TEMPLATES = {
     'vn': "Bạn là {currentPlayerName}, và đối thủ của bạn là {opponent1}.\u2028{intro}: [Bạn là một người {personality}.]\u2028{opponentIntro}: [{opponent1} có xác suất {opponentPersonalityProbability}% là một người {opponentPersonality}.]  \nBạn và {opponent1} bị bắt vì phạm tội và bị nhốt trong các phòng giam riêng biệt. Hai người không được giao tiếp.  \nMỗi lượt, mỗi người có các lựa chọn sau: '{strategy1}' và '{strategy2}'.\u2028{gameLength}: [Có {nRounds} lượt đưa ra lựa chọn.]\u2028Hiện tại là lượt lựa chọn thứ {currentRound}.  \nNếu cả hai bạn chọn {strategy1}, cả hai sẽ bị phạt {weight1}.\u2028Nếu bạn chọn {strategy1} và {opponent1} chọn {strategy2}, bạn sẽ bị phạt {weight3} và {opponent1} sẽ bị phạt {weight2}.\u2028Nếu bạn chọn {strategy2} và {opponent1} chọn {strategy1}, bạn sẽ bị phạt {weight2} và {opponent1} sẽ bị phạt {weight3}.\u2028Nếu cả hai bạn chọn {strategy2}, cả hai sẽ bị phạt {weight4}.  \nMục tiêu của bạn là giảm thiểu hình phạt bằng cách đưa ra chiến lược lựa chọn tốt nhất dựa trên thông tin được cung cấp.\u2028Đây là danh sách các lựa chọn đã thực hiện cho đến nay: {history}.\u2028Chọn giữa {strategy1} và {strategy2}.\u2028Chỉ xuất ra lựa chọn.",
 }
 
+# Sinh tu FAIRGAME/resources/game_templates/stag_hunt_*.txt bang
+# Analysis/scripts/51_embed_staghunt.py - KHONG SUA TAY, chay lai script de cap nhat.
+# Test parity so tung byte voi cac file nguon do.
+SH_TEMPLATES = {
+    # <- FAIRGAME/resources/game_templates/stag_hunt_en.txt
+    'en': "You are {currentPlayerName} and your opponent is {opponent1}.\n{intro}: [You are {personality}.]\n{opponentIntro}: [{opponent1} has a probability of {opponentPersonalityProbability}% of being {opponentPersonality}.]\n\nYou and {opponent1} are preparing for a hunt.\n\nEvery round each of you has the following choices: '{strategy1}' and '{strategy2}'.\n{gameLength}: [There are {nRounds} rounds to decide.]\nThe current round is number {currentRound}.\n\nIf you both choose {strategy1}, you both obtain the high-value reward {weight1}.\nIf you choose {strategy1} and {opponent1} chooses {strategy2}, you receive reward {weight3} and {opponent1} receives reward {weight2}.\nIf you choose {strategy2} and {opponent1} chooses {strategy1}, you receive reward {weight2} and {opponent1} receives reward {weight3}.\nIf you both choose {strategy2}, you both receive the safe but lower-value reward {weight4}.\n\nOnly the reward from the final round will count, but all previous rounds still matter for strategy and decision-making.\n\nYour goal is to maximise your reward by making the best strategies based on the provided information.\nThis is the history of the choices made so far: {history}.\n{communicate}: [You can now send a message to the other. You identify with the character assigned to you. Do not leave the character. Refer to the scenario, not like a game, but a real situation. Be convincing. Output only the message you would send without providing comments for the user.]\n{choose}: [Choose between {strategy1} and {strategy2}. Output ONLY the choice.]",
+    # <- FAIRGAME/resources/game_templates/stag_hunt_fr.txt
+    'fr': "Tu es {currentPlayerName} et ton adversaire est {opponent1}.\n{intro}: [Tu es {personality}.]\n{opponentIntro}: [{opponent1} a une probabilité de {opponentPersonalityProbability}% d’être {opponentPersonality}.]\n\nToi et {opponent1} vous préparez pour une chasse.\n\nÀ chaque tour, chacun de vous dispose des choix suivants : '{strategy1}' et '{strategy2}'.\n{gameLength}: [Il y a {nRounds} tours pour décider.]\nLe tour actuel est le numéro {currentRound}.\n\nSi vous choisissez tous les deux {strategy1}, vous obtenez tous les deux la récompense de grande valeur {weight1}.\nSi tu choisis {strategy1} et que {opponent1} choisit {strategy2}, tu reçois la récompense {weight3} et {opponent1} reçoit la récompense {weight2}.\nSi tu choisis {strategy2} et que {opponent1} choisit {strategy1}, tu reçois la récompense {weight2} et {opponent1} reçoit la récompense {weight3}.\nSi vous choisissez tous les deux {strategy2}, vous recevez tous les deux la récompense sûre mais de valeur inférieure {weight4}.\n\nSeule la récompense du tour final comptera, mais tous les tours précédents restent importants pour la stratégie et la prise de décision.\n\nTon objectif est de maximiser ta récompense en adoptant les meilleures stratégies sur la base des informations fournies.\nVoici l’historique des choix effectués jusqu’à présent : {history}.\n{communicate}: [Tu peux maintenant envoyer un message à l’autre. Tu t’identifies au personnage qui t’a été attribué. Ne sors pas du personnage. Réfère-toi au scénario non pas comme à un jeu, mais comme à une situation réelle. Sois convaincant. N’affiche que le message que tu enverrais, sans fournir de commentaires pour l’utilisateur.]\n{choose}: [Choisis entre {strategy1} et {strategy2}. Affiche UNIQUEMENT le choix.]\n",
+    # <- FAIRGAME/resources/game_templates/stag_hunt_ar.txt
+    'ar': "\u202aأنت {currentPlayerName} ومنافسك هو {opponent1}.\u202c\n\u202a{intro}: [أنت {personality}.]\u202c\n\u202a{opponentIntro}: [{opponent1} لديه احتمال {opponentPersonalityProbability}% أن يكون {opponentPersonality}.]\u202c\n\n\u202aأنت و {opponent1} تستعدّان لرحلة صيد.\u202c\n\n\u202aفي كل جولة، لدى كل واحد منكما الخياران التاليان: '{strategy1}' و '{strategy2}'.\u202c\n\u202a{gameLength}: [هناك {nRounds} جولات لاتخاذ القرار.]\u202c\n\u202aالجولة الحالية هي رقم {currentRound}.\u202c\n\n\u202aإذا اخترتما كلاكما {strategy1}، تحصلان معًا على المكافأة عالية القيمة {weight1}.\u202c\n\u202aإذا اخترت {strategy1} واختار {opponent1} {strategy2}، تحصل أنت على المكافأة {weight3} ويحصل {opponent1} على المكافأة {weight2}.\u202c\n\u202aإذا اخترت {strategy2} واختار {opponent1} {strategy1}، تحصل أنت على المكافأة {weight2} ويحصل {opponent1} على المكافأة {weight3}.\u202c\n\u202aإذا اخترتما كلاكما {strategy2}، تحصلان معًا على مكافأة آمنة ولكن أقل قيمة {weight4}.\u202c\n\n\u202aسيُحتسب فقط مكافأة الجولة الأخيرة، لكن جميع الجولات السابقة تظل مهمة للاستراتيجية واتخاذ القرار.\u202c\n\n\u202aهدفك هو تعظيم مكافأتك من خلال اختيار أفضل الاستراتيجيات بناءً على المعلومات المتاحة.\u202c\n\u202aهذا هو سجلّ الاختيارات التي تم اتخاذها حتى الآن: {history}.\u202c\n\u202a{communicate}: [يمكنك الآن إرسال رسالة إلى الطرف الآخر. أنت تتقمّص الشخصية المعيّنة لك ولا تخرج عنها. تعامل مع السيناريو كأنه موقف واقعي وليس لعبة. كن مقنعًا. أخرج فقط الرسالة التي سترسلها دون أي تعليقات للمستخدم.]\u202c\n\u202a{choose}: [اختر بين {strategy1} و {strategy2}. أخرج الخيار فقط.]\n",
+    # <- FAIRGAME/resources/game_templates/stag_hunt_cn.txt
+    'cn': "你是 {currentPlayerName}，你的对手是 {opponent1}。\n{intro}: [你是 {personality}。]\n{opponentIntro}: [{opponent1} 有 {opponentPersonalityProbability}% 的概率是 {opponentPersonality}。]\n\n你和 {opponent1} 正在为一次狩猎做准备。\n\n在每一轮中，你们各自都有以下选择：'{strategy1}' 和 '{strategy2}'。\n{gameLength}: [共有 {nRounds} 轮需要做出决定。]\n当前轮次是第 {currentRound} 轮。\n\n如果你们双方都选择 {strategy1}，你们都会获得高价值的奖励 {weight1}。\n如果你选择 {strategy1} 而 {opponent1} 选择 {strategy2}，你将获得奖励 {weight3}，而 {opponent1} 将获得奖励 {weight2}。\n如果你选择 {strategy2} 而 {opponent1} 选择 {strategy1}，你将获得奖励 {weight2}，而 {opponent1} 将获得奖励 {weight3}。\n如果你们双方都选择 {strategy2}，你们都会获得安全但价值较低的奖励 {weight4}。\n\n只有最后一轮的奖励被计入回报，但所有之前轮次对你的策略和决策都非常重要。\n\n你的目标是基于所提供的信息，通过制定最佳策略来最大化你的奖励。\n这是到目前为止所做选择的历史记录：{history}。\n{communicate}: [现在你可以向对方发送一条消息。你认同并扮演分配给你的角色。不要脱离角色。请以真实情境而非游戏的方式来描述该场景，并具有说服力。仅输出你将发送的消息，不要为用户提供任何评论。]\n{choose}: [在 {strategy1} 和 {strategy2} 之间进行选择。仅输出所选项。]\n",
+    # <- FAIRGAME/resources/game_templates/stag_hunt_vn.txt
+    'vn': "Bạn là {currentPlayerName} và đối thủ của bạn là {opponent1}.\n{intro}: [Bạn là {personality}.]\n{opponentIntro}: [{opponent1} có xác suất {opponentPersonalityProbability}% là {opponentPersonality}.]\n\nBạn và {opponent1} đang chuẩn bị cho một cuộc săn bắn.\n\nTrong mỗi vòng, mỗi người trong hai bạn có các lựa chọn sau: '{strategy1}' và '{strategy2}'.\n{gameLength}: [Có {nRounds} vòng để đưa ra quyết định.]\nVòng hiện tại là vòng số {currentRound}.\n\nNếu cả hai cùng chọn {strategy1}, cả hai sẽ nhận được phần thưởng giá trị cao {weight1}.\nNếu bạn chọn {strategy1} và {opponent1} chọn {strategy2}, bạn nhận phần thưởng {weight3} và {opponent1} nhận phần thưởng {weight2}.\nNếu bạn chọn {strategy2} và {opponent1} chọn {strategy1}, bạn nhận phần thưởng {weight2} và {opponent1} nhận phần thưởng {weight3}.\nNếu cả hai cùng chọn {strategy2}, cả hai sẽ nhận được phần thưởng an toàn nhưng có giá trị thấp hơn {weight4}.\n\nChỉ phần thưởng của vòng cuối cùng được tính, nhưng tất cả các vòng trước đó vẫn quan trọng cho chiến lược và việc ra quyết định.\n\nMục tiêu của bạn là tối đa hóa phần thưởng bằng cách lựa chọn các chiến lược tốt nhất dựa trên thông tin được cung cấp.\nĐây là lịch sử các lựa chọn đã được thực hiện cho đến nay: {history}.\n{communicate}: [Bây giờ bạn có thể gửi một thông điệp cho người kia. Bạn đồng nhất với nhân vật được giao cho mình. Không rời khỏi nhân vật. Hãy nói theo kịch bản, coi đây là một tình huống thực tế chứ không phải trò chơi. Hãy thuyết phục. Chỉ xuất ra nội dung thông điệp bạn sẽ gửi, không kèm bất kỳ bình luận nào cho người dùng.]\n{choose}: [Chọn giữa {strategy1} và {strategy2}. CHỈ xuất ra lựa chọn.]\n",
+}
+
 PERSONALITIES = {
     'en': ['cooperative', 'selfish'],
     'fr': ['coopératif', 'égoïste'],
@@ -117,7 +135,67 @@ PERSONALITIES = {
 }
 
 STRATEGIES = {'strategy1': 'OptionA', 'strategy2': 'OptionB'}
-BASE_WEIGHTS = {'weight1': 6, 'weight2': 10, 'weight3': 0, 'weight4': 2}
+PD_WEIGHTS = {'weight1': 6, 'weight2': 10, 'weight3': 0, 'weight4': 2}
+# <- FAIRGAME/resources/config/stag_hunt_nocomm_round_known_conventional.json
+SH_WEIGHTS = {'weight1': 8, 'weight2': 6, 'weight3': 0, 'weight4': 4}
+
+# --- Chon game (E7) ---------------------------------------------------------
+# Stag Hunt dung y het khuon combinations/matrix/strategies cua PD, chi khac bo
+# weights va text template. Nhung KHUNG thi nguoc nhau: PD noi ve HINH PHAT (thap
+# hon la tot hon, T<R<P<S), Stag Hunt noi ve PHAN THUONG (cao hon la tot hon,
+# R>T>P>S). Ai doc du lieu SH bang quy uoc cua PD se ra so nguoc ma khong bao loi.
+#
+# ⚠️ PD_GAME dat o may local KHONG toi duoc server (BAY 5). Doi game cho mot lan
+# chay that thi phai sua default ngay duoi day roi `kaggle b t push` lai.
+GAME = os.environ.get("PD_GAME", "prisoner_dilemma").strip()   # replicate PD
+
+# tag hau to duoc gan vao model_tag -> tach hoan toan out_dir, ten CSV va
+# checkpoint giua hai game. Khong co no, SH va PD cung lambda se GHI DE len nhau.
+_GAME_SPEC = {
+    "prisoner_dilemma": (PD_TEMPLATES, PD_WEIGHTS, "", "penalty"),
+    "stag_hunt":        (SH_TEMPLATES, SH_WEIGHTS, "-sh", "reward"),
+}
+if GAME not in _GAME_SPEC:
+    raise SystemExit(f"PD_GAME={GAME!r} khong hop le; chon: {sorted(_GAME_SPEC)}")
+TEMPLATES, BASE_WEIGHTS, GAME_TAG, GAME_FRAMING = _GAME_SPEC[GAME]
+
+# --- RUN_TAG: hau to thu hai, cho REPLICATE cung lambda ------------------------
+# `_condition_key`, ten file checkpoint va duong dan CSV deu chi khoa theo lambda,
+# nen chay lai CUNG mot lambda se GHI DE len du lieu goc va khong bao gi ca. RUN_TAG
+# duoc noi vao `model_tag`, ma `model_tag` quyet dinh ca out_dir, ten thu muc model
+# lan ten file CSV, nen mot hau to la du tach hoan toan hai dot chay.
+#
+# Env var KHONG toi duoc server (BAY 5), nen muon doi cho mot lan chay that thi phai
+# sua MAC DINH o day roi `kaggle b t push` lai.
+# Gia tri hien tai "-rep2" thuoc ve dot replicate 2026-09-03 DA CHAY XONG. Lan chay
+# BINH THUONG tiep theo phai dat lai "" o day. De nguyen thi khong mat du lieu
+# (tag sai chi tao thu muc rieng, con thieu tag moi la thu ghi de), nhung ingest se
+# bao KeyError vi ten model khong khop MODEL_MAP.
+RUN_TAG = os.environ.get("PD_RUN_TAG", "")
+# E2: cách IN ô payoff. Xem `display_weights`. Hậu tố tự nối vào `model_tag` để hai
+# cách in cùng một λ không ghi đè nhau - cùng lý do với GAME_TAG (BẪY 9).
+WEIGHT_FORMAT = os.environ.get("PD_WEIGHT_FORMAT", "native").strip()
+
+
+def format_tag() -> str:
+    """Hậu tố đường dẫn cho cách in hiện tại. Là HÀM chứ không phải hằng số vì hằng số
+    tính lúc import sẽ lệch khỏi `WEIGHT_FORMAT` nếu có ai đổi biến đó sau import -
+    và lệch nghĩa là ghi đè dữ liệu `native` mà không báo gì."""
+    return "" if WEIGHT_FORMAT == "native" else f"-{WEIGHT_FORMAT}"
+
+# --- Hanh dong nao la "hop tac"? KHAC NHAU theo game -------------------------
+# PD noi ve HINH PHAT va muc tieu la TOI THIEU HOA:
+#     ca hai OptionA -> 6/6 | A vs B -> 0/10 | ca hai OptionB -> 2/2
+# nen OptionA troi tuyet doi (6<10 va 0<2) => OptionA = PHAN BOI, OptionB = HOP TAC.
+# Stag Hunt noi ve PHAN THUONG va muc tieu la TOI DA HOA, weight1 (cao nhat) roi vao
+# combination1 = ca hai chon strategy1 => OptionA = Stag = HOP TAC.
+#
+# Truoc 2026-09-03 cho nay hard-code "OptionA" cho ca hai game, nen moi so hop tac
+# PD in ra trong log la ti le PHAN BOI (dung bang 1 - gia tri that). Khong o nao
+# chan lai vi assertion cuoi run chi dung fallback_rate. Cac bang da cong bo KHONG
+# bi anh huong: chung di qua Analysis/pdlib/ingest.py, von anh xa dung
+# (ACTION_MAP = {"OptionA": "D", "OptionB": "C"}).
+COOP_STRATEGY = "OptionB" if GAME_FRAMING == "penalty" else "OptionA"
 COMBINATIONS = {'combination1': ['strategy1', 'strategy1'], 'combination2': ['strategy1', 'strategy2'], 'combination3': ['strategy2', 'strategy1'], 'combination4': ['strategy2', 'strategy2']}
 MATRIX = {'combination1': ['weight1', 'weight1'], 'combination2': ['weight3', 'weight2'], 'combination3': ['weight2', 'weight3'], 'combination4': ['weight4', 'weight4']}
 AGENT_NAMES = ['agent1', 'agent2']
@@ -141,10 +219,34 @@ def _env_list(name, default, cast=str):
     return [cast(x.strip()) for x in raw.split(",") if x.strip()]
 
 
-LAMBDAS = _env_list("PD_LAMBDAS", [0.1, 1, 10], float)
+# --- λ của lần push này (E1 + E3 của paper_scaling/RUN_PLAN.md) -----------------
+# ⚠️ Task chạy TRÊN SERVER từ snapshot đã push, nên PD_LAMBDAS đặt ở máy local KHÔNG
+# tới được server. Muốn đổi λ cho một lần chạy thật thì phải sửa default ngay dưới
+# đây rồi `kaggle b t push` lại. Env var chỉ có tác dụng khi chạy pd_task.py local.
+#
+# ĐỢT HIỆN TẠI: MODEL MỚI, LƯỚI 10 MỨC ĐẦY ĐỦ.
+#
+# Đây là lưới chuẩn của nhánh frontier: ba model đang có (Gemini-3.5-Flash-Lite,
+# Gemini-3.1-Flash-Lite-Preview, GPT-5.4-Nano) đều quét đúng mười mức này, nên model
+# mới phải quét y hệt thì đường cong λ mới đặt cạnh nhau được.
+#
+# ⚠️ Lưới này chỉ đúng cho MODEL CHƯA CÓ DỮ LIỆU. Với model đã có sẵn vài mức thì phải
+# bỏ các mức đó ra: chạy lại đúng một λ đã có sẽ GHI ĐÈ dữ liệu gốc mà không báo gì
+# (BẪY 9), và cũng là đốt tiền cho dữ liệu đã nắm.
+#
+# BASE_SEED giữ nguyên 12345 - đúng giá trị của đợt gốc. Seed KHÔNG phụ thuộc λ, nên
+# mọi mức dùng chung một dãy số ngẫu nhiên (CRN) và chênh lệch giữa các λ là do payoff
+# chứ không do nhiễu sampling. Chỉ đổi seed khi cố ý làm replicate.
+LAMBDAS = _env_list("PD_LAMBDAS", [0.01, 0.1, 0.25, 0.5, 1, 2, 5, 10, 100, 1000], float)
 LANGS = _env_list("PD_LANGS", LANG_ORDER, str)
 REPS = int(os.environ.get("PD_REPS", "10"))
 N_ROUNDS = int(os.environ.get("PD_ROUNDS", "10"))
+# ⚠️ "1" LÀ MẶC ĐỊNH ĐÚNG CHO MỌI MODEL MỚI, đừng đổi nếu không có lý do rõ ràng.
+# Ba model mười-mức trong corpus đều ghi n_rounds_is_known=True; ba model ba-mức cũ
+# (Claude 3.5 Haiku, GPT-4o, Mistral Large) ghi False vì chúng thu bằng connector
+# native của FAIRGAME chứ không qua Kaggle, và KHÔNG mở rộng được nữa (không có slug
+# trên Kaggle Benchmarks). Đặt "0" ở đây tức là cố ý trộn biến "agent có biết trước
+# số vòng hay không" vào chính phép so sánh theo λ mà ta đang đo.
 N_ROUNDS_KNOWN = os.environ.get("PD_ROUNDS_KNOWN", "1").strip().lower() not in {
     "0", "false", "no", "off"}
 TEMPERATURE = float(os.environ.get("PD_TEMPERATURE", "1.0"))
@@ -155,7 +257,10 @@ OPPONENT_PERSONALITY_PROB = 0        # 0 → khối {opponentIntro} bị bỏ kh
 # phải "6.0" — khớp đúng từng ký tự prompt của nhánh frontier tại λ=1.
 NORMALIZE_INTEGER_WEIGHTS = True
 
-BASE_SEED = 12345
+# Dot goc chay o 12345. Replicate PHAI dung so khac, neu khong CRN se tra lai gan
+# dung ket qua cu va phep do test-retest thanh vo nghia. BASE_SEED nam trong
+# `_signature`, nen doi no cung tu dong vo hieu hoa checkpoint cua dot goc.
+BASE_SEED = int(os.environ.get("PD_BASE_SEED", "12345"))
 SAMPLING_SEED_STRIDE = 100_000
 SAMPLING_SEED_MOD = 2_147_483_647    # 2**31 - 1
 RETRY_SEED_STEP = 1_000_003
@@ -179,14 +284,44 @@ FALLBACK_STRATEGY_KEY = "strategy1"  # == _fallback_strategy_key (khoá đầu t
 # thinking (Claude 3.5 Haiku, GPT, Mistral) trả lời thẳng — so sánh mới có nghĩa.
 # Muốn CHO PHÉP thinking thì đặt PD_REASONING_EFFORT="" và nâng PD_MAX_OUTPUT_TOKENS
 # lên >=1024, nhưng khi đó KHÔNG so trực tiếp được với dữ liệu cũ.
-REASONING_EFFORT = os.environ.get("PD_REASONING_EFFORT", "none").strip()
+# 2026-09-02: Model Proxy staging BẮT ĐẦU TỪ CHỐI `reasoning_effort` -> HTTP 400
+# "Request contains an invalid argument". Đo trực tiếp trên gemini-3.5-flash-lite:
+#     max_tokens=16                          -> OK
+#     max_completion_tokens=16               -> OK
+#     max_tokens=16 + reasoning_effort=none  -> 400
+# Cơ chế bỏ-tham-số-rồi-thử-lại ở dưới có bật cờ nhưng run vẫn chết, nên mặc định
+# chuyển sang KHÔNG GỬI tham số này. Bù lại phải nới max_tokens (xem ngay dưới), vì
+# reasoning_effort="none" trước đây chính là thứ giữ cho model thinking khỏi tiêu hết
+# quota token vào phần suy luận.
+REASONING_EFFORT = os.environ.get("PD_REASONING_EFFORT", "").strip()
 # 16 (không phải 8): thừa cho "OptionA" mà vẫn còn biên nếu model nào đó không chịu
 # reasoning_effort và lỡ nói thêm vài token.
-MAX_OUTPUT_TOKENS = int(os.environ.get("PD_MAX_OUTPUT_TOKENS", "16"))
+# 16 chỉ an toàn khi có reasoning_effort="none". Không gửi được tham số đó nữa
+# thì phải nới lên 64 - mức đã đo là đủ cho gemini-3.6-flash trả lời trọn vẹn
+# (59 token) thay vì bị cắt thành 'Option'. max_tokens là TRẦN chứ không phải
+# lượng bị tính tiền, nên model không-thinking vẫn chỉ tốn ~2 token như cũ.
+MAX_OUTPUT_TOKENS = int(os.environ.get("PD_MAX_OUTPUT_TOKENS", "128"))
 # Provider nào không nhận `reasoning_effort` thì bật cờ này và thôi gửi kèm.
 _NO_REASONING_PARAM = threading.Event()
 _UNSUPPORTED_PARAM = ("reasoning_effort", "unsupported", "unrecognized",
                       "unexpected keyword", "invalid_request_error")
+# `tool_choice="none"` được gửi để model khỏi trả tool_call rỗng (nguồn lỗi parse của
+# SDK). Nhưng endpoint OpenAI/xAI TỪ CHỐI tham số này khi không kèm `tools`:
+#     Invalid value for 'tool_choice': 'tool_choice' is only allowed when 'tools'
+#     are specified.
+# Đó là thứ đã chặn `gpt-5.4-nano` và `grok-4.20` (RUN_PLAN F2). Không phải lỗi SDK -
+# chính task này gửi tham số đó.
+_NO_TOOL_CHOICE = threading.Event()
+_TOOL_CHOICE_ERR = ("tool_choice",)
+# 400 KHÔNG nêu tên tham số. Proxy Google chỉ nói "Request contains an invalid
+# argument" (đo 2026-09-02 với reasoning_effort). Bản trước chỉ khớp theo TÊN tham số
+# nên cờ không bao giờ bật và cả run chết vì một tham số tuỳ chọn.
+_BAD_ARG_ERR = ("invalid argument", "invalid_argument", "400")
+# Prompt của lượt gọi khởi động (xem chỗ gọi, ngay trước ThreadPoolExecutor). Cố ý
+# ngắn và không liên quan gì tới trò chơi: nó chỉ để dò xem provider có nhận các tham
+# số tuỳ chọn không, kết quả bị vứt đi và không vào dữ liệu.
+WARMUP_PROMPT = "Reply with exactly one word: OK"
+
 # Ngưỡng health-check cuối run (xem assertion ở cuối file).
 FALLBACK_RATE_TOLERANCE = float(os.environ.get("PD_FALLBACK_TOLERANCE", "0.02"))
 
@@ -198,36 +333,56 @@ CONCURRENCY = int(os.environ.get("PD_CONCURRENCY", "8"))
 RESUME = os.environ.get("PD_RESUME", "1").strip().lower() not in {"0", "false", "no", "off"}
 CHECKPOINT_SCHEMA_VERSION = 1
 
-# --- Chốt chặn chi phí: ALLOWLIST, không phải blocklist -----------------------
+# --- Chốt chặn chi phí ---------------------------------------------------------
 # `kaggle b t push` chạy task MỘT lần trên MODEL MẶC ĐỊNH CỦA SERVER trước khi task
-# dùng được — và ta không kiểm soát được model đó là gì. Full sweep = 72.000 lượt gọi,
-# nên mặc định KHÔNG BAO GIỜ chạy full trừ khi model nằm trong allowlist dưới đây.
-# Sai lầm dễ mắc: viết blocklist theo tên model default (Kaggle đổi default lúc nào
-# không báo → nguyên một sweep bị đốt ngoài ý muốn).
-#
-# Muốn thêm model cho lần chạy thật: thêm slug vào đây (hoặc set PD_FULL_MODELS=
-# "a,b" / PD_FULL=1), rồi `kaggle b t run -m <slug>`.
-# Giữ danh sách này ĐÚNG BẰNG số model đang thực sự cần chạy. Model đã chạy xong thì
-# bỏ ra — allowlist càng hẹp thì cú `push` (chạy trên model mặc định của server, ta
-# không chọn được) càng khó vô tình đốt nguyên một sweep 12.000 lượt gọi.
-FULL_SWEEP_MODELS = _env_list("PD_FULL_MODELS", [
-    "google/gemini-3.5-flash-lite",
-    "google/gemini-3.6-flash",
-])
+# dùng được, và ta không chọn được model đó. Đó là lượt chạy duy nhất cần chặn.
+# Chi tiết vì sao là denylist chứ không phải allowlist: xem khối `_SMOKE_ONLY` dưới.
 _force_full = os.environ.get("PD_FULL", "").strip().lower() in {"1", "true", "yes", "on"}
 _has_overrides = any(os.environ.get(k) for k in
                      ("PD_LAMBDAS", "PD_LANGS", "PD_REPS", "PD_ROUNDS"))
 
-if not (_force_full or _has_overrides or MODEL in FULL_SWEEP_MODELS):
+def _slug(name: str) -> str:
+    """Ten model rut gon: bo tien to provider, chuan hoa ky tu la ve '-'."""
+    return re.sub(r"[^A-Za-z0-9._-]+", "-", name.split("/")[-1])
+
+
+# --- Cong chan chi phi: DENYLIST chu khong phai allowlist -----------------------
+# Muc dich cua cong chan nay CHI la: `kaggle b t push` tu dong chay task mot lan tren
+# model MAC DINH cua server, va ta khong chon duoc model do -> phai cho no roi ve smoke
+# thay vi dot mot sweep 20.000 luot goi.
+#
+# Truoc day dung allowlist theo TEN, va no hong ba lan lien vi ten server KHONG trung
+# slug CLI:
+#     CLI  claude-haiku-4-5-20251001  ->  server  anthropic/claude-haiku-4-5@20251001
+#     CLI  gemini-3.5-flash-lite      ->  server  google/gemini-3.5-flash-lite
+#     CLI  gemma-4-26b-a4b-it         ->  server  google/gemma-4-26b-a4b      (mat '-it')
+# Moi lan lech la sweep AM THAM tut xuong 40 luot goi ma van bao Completed.
+# Khong the doan truoc dang ten, nen dao chieu: mot lenh `run -m X` luon la co y, con
+# `push` thi khong. Chi can chan dung model mac dinh cua server.
+# Ngoai model mac dinh cua server, danh sach nay con giu cac UNG VIEN dang do: cho
+# chung roi ve smoke 40 luot goi de biet co chay duoc server-side khong ma khong doi
+# rui ro dot mot sweep. Do xong thi BO SLUG DO RA rồi push lai truoc khi chay that.
+_SMOKE_ONLY = {_slug(m) for m in _env_list("PD_SMOKE_MODELS", [
+    "gemini-3-flash-preview",
+    "qwen3-next-80b-a3b-instruct",
+    "deepseek-v3.1",
+    "glm-5",
+    "claude-haiku-4-5-20251001",
+])}
+if not (_force_full or _has_overrides) and _slug(MODEL) in _SMOKE_ONLY:
     LAMBDAS, LANGS, REPS, N_ROUNDS = [1.0], ["en"], 1, 5
-    print(f"[guard] {MODEL} không nằm trong FULL_SWEEP_MODELS -> chạy SMOKE "
+    print(f"[guard] {MODEL} nằm trong PD_SMOKE_MODELS -> chạy SMOKE "
           f"(1 λ × 1 lang × 4 tổ hợp × 1 rep × 5 vòng = 40 lượt gọi). "
-          f"Mở full bằng PD_FULL=1, PD_FULL_MODELS=..., hoặc thêm slug vào "
-          f"FULL_SWEEP_MODELS trong file này.", flush=True)
+          f"Mở full bằng PD_FULL=1 hoặc override PD_LAMBDAS/PD_LANGS/PD_REPS.",
+          flush=True)
 
 # Proxy (nhất là model non-Gemini trên staging) thỉnh thoảng trả 429/503 → retry.
 _TRANSIENT = ("429", "503", "500", "502", "504", "overloaded",
               "unavailable", "not reachable", "rate limit", "heavy load")
+# Lỗi tạm thời đáng chờ lâu hơn hẳn lỗi thật: chờ CHÍNH LÀ cách xử lý đúng cho nó, còn
+# với lỗi thật thì retry chỉ tổ đốt thời gian. Dùng chung một ngân sách 6 lượt là thứ
+# đã giết run grok-4.20 (1040035) sau khi nó đã chạy được game đầu tiên.
+TRANSIENT_MAX_ATTEMPTS = int(os.environ.get("PD_TRANSIENT_ATTEMPTS", "14"))
 _AUTH_ERR = ("expired token", "authentication", "unauthorized", "401",
              "invalid api key", "invalid_api_key")
 # Quota cũng trả 403 nên PHẢI tách khỏi _AUTH_ERR: reauth không tạo thêm credit, mà
@@ -250,12 +405,45 @@ def fmt_lambda(scale) -> str:
 
 
 def scaled_weights(lam) -> dict:
-    """BASE_WEIGHTS × λ, khử nhiễu float, ép int khi nguyên (== notebook open-source)."""
+    """BASE_WEIGHTS × λ, khử nhiễu float, ép int khi nguyên (== notebook open-source).
+
+    Trả về SỐ, không phải chuỗi: `attribute_scores` dùng chính dict này để chấm điểm.
+    Việc in ra prompt là chuyện khác - xem `display_weights`.
+    """
     out = {}
     for k, v in BASE_WEIGHTS.items():
         s = round(float(v) * float(lam), 10)
         out[k] = int(s) if NORMALIZE_INTEGER_WEIGHTS and float(s).is_integer() else s
     return out
+
+
+def display_weights(weights) -> dict:
+    """Ô payoff ĐÚNG NHƯ prompt in ra. Đây là chỗ E2 tách notation khỏi magnitude.
+
+    Trên lưới decade, "λ < 1" và "ô in ra có dấu chấm thập phân" là CÙNG MỘT sự kiện,
+    nên không phân biệt được hai giả thuyết. `PD_WEIGHT_FORMAT` cắt đúng chỗ đó:
+
+    - ``native`` (mặc định) - y như FAIRGAME, `6` và `0.6`. Giữ nguyên để test parity
+      byte-exact không đổi và mọi dữ liệu cũ vẫn tái tạo được.
+    - ``decN``  - luôn N chữ số thập phân: `dec2` cho `6.00`, `0.60`, `60.00`.
+
+    Hai nhánh thí nghiệm dựng từ đó:
+
+    - **magnitude cố định, notation đổi**: cùng λ=1, chạy `native` (`6`) và `dec2`
+      (`6.00`). Payoff y hệt nhau, chỉ khác cách in. Chênh lệch nào cũng là NOTATION.
+    - **notation cố định, magnitude đổi**: λ ∈ {0.1, 1, 10} đều in `dec2`, nên ô nào
+      cũng có dấu chấm. Chênh lệch nào cũng là MAGNITUDE.
+
+    Không đụng tới điểm số: chấm điểm vẫn dùng `scaled_weights`, tức là số thật.
+    """
+    if WEIGHT_FORMAT == "native":
+        return weights
+    m = re.fullmatch(r"dec(\d+)", WEIGHT_FORMAT)
+    if not m:
+        raise ValueError(f"PD_WEIGHT_FORMAT không hợp lệ: {WEIGHT_FORMAT!r} "
+                         f"(chỉ nhận 'native' hoặc 'decN')")
+    nd = int(m.group(1))
+    return {k: f"{float(v):.{nd}f}" for k, v in weights.items()}
 
 
 def assemble_prompt(language, agent_idx, personality, current_round, history, weights):
@@ -278,6 +466,13 @@ def assemble_prompt(language, agent_idx, personality, current_round, history, we
         # mọi opponent đều có prob = 0 → valid_opponents_exist = False → xoá khối
         "opponentIntro": False,
         "gameLength": bool(N_ROUNDS_KNOWN),
+        # Template Stag Hunt boc cau lenh chon vao khoi {choose} va co them khoi
+        # {communicate}. FAIRGAME voi phase='choose' GIU 'choose', BO 'communicate'
+        # (prompt_creator.py:157-167). Khong khai bao 'choose' o day thi khoi mac
+        # dinh bi xoa -> prompt mat han cau yeu cau chon, va model van tra loi gi do
+        # nen loi khong lo ra o dau ca.
+        "choose": True,
+        "communicate": bool(AGENTS_COMMUNICATE),
     }
     template = _BLOCK_RE.sub(
         lambda m: m.group(2) if enabled.get(m.group(1), False) else "", template)
@@ -292,8 +487,9 @@ def assemble_prompt(language, agent_idx, personality, current_round, history, we
     }
     for i, key in enumerate(STRATEGIES, start=1):
         values[f"strategy{i}"] = STRATEGIES[key]
-    for i, key in enumerate(weights, start=1):
-        values[f"weight{i}"] = weights[key]
+    shown = display_weights(weights)
+    for i, key in enumerate(shown, start=1):
+        values[f"weight{i}"] = shown[key]
     return template.format(**values)
 
 
@@ -393,6 +589,53 @@ def _reauth():
         print(f"[auth] rebuild client thất bại ({exc}); giữ client cũ.", flush=True)
 
 
+def _drop_optional_param(msg: str) -> str:
+    """Provider từ chối một tham số tuỳ chọn. Trả:
+
+    - ``"dropped"`` - vừa gỡ được một tham số, thử lại ngay và KHÔNG tính lượt;
+    - ``"stale"``   - đúng lỗi đó nhưng tham số đã bị gỡ từ trước, nên đây là request
+      bay song song được gửi trước lúc cờ kịp bật -> retry có backoff là qua;
+    - ``""``        - không phải lỗi tham số.
+
+    Vì sao không chỉ khớp theo tên tham số: hai provider báo lỗi theo hai kiểu.
+
+    - OpenAI/xAI CÓ nêu tên:
+        "Invalid value for 'tool_choice': 'tool_choice' is only allowed when
+         'tools' are specified"
+    - Proxy Google KHÔNG nêu tên, chỉ nói "Request contains an invalid argument"
+      (đo 2026-09-02 với `reasoning_effort`).
+
+    Bản trước chỉ khớp theo tên nên với Google cờ không bao giờ bật: mọi lượt gọi đều
+    400 và cả run Errored sau ~10 giây. Vì thế khi thấy 400 kiểu chung chung thì gỡ
+    DẦN từng tham số tuỳ chọn - mỗi tham số một lần cho cả run, tối đa hai lượt phí.
+    """
+    def _has(tokens):
+        return any(t in msg for t in tokens)
+
+    if not (_has(_UNSUPPORTED_PARAM) or _has(_TOOL_CHOICE_ERR)
+            or _has(_BAD_ARG_ERR)):
+        return ""
+    # Lỗi nêu đích danh `tool_choice` thì đừng đụng tới `reasoning_effort`.
+    if (REASONING_EFFORT and not _NO_REASONING_PARAM.is_set()
+            and not _has(_TOOL_CHOICE_ERR)):
+        _NO_REASONING_PARAM.set()
+        print("[warn] provider từ chối `reasoning_effort` -> bỏ tham số này. "
+              "CẢNH BÁO: model thinking có thể ăn hết max_tokens rồi trả text "
+              "cụt -> kiểm tra fallback_rate cuối run.", flush=True)
+        return "dropped"
+    if not _NO_TOOL_CHOICE.is_set():
+        _NO_TOOL_CHOICE.set()
+        print("[warn] provider từ chối `tool_choice` -> bỏ tham số này. Model có thể "
+              "trả tool_call rỗng; nhánh 'SDK tool-call parse bug' bên dưới đỡ.",
+              flush=True)
+        return "dropped"
+    # Cờ đã bật mà vẫn thấy đúng lỗi đó: CONCURRENCY worker cùng bay, những request
+    # gửi đi trước lúc cờ kịp bật vẫn mang tham số cũ. Đây là thứ đã giết run 1034690
+    # (gpt-5.4-nano): worker đầu gỡ được `tool_choice`, worker thứ hai nhận cùng 400
+    # nhưng không còn gì để gỡ -> rơi thẳng ra ngoài. Phải coi là tạm thời.
+    return "stale"
+
+
 def _call_llm(prompt, seed, max_attempts=6):
     """Một lượt sinh văn bản. Trả (text, usage). Tự reauth khi token hết hạn;
     exp-backoff với 429/503."""
@@ -402,14 +645,16 @@ def _call_llm(prompt, seed, max_attempts=6):
         attempt += 1
         try:
             params = {
-                # Không có tool nào cần gọi; tắt hẳn để model không trả tool_call
-                # rỗng (nguồn gốc lỗi parse của SDK bên dưới).
                 # ĐỪNG thêm "max_output_tokens" ở đây: endpoint là OpenAI
                 # chat.completions, nó ném TypeError "unexpected keyword argument"
                 # và giết cả task (run-13). `max_tokens` mới là tên đúng.
                 "max_tokens": MAX_OUTPUT_TOKENS,
-                "tool_choice": "none",
             }
+            # Không có tool nào cần gọi; tắt hẳn để model không trả tool_call rỗng
+            # (nguồn gốc lỗi parse của SDK bên dưới). Endpoint OpenAI/xAI từ chối
+            # tham số này khi không kèm `tools` -> gỡ ra, xem _drop_optional_param.
+            if not _NO_TOOL_CHOICE.is_set():
+                params["tool_choice"] = "none"
             if REASONING_EFFORT and not _NO_REASONING_PARAM.is_set():
                 params["reasoning_effort"] = REASONING_EFFORT
             with kbench.chats.new("turn", orphan=True) as chat:
@@ -432,15 +677,16 @@ def _call_llm(prompt, seed, max_attempts=6):
             # resume đúng chỗ.
             if any(t in msg for t in _QUOTA_ERR):
                 raise QuotaExhausted(str(e)) from e
-            # Provider không nhận `reasoning_effort`: bỏ tham số đó rồi thử lại (một
-            # lần cho cả run) thay vì để cả sweep chết vì một tham số tuỳ chọn.
-            if (REASONING_EFFORT and not _NO_REASONING_PARAM.is_set()
-                    and any(t in msg for t in _UNSUPPORTED_PARAM)):
-                _NO_REASONING_PARAM.set()
-                print("[warn] provider từ chối `reasoning_effort` -> bỏ tham số này. "
-                      "CẢNH BÁO: model thinking có thể ăn hết max_tokens rồi trả text "
-                      "cụt -> kiểm tra fallback_rate cuối run.", flush=True)
+            # Provider từ chối một tham số TUỲ CHỌN: gỡ nó ra rồi thử lại, thay vì
+            # để cả sweep chết vì thứ không ảnh hưởng tới nội dung câu trả lời.
+            _param_status = _drop_optional_param(msg)
+            if _param_status == "dropped":
                 attempt -= 1
+                continue
+            if _param_status == "stale":
+                if attempt >= max_attempts:
+                    raise
+                time.sleep(min(2 ** attempt, 12))
                 continue
             if any(t in msg for t in _AUTH_ERR):
                 auth_retries += 1
@@ -470,9 +716,14 @@ def _call_llm(prompt, seed, max_attempts=6):
                     return "", _NoUsage()
                 time.sleep(min(2 ** attempt, 12))
                 continue
-            if attempt >= max_attempts or not any(t in msg for t in _TRANSIENT):
+            transient = any(t in msg for t in _TRANSIENT)
+            budget = TRANSIENT_MAX_ATTEMPTS if transient else max_attempts
+            if attempt >= budget or not transient:
                 raise
-            time.sleep(min(2 ** attempt, 30))
+            # Jitter: không có nó thì CONCURRENCY worker cùng ngủ `2**attempt` giây rồi
+            # thức dậy cùng một lúc và lại đâm vào nhau, kéo dài đúng cái quá tải đang
+            # cố chờ cho qua.
+            time.sleep(min(2 ** attempt, 45) * (0.5 + random.random()))
 
 
 def decide(prompt, base_seed):
@@ -713,8 +964,9 @@ def prisoner_dilemma_fairgame(llm) -> dict:
     global _LLM
     _LLM = llm
 
-    model_tag = os.environ.get("PD_MODEL_TAG") or re.sub(
+    model_tag = os.environ.get("PD_MODEL_TAG") or (re.sub(
         r"[^A-Za-z0-9._-]+", "-", MODEL.split("/")[-1])
+        + GAME_TAG + format_tag() + RUN_TAG)
     out_dir = Path(os.environ.get("PD_OUT", f"results/kbench/{model_tag}"))
     out_dir.mkdir(parents=True, exist_ok=True)
     ckpt_dir = out_dir / "checkpoints"
@@ -767,7 +1019,8 @@ def prisoner_dilemma_fairgame(llm) -> dict:
             agg[k] += stats.get(k, 0)
         _materialize(out_dir, model_tag, *_ordered())
         done += 1
-        coop = sum(s == "OptionA" for s in ast.literal_eval(row["agent1_strategies"])
+        coop = sum(s == COOP_STRATEGY
+                   for s in ast.literal_eval(row["agent1_strategies"])
                    + ast.literal_eval(row["agent2_strategies"]))
         elapsed = time.time() - t0
         pct = (done / total) * 100 if total else 100.0
@@ -782,6 +1035,22 @@ def prisoner_dilemma_fairgame(llm) -> dict:
     # Hết credit giữa chừng KHÔNG được ném traceback ra ngoài: làm vậy là mất luôn
     # bảng summary và mất luôn CSV của mấy trăm game đã chạy xong. Thay vào đó dừng
     # nhận việc mới, ghi trọn những gì đã có, rồi báo cáo run dở dang.
+    # Một lượt gọi KHỞI ĐỘNG tuần tự trước khi mở pool. Mục đích duy nhất: để các cờ
+    # tham số (`_NO_TOOL_CHOICE`, `_NO_REASONING_PARAM`) ổn định xong mới chạy song
+    # song. Không có nó thì CONCURRENCY worker cùng bay vào cùng một lỗi 400, worker
+    # đầu gỡ được tham số còn các worker sau nhận lỗi đã hết cách gỡ - đó là thứ đã
+    # giết run 1034690 (gpt-5.4-nano). Rẻ: đúng một lượt gọi, và nếu provider từ chối
+    # tham số nào thì thấy ngay ở dòng log đầu tiên thay vì sau vài trăm game.
+    if pending and CONCURRENCY > 1:
+        try:
+            _call_llm(WARMUP_PROMPT, BASE_SEED)
+            print("[warmup] 1 lượt gọi tuần tự OK -> mở pool.", flush=True)
+        except QuotaExhausted:
+            raise
+        except Exception as exc:  # noqa: BLE001
+            print(f"[warmup] lượt gọi khởi động lỗi ({type(exc).__name__}: {exc}); "
+                  f"vẫn mở pool vì retry trong _call_llm có thể qua được.", flush=True)
+
     quota_hit = None
     if CONCURRENCY <= 1:
         for cell in pending:
@@ -828,7 +1097,7 @@ def prisoner_dilemma_fairgame(llm) -> dict:
         picks = [s for g in cells
                  for s in ast.literal_eval(g["agent1_strategies"])
                  + ast.literal_eval(g["agent2_strategies"])]
-        return round(sum(p == "OptionA" for p in picks) / len(picks), 3)
+        return round(sum(p == COOP_STRATEGY for p in picks) / len(picks), 3)
 
     result = {
         "model": model_tag,
