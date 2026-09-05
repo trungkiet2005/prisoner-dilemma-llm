@@ -367,7 +367,6 @@ _SMOKE_ONLY = {_slug(m) for m in _env_list("PD_SMOKE_MODELS", [
     "qwen3-next-80b-a3b-instruct",
     "deepseek-v3.1",
     "glm-5",
-    "claude-haiku-4-5-20251001",
 ])}
 if not (_force_full or _has_overrides) and _slug(MODEL) in _SMOKE_ONLY:
     LAMBDAS, LANGS, REPS, N_ROUNDS = [1.0], ["en"], 1, 5

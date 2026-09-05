@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "write-kaggle-benchmarks": {
+      "source": "D:\\AI_PhD\\GameTheory\\Prisoner_Dilemma_Game",
+      "sourceType": "local",
+      "computedHash": "77f1c749cbcd1c903d91af397feec7076bb97546a32d8f782c340ee9f21e4c4d"
+    }
+  }
+}
