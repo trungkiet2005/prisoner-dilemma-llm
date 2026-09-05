@@ -1,16 +1,11 @@
 % ---------------------------------------------------------------------------
 % Electronic supplementary material for
-%   "Units matter: cooperation in large language model agents tracks how the
-%    payoff matrix is written, not what it means"
-%
-% Tables S1-S10 are generated from tables/T_PS*.csv by
-% Analysis/scripts/42_supp_tables.py into supp_tables.tex, so no number here
-% is transcribed by hand.  Table S11 is the open-weight corpus of the earlier
-% preprint, which the main text no longer uses; its numbers are transcribed
-% from the archived analysis output of that corpus and are marked as such.
+% "Payoff scale reshapes how language models play the prisoner's dilemma".
 %
 %   pdflatex supplementary && bibtex supplementary && pdflatex supplementary
-%   pdflatex supplementary
+%
+% All tables are machine-generated into supp_tables_auto.tex by
+% Analysis/scaling/s07_supplementary.py.  Do not retype numbers here.
 % ---------------------------------------------------------------------------
 \documentclass[11pt,a4paper]{article}
 
@@ -24,239 +19,198 @@
 \usepackage{caption}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage{microtype}
+\usepackage{url}\urlstyle{tt}   % \path breaks long file paths at the slashes
 \usepackage{xcolor}
 \usepackage[colorlinks=true,allcolors=blue!55!black]{hyperref}
+\setlength{\emergencystretch}{2em}
 
 \captionsetup{font=small,labelfont=bf,width=\textwidth}
-\setlength{\parskip}{0pt}
-\renewcommand{\baselinestretch}{1.15}
-
-% Supplementary numbering: S1, S2, ... throughout.
+\renewcommand{\baselinestretch}{1.12}
 \renewcommand{\thetable}{S\arabic{table}}
 \renewcommand{\thefigure}{S\arabic{figure}}
 \renewcommand{\thesection}{S\arabic{section}}
 
 \newcommand{\lam}{\lambda}
 
-\title{\bfseries Electronic supplementary material\\[4pt]
-\large Units matter: cooperation in large language model agents tracks how
-the payoff matrix is written, not what it means}
 \date{}
 
 \begin{document}
-\maketitle
-\thispagestyle{empty}
 
-\noindent
-This document holds the per-model and per-cell breakdowns behind the summary
-statistics of the main text, the validation of the strategy read-out, and the
-open-weight corpus of the earlier preprint, which the main text no longer uses.
-Tables S1--S10 are generated directly from the machine-readable analysis output
-by \texttt{Analysis/scripts/42\_supp\_tables.py}; none of their numbers is
-transcribed by hand, and re-running the pipeline regenerates this document and
-the main text together.
+\begin{center}
+{\LARGE\bfseries Electronic supplementary material}\\[6pt]
+{\large Payoff scale reshapes how language models play\\[2pt]
+the prisoner's dilemma}
+\end{center}
+\bigskip
 
-\begin{description}\itemsep2pt \parskip0pt
-\item[\S S1] Validating the strategy read-out: accuracy, the identifiability
-  floor, and where the corpus sits relative to the training distribution.
-\item[\S S2] The open-weight corpus of the earlier preprint, and the two
-  conclusions drawn from it that the frontier sweep revises (table S11).
-\item[Table S1] The corpus, by model.
-\item[Table S2] What the rescaling changes, and what it cannot: the printed
-  cells at each scale beside the game-theoretic invariants.
-\item[Table S3] The description ladder, model by model.
-\item[Table S4] The persona instruction, model by model and scale by scale.
-\item[Table S5] Strategy-mix shifts on both vocabularies.
-\item[Table S6] The strategy mix, model by model.
-\item[Table S7] Where each strategy label came from.
-\item[Table S8] Cooperation by prompt language and payoff scale.
-\item[Table S9] What one decade of separation buys.
-\item[Table S10] Cooperation across the game, by notation regime.
-\end{description}
+\tableofcontents
+\bigskip
 
-\section{Validating the strategy read-out}
-\label{sec:S-readout}
+\section{Scope of the corpus}
 
-The read-out described in \S2.4 of the main text assigns each agent-game a
-label from the four canonical memory-one rules in two stages: an enumeration
-that proves whether a trajectory is exactly what a rule would have played, and
-where no rule fits, a long short-term memory
-network~\citep{hochreiter1997long} that returns the nearest one. This section
-records what each stage is worth, because the strategy results of \S3.10 rest
-on it and because two thirds of the labels come from the learned stage.
+The analysis in the main text uses one corpus of language-model transcripts,
+\path{Dataset/data_fairgame_frontier_llm}, and one synthetic corpus,
+\path{Dataset/noise_dataset}, which trains the LSTM branch of the strategy
+read-out and contains no language-model output at all. No other dataset in the
+repository enters any number reported in the paper.
 
-\paragraph{Validation corpus.} The network is trained and evaluated on
-synthetic play generated from the same four rules, at execution-noise levels
-of 0 and 5 per cent, with a separate network for each of the two horizons the
-project uses. Ten per cent and twenty per cent noise are held out entirely, and
-are reported below because real transcripts are noisier than the training
-distribution and it matters how the network degrades outside it. Every game in
-the corpus of the main text runs ten rounds, so the ten-round network reads all
-of it; the thirty-round network is used only for the open-weight corpus of
-\S\ref{sec:S-openweight}.
+The transcript corpus is a complete crossing of ten payoff scales, five models,
+five prompt languages, four persona pairings and ten replicates, at ten rounds
+per game and two agents per dyad. Table~\ref{tab:S-corpus} gives its
+composition. Every one of the 250 model-by-language-by-scale cells holds
+exactly 40 dyads per language, or 200 per cell of the coarser
+model-by-scale grid, and the ingest raises an error rather than writing its
+tables if that is not what is on disk. It also checks that every game is ten
+rounds long, and that the payoff scale recovered from the recorded payoffs
+agrees with the scale the cell was run at, which catches a mislabelled
+directory.
 
-\paragraph{Accuracy.} At ten rounds the pipeline recovers the generating rule
-with accuracy 0.995 on noise-free play and 0.975 at five per cent noise,
-against Bayes-optimal single-label ceilings of 0.996 and 0.987. At thirty
-rounds the corresponding figures are 0.953 at five per cent noise against a
-ceiling of 0.966. Where exactly one rule fires the label is right 99.5 per
-cent of the time at ten rounds and 98.7 per cent at thirty, which is what
-makes the provable stage worth running first even though it covers a
-minority of games.
+\section{Cooperation, by scale, model and language}
 
-\paragraph{The identifiability floor.} On noise-free thirty-round play the
-forced single-label ceiling is 0.625, and this is a property of the game
-rather than a failure of the method: an agent that cooperates throughout
-against a cooperator is exactly consistent with AllC, tit-for-tat and
-win-stay lose-shift at once, and no procedure can separate them. Allowing the
-first stage to return the \emph{set} of rules that fit, the answer is correct
-on 100 per cent of that file with a mean answer size of 2.13 labels. This is
-why the main text records such runs as \emph{ambiguous} rather than resolving
-them, and why the ambiguous share is treated throughout as a statement about
-identifiability rather than about strategy.
+Table~\ref{tab:S-scale} gives the cooperation rate behind
+Fig.~1b of the main text, with bootstrap intervals.
+Table~\ref{tab:S-language} breaks the same quantity down by prompt language and
+is the table behind Fig.~2.
 
-\paragraph{Where the corpus sits relative to the training distribution.} The
-exact-rule coverage the read-out achieves on the real corpus locates it
-against the synthetic noise levels. Over the corpus of the main text 19.4 per
-cent of agent-games carry a provable rule: 17.2 per cent over the three models
-that met ten scales and 26.7 per cent over the three that met three. Both
-figures sit below the 39.1 per cent of ten-round synthetic play at ten per cent
-noise and, for the ten-scale group, close to the 14.3 per cent at twenty per
-cent noise. Frontier transcripts therefore depart from the canonical rules by
-more than the training corpus does, and the network is extrapolating there more
-often. On those two held-out noise levels its accuracy where no rule fits is
-0.908 and 0.788, which brackets what these labels are worth and is the reason
-\S3.10 of the main text reports every test on the four named rules as well as
-on all five categories. Table~\ref{tab:S-source} gives the full provenance
-breakdown, scale by scale.
+The final column of Table~\ref{tab:S-language} is the quantity we draw
+attention to in the main text: the range of cooperation across the ten payoff
+scales, computed within one model and one language. It runs from 0.080
+(Gemini 3.1 Flash-Lite in Arabic) to 0.449 (GPT-5.4 Nano in English). The
+sensitivity of a model to a transformation that changes nothing about the game
+is therefore not a single number even for a fixed model; it depends on the
+language the game was posed in.
 
-\section{The open-weight corpus of the earlier preprint}
-\label{sec:S-openweight}
+\section{Variance decomposition}
 
-An earlier preprint by the present authors reported that the cooperation rate
-of small open-weight models varies with the payoff scale and with the prompt
-language~\citep{selfpreprint2026scaling}. That corpus is not part of the
-analysis in the main text, is not pooled with it anywhere, and no claim in the
-main text rests on it. We report it here for two reasons: it is where two of
-the preprint's conclusions came from, and both are conclusions the frontier
-sweep revises, so a reader who knows the preprint should be able to see exactly
-where the two corpora part company.
+Table~\ref{tab:S-variance} is the full analysis-of-variance table summarised in
+the main text. It is computed on the 250 cell means rather than on the 20{,}000
+agent-games, because the design is exactly balanced at the cell level, which
+makes the type-II decomposition order-independent.
 
-\paragraph{The corpus.} Gemma 3 12B, Llama 3.1 8B and Qwen3 8B each met six
-payoff scales, $\lam \in \{0.01, 0.1, 1, 10, 100, 1000\}$, the same five prompt
-languages and the same four ordered persona pairings, over thirty rounds rather
-than ten. Every model $\times$ language $\times$ scale cell holds 80
-agent-games, giving 3{,}600 dyads, 7{,}200 agent-games and 216{,}000 decisions.
-The base payoff matrix, the FAIRGAME templates and the notation regimes are
-those of \S2 of the main text. The horizon differs, so this corpus is read with
-the thirty-round network of \S\ref{sec:S-readout} rather than the ten-round
-one, and no level statistic here is comparable with a frontier number.
+The reading that matters for benchmark practice is the contrast between rows.
+The payoff scale carries $0.7\%$ of the variance across cells as a main effect
+and is not significant ($p = 0.36$). Its interaction with the model carries
+$6.5\%$ and its interaction with the prompt language $3.8\%$, and both are
+significant. A design that estimates a main effect for the payoff scale,
+pooling over models and languages, is therefore built to return exactly the
+null result it would return if no model responded to the scale at all.
 
-\paragraph{What replicates.} All three models fail the invariance. The largest
-shift in cooperation between two payoff scales is 0.316 for Gemma 3 12B, 0.198
-for Llama 3.1 8B and 0.267 for Qwen3 8B, against dyad-level permutation nulls
-of 0.121, 0.047 and 0.095, each at $P < 0.001$. The smallest of those three
-swings exceeds the median spread between the three models at a fixed scale,
-0.114, and 8 of the 45 model-pair by scale-pair comparisons change sign
-somewhere in the sweep. That is the central result of the main text, obtained
-on a disjoint set of models at a different horizon, and it is the part of the
-preprint the denser frontier sweep strengthens rather than qualifies.
+\section{Persona}
 
-\paragraph{What does not: the notation account.} Pooled over this arm, the
-three-level notation regime is the best specification in the description
-ladder, ahead of a specification with no $\lam$ term by 373.5 BIC points, a
-linear term in $\log_{10}\lam$ by 247.2, a quadratic by 109.6, the fractional
-flag by 56.1 and the specification saturated in $\lam$ by 19.6; it is also the
-best specification for Llama 3.1 8B and Qwen3 8B individually, with Gemma 3 12B
-preferring a cubic in $\log_{10}\lam$. On a six-point decade grid, however, the
-regime read from the printed cells and a step function of $\lam$ are the same
-variable: every scale that prints with a decimal point is also a small-stakes
-scale, with no exception anywhere on the grid. The ten-scale frontier grid
-breaks that coincidence at $\lam = 0.5$, whose cells print as integers although
-$\lam < 1$, and once it is broken no notation specification is the best one for
-any model (\S3.2 of the main text). The preprint's conclusion was what its grid
-could support; it is not what a grid that can separate the two accounts
-supports.
+Table~\ref{tab:S-persona} gives the persona effect at every scale and model,
+which is the table behind Fig.~3a. The two leftmost columns are the scales at
+which every payoff printed is at most 1, since with base payoffs $0, 2, 6, 10$
+the largest number shown is $10\lam$.
 
-\paragraph{What does not: the coordination invariant.} In this arm the rate of
-miscoordination, the share of rounds on which the two agents chose differently,
-swings by 0.039 across the six scales and does not clear its null
-($P = 0.14$, null 95th percentile 0.047), while mutual cooperation over the
-same rows swings 0.198, mutual defection 0.233 and the cooperation rate itself
-0.216. Read alone, that is an invariance. On the ten-scale frontier grid the
-same measure does clear its null, at 0.076 against 0.056 ($P = 0.0005$). What
-survives across both corpora is an ordering and not an invariance:
-miscoordination is the smallest mover of the six measures in both, and it is
-fixed in neither.
+Two features are worth stating explicitly because they are easy to misread from
+the figure. First, the sign reversal is a reversal of the \emph{persona} effect,
+not of the cooperation rate: below the boundary the three reversing models
+cooperate more when told they are selfish than when told they are cooperative.
+Second, Qwen3 235B-A22B is inverted at every scale rather than only below the
+boundary, cooperating 0.072 under the cooperative persona against 0.798 under
+the selfish one. We report it because excluding it would flatter the analysis,
+but the paper draws no conclusion from the inversion itself beyond noting that
+its magnitude, like everything else measured here, depends on the payoff scale.
 
-\paragraph{The persona and the strategy mix.} The persona result is
-qualitatively the same here, and table~\ref{tab:S-ow} gives it per model. All
-three models move toward compliance across the fractional-to-unit boundary, by
-$+0.244$, $+0.052$ and $+0.192$, and all three move back away from it into the
-large regime, by $-0.205$, $-0.049$ and $-0.058$, the first two of which
-exclude zero. The second half of that pattern is what the frontier corpus does
-not reproduce: there the three shifts out of the unit regime are $-0.034$,
-$-0.033$ and $+0.018$, and none excludes zero. All three models here keep one
-sign across the whole sweep, positive for Gemma 3 12B and Llama 3.1 8B and
-negative for Qwen3 8B. The strategy mix moves in all three, by 0.375, 0.388 and
-0.278 in total variation against nulls of 0.143, 0.115 and 0.123, and the
-unconditional rules carry it: AllD swings 0.223 and AllC 0.161 across the six
-scales, against 0.049 for tit-for-tat and 0.020 for win-stay lose-shift, the
-last of which does not clear its null at all.
+\section{Strategy read-out}
 
-% Numbered to follow the ten generated tables, so that S1-S10 keep the numbers
-% the main text cites.
-\setcounter{table}{10}
-\begin{table}[htbp]
-\centering
-\footnotesize
-\setlength{\tabcolsep}{3.4pt}
-\caption{\textbf{The open-weight corpus of the earlier preprint, by model.}
-Three models, six payoff scales, five languages, thirty rounds, 80 agent-games
-per model $\times$ language $\times$ scale cell. ``Swing'' is the largest
-difference in cooperation rate between two payoff scales, against a permutation
-null that shuffles the scale label across whole dyads. The persona effect is
-the cooperation rate of an agent told to be cooperative minus that of an agent
-told to be selfish, measured within a notation regime, and a dagger marks an
-estimate whose 95\% dyad bootstrap interval excludes zero. ``Mix'' is the
-largest total-variation distance between the strategy mixes at two scales.
-Nothing in this table is comparable with a number from the main text: the
-horizon is thirty rounds rather than ten, and the read-out uses the
-corresponding network.}
-\label{tab:S-ow}
-\begin{tabular}{@{}lcccccccccc@{}}
-\toprule
- & & \multicolumn{2}{c}{Coop. shift} & \multicolumn{3}{c}{Persona effect} & \multicolumn{2}{c}{Persona shift} & \multicolumn{2}{c}{Mix shift} \\
-\cmidrule(lr){3-4}\cmidrule(lr){5-7}\cmidrule(lr){8-9}\cmidrule(lr){10-11}
-Model & Coop. & swing & null & frac. & unit & large & f.$\to$u. & u.$\to$l. & obs. & null \\
-\midrule
-Gemma 3 12B  & 0.535 & 0.316$^{***}$ & 0.121 & $+0.138^{\dagger}$ & $+0.382^{\dagger}$ & $+0.177^{\dagger}$ & $+0.244^{\dagger}$ & $-0.205^{\dagger}$ & 0.375$^{***}$ & 0.143 \\
-Llama 3.1 8B & 0.420 & 0.198$^{***}$ & 0.047 & $+0.093^{\dagger}$ & $+0.145^{\dagger}$ & $+0.097^{\dagger}$ & $+0.052^{\dagger}$ & $-0.049^{\dagger}$ & 0.388$^{***}$ & 0.115 \\
-Qwen3 8B     & 0.474 & 0.267$^{***}$ & 0.095 & $-0.442^{\dagger}$ & $-0.250^{\dagger}$ & $-0.308^{\dagger}$ & $+0.192^{\dagger}$ & $-0.058$\phantom{$^{\dagger}$} & 0.278$^{***}$ & 0.123 \\
-\bottomrule
-\end{tabular}
+\subsection{What the two branches do}
 
-\vspace{3pt}
-{\footnotesize $^{***}P < 0.001$ over 2{,}000 dyad-level permutations. Best
-description by BIC: the three-level notation regime for Llama 3.1 8B and Qwen3
-8B, a cubic in $\log_{10}\lam$ for Gemma 3 12B. Per-strategy swings across the
-six scales: AllD 0.223, AllC 0.161, tit-for-tat 0.049, win-stay lose-shift
-0.020, ambiguous 0.118, against nulls of 0.063, 0.054, 0.038, 0.029 and 0.052.}
-\end{table}
+Each agent-game is encoded as a sequence of two-letter tokens, one per round,
+pairing the previous round's joint outcome with the action taken in the current
+round. The alphabet is shared between the synthetic training corpus and the
+language-model transcripts, which is what makes a classifier trained on the
+former applicable to the latter without any adaptation.
 
-\clearpage
-\setcounter{table}{0}
+The rule base asks an exact question: is this trajectory precisely what AllC,
+AllD, Tit-for-Tat or Win-Stay-Lose-Shift would have played, given the history
+that actually occurred? Because all four rules are memory-one, the answer is a
+per-token lookup and requires no learning. It returns a set rather than a single
+label, because over ten rounds several canonical rules routinely prescribe the
+same moves. A player cooperating in all ten rounds against a cooperator is
+exactly consistent with three of the four rules at once, AllC, Tit-for-Tat and
+Win-Stay-Lose-Shift, and no method, learned or otherwise, can separate them on
+that evidence. Reporting the set is the correct answer, not a failure.
+
+The LSTM ranks within whatever set the rule base returns, and decides alone only
+where the set is empty. It therefore cannot overturn a deduction; it can only
+break a tie the evidence genuinely leaves open, or supply an attribution where
+no canonical rule applies.
+
+\subsection{Provenance, and which claims depend on the classifier}
+
+Over the whole corpus, $23.0\%$ of agent-games are matched exactly by one
+canonical rule, $13.2\%$ by several at once, and $63.7\%$ by none. Those three
+provenances are reported separately throughout, and the claims in the main text
+are ordered by how much they depend on the learned component:
+
+\begin{itemize}
+\item The share of agent-games matched exactly by one rule
+      (Table~\ref{tab:S-deduced}) and the number of rounds violating the
+      nearest canonical rule are computed by exact matching. Neither depends on
+      the LSTM in any way. These carry the main text's strategy claim.
+\item The compositional claim, that the mix moves from unconditional towards
+      reciprocal play (Table~\ref{tab:S-mix}), uses the labels, and therefore
+      leans on the LSTM for the $76.9\%$ of agent-games that are ambiguous or
+      unmatched. It is the weakest of the three and is presented as such.
+\end{itemize}
+
+Table~\ref{tab:S-provenance} shows that this dependence is very unevenly spread
+across the four labels, which bounds how the compositional result may be read.
+AllC and AllD carry deduced shares of $26.0\%$ and $32.7\%$, so a movement in
+those two is anchored in part by exact matching. Tit-for-Tat and
+Win-Stay-Lose-Shift are $95.4\%$ and $97.3\%$ unmatched, meaning the label is an
+attribution the LSTM makes about which canonical rule the play most resembles,
+on trajectories that follow none of them exactly. A rise in the Tit-for-Tat
+share is therefore evidence that play is drifting towards the reciprocal region
+of the space, and is not evidence that any model is implementing Tit-for-Tat.
+The main text states this where the result is reported.
+
+\subsection{Validation}
+
+Table~\ref{tab:S-classifier} reports the accuracy of the LSTM branch. Training
+uses the noise-free and 5\% execution-noise variants of the synthetic corpus
+together, which forces the network to identify a rule from imperfect behaviour
+rather than from a clean signature; the 10\% and 20\% variants are held out
+entirely and measure how the read-out degrades as play departs further from any
+rule. Accuracy falls from $98.5\%$ in distribution to $93.6\%$ and $81.1\%$ at
+those two unseen noise levels, which is the honest bound on how far the label
+distributions in Table~\ref{tab:S-mix} should be pushed.
+
+\section{Why the model curves cancel under pooling}
+
+Table~\ref{tab:S-shapes} gives the pairwise correlations between the five
+models' cooperation-against-scale curves. Six of the ten pairs are negative,
+the mean is $-0.10$, and the extremes are $-0.72$ and $+0.73$. Averaging curves
+that disagree in shape this strongly reduces the range from a mean of 0.136
+within a model to 0.048 for the average, a factor of 2.8. The cancellation is
+arithmetic rather than statistical, and no increase in sample size affects it.
+
+\section{Reproduction}
+
+The pipeline runs in order and each stage writes its outputs under
+\path{Analysis/scaling/}:
+
+\begin{itemize}
+\item \path{s00_build.py} parses the transcripts into \texttt{rounds.parquet}
+      and \texttt{games.parquet}, and refuses to write either if the grid is
+      incomplete.
+\item \path{s01_train_lstm.py} trains the LSTM branch on the synthetic
+      corpus and writes \path{models/strategy_lstm.pt}.
+\item \path{s02_readout.py} applies the hybrid read-out to all 20{,}000
+      agent-games and writes \texttt{readout.parquet}.
+\item \path{s03_stats.py} and \path{s04_strategy_stats.py} compute every
+      statistic in the paper into \path{tables/}.
+\item \path{s05_figures.py} draws Figs.~1 to 5.
+\item \path{s06_tables.py} and \path{s07_supplementary.py} generate the
+      LaTeX tables in the main text and in this supplement.
+\end{itemize}
+
+Random seeds are fixed: 1234 for classifier training, 20260905 for the
+bootstrap and the permutation test.
 
 \section{Supplementary tables}
-\label{sec:S-tables}
 
-\input{supp_tables}
-
-% flush every float before the reference list, so the tables are not printed
-% after the bibliography that follows them in the source
-\clearpage
-
-\bibliographystyle{unsrtnat}
-\bibliography{references}
+\input{supp_tables_auto}
 
 \end{document}

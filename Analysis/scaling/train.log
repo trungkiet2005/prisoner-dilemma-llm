@@ -1,0 +1,23 @@
+  NoNoise: 161,280 sequences
+  Noise005: 161,280 sequences
+  epoch  1  loss 0.0690  held-out acc 0.9846
+  epoch  2  loss 0.0395  held-out acc 0.9844
+  epoch  3  loss 0.0385  held-out acc 0.9851
+  epoch  4  loss 0.0378  held-out acc 0.9846
+  epoch  5  loss 0.0373  held-out acc 0.9845
+  epoch  6  loss 0.0370  held-out acc 0.9844
+  epoch  7  loss 0.0363  held-out acc 0.9848
+  epoch  8  loss 0.0360  held-out acc 0.9849
+  epoch  9  loss 0.0355  held-out acc 0.9849
+  epoch 10  loss 0.0351  held-out acc 0.9848
+  epoch 11  loss 0.0347  held-out acc 0.9846
+  epoch 12  loss 0.0346  held-out acc 0.9846
+                        split      n  accuracy
+held-out (NoNoise + Noise005)  64512  0.984561
+                OOD (Noise01) 161280  0.936378
+                OOD (Noise02) 161280  0.810677
+        held-out recall: AllC  16150  0.985263
+        held-out recall: AllD  16203  0.995186
+         held-out recall: TFT  16193  0.974372
+        held-out recall: WSLS  15966  0.983402
+wrote D:\AI_PhD\GameTheory\Prisoner_Dilemma_Game\Analysis\scaling\models\strategy_lstm.pt

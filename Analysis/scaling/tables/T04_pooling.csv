@@ -1,0 +1,2 @@
+pooled_range,mean_within_model_range,max_within_model_range,attenuation_factor,mean_pairwise_shape_corr,min_pairwise_shape_corr,max_pairwise_shape_corr,n_negative_pairs,n_pairs
+0.047900000000000054,0.13610000000000003,0.24275000000000002,2.841336116910227,-0.10204841753503988,-0.7232677762617269,0.7306151417190607,6,10

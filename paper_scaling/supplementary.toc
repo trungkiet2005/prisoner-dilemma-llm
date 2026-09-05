@@ -1,6 +1,11 @@
-\contentsline {section}{\numberline {S1}Validating the strategy read-out}{1}{section.1}%
-\contentsline {paragraph}{Validation corpus.}{1}{section*.2}%
-\contentsline {paragraph}{Accuracy.}{1}{section*.3}%
-\contentsline {paragraph}{The identifiability floor.}{2}{section*.4}%
-\contentsline {paragraph}{Where the corpus sits relative to the training distribution.}{2}{section*.5}%
-\contentsline {section}{\numberline {S2}Supplementary tables}{2}{section.2}%
+\contentsline {section}{\numberline {S1}Scope of the corpus}{1}{section.1}%
+\contentsline {section}{\numberline {S2}Cooperation, by scale, model and language}{1}{section.2}%
+\contentsline {section}{\numberline {S3}Variance decomposition}{2}{section.3}%
+\contentsline {section}{\numberline {S4}Persona}{2}{section.4}%
+\contentsline {section}{\numberline {S5}Strategy read-out}{2}{section.5}%
+\contentsline {subsection}{\numberline {S5.1}What the two branches do}{2}{subsection.5.1}%
+\contentsline {subsection}{\numberline {S5.2}Provenance, and which claims depend on the classifier}{3}{subsection.5.2}%
+\contentsline {subsection}{\numberline {S5.3}Validation}{3}{subsection.5.3}%
+\contentsline {section}{\numberline {S6}Why the model curves cancel under pooling}{3}{section.6}%
+\contentsline {section}{\numberline {S7}Reproduction}{3}{section.7}%
+\contentsline {section}{\numberline {S8}Supplementary tables}{4}{section.8}%

@@ -77,6 +77,11 @@ MODEL_MAP = {
     # became runnable after `pd_task.py` stopped sending `tool_choice`, which the
     # OpenAI/xAI endpoints reject when no `tools` are supplied.
     "gpt-5.4-nano-2026-03-17": "GPT-5.4-Nano",
+    # Added 2026-09-05 (payoff-scaling sweep). Completes the 10-scale grid to five
+    # frontier models; both are non-Google, and Qwen3-235B is the first
+    # mixture-of-experts model in the corpus.
+    "claude-haiku-4-5-20251001": "Claude-Haiku-4.5",
+    "qwen3-235b-a22b-instruct-2507": "Qwen3-235B-A22B",
     "gemma_3_12b": "Gemma-3-12B",
     "llama-3-1-8b": "Llama-3.1-8B",
     "qwen3_8b": "Qwen3-8B",

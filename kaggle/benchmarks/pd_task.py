@@ -366,9 +366,22 @@ _SMOKE_ONLY = {_slug(m) for m in _env_list("PD_SMOKE_MODELS", [
     "gemini-3-flash-preview",
     "qwen3-next-80b-a3b-instruct",
     "deepseek-v3.1",
+    "deepseek-r1-0528",
     "glm-5",
+    "grok-4.20-0309-non-reasoning",
+    "grok-4.5-0708",
+    "grok-4.6",
 ])}
-if not (_force_full or _has_overrides) and _slug(MODEL) in _SMOKE_ONLY:
+
+# --- SNAPSHOT DO MODEL (probe) -------------------------------------------------
+# Denylist o tren chi chan duoc model ma ta DOAN DUNG ten server (BAY 4: server doi
+# ten theo 3 kieu khac nhau, va ta khong biet truoc xai/grok-4.6 hay grok-4.6@...).
+# Doan sai o day KHONG roi ve smoke ma bung ra mot sweep 10 lambda -> vai chuc USD.
+# Nen voi snapshot chi de DO xem model nao goi duoc, ha TAT CA ve smoke, khong xet ten.
+# PHAI tra ve False roi `kaggle b t push` lai truoc khi chay sweep that.
+PROBE_ALL_MODELS = False
+
+if PROBE_ALL_MODELS or (not (_force_full or _has_overrides) and _slug(MODEL) in _SMOKE_ONLY):
     LAMBDAS, LANGS, REPS, N_ROUNDS = [1.0], ["en"], 1, 5
     print(f"[guard] {MODEL} nằm trong PD_SMOKE_MODELS -> chạy SMOKE "
           f"(1 λ × 1 lang × 4 tổ hợp × 1 rep × 5 vòng = 40 lượt gọi). "
