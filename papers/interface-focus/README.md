@@ -26,7 +26,7 @@ lives in the appendix, with a short pointer in main-text §3.7.
 
 | File | Role |
 |---|---|
-| `main.tex` / `main.pdf` | Main manuscript, 17 pp., 8 figures, 3 tables |
+| `main.tex` / `main.pdf` | Main manuscript source and last compiled PDF; the current source references 11 main-text figures and 3 tables |
 | `appendix.tex` / `appendix.pdf` | Standalone electronic supplementary material, 17 pp. |
 | `tables_auto.tex` | The three main-text tables, **generated**, do not edit |
 | `supp_tables_auto.tex` | The thirteen supplementary tables, **generated**, do not edit |
@@ -34,7 +34,7 @@ lives in the appendix, with a short pointer in main-text §3.7.
 | `mybib.bib` | Bibliography (biblatex/biber, style fixed by the class), 155 entries |
 | `rsproca_new.cls` | Journal class |
 | `TemplateFigs/` | Journal logos **required by the class** (`\maketitle` first page), do not delete |
-| `figures/` | The twelve figures, `f1`-`f8` main text and `fa1`-`fa4` appendix, **generated** |
+| `figures/` | Generated figure files: 11 current main-text figures (`f_overview`, `f_landscape`, `f_language`, `f_persona`, `f_strategy_mix`, `f_firstmove`, `f_simplex`, `f_invasion`, `f_egt_vs_llm`, `f_robustness`, `f_strategy_space`) plus `fa1`-`fa4` for the appendix |
 
 Nothing in `figures/` and none of the three `*_auto.tex` files is written by hand.
 They are produced by the analysis pipeline described below, so a number cannot drift
@@ -42,19 +42,34 @@ between the data and the manuscript.
 
 ## Regenerating the figures and tables
 
-The pipeline lives in `../../Analysis/scaling/`. It writes into whichever
-manuscript directory `PD_PAPER_DIR` and `PD_FIGDIR` name, and with neither set it
-resolves to **this** directory, so no export is needed:
+Statistics and tables live in `../../Analysis/scaling/`; the redesigned
+main-text figure suite lives in `../../Analysis/figures/`. Both write directly
+into this manuscript directory, so no manual export step is needed:
 
 ```bash
 cd ../../Analysis/scaling
-
-python s05_figures.py            # f1..f8, the main-text figures
-python s05b_appendix_figures.py  # fa1..fa4, the appendix figures
+python s05b_appendix_figures.py  # fa1..fa4, appendix
 python s06_tables.py             # tables_auto.tex
 python s07_supplementary.py      # supp_tables_auto.tex
-python s09_egt.py                # the evolutionary grid + egt_tables_auto.tex
+python s09_egt.py                # evolutionary grid + egt_tables_auto.tex
+
+cd ../figures
+python fig_overview.py
+python fig_landscape.py
+python fig_language.py
+python fig_persona.py
+python fig_strategy_mix.py
+python fig_firstmove.py
+python fig_simplex.py
+python fig_invasion.py
+python fig_egt_vs_llm.py
+python fig_robustness.py
+python fig_strategy_space.py
 ```
+
+`Analysis/scaling/s05_figures.py` still reproduces the superseded f1-f8 visual
+suite and is retained for provenance; it is not the current main-text figure
+generator.
 
 `s09_egt.py` recomputes the evolutionary baseline from scratch in 200-digit arithmetic
 and takes about seven seconds. It is analytical and calls no model.
@@ -95,11 +110,11 @@ the old ones.
 
 ## Before submitting
 
-Search both sources for `>>> FILL IN <<<`. The outstanding items are the ORCID of the
-submitting author, the data-accessibility review link and eventual DOI, the funding
-statement for the co-authors outside Teesside, the CRediT roles author by author, the
-name of the model-inference compute provider, and the calendar range over which the
-corpus was collected.
+Run `python preflight_submission.py` from this directory. The corpus collection
+window and public repository URL are now resolved. The remaining author-owned blockers
+are the data and code licences, any additional funding, author-by-author CRediT roles,
+and final confirmation of the acknowledgements/compute-credit wording. A permanent DOI
+is needed at archival deposit rather than for the working GitHub repository.
 
 House style: **no em dashes or en dashes in prose**, plain hyphens only. En dashes are
 permitted in numeric ranges (`50--86`), paired proper names (`Neumann--Morgenstern`)
