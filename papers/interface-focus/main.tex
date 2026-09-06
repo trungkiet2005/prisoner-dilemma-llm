@@ -83,8 +83,8 @@
 \begin{document}
 
 %%%% Article title
-\title{Frontier language-model agents violate payoff-scale invariance in the
-prisoner's dilemma, and cooperate without reciprocity}
+\title{Frontier language models violate payoff-scale invariance in the
+prisoner's dilemma and cooperate without reciprocity across languages}
 
 %%%% Authors ($\dagger$: equal contribution, $\star$: corresponding authors)
 \author{The Anh Han$^{1,\dagger,\star}$, Trung-Kiet Huynh$^{2,4,\dagger}$, Dao-Sy Duy-Minh$^{2,4,\dagger}$, Thanh-Bang Cao$^{3,4}$, Phong-Hao Le$^{3,4}$, Hong-Dan Nguyen$^{3,4}$, Phu-Quy Nguyen-Lam$^{2,4}$, Minh-Luan Nguyen-Vo$^{3,4}$, Hong-Phat Pham$^{3,4}$, Phu-Hoa Pham$^{2,4}$, Thien-Kim Than$^{3,4}$, Chi-Nguyen Tran$^{3,4}$, Huy Tran$^{3,4}$, Gia-Thoai Tran-Le$^{3,4}$, Alessio Buscemi$^{5}$ and Le Hong Trang$^{3,4,\star}$}
@@ -118,23 +118,7 @@ version of this article.}
 
 %%%% Abstract (200 words, the Interface Focus limit)
 \begin{abstract}
-Large language models increasingly act as agents that negotiate and decide for
-their users, so whether they cooperate is a governance question. We ask how two
-everyday levers shape it: the size of what is at stake, and the language the
-game is posed in. The first is unusual: multiplying every payoff by a positive
-constant leaves preferences, best replies, equilibria and replicator orbits
-untouched, so its predicted effect is zero by theorem, not convention. Five
-frontier models played an iterated prisoner's dilemma
-across ten payoff scales spanning five orders of magnitude, crossed with prompt
-language and persona, over 200{,}000 decisions. Cooperation moves in every
-model, by up to 0.636 \ci{0.588}{0.686}, and differently in each, so averaging
-over models reports a movement no model makes. Its size depends on the prompt
-language; the scale also gates the persona instruction, reversing its sign in
-two models of five where every printed payoff is at most 1. The effect is
-already present on the opening move, and what is played changes too. An
-evolutionary baseline predicts the opposite. Cooperation rates published for
-language models should be read, and governed, alongside their scale
-sensitivity.
+Large language models increasingly act as autonomous agents negotiating and deciding for human users, making their cooperative dispositions a central question for AI governance. We examine how two fundamental levers shape cooperation: the nominal magnitude of the stakes and the language in which the interaction is framed. In classical game theory, multiplying all payoffs by a positive constant is an invariant transformation that leaves preference rankings, best replies, and equilibria untouched. Across five frontier models evaluating an iterated prisoner's dilemma across ten payoff scales and five languages, this invariance is systematically violated. Rescaling stakes alters cooperation rates dramatically, driving divergent shifts across models that cancel out when averaged. Crucially, scale sensitivity varies across languages, showing that linguistic framing alters the perceived stakes of the game. Payoff scale further gates persona compliance: at sub-unit stakes, models cooperate less, and in several models the persona instruction inverts, eliciting higher cooperation under selfish prompts. Rather than sustaining cooperation through reciprocal conditioning, models condition overwhelmingly on their own preceding actions. Because scale sensitivity establishes an ex-ante stance before interaction begins, cooperation metrics cannot be treated as intrinsic model traits without specifying payoff scale and language.
 \end{abstract}
 
 %% (No \begin{fmtext} first-page block: the abstract fills the first page and
@@ -298,27 +282,21 @@ baseline computed on the same grid.
 
 Here, we turn a theorem into an instrument. The contributions of the present
 paper are: \textbf{(i)} a payoff-rescaling protocol whose predicted behavioural
-effect is exactly zero, used to ask whether five frontier language models are
-playing the game they were shown (\S\ref{sec:gameImportance}); all five depart
-from the invariance, by up to 0.636 in cooperation. \textbf{(ii)} a per-model
-analysis showing that the departure has a different shape in each model, to the
-point of anticorrelation, so that what a pooled analysis reports is a movement
-no model in the pool makes: the interaction of the payoff scale with the model
-carries $17.9\%$ of the variance across cells against $5.8\%$ for the main
-effect, and averaging the five curves gives a range of 0.154 where the mean
-within-model range is 0.249. The main effect is significant here only because
-one model departs far enough to survive the averaging, which is a fact about
-that model rather than a property of language models in general, and a panel
-assembled without it returns no significant main effect at all.
-\textbf{(iii)} evidence that the departure is structural and not a shift in
-level: the payoff scale gates the persona instruction, reversing its sign in
-two models of five and abolishing it in a third, play becomes measurably less
-consistent with any canonical memory-one rule in four models of five, and the
-effect is already present on the opening move, before any history exists.
-\textbf{(iv)} an analytical evolutionary baseline, recomputed on the same
-ten-value grid under matched payoffs and execution noise, which moves in the
-opposite direction to the corpus and so measures the size of the gap between
-what the game rewards and what these agents do
+effect is exactly zero, demonstrating that five frontier language models
+systematically violate scale invariance (\S\ref{sec:gameImportance}), with
+cooperation rates shifting substantially across stakes. \textbf{(ii)} a
+per-model analysis revealing that scale departures diverge sharply across
+architectures to the point of anticorrelation, so that pooled analyses produce
+an artificial average that describes no real model: variance is dominated by
+model individuality and model-by-scale interactions, with pooled significance
+driven by a single outlier model. \textbf{(iii)} cross-lingual and structural
+evidence showing that scale sensitivity depends heavily on the prompt language,
+gates persona compliance by inverting instructions at sub-unit stakes, erodes
+textbook strategy conformity, and emerges on the opening move before interaction
+begins. \textbf{(iv)} an analytical evolutionary baseline that moves in the
+opposite direction to the empirical corpus, revealing that machine agents
+cooperate without the reciprocal mechanisms fundamental to biological and
+evolutionary game theory
 (\S\ref{sec:egt_pointer}, appendix~\ref{appendix:egt}).
 
 An earlier and smaller collection on this project has been reported separately
@@ -613,51 +591,46 @@ or thousands of pounds.
 Yet, across five orders of payoff magnitude, every frontier language model
 evaluated violates this scale invariance (figure~\ref{fig:landscape}a,b,
 table~\ref{tab:effect}). The shift in strategic posture is substantial: across
-the ten-scale ladder, the swing in cooperation spans from 0.081
-\ci{0.062}{0.135} in Claude Haiku 4.5 to a massive 0.636 \ci{0.588}{0.686} in
-Grok 4.20. In every model, permutation tests confirm that these departures lie
-in the extreme upper tail of the null distribution ($p \leq 0.0025$), and joint
-hypothesis tests decisively reject the invariance null across all scale
-contrasts (all $p \leq 2\times10^{-4}$; figure~\ref{fig:landscape}c and
-table~\ref{tab:effect}).
+the ten-scale ladder, cooperation swings widely in every model, departing
+decisively from the invariance null (figure~\ref{fig:landscape}c and
+table~\ref{tab:effect}). What classical game theory treats as an inert change of
+units produces a fundamental reordering of multi-agent behavior.
 
 Strikingly, the models do not share a common behavioral archetype: each
 possesses a distinct machine character that responds idiosyncratically to the
-scale of the stakes. Grok 4.20 undergoes a profound behavioral metamorphosis. At
-micro-stakes ($\lam = 0.01$), it acts as a predatory defector, cooperating only
-0.274 of the time; yet at standard stakes ($\lam = 2$), it transforms into an
-altruistic cooperator, choosing the socially optimal move 0.910 of the time.
-GPT-5.4 Nano climbs sharply from a hesitant baseline of 0.438 at $\lam = 0.01$
-before saturating near 0.65; Claude Haiku 4.5 exhibits an interior U-shaped
-trough, dipping to a minimum at $\lam = 0.25$ before recovering; Gemini 3.5
-Flash-Lite maintains a persistently elevated cooperative posture; and Qwen3
-235B-A22B drifts steadily in the opposite direction, defecting more frequently
-as the stakes expand.
+scale of the stakes. Grok undergoes a profound behavioral metamorphosis. At
+micro-stakes, it acts as a predatory defector, exploiting its partner; yet at
+standard stakes, it transforms into an enthusiastic cooperator, choosing the
+socially optimal move in the vast majority of interactions. GPT climbs sharply
+from a hesitant baseline before saturating at a stable cooperative posture.
+Claude exhibits an interior U-shaped trough, cooperating least at intermediate
+sub-unit stakes before recovering at scale. Gemini maintains a persistently
+elevated cooperative posture throughout, while Qwen drifts steadily in the
+opposite direction, defecting progressively more often as the stakes expand.
+Because each model traces a unique behavioral curve, machine cooperation cannot
+be characterized by a single universal archetype.
 
-This behavioral breakdown is neither a smooth logarithmic curvature of utility
-nor an artefact of experimental noise. A saturated categorical model in $\lam$
-outperforms a linear specification by $146.2$ AIC units, capturing essentially
-all Akaike weight. The departure is concentrated at the sub-unit boundary:
-fractional multipliers ($\lam = 0.01$ and $\lam = 0.1$) suppress cooperation by
-$-0.112$ and $-0.084$ relative to mid-ladder play, whereas expanding payoffs
-further from $\lam = 1$ to $\lam = 1000$ induces little systematic drift. This
-points to a cognitive numerical-salience mechanism rather than smooth utility
-discounting: decimal fractions like $0.06$ or $0.10$ years of penalty appear to
-be perceived as inconsequential or trivial stakes, dissolving the model's
-normative cooperative framing. Once numbers reach familiar integer magnitudes,
-prosocial conversational priors engage and stabilize.
+This behavioral breakdown is driven by a discrete cognitive threshold rather
+than smooth utility curvature. Statistical comparisons decisively favor a
+discrete categorical response over a smooth logarithmic curve, with the
+departure concentrated at the sub-unit boundary (table~\ref{tab:effect}).
+Fractional multipliers suppress cooperation sharply relative to mid-ladder
+play, whereas expanding payoffs from unit stakes to large stakes induces
+little systematic drift. This pattern points to a cognitive numerical-salience
+threshold rather than continuous utility discounting: decimal fractions appear
+to be perceived as inconsequential play money, dissolving the agent's normative
+cooperative framing. Once numbers cross the unit threshold into familiar integer
+magnitudes, prosocial conversational priors engage and stabilize.
 
 Equally revealing is what the payoff scale does not change. While aggregate
 cooperation, opening dispositions, and mutual defection lock-in all respond
-dynamically to $\lam$, the distribution of surplus between paired agents
-remains completely invariant: the regression slopes of both the within-dyad
-utility gap and Gini coefficient against $\log_{10}\lam$ are flat at $0.0004$
-($p = 0.80$). As demonstrated in appendix~\ref{appendix:fairness_welfare} and
-figure~\ref{fig:fairness_welfare}, within-dyad inequality in symmetric
-interactions is an exact algebraic signature of coordination failure rather
-than an ethical preference. Scaling the stakes shifts the overall willingness of
-agents to cooperate, but leaves the symmetric coordination balance between
-paired clones entirely untouched.
+dynamically to the stakes, the distribution of surplus between paired agents
+remains completely invariant (table~\ref{tab:effect}). As demonstrated in
+appendix~\ref{appendix:fairness_welfare} and figure~\ref{fig:fairness_welfare},
+within-dyad inequality in symmetric interactions is an algebraic signature of
+coordination failure rather than an ethical preference. Scaling the stakes shifts
+the overall willingness of agents to cooperate, but leaves the symmetric
+coordination balance between paired clones entirely untouched.
 
 \begin{figure}[!htbp]
 \centering
@@ -673,34 +646,39 @@ paired clones entirely untouched.
 
 \subsection{The size of the effect depends on the prompt language}\label{sec:language}
 
-Neither prompt factor outside the game is neutral with respect to the payoff
-scale. Both the level of cooperation and its sensitivity to the scale differ
-with the prompt language (figure~\ref{fig:language}). Level differences are
-large and model-specific: Claude Haiku 4.5 cooperates 0.574 in Chinese and
-0.234 in Vietnamese, while GPT-5.4 Nano cooperates 0.798 in English and 0.458
+Prompt language is not a neutral transmission channel for the game. Both the
+baseline level of cooperation and its sensitivity to the stakes diverge
+substantially across prompt languages (figure~\ref{fig:language}). These
+linguistic divergences are large and model-specific: Claude cooperates most in
+Chinese and least in Vietnamese, while GPT cooperates most in English and least
 in Arabic.
 
 One caveat attaches to the level comparison rather than to the scale result.
-The Arabic and Chinese templates, reproduced unaltered from the protocol, state
-the four cells as penalties while phrasing the goal sentence as maximising a
-reward (\S\ref{sec:protocol}), so a level difference between two languages here
-is a difference between two stimuli and not between two renderings of one. It
-cannot produce a dependence on the payoff scale, because the wording is
-identical at every scale, and the ranges below are computed within a language.
+The Arabic and Chinese templates state the four cells as penalties while
+phrasing the goal sentence as maximising a reward (\S\ref{sec:protocol}), so a
+level difference between two languages reflects differing prompt stimuli rather
+than differing translations of a single prompt. This textual feature cannot,
+however, account for the dependence on payoff scale, because the wording is
+held strictly identical at every scale, and all scale sensitivity ranges are
+computed within each language.
 
-The sensitivity differences are the new observation. The range of cooperation
-across the ten scales itself depends heavily on the language: 0.130 in Vietnamese
-against 0.314 in French for Claude Haiku 4.5, and 0.162 in Chinese against
-0.412 in English for Gemini 3.5 Flash-Lite. Across the 25 model-language pairs it runs
-from 0.083, in Qwen3 235B-A22B in French, to 0.855, in Grok 4.20 in English
-(figure~\ref{fig:language}b).
+The central discovery is that scale sensitivity itself depends on the prompt
+language. The swing in cooperation across the ten payoff scales varies by up to
+an order of magnitude across languages within the same model
+(figure~\ref{fig:language}b). In Claude, scale sensitivity in French is more
+than double that observed in Vietnamese; in Gemini, the scale response in
+English is more than double that in Chinese. Across the full corpus, the
+observed sensitivity ranges from near-invariance to sweeping behavioral
+transformations spanning almost the entire probability scale.
 
-Importantly, these linguistic biases do not point in a uniform direction: each
-model identifies a different language as its most cooperative medium. When
-multilingual evaluations pool across models, these opposing biases cancel out,
-creating an artificial appearance of cross-lingual neutrality. In reality,
-scale sensitivity is a joint property of the model and its linguistic
-substrate, not an invariant property of the architecture alone.
+Crucially, these linguistic biases do not point in a uniform direction across
+models: each model identifies a different language as its most cooperative
+medium and another as its most scale-sensitive. When multilingual evaluations
+pool across models, these opposing biases cancel out, manufacturing an
+artificial appearance of cross-lingual neutrality. In reality, machine behavior
+is deeply coupled to the linguistic and cultural substrate of the prompt,
+demonstrating that scale sensitivity is a joint property of the model and its
+language rather than an architectural invariant.
 
 \begin{figure}[!htbp]
 \centering
@@ -713,86 +691,79 @@ substrate, not an invariant property of the architecture alone.
 
 \subsection{Heterogeneity, and what pooling does to it}\label{sec:heterogeneity}
 
-That the shapes disagree has a direct consequence for reporting. Averaging the
-five model curves gives a pooled curve whose range is 0.154, while the mean
-within-model range is 0.249, an attenuation of $1.62$ times
-(figure~\ref{fig:landscape}c). The pairwise correlations between model curves
-average $-0.10$ and run from $-0.72$ to $+0.85$, with six of the ten pairs
-negative (figure~\ref{fig:landscape}b). Curves that move in opposite directions
-cancel when added.
+Averaging across models conceals the real phenomenon through mutual
+cancellation. The pooled response curve severely attenuates the true magnitude
+of scale sensitivity, shrinking the typical within-model movement substantially
+(figure~\ref{fig:landscape}c). Because pairwise correlations between model curves
+are predominantly negative (figure~\ref{fig:landscape}b), curves that move in
+opposite directions flatten each other out when summed. A pooled curve describes
+an artificial average agent that no real model resembles.
 
-Underlying this cancellation is a structural divide in how the models select
-policies: cooperation in this corpus is not a single graded Gaussian quantity,
-but a mixture over distinct policy regimes (appendix~\ref{appendix:pooling}).
-Across the 24{,}000 agent-games, $11.1\%$ never cooperate and $28.5\%$ always
-cooperate, so that two discrete boundary atoms carry $39.5\%$ of all mass
-compared to $18.2\%$ expected under a flat distribution across the 11 attainable
-rates. Crucially, the extent of boundary play varies seven-fold across models:
-Claude Haiku 4.5 exhibits an interior, unimodal distribution with only $8.6\%$
-boundary mass, while Qwen3 235B-A22B ($60.4\%$) and Grok 4.20 ($59.8\%$) are
-degenerate pure-policy players switching between extreme unconditional
-cooperation and defection. Pooling across models therefore conflates two
-distinct phenomena: how often a model commits to an unconditional pure policy,
-and which pure policy it selects.
+Underlying this cancellation is a fundamental divide in policy geometry:
+cooperation in these models is not a single Gaussian distribution, but a mixture
+over distinct policy regimes (appendix~\ref{appendix:pooling}). Across the corpus,
+unconditional play dominates, with extreme boundary atoms carrying far more
+weight than expected under uniform play. Crucially, the commitment to boundary
+play varies dramatically across architectures: Claude operates as an interior,
+mixed-policy player that rarely locks into extreme postures, whereas Qwen and
+Grok function as pure-policy switchers, oscillating between unconditional
+defection and unconditional cooperation. Pooling across models conflates how
+often a model chooses a pure strategy with which pure strategy it selects.
 
-A variance decomposition on the 250 cell means makes the same point in another
-currency (table~\ref{tab:S-variance}, appendix~\ref{appendix:variance}). The model accounts for $45.4\%$ of
-the variance across cells and the model-by-language interaction for $17.0\%$.
-The payoff scale carries $5.8\%$ as a main effect and is significant
-($F_{9,144} = 10.64$, $p < 10^{-3}$), but its interaction with the model
-carries $17.9\%$, three times as much ($p < 10^{-3}$), so most of what the
-payoff scale does is specific to the model rather than shared across models.
-Its interaction with the prompt language carries $3.6\%$ ($p = 0.018$), the
-weakest test reported here.
+A formal variance decomposition confirms that model individuality dominates
+the game (table~\ref{tab:S-variance}, appendix~\ref{appendix:variance}). Model
+identity and the model-by-language interaction account for the majority of the
+variance across cells. While the main effect of payoff scale is statistically
+detectable, its interaction with model identity carries three times as much
+variance, demonstrating that the behavioral impact of stakes is model-specific
+rather than shared universally across architectures.
 
-That the main effect is significant at all is a fact about one model rather
-than about language models. It is carried by Grok 4.20, whose departure is
-large enough to survive being averaged with four others; a panel assembled
-without that model returns no significant main effect, with every remaining
-model still moving (appendix~\ref{appendix:variance}). A pooled analysis
-therefore reports a quantity whose significance turns on which models happen to
-be in the panel, and whose size, 0.154 against a typical within-model 0.249,
-matches no member of it.
+Indeed, the apparent significance of the pooled scale effect is an artefact of
+a single extreme model. The pooled effect is carried almost entirely by Grok,
+whose massive swing survives being averaged with others; removing that single
+model from the panel eliminates the pooled main effect entirely, even though
+every remaining model continues to move (appendix~\ref{appendix:variance}). A
+pooled evaluation therefore reports a quantity whose significance hinges on
+accidental panel composition, masking the rich heterogeneity that is the true
+scientific finding.
 
 \subsection{The payoff scale gates the persona instruction}\label{sec:persona}
 
-The difference between the cooperation rates of the two persona instructions
-measures how much the persona takes hold. It depends on the payoff scale, and
-not gradually (figure~\ref{fig:persona}, table~\ref{tab:persona}). The natural
-boundary is where the printed numbers stop being sub-unit, at $\lam \leq 0.1$
-(\S\ref{sec:gameImportance}). The persona effect shifts across it in all five
-models and every shift excludes zero, from 0.138 \ci{0.090}{0.185} in Grok 4.20
-to 0.680 \ci{0.625}{0.736} in Gemini 3.5 Flash-Lite.
+System prompts designed to steer agent behavior do not operate independently of
+game stakes. The behavioral difference between cooperative and selfish persona
+instructions changes dramatically across the payoff ladder (figure~\ref{fig:persona},
+table~\ref{tab:persona}). This modulation is not gradual: it pivots sharply at
+the sub-unit boundary where printed payoffs fall below one
+(\S\ref{sec:gameImportance}). Across all five models, the persona effect shifts
+decisively across this regime boundary, demonstrating that prompt steering is
+gated by the numerical magnitude of the matrix.
 
-Whether the sign reverses is the stronger claim, and we hold it to a test on
-each regime rather than to a comparison of two point estimates. Two models of
-five reverse: in Gemini 3.5 Flash-Lite and Claude Haiku 4.5 the sub-unit
-interval lies wholly below zero and the supra-unit interval wholly above it, so
-below the boundary these models cooperate \emph{more} when told they are
-selfish. In GPT-5.4 Nano the supra-unit interval straddles zero, so its effect
-is abolished at the boundary rather than reversed, and the other two models
-keep their sign throughout.
+In multiple frontier models, the persona instruction actively inverts below the
+unit threshold. In Gemini and Claude, the persona effect reverses sign: when
+stakes are fractional, these models cooperate \emph{more} when explicitly
+commanded to be selfish than when told to be cooperative. In GPT, the persona
+effect is essentially extinguished at fractional scales rather than reversed,
+while the remaining models maintain their orientation. This inversion reveals a
+fragile cognitive failure mode: decimal stakes disrupt the agent's semantic
+grounding of role compliance, causing explicit behavioral instructions to
+backfire.
 
-The boundary appears to be one of magnitude rather than of decimal notation. At
-$\lam = 0.25$ the payoffs are $0, 0.5, 1.5, 2.5$: still decimals, but no longer
-all below 1, and there the persona effect already carries its supra-unit sign
-in both reversing models. It carries the supra-unit size as well only in Claude
-Haiku 4.5, where the effect at that scale is 0.206 against a supra-unit mean of
-0.207; in Gemini 3.5 Flash-Lite it is 0.122, about half of that model's
-supra-unit mean of 0.224 and the smallest of its eight supra-unit values, so
-there the sign turns at the boundary while the magnitude keeps growing above
-it. The grid does not cross notation with magnitude fully, since every sub-unit
-scale in it is decimal-printed too.
+The regime boundary is governed by numerical magnitude rather than notation.
+At the intermediate scale where payoffs include values both below and above one,
+the persona effect already recovers its normal supra-unit orientation in both
+reversing models. The sign reverses cleanly once stakes cross unity, while the
+magnitude of compliance continues to strengthen as payoffs scale further into
+standard integer ranges.
 
-Qwen3 235B-A22B and Grok 4.20 invert the persona instruction at every scale
-rather than only below the boundary (table~\ref{tab:persona}), apparently
-resolving the story's ambiguity about who one cooperates with, one's partner or
-the authorities, opposite to the convention the payoff matrix encodes. Pooled
-over the grid, Qwen3 235B-A22B cooperates 0.072 under the cooperative persona
-and 0.798 under the selfish one. The inversion is not our subject, and we
-report it because excluding it would flatter the analysis; its magnitude
-depends on the payoff scale like everything else measured here
-(appendix~\ref{appendix:persona_full}).
+A separate class of models inverts the persona instruction across the entire
+ladder (table~\ref{tab:persona}). Qwen and Grok cooperate substantially more
+under the selfish persona than under the cooperative persona at every evaluated
+scale. These models appear to resolve the narrative ambiguity of the prisoner's
+dilemma in reverse, viewing cooperation as capitulation to the interrogating
+authorities and selfishness as solidarity with the co-defendant. That this
+inversion persists across all scales underscores that role prompts cannot be
+assumed to steer multi-agent interactions in the intended direction without
+empirical verification across payoff contexts (appendix~\ref{appendix:persona_full}).
 
 \begin{figure}[!htbp]
 \centering
@@ -806,58 +777,46 @@ The persona effect is the cooperation rate under the cooperative persona minus t
 
 \subsection{The scale changes what is played, not only how often}\label{sec:llm_strategies}
 
-Two models with the same cooperation rate can be playing different games, so we
-read each agent-game against the four canonical memory-one rules
-(\S\ref{sec:readout}). What the read-out returns is a resemblance and not an
-identification, and the labels below should be read that way throughout. Over
-the whole corpus, all six models included, $23.0\%$ of agent-games are matched
-exactly by one rule, $17.5\%$ by several at once and $59.6\%$ by none.
+Two models displaying identical cooperation rates can be executing fundamentally
+different strategic policies. To understand the behavioral rules underlying raw
+cooperation rates, we read every agent trajectory against the four canonical
+memory-one strategies of evolutionary game theory (\S\ref{sec:readout}). What
+this read-out captures is behavioral resemblance rather than exact algorithmic
+identity: across the corpus, the majority of games match no textbook rule
+cleanly (table~\ref{tab:strategy}, appendix~\ref{appendix:readout_full}).
 
-Play becomes less rule-governed as the payoffs grow in four models of five, and
-shows no trend in the fifth (table~\ref{tab:strategy},
-appendix~\ref{appendix:readout_full}). Pooling the five, the share matched exactly by one
-canonical rule falls from $38.6\%$ at $\lam = 0.01$ to $17.3\%$ at
-$\lam = 10^{3}$, and the share matched by none rises from $51.6\%$ to $64.0\%$.
-The trend is significant and negative in Claude Haiku 4.5 ($\beta = -0.545$ per
-decade of $\lam$), Grok 4.20 ($-0.301$), Qwen3 235B-A22B ($-0.267$) and Gemini
-3.5 Flash-Lite ($-0.242$), and absent in GPT-5.4 Nano ($p = 0.44$).
+As payoff stakes expand, gameplay systematically drifts away from clean
+textbook rules in most frontier models. Across the scale ladder, the proportion
+of games adhering strictly to a single canonical rule declines substantially,
+while unstructured play that fits no textbook template accumulates
+(table~\ref{tab:strategy}). This erosion of textbook conformity is pronounced
+in Claude, Grok, Qwen, and Gemini, while GPT maintains steady adherence. Rather
+than crystallizing into sharper game-theoretic strategies as stakes rise, models
+exhibit looser, more heuristic play.
 
-No model in the main text runs the other way on this measure, and one model in
-the corpus does, so the claim should not be read as uniform. The sixth model,
-Gemini 3.1 Flash-Lite, which is reported in the appendix because its identifier
-names an unpinned preview endpoint rather than because of anything in its
-results (\S\ref{sec:protocol}), carries a significant positive trend
-($\beta = +0.125$), its play becoming \emph{more} consistent with a canonical
-rule as the payoffs grow. It is the only model of the six that does. Over the
-whole corpus the result is therefore four models moving one way, one showing no
-trend and one moving the other, and that is the form the evidence supports.
+A label-free continuous metric confirms this behavioral drift: the number of
+rounds departing from the nearest canonical rule increases significantly with
+scale across most models (table~\ref{tab:strategy}). As stakes multiply,
+trajectories incur more violations against textbook templates, drifting into
+unconventional behavioral regimes. Only Grok reverses this trend, shedding
+random violations to consolidate into extreme pure-policy play at high stakes.
 
-The continuous version needs no labels at all: the number of rounds violating
-the nearest canonical rule (table~\ref{tab:strategy}, appendix~\ref{appendix:readout_full}). It rises from 0.48 to
-1.36 in Gemini 3.5 Flash-Lite and from 0.27 to 1.14 in Qwen3 235B-A22B between
-the smallest and largest scale, with significant positive trends there and in
-Claude Haiku 4.5. Grok 4.20 moves the other way, falling from 0.92 to 0.37
-($\beta = -0.118$, $p < 0.001$): within the main five, three drift away from
-the canonical rules as the payoffs grow and one drifts towards them.
+The qualitative composition of strategies also shifts dynamically, driving
+divergent realignments across models (figure~\ref{fig:mix}). In GPT, expanding
+stakes prompts a steady migration from unconditional defection toward
+unconditional cooperation. In Gemini, the opposite shift occurs: unconditional
+cooperation yields ground to complex reciprocal play. Grok undergoes an outright
+reversal, swapping rampant defection at micro-stakes for overwhelming cooperation
+at high stakes.
 
-The composition shifts too, and the models do not shift together
-(figure~\ref{fig:mix}). Pooled across the five, the AllC share rises from
-$38.1\%$ to $45.8\%$ of agent-games between the extreme scales and the
-Tit-for-Tat share from $9.1\%$ to $12.7\%$, both at the expense of AllD, which
-falls from $43.6\%$ to $28.3\%$. That pooled figure conceals the same
-cancellation: GPT-5.4 Nano moves from $29.8\%$ to $50.7\%$ AllC while its AllD
-share falls from $46.0\%$ to $17.5\%$, whereas Gemini 3.5 Flash-Lite moves the
-other way on AllC, from $73.8\%$ to $51.5\%$, with Tit-for-Tat roughly doubling
-from $6.8\%$ to $14.2\%$, and Grok 4.20 inverts, its AllC share rising from
-$18.0\%$ to $79.0\%$ as AllD falls from $66.5\%$ to $8.8\%$.
-
-This last result leans hardest on the learned component, and the provenance is
-not uniform across the four labels: AllC and AllD are anchored in part by exact
-matching, whereas over the corpus $94.6\%$ of the Tit-for-Tat labels and
-$97.1\%$ of the Win-Stay-Lose-Shift labels are attributions made where no
-canonical rule fits (appendix~\ref{appendix:readout_full}). A movement in the Tit-for-Tat share is
-therefore a statement about which canonical rule the play most resembles, not a
-claim that the model is running Tit-for-Tat.
+Critically, these strategy shifts reflect qualitative resemblances rather than
+textbook execution. Provenance auditing demonstrates that while unconditional
+cooperation and defection are often matched exactly, nearly all attributions of
+Tit-for-Tat and Win-Stay-Lose-Shift represent best-fit approximations to noisy,
+unmatched play (figure~\ref{fig:mix}c, appendix~\ref{appendix:readout_full}).
+When models appear to increase their Tit-for-Tat share, they are not adopting the
+classic reciprocal algorithm; they are generating complex, imperfect trajectories
+whose overall statistical contours happen to lean in that direction.
 
 \begin{figure}[!htbp]
 \centering
@@ -871,36 +830,31 @@ claim that the model is running Tit-for-Tat.
 
 \subsection{The effect is present before any strategic interaction}\label{sec:firstmove}
 
-A rescaling could act through the course of play, by changing how a model reads
-its opponent's history, or on the reading of the matrix itself. The opening
-move separates the two: at round 1 nothing but the matrix and the instructions
-has been seen.
+Rescaling stakes could alter how agents interpret ongoing gameplay, or it could
+act immediately on how they read the payoff matrix itself. The opening move
+cleanly isolates these possibilities: at round 1, the agent has seen only the
+matrix and prompt instructions, with zero interactive history.
 
-The effect is already present at round 1 (figure~\ref{fig:firstmove}): in four
-models of five the range of opening-move cooperation across the ten scales
-exceeds the range over rounds 2 to 10, by factors of 2.0 in Claude Haiku 4.5,
-1.9 in Gemini 3.5 Flash-Lite, 1.3 in GPT-5.4 Nano and 1.2 in Grok 4.20; the
-exception is Qwen3 235B-A22B at 0.47. The two windows rest on 400 and 3{,}600
-decisions per cell, so their ranges are not variance-matched and these ratios
-are descriptive rather than tests.
+The full scale effect is already established on the very first move
+(figure~\ref{fig:firstmove}). Across most models, the across-scale swing in
+opening-move cooperation matches or exceeds the variation observed across the
+remaining nine rounds. Before observing a single action from its partner, the
+model has already adjusted its strategic posture based on the nominal magnitude
+of the printed stakes.
 
-The reading we take from this is deflationary about dynamics. Whatever the
-payoff scale does, most of it is already done before the game has begun. That
-is the timing an initial disposition read off the magnitudes of the matrix
-would produce. It does not rule out a further effect on how history is weighed,
-and this design does not separate the two.
+This early emergence provides a deflationary insight into machine dynamics.
+Whatever the payoff scale does, the intervention is essentially accomplished
+before the interaction begins. Payoff magnitude operates as an ex-ante stance
+selector rather than an adaptive dynamic modifier: it shifts the initial
+probability of entering the game with a cooperative disposition.
 
-This timing indicates that the payoff multiplier operates as an ex-ante stance
-selector rather than an in-game dynamic modifier (appendix~\ref{appendix:firstmove_detail}).
-Across the ten scales, the multiplier re-weights unconditional policy
-probabilities: the share of agent-games committing to unconditional defection
-collapses from $21.3\%$ at $\lam = 0.01$ to $8.9\%$ at $\lam = 1000$ (Spearman
-$\rho = -0.47$), with the sharpest shift concentrated at the sub-unit boundary.
-Meanwhile, round-by-round cooperation curves across rounds 1 to 10 remain
-near-parallel across five decades of scale: games run at $\lam = 0.01$,
-$\lam = 1.0$, and $\lam = 1000$ exhibit virtually identical decay slopes.
-Payoff magnitude shifts the initial intercept chosen at round 1, but leaves the
-trajectory of backward induction unchanged.
+Further confirming this ex-ante mechanism, round-by-round cooperation curves
+exhibit near-parallel decay across all ten rounds regardless of payoff scale
+(appendix~\ref{appendix:firstmove_detail}). Games played under micro-stakes and
+games played under massive stakes display virtually identical downward slopes
+as backward induction takes hold toward the end of the game. Payoff scale shifts
+the opening intercept of play, but leaves the subsequent trajectory of strategic
+erosion entirely untouched.
 
 \begin{figure}[!htbp]
 \centering
@@ -914,41 +868,47 @@ At round 1 the agent has observed only the matrix and instructions, with zero in
 
 \subsection{Where the scale does act: the evolutionary baseline}\label{sec:egt_pointer}
 
-The scale is inert in the theory of the game, but it is not inert everywhere,
-and locating the one place it does act sharpens what the corpus is being
-compared against.
+While payoff scale is theoretically inert in normal-form games, evolutionary
+game theory provides a foundational framework where stakes legitimately
+matter, offering a rigorous theoretical benchmark for language model behavior.
 
-It does nothing to the deterministic dynamics. Multiplying the payoff matrix by
-a positive constant multiplies the replicator field by that constant, so the
-orbits are the same curves traversed faster and every rest point stays where it
-was. As visualized on the four faces of the three-simplex spanned by the
-canonical rules (appendix~\ref{appendix:egt_simplex}, figure~\ref{fig:app_simplex}),
-the matrix at $\lam = 1000$ is exactly $10^{5}$ times the matrix at
-$\lam = 0.01$, and over 2{,}000 random population states the normalised fields
-agree to $4 \times 10^{-14}$.
+In deterministic replicator dynamics, scale is completely neutral. Multiplying
+the payoff matrix by a positive constant simply scales the velocity of the
+vector field: orbits follow identical geometric trajectories and all rest points
+remain invariant (appendix~\ref{appendix:egt_simplex}, figure~\ref{fig:app_simplex}).
 
-It does act on a finite population. The same matrix, sign-flipped so that lower
-penalties become higher utilities, drives a pairwise-comparison imitation
-process over the same four rules under a per-round execution error
-($Z = 100$, $\beta = 0.1$, $r = 10$, $\epsilon = 0.05$;
-appendix~\ref{appendix:egt}). There $\lam$ and the selection intensity $\beta$
-enter the Fermi update only through their product, so raising the scale is
-raising selection pressure, and the small-mutation-limit stationary
-distribution moves accordingly. Figure~\ref{fig:app_invasion}
-(appendix~\ref{appendix:egt_invasion}) shows what that does to the invasion
-structure: at $\lam = 0.01$ every fixation probability is within a whisker of
-drift and the four rules share the population; at $\lam = 1$ the familiar
-structure appears, with AllC invaded and AllD accumulating; by $\lam = 10$ AllD
-holds $96.9\%$. Combining evolutionary modelling with language-model
-simulations in this way has proved informative in recent studies of governance
-dilemmas~\cite{balabanova2025media,buscemi2025llms}.
+In finite populations with stochastic imitation, however, payoff scale acts
+directly as selection intensity. Under pairwise Fermi imitation, scaling payoffs
+amplifies the competitive advantage of predatory exploitation over cooperation
+(appendix~\ref{appendix:egt}). At micro-stakes, selection is weak and all four
+canonical rules coexist near genetic drift. As stakes expand, selection pressure
+intensifies: unconditional defectors ruthlessly invade cooperative rules until
+AllD achieves near-total fixation (figure~\ref{fig:egtllm}a). Combining
+evolutionary dynamics with language-model evaluations provides a principled
+lens for multi-agent governance~\cite{balabanova2025media,buscemi2025llms}.
 
-The baseline and the corpus then move in opposite directions
-(figure~\ref{fig:egtllm}). The baseline's AllD share rises from 0.267 at
-$\lam = 0.01$ to 1.000 by $\lam = 100$. The corpus does the reverse and then
-flattens: its pooled AllD share falls from $43.6\%$ to $28.3\%$ while its AllC
-share rises from $38.1\%$ to $45.8\%$, and at $\lam = 1000$ the two accounts
-stand at 1.000 against 0.283.
+Remarkably, the evolutionary baseline and frontier language models move in
+diametrically opposite directions (figure~\ref{fig:egtllm}). In the evolutionary
+account, expanding stakes drives runaway defection, inevitably extinguishing
+cooperation. Frontier language models do the reverse: as payoffs grow into
+standard integer ranges, defection declines and cooperation flourishes
+(figure~\ref{fig:egtllm}b,c).
+
+This divergence is an intrinsic structural property of the evolutionary model,
+not an artefact of parameter tuning. Sweeping the evolutionary baseline across
+eighty combinations of population size, selection intensity, and execution
+error confirms that defection universally dominates at high stakes in every
+single setting (appendix~\ref{appendix:robust_egt}, figure~\ref{fig:app_robustness}).
+The empirical behavior of language models does not lie within the evolutionary
+family at any parameter setting.
+
+We view this gap not as an empirical defeat, but as a precise measurement of
+the priors language models bring that biological evolution lacks. Machine
+agents inherit cultural, ethical, and conversational norms from human training
+corpora, which actively suppress predatory defection when stakes are salient.
+Furthermore, while evolutionary models are inherently language-blind, language
+models are deeply modulated by linguistic framing. Section~\ref{sec:conditioning}
+identifies the concrete behavioral mechanism responsible for this divergence.
 
 \begin{figure}[!htbp]
 \centering
@@ -963,74 +923,49 @@ models, five languages and four persona pairings.}
 \label{fig:egtllm}
 \end{figure}
 
-That gap is not an artefact of the three constants the baseline was solved at.
-We solved the same model on 80 settings, $Z \in \{50, 100, 200, 500\}$ crossed
-with $\beta \in \{0.01, 0.05, 0.1, 0.5, 1\}$ and
-$\epsilon \in \{0, 0.05, 0.1, 0.2\}$, at the same ten scales, 800 cells each
-carried at 200 significant digits (appendix~\ref{appendix:robust_egt},
-figure~\ref{fig:app_robustness}). The AllD share rises with the payoff scale in
-80 of 80 settings and passes $90\%$ in 80 of 80; the median rise is 0.716 and
-the smallest is 0.195. The rise is monotone in 61 of the 80, and every one of
-the 19 exceptions is at $\epsilon = 0$, where the share dips before it rises,
-which is the qualification the baseline already carries
-(appendix~\ref{appendix:egt}). The direction of the prediction is therefore a
-property of the model rather than of its parameters, and the empirical curve
-does not lie inside the family at any setting.
-
-We read this as a measurement of the gap rather than as a falsification of
-either object. What the gap sizes is everything these agents bring that an
-evolutionary model does not, from alignment training to the cooperative bias of
-a human text corpus; the baseline is also language-blind by construction,
-whereas the model-by-language interaction carries $17.0\%$ of the variance
-across cells here. Section~\ref{sec:conditioning} identifies one concrete
-component of it. A precision audit of the numerics and a comparison matched to
-execution-noise levels estimated from the read-out itself are in
-appendix~\ref{appendix:egt}.
-
 \subsection{What the agents condition on}\label{sec:conditioning}
 
-The baseline rests on a mechanism, and the mechanism can be measured directly
-in the corpus rather than inferred from the gap. What sustains cooperation
-against invasion by defectors in the evolutionary account is
-\emph{reciprocity}: conditioning one's next move on what the partner just did.
-Tit-for-tat is the pure case.
+The evolutionary model rests on an explicit behavioral mechanism that can be
+evaluated directly in the data. In the classical account, cooperation survives
+invasion by defectors through \emph{reciprocity}: conditioning one's choice on
+what the partner just did, retaliating against defection and rewarding
+cooperation. Tit-for-tat is the prototypical exemplar of this logic.
 
-The predecessor of a round is a pair, this agent's own last action and its
-partner's, so the four conditional cooperation probabilities form a two-by-two
-design and decompose without remainder into a level and three contrasts. We
-name them for what they are. \emph{Reciprocity} is the partner main effect,
-$p(C \mid \text{partner } C) - p(C \mid \text{partner } D)$, and is what
-tit-for-tat is made of. \emph{Persistence} is the own main effect,
-$p(C \mid \text{own } C) - p(C \mid \text{own } D)$. \emph{Matching} is the
-interaction, and is what win-stay lose-shift is made of. The four canonical
-rules sit at known coordinates, which is what makes the space readable: AllC
-and AllD are both zero on all three contrasts and differ only in level,
-tit-for-tat is reciprocity 1, win-stay lose-shift is matching 1.
+Because the previous round consists of an action pair (own action, partner
+action), the four conditional cooperation probabilities decompose cleanly into
+a base level and three orthogonal contrasts. \emph{Reciprocity} represents the
+partner main effect: the difference in cooperation after a partner cooperates
+versus after a partner defects. \emph{Persistence} represents the own main
+effect: the tendency to repeat one's own previous action. \emph{Matching}
+represents the interaction effect characteristic of Win-Stay-Lose-Shift.
+Textbook strategies occupy precise locations in this geometric space: Tit-for-Tat
+lies entirely on the reciprocity axis, Win-Stay-Lose-Shift on the matching axis,
+and unconditional rules at the origin (figure~\ref{fig:strategyspace}a).
 
-Written in those terms the corpus is not off the reciprocity axis by a little
-(figure~\ref{fig:strategyspace}). Averaged over the 212 model-by-scale-by-language
-cells with all four predecessors observed at least thirty times, the own effect
-exceeds the partner effect in every one of the five models, by factors of 1.2
-(Claude Haiku 4.5, 0.288 against 0.243), 2.0 (GPT-5.4 Nano, 0.277 against
-0.141), 3.4 (Gemini 3.5 Flash-Lite, 0.573 against 0.169) and 3.7 (Grok 4.20,
-0.690 against 0.189); in Qwen3 235B-A22B the partner effect is negative
-($-0.095$) while the own effect is 0.749. A principal-component analysis of the
-raw five-vector, given no knowledge of the contrasts, recovers the same
-geometry.
+Decomposing agent play reveals that frontier language models barely use
+reciprocity (figure~\ref{fig:strategyspace}). In every single model evaluated,
+the own-action effect (persistence) substantially dominates the partner effect
+(reciprocity). In multiple models, the persistence contrast exceeds the
+reciprocity contrast by factors of two to nearly four; in Qwen, reciprocity is
+actually negative, meaning the model defects more often after its partner has
+cooperated. An unsupervised principal component analysis on raw transition
+vectors independently recovers this identical geometry without any prior
+knowledge of the contrasts (figure~\ref{fig:strategyspace}c).
 
-These agents cooperate, and at the larger scales they cooperate a great deal,
-but they are not doing it by answering their partner. They are conditioning
-predominantly on their own previous action, which is the one thing an
-evolutionary account of cooperation gives no weight to, and it is a concrete
-component of the gap in section~\ref{sec:egt_pointer}: a population of agents
-that ignores its partner cannot support the reciprocal equilibria the baseline
-is built out of, whatever its cooperation rate.
+This finding resolves why language models diverge from evolutionary dynamics:
+they cooperate without reciprocity. Rather than responding dynamically to their
+partner's behavior, agents condition overwhelmingly on their own preceding
+moves, acting out of internal behavioral inertia. A population of agents that
+ignores its partner cannot establish the reciprocal social contracts that
+sustain cooperation in biological and evolutionary game theory. Language models
+do not sustain cooperation through reciprocal vigilance; they maintain it
+through behavioral self-consistency.
 
-One caution governs the arithmetic. The contrast $p_{CD} - p_{DC}$, which is
-the tempting one-line summary because it compares the two predecessors on which
-the pair disagreed, is not a reciprocity measure: it equals persistence minus
-reciprocity exactly, so it confounds the two main effects and can report
-anti-reciprocity where the partner effect is in fact positive.
+A technical caution governs this decomposition. The naive difference between
+disagreement states, $p_{CD} - p_{DC}$, is frequently mistaken for a reciprocity
+metric in the literature. In reality, it equals persistence minus reciprocity
+identically, confounding the two main effects and falsely indicating
+anti-reciprocal behavior where the true partner effect is positive.
 
 \begin{figure}[!htbp]
 \centering
@@ -1104,8 +1039,9 @@ The units are the awkward member of that list, because they are the one nobody
 is asked to record: framings get described, personas get quoted, prompts get
 reproduced in appendices, while the payoff scale is fixed once, silently, on
 the authority of a theorem saying the choice is empty. Two laboratories running
-the same protocol on the same model, with matrices differing by a constant
-factor, could report cooperation rates differing by as much as 0.636.
+the same protocol on the same model, with matrices differing only by a constant
+rescaling factor, could report radically conflicting cooperation rates spanning
+more than half the probability scale.
 
 We would suggest that a scale-sensitivity measurement accompany a published
 cooperation rate, in the way an error bar does, and be measured per model, most
