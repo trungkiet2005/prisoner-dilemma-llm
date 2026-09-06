@@ -1,0 +1,16 @@
+model_a,model_b,pooled_diff,n_slices,n_reversed,reversed_in
+Claude-Haiku-4.5,Qwen3-235B-A22B,-0.020324999999999982,19,8,lambda=1; lambda=2; lambda=5; lambda=10; lambda=100; lang:fr; lang:cn; pair:CvC
+Claude-Haiku-4.5,GPT-5.4-Nano,-0.191575,19,1,lang:cn
+Claude-Haiku-4.5,Gemini-3.1-Flash-Lite,-0.20240000000000008,19,0,
+Claude-Haiku-4.5,Grok-4.20-Non-Reasoning,-0.298175,19,2,lambda=0.01; pair:CvC
+Claude-Haiku-4.5,Gemini-3.5-Flash-Lite,-0.33597499999999997,19,0,
+Qwen3-235B-A22B,GPT-5.4-Nano,-0.17125,19,2,lambda=0.01; pair:SvS
+Qwen3-235B-A22B,Gemini-3.1-Flash-Lite,-0.1820750000000001,19,3,pair:CvS; pair:SvC; pair:SvS
+Qwen3-235B-A22B,Grok-4.20-Non-Reasoning,-0.27785000000000004,19,2,lambda=0.01; lambda=0.1
+Qwen3-235B-A22B,Gemini-3.5-Flash-Lite,-0.31565,19,0,
+GPT-5.4-Nano,Gemini-3.1-Flash-Lite,-0.010825000000000085,19,12,lambda=0.25; lambda=2; lambda=5; lambda=10; lambda=100; lambda=1000; lang:en; lang:fr; lang:vn; pair:CvS; pair:SvC; pair:SvS
+GPT-5.4-Nano,Grok-4.20-Non-Reasoning,-0.10660000000000003,19,5,lambda=0.01; lambda=0.1; lambda=100; lang:en; pair:CvC
+GPT-5.4-Nano,Gemini-3.5-Flash-Lite,-0.14439999999999997,19,1,lang:en
+Gemini-3.1-Flash-Lite,Grok-4.20-Non-Reasoning,-0.09577499999999994,19,5,lambda=0.01; lambda=0.1; lambda=0.5; lang:ar; pair:CvC
+Gemini-3.1-Flash-Lite,Gemini-3.5-Flash-Lite,-0.1335749999999999,19,1,pair:CvC
+Grok-4.20-Non-Reasoning,Gemini-3.5-Flash-Lite,-0.037799999999999945,19,10,lambda=1; lambda=2; lambda=5; lambda=10; lambda=1000; lang:en; lang:fr; lang:vn; pair:CvS; pair:SvS

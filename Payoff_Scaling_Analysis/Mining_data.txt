@@ -1,0 +1,1489 @@
+You are an expert researcher in:
+
+* Large Language Models
+* Computational social science
+* Evolutionary game theory
+* Behavioral economics
+* Statistical modeling
+* Scaling laws
+* Causal inference
+* Multi-objective optimization
+* Scientific visualization
+
+You are given the complete dataset:
+
+`Dataset/data_fairgame_frontier_llm/`
+
+and its accompanying data card:
+
+`Dataset/DATA_CARD_frontier_llm.md`
+
+Your task is to perform a **deep, exhaustive, publication-oriented scientific analysis** of this dataset.
+
+The objective is NOT simply to perform EDA.
+
+The objective is to discover whether **LLMs exhibit systematic behavioral responses to payoff-scale changes despite the underlying prisoner's dilemma being strategically invariant**, and to identify all other scientifically meaningful patterns hidden in the corpus.
+
+The final output should be suitable for informing a research paper on **LLM behavioral scaling, payoff sensitivity, cooperation, fairness, and evolutionary-game behavior**.
+
+---
+
+# 0. READ AND FOLLOW THE DATA CARD FIRST
+
+Before writing analysis code, read:
+
+`Dataset/DATA_CARD_frontier_llm.md`
+
+Treat it as the authoritative specification of the dataset.
+
+Do not invent columns, variables, or experimental conditions.
+
+Important verified facts include:
+
+* 300 CSV files
+* 12,000 games
+* 24,000 agent-games
+* 240,000 agent-round observations
+* 6 frontier LLMs
+* 10 payoff scales
+* 5 languages
+* 4 personality pairings
+* 10 repetitions per design cell
+* 10 rounds per game
+* self-play only
+* no communication
+* known horizon
+* payoff matrix:
+
+  * CC = 2λ
+  * CD = 10λ
+  * DC = 0
+  * DD = 6λ
+* `OptionA = Defection`
+* `OptionB = Cooperation`
+
+The payoff-scale ladder is:
+
+`0.01, 0.1, 0.25, 0.5, 1, 2, 5, 10, 100, 1000`
+
+The strategic structure of the game is unchanged by λ.
+
+This means that if behavior changes with λ, that change is scientifically interesting.
+
+---
+
+# 1. BUILD THE ANALYSIS DATASET
+
+Construct two canonical analytical tables.
+
+## Round-level table
+
+One row per:
+
+`game × focal_agent × round`
+
+Expected:
+
+`240,000 rows`
+
+Include at minimum:
+
+* model
+* language
+* scale
+* game_uid
+* game_id
+* repetition
+* agent
+* personality
+* opponent personality
+* dyad
+* round
+* action
+* opponent action
+* cooperation indicator
+* outcome
+* raw penalty
+* scale-normalized penalty
+* normalized payoff
+* efficiency
+* previous action
+* previous opponent action
+* previous outcome
+* round fraction
+
+## Game-level table
+
+One row per:
+
+`game × focal_agent`
+
+Expected:
+
+`24,000 rows`
+
+Include:
+
+* model
+* language
+* scale
+* repetition
+* personality
+* opponent personality
+* dyad
+* cooperation rate
+* opponent cooperation rate
+* first-round cooperation
+* last-round cooperation
+* CC/CD/DC/DD rates
+* normalized payoff
+* payoff per round
+* efficiency
+* longest defection run
+* mutual-defection absorption
+* any other meaningful trajectory features
+
+Prefer the canonical ingestion logic described in the data card.
+
+If implementing your own loader, validate it against the data-card invariants.
+
+---
+
+# 2. DATA VALIDATION
+
+Before any scientific analysis, automatically verify:
+
+* 300 files
+* 40 games/file
+* 12,000 games
+* 240,000 agent-rounds
+* every game has 10 rounds
+* every strategy sequence has length 10
+* every score sequence has length 10
+* only OptionA/OptionB occur
+* `OptionA = D`
+* `OptionB = C`
+* score matrix matches λ exactly
+* all six models are correctly identified
+* all five languages are correctly identified
+* all four dyads are correctly reconstructed
+* every λ cell contains the expected number of observations
+* no duplicate game UID
+* no missing values
+* no accidental mixing of scales
+
+Produce:
+
+`Payoff_Scaling_Analysis/00_validation/validation_report.csv`
+
+and:
+
+`validation_report.md`
+
+If validation fails, stop the scientific analysis and diagnose the problem first.
+
+---
+
+# 3. EXPERIMENTAL DESIGN ANALYSIS
+
+Create an explicit representation of the experimental design:
+
+MODEL × LANGUAGE × SCALE × DYAD × REPETITION × ROUND
+
+Quantify the balance of the design.
+
+Create figures showing:
+
+* number of games per model
+* number of games per scale
+* number of games per language
+* number of games per dyad
+* model × scale balance
+* language × scale balance
+* dyad × scale balance
+
+This should demonstrate that the design is fully balanced.
+
+---
+
+# 4. CORE RESEARCH QUESTION
+
+The central scientific question is:
+
+> Does changing the numerical magnitude of payoffs alter LLM behavior even though the strategic ordering of the prisoner's dilemma remains unchanged?
+
+Treat λ as the primary experimental variable.
+
+Do NOT simply compare raw payoff.
+
+Separate:
+
+### Mechanical payoff scaling
+
+Raw penalties necessarily change with λ.
+
+from:
+
+### Behavioral scaling
+
+The following should NOT mechanically change simply because λ changes:
+
+* cooperation probability
+* strategy choice
+* outcome frequencies
+* defection behavior
+* cooperation persistence
+* response to opponent actions
+* endgame behavior
+* strategy composition
+
+This distinction is critical.
+
+---
+
+# 5. PAYOFF SCALE RESPONSE
+
+For each model separately, analyze:
+
+`behavior ~ scale`
+
+Analyze at least:
+
+* cooperation rate
+* first-round cooperation
+* last-round cooperation
+* CC rate
+* CD rate
+* DC rate
+* DD rate
+* normalized payoff
+* efficiency
+* mutual-defection absorption
+* longest D run
+
+Plot each metric against λ.
+
+Use:
+
+* linear x-axis
+* log10(x)-axis
+* log-scaled x-axis with λ labels
+
+Do NOT connect points without showing uncertainty.
+
+Use clustered bootstrap confidence intervals where appropriate.
+
+---
+
+# 6. PAIRED COMMON-RANDOM-NUMBER ANALYSIS
+
+This is one of the most important analyses.
+
+The data card states that the same:
+
+`(model, language, game_id)`
+
+is matched across λ.
+
+Therefore exploit this explicitly.
+
+Do NOT treat scale observations as completely independent.
+
+For every model-language-game combination, calculate:
+
+`Δ_behavior(λ1, λ2)`
+
+and:
+
+`Δ_behavior(λ, baseline)`
+
+where the baseline is preferably λ = 1.
+
+Analyze:
+
+* cooperation change
+* outcome change
+* payoff-normalized change
+* endgame change
+
+Use paired comparisons.
+
+Generate:
+
+* paired slope plots
+* spaghetti plots where interpretable
+* Δ-cooperation distributions
+* Δ-cooperation heatmaps
+* baseline-vs-scale scatter plots
+* paired effect-size plots
+
+This analysis should be substantially emphasized in the final report.
+
+---
+
+# 7. SCALING-LAW ANALYSIS
+
+For each behavioral metric, test whether response to λ follows:
+
+### Linear
+
+`y = a + bλ`
+
+### Logarithmic
+
+`y = a + b log(λ)`
+
+### Power law
+
+`y = a λ^b`
+
+### Saturating response
+
+e.g. Michaelis-Menten / Hill-type form
+
+### Piecewise / threshold model
+
+### Null model
+
+`y = constant`
+
+Compare models using appropriate criteria such as:
+
+* AIC
+* BIC
+* cross-validation
+* RMSE
+* residual diagnostics
+
+Do NOT assume power-law scaling in advance.
+
+For each model × behavioral metric combination, report:
+
+* best functional form
+* coefficient
+* confidence interval
+* model fit
+* residual diagnostics
+* robustness
+
+Create:
+
+`scaling_results.csv`
+
+---
+
+# 8. SCALING EXPONENTS
+
+For power-law-compatible variables estimate:
+
+`y = a λ^b`
+
+Report:
+
+* exponent b
+* 95% CI
+* standard error
+* fit quality
+
+Interpret:
+
+* b ≈ 0 → scale-invariant behavior
+* b > 0 → increasing response
+* b < 0 → decreasing response
+
+But be careful with bounded variables such as cooperation rate.
+
+For bounded behavioral variables, consider appropriate transformations/models instead of blindly fitting log-log regressions.
+
+Compare scaling exponents across:
+
+* LLMs
+* languages
+* dyads
+
+Visualize:
+
+`model → scaling exponent`
+
+with confidence intervals.
+
+---
+
+# 9. MODEL-SPECIFIC SCALING
+
+For each of the six models:
+
+* Claude-Haiku-4.5
+* Gemini-3.1-Flash-Lite-Preview
+* Gemini-3.5-Flash-Lite
+* GPT-5.4-Nano
+* Grok-4.20-Non-Reasoning
+* Qwen3-235B-A22B
+
+analyze scale sensitivity.
+
+Construct a model × scale behavioral matrix.
+
+Visualize:
+
+* cooperation heatmap
+* normalized payoff heatmap
+* efficiency heatmap
+* DD heatmap
+* endgame cooperation heatmap
+
+Then rank models by:
+
+1. average cooperation
+2. scale sensitivity
+3. behavioral stability
+4. fairness
+5. efficiency
+6. endgame stability
+
+Do NOT create a single arbitrary overall ranking unless statistically justified.
+
+---
+
+# 10. SCALE SENSITIVITY INDEX
+
+Construct a principled scale-sensitivity metric.
+
+Possible definitions include:
+
+* variance across λ
+* mean absolute deviation from λ=1
+* regression slope
+* normalized response range
+* area between scale-response curves
+* elasticity where appropriate
+
+Compare scale sensitivity across models.
+
+Define clearly what each metric measures.
+
+Potentially construct:
+
+`Scale Sensitivity Index`
+
+only if it adds scientific value.
+
+Validate that the index is not dominated by noise.
+
+---
+
+# 11. BEHAVIORAL INVARIANCE ANALYSIS
+
+Because positive affine rescaling should preserve strategic preferences, explicitly test:
+
+> How invariant are LLM strategies to payoff magnitude?
+
+For each model calculate:
+
+* cooperation range across λ
+* maximum absolute behavioral deviation
+* coefficient of variation
+* pairwise scale divergence
+* Jensen-Shannon divergence between action distributions
+* KL divergence only where mathematically appropriate
+* behavioral consistency
+
+Construct an:
+
+`Invariance Score`
+
+if justified.
+
+Identify:
+
+* scale-invariant models
+* scale-sensitive models
+* highly nonlinear models
+
+---
+
+# 12. WITHIN-GAME BEHAVIORAL FLIPS
+
+This is potentially highly interesting.
+
+For each matched game across λ, determine whether the model changes its action sequence.
+
+Compare:
+
+`strategy_sequence(λ=0.01)`
+
+vs
+
+`strategy_sequence(λ=1)`
+
+vs
+
+`strategy_sequence(λ=1000)`
+
+Calculate:
+
+* number of changed rounds
+* fraction of rounds changed
+* first behavioral change
+* persistent changes
+* endgame changes
+* cooperation → defection transitions
+* defection → cooperation transitions
+
+Create:
+
+* action-transition matrices
+* sequence similarity distributions
+* Hamming-distance distributions
+* scale-vs-sequence-distance plots
+
+---
+
+# 13. STRATEGY CLASSIFICATION / STRATEGIC PHENOTYPES
+
+Analyze the 10-round action sequences.
+
+Look for recognizable behavioral patterns:
+
+* always cooperate
+* always defect
+* reciprocal behavior
+* retaliatory behavior
+* generous behavior
+* forgiving behavior
+* alternating behavior
+* endgame defection
+* conditional cooperation
+
+If the repository's strategy classifier exists, use it where appropriate.
+
+Otherwise construct transparent sequence-based behavioral descriptors.
+
+Analyze how the frequency of each phenotype changes with λ.
+
+Generate:
+
+* strategy composition by scale
+* strategy composition by model
+* strategy transition heatmaps
+* phenotype scaling curves
+
+---
+
+# 14. ENDGAME ANALYSIS
+
+The horizon is known and fixed at 10 rounds.
+
+Analyze rounds individually:
+
+`round 1 ... round 10`
+
+For every model × scale calculate:
+
+* cooperation probability by round
+* defection probability by round
+* CC/CD/DC/DD probability by round
+
+Create:
+
+* cooperation trajectory
+* defection trajectory
+* outcome trajectory
+* model × round heatmaps
+* scale × round heatmaps
+* model × scale × round visualizations
+
+Investigate:
+
+* backward-induction signatures
+* late-round defection
+* early cooperation
+* scale-dependent endgame effects
+
+Do NOT claim that scale causes endgame changes without appropriate statistical evidence.
+
+---
+
+# 15. ENDGAME SHIFT
+
+Define interpretable metrics such as:
+
+`cooperation_round_1 - cooperation_round_10`
+
+and:
+
+`early_cooperation - late_cooperation`
+
+Compare these across λ.
+
+Investigate whether payoff scaling changes the strength of endgame defection.
+
+---
+
+# 16. OPPONENT RESPONSE / CONDITIONAL BEHAVIOR
+
+Analyze:
+
+`P(C_t | opponent action_{t-1})`
+
+and:
+
+`P(D_t | opponent action_{t-1})`
+
+Compute:
+
+* cooperation after cooperation
+* cooperation after defection
+* defection after cooperation
+* defection after defection
+
+Compare these across:
+
+* λ
+* models
+* languages
+* personalities
+
+This can reveal whether payoff scaling changes conditional reciprocity rather than only aggregate cooperation.
+
+---
+
+# 17. PERSONALITY EFFECTS
+
+Analyze:
+
+* CvC
+* CvS
+* SvC
+* SvS
+
+Do NOT collapse them prematurely.
+
+Separate:
+
+* focal personality
+* opponent personality
+* dyad composition
+
+Test:
+
+`personality × scale`
+
+and:
+
+`opponent personality × scale`
+
+effects.
+
+Important:
+
+CvS and SvC have the same composition but swapped roles.
+
+Use this to test focal-agent asymmetry.
+
+---
+
+# 18. FAIRNESS / INEQUALITY ANALYSIS
+
+Extract all meaningful fairness/inequality measures available from the game outcomes.
+
+If direct fairness metrics do not exist, derive transparent measures such as:
+
+* payoff inequality
+* absolute payoff difference
+* relative payoff difference
+* exploitation gap
+* mutuality
+* efficiency
+
+Analyze:
+
+`fairness ~ scale`
+
+and:
+
+`fairness ~ cooperation`
+
+and:
+
+`fairness ~ model × scale`
+
+Do not label arbitrary metrics "fairness" without explaining the operational definition.
+
+---
+
+# 19. PAYOFF–COOPERATION RELATIONSHIP
+
+Investigate whether models that cooperate more also achieve:
+
+* better normalized payoff
+* worse normalized payoff
+* greater efficiency
+* lower inequality
+
+Important distinction:
+
+Raw payoff is mechanically proportional to λ.
+
+Therefore use:
+
+* normalized payoff
+* base payoff
+* efficiency
+
+for cross-scale comparisons.
+
+Create:
+
+* cooperation vs normalized payoff
+* cooperation vs efficiency
+* cooperation vs inequality
+* scale-colored scatter plots
+* model-specific regression lines
+
+---
+
+# 20. EXPLOITATION ANALYSIS
+
+The penalty matrix allows exploitation.
+
+Identify:
+
+`DC`
+
+from the focal-agent perspective.
+
+Analyze:
+
+* exploitation frequency
+* exploitation success
+* exploitation by personality
+* exploitation by model
+* exploitation by λ
+
+Investigate whether some models become more exploitative at certain payoff scales.
+
+---
+
+# 21. MUTUAL DEFECTION ANALYSIS
+
+Analyze:
+
+`DD`
+
+and whether games become trapped in mutual defection.
+
+Use:
+
+`dd_absorbed`
+
+if available.
+
+Study:
+
+* probability of entering DD absorption
+* round at which DD absorption begins
+* scale dependence
+* model dependence
+* personality dependence
+
+Generate survival-style plots if appropriate.
+
+---
+
+# 22. LANGUAGE EFFECTS
+
+Analyze all five languages:
+
+* Arabic
+* Chinese
+* English
+* French
+* Vietnamese
+
+Analyze:
+
+`language × scale`
+
+interaction.
+
+IMPORTANT:
+
+The data card states that Arabic and Chinese prompt templates contain a translation inconsistency:
+
+the payoff text describes penalties while the final goal sentence says to maximize rewards.
+
+Therefore:
+
+* flag Arabic/Chinese effects explicitly
+* do NOT automatically interpret them as pure cultural/language effects
+* perform sensitivity analyses excluding Arabic/Chinese
+* compare:
+
+  * all languages
+  * English/French/Vietnamese only
+  * Arabic/Chinese separately
+
+This caveat must appear in the final report.
+
+---
+
+# 23. MODEL × LANGUAGE INTERACTION
+
+Test whether different models respond differently to language.
+
+Analyze:
+
+`model × language`
+
+and:
+
+`model × language × scale`
+
+Create interaction plots and heatmaps.
+
+Do not overinterpret language effects because language is confounded with translated prompt wording.
+
+---
+
+# 24. MODEL × SCALE INTERACTION
+
+This should be one of the main analyses.
+
+Test:
+
+`behavior ~ model + scale + model:scale`
+
+using appropriate statistical models.
+
+Ask:
+
+> Do different LLMs have different payoff-scale sensitivity?
+
+Visualize interaction slopes.
+
+Report:
+
+* effect size
+* uncertainty
+* statistical significance where appropriate
+* model-specific response curves
+
+---
+
+# 25. LANGUAGE × SCALE INTERACTION
+
+Likewise test:
+
+`behavior ~ language + scale + language:scale`
+
+But clearly distinguish language interaction from prompt-translation effects.
+
+---
+
+# 26. DYAD × SCALE INTERACTION
+
+Test:
+
+`behavior ~ dyad + scale + dyad:scale`
+
+Determine whether payoff scaling affects:
+
+* cooperative dyads
+* asymmetric dyads
+* selfish dyads
+
+differently.
+
+---
+
+# 27. MULTILEVEL / MIXED-EFFECTS MODELS
+
+Where statistically justified, fit hierarchical models accounting for repeated observations.
+
+Potential structure:
+
+`behavior ~ scale + model + language + dyad + interactions + (1 | game_uid)`
+
+or an appropriate game-level formulation.
+
+Do NOT treat 240,000 rounds as 240,000 independent observations.
+
+The fundamental experimental unit is the game/dyad.
+
+Cluster uncertainty at the game level.
+
+---
+
+# 28. BOOTSTRAP ANALYSIS
+
+Use cluster bootstrap over games.
+
+For major quantities calculate:
+
+* mean
+* median
+* 95% CI
+* bootstrap distribution
+
+Especially for:
+
+* cooperation
+* scale sensitivity
+* scaling slopes
+* model differences
+* language differences
+* dyad differences
+* frontier metrics
+
+Never use naive round-level bootstrap.
+
+---
+
+# 29. MULTIPLE COMPARISON CONTROL
+
+There will be many statistical tests.
+
+Use appropriate correction such as:
+
+* Benjamini-Hochberg FDR
+
+or another justified method.
+
+Report both:
+
+* raw p-value
+* adjusted p-value
+
+but emphasize effect sizes and uncertainty.
+
+---
+
+# 30. PARETO FRONTIER ANALYSIS
+
+This dataset may support multiple objectives.
+
+Construct Pareto frontiers using combinations such as:
+
+### Payoff vs cooperation
+
+### Efficiency vs cooperation
+
+### Efficiency vs fairness
+
+### Cooperation vs inequality
+
+For raw penalty, remember that lower is better.
+
+For transformed utility/efficiency, explicitly define directionality.
+
+Identify:
+
+* dominated observations
+* nondominated observations
+* frontier composition
+* frontier by model
+* frontier by λ
+* frontier by language
+* frontier by dyad
+
+---
+
+# 31. FRONTIER MOVEMENT WITH SCALE
+
+This is a key exploratory question.
+
+Ask:
+
+> Does payoff scaling move an LLM toward or away from desirable behavioral frontiers?
+
+Measure:
+
+* distance to frontier
+* frontier hypervolume where meaningful
+* number of Pareto-optimal observations
+* frontier displacement
+
+Plot:
+
+`frontier position ~ scale`
+
+for each model.
+
+---
+
+# 32. SURPRISING-PATTERN MINING
+
+Actively search for:
+
+* non-monotonic scale responses
+* U-shaped behavior
+* inverted-U behavior
+* threshold effects
+* sudden behavioral transitions
+* scale regions with instability
+* model-specific reversals
+* language-specific reversals
+* personality reversals
+* Simpson's paradox
+* aggregation artifacts
+* subgroup effects
+* heterogeneous treatment effects
+
+Do not assume monotonicity.
+
+---
+
+# 33. SIMPSON'S PARADOX CHECK
+
+For every strong aggregate relationship involving λ:
+
+1. Analyze pooled data.
+2. Stratify by model.
+3. Stratify by language.
+4. Stratify by dyad.
+5. Compare whether the direction remains consistent.
+
+If aggregate and subgroup effects disagree, explicitly flag a possible Simpson's paradox.
+
+---
+
+# 34. CHANGEPOINT / REGIME ANALYSIS
+
+Search for scale thresholds.
+
+Candidate scales:
+
+`0.01 → 0.1 → 0.25 → 0.5 → 1 → 2 → 5 → 10 → 100 → 1000`
+
+Investigate whether behavior changes sharply around:
+
+* sub-unit scales
+* λ≈1
+* high scales
+* extremely high scales
+
+Use piecewise regression or changepoint methods when appropriate.
+
+---
+
+# 35. BEHAVIORAL PHASE DIAGRAM
+
+If supported by the data, construct a phase-like behavioral map using dimensions such as:
+
+* cooperation
+* defection
+* efficiency
+* inequality
+
+Show where each:
+
+`model × scale`
+
+combination lies.
+
+Cluster these regimes.
+
+Do NOT call them true physical "phases" unless the evidence justifies the terminology; use "behavioral regimes" otherwise.
+
+---
+
+# 36. ROBUSTNESS ANALYSIS
+
+Repeat major findings under:
+
+1. raw observations
+2. game-level aggregation
+3. normalized payoff
+4. removal of extreme scales
+5. removal of preview model
+6. exclusion of Arabic
+7. exclusion of Chinese
+8. exclusion of Arabic + Chinese
+9. model-specific analyses
+10. dyad-specific analyses
+
+Identify which conclusions are robust.
+
+---
+
+# 37. FIGURE MINING — GENERATE AS MANY MEANINGFUL FIGURES AS POSSIBLE
+
+Systematically generate every scientifically useful figure supported by the data.
+
+Do not arbitrarily cap the number of figures.
+
+Potential figure families:
+
+### Dataset
+
+* design balance
+* sample counts
+* missingness
+* distribution overview
+
+### Payoff
+
+* raw payoff vs λ
+* normalized payoff vs λ
+* efficiency vs λ
+* payoff distributions
+
+### Cooperation
+
+* cooperation vs λ
+* cooperation by model
+* cooperation by language
+* cooperation by dyad
+* cooperation by round
+* cooperation heatmaps
+
+### Scaling
+
+* log-log plots
+* scaling exponent plots
+* elasticity plots
+* nonlinear scaling curves
+* threshold plots
+* model × scale interactions
+
+### Strategy
+
+* strategy composition
+* sequence similarity
+* action-transition matrices
+* behavioral phenotype distributions
+
+### Endgame
+
+* round trajectories
+* endgame defection
+* DD absorption
+* round-specific scale effects
+
+### Conditional behavior
+
+* response to previous cooperation
+* response to previous defection
+* reciprocity matrices
+
+### Fairness
+
+* payoff inequality
+* fairness vs cooperation
+* fairness vs scale
+
+### Model comparison
+
+* model distributions
+* model effect sizes
+* model × scale interactions
+* model sensitivity
+
+### Language
+
+* language effects
+* language × scale interactions
+* sensitivity excluding AR/CN
+
+### Personality
+
+* dyad effects
+* focal vs opponent personality
+* personality × scale
+
+### Frontier
+
+* Pareto frontiers
+* frontier movement
+* hypervolume
+* dominated/nondominated observations
+
+### Robustness
+
+* bootstrap distributions
+* sensitivity analysis
+* effect-size forest plots
+
+### Advanced
+
+* PCA
+* clustering
+* behavioral regimes
+* changepoints
+* nonlinear fits
+* residual diagnostics
+
+---
+
+# 38. FIGURE QUALITY CONTROL
+
+Every figure must have:
+
+* descriptive title
+* clear x-axis
+* clear y-axis
+* units
+* legend
+* uncertainty intervals when relevant
+* appropriate scale transformation
+* scientifically interpretable annotations
+
+Avoid:
+
+* 3D plots unless essential
+* excessive decoration
+* unreadable legends
+* misleading truncated axes
+* pie charts
+* unnecessary radar charts
+* plots that obscure individual observations
+
+For publication figures, prefer clean matplotlib-based plots.
+
+---
+
+# 39. FIGURE DIRECTORY
+
+Save everything under:
+
+`Payoff_Scaling_Analysis/`
+
+with:
+
+`01_validation/`
+
+`02_dataset_overview/`
+
+`03_payoff/`
+
+`04_cooperation/`
+
+`05_scaling/`
+
+`06_strategy/`
+
+`07_endgame/`
+
+`08_conditional_behavior/`
+
+`09_fairness/`
+
+`10_model_comparison/`
+
+`11_language/`
+
+`12_personality/`
+
+`13_frontier/`
+
+`14_behavioral_regimes/`
+
+`15_robustness/`
+
+`16_publication_figures/`
+
+Save publication-quality figures as:
+
+* PNG
+* PDF/SVG where appropriate
+
+---
+
+# 40. FIGURE INVENTORY
+
+Create:
+
+`figure_inventory.csv`
+
+with:
+
+* figure_id
+* filename
+* plot_type
+* variables
+* subgroup
+* research_question
+* statistical_method
+* main_finding
+* publication_quality
+* recommended_use
+
+For every figure, write a one-sentence interpretation.
+
+---
+
+# 41. AUTOMATIC FINDING DISCOVERY
+
+After all analysis, rank findings.
+
+For each finding provide:
+
+### Finding
+
+One sentence.
+
+### Evidence
+
+Exact statistic.
+
+### Effect size
+
+Quantify magnitude.
+
+### Uncertainty
+
+Confidence interval.
+
+### Figure
+
+Relevant figure filename.
+
+### Robustness
+
+Strong / moderate / weak.
+
+### Interpretation
+
+Scientific interpretation.
+
+### Alternative explanation
+
+Possible confounder.
+
+### Paper claim
+
+A conservative sentence suitable for a manuscript.
+
+---
+
+# 42. IDENTIFY THE TOP 10 DISCOVERIES
+
+Produce a ranked table:
+
+| Rank | Finding | Effect | Evidence | Robustness | Figure |
+| ---- | ------- | ------ | -------- | ---------- | ------ |
+
+Prioritize:
+
+1. surprising
+2. large
+3. robust
+4. theoretically meaningful
+5. directly related to payoff scaling
+6. useful for a research paper
+
+---
+
+# 43. PAPER-READY RESULTS
+
+Write a final section:
+
+`Potential Paper Results`
+
+Organize it into possible claims such as:
+
+### Finding 1 — Scale sensitivity
+
+### Finding 2 — Model heterogeneity
+
+### Finding 3 — Behavioral invariance / non-invariance
+
+### Finding 4 — Endgame effects
+
+### Finding 5 — Language effects
+
+### Finding 6 — Personality effects
+
+### Finding 7 — Payoff/fairness trade-off
+
+### Finding 8 — Behavioral regimes
+
+Only include claims supported by the actual analysis.
+
+---
+
+# 44. LIMITATIONS
+
+Explicitly discuss:
+
+* self-play only
+* known 10-round horizon
+* no communication
+* model sampling variability
+* provider differences
+* preview model
+* translation inconsistency in Arabic/Chinese
+* observational limitations of LLM behavior
+* repeated-game dependence
+* inability to infer cross-model interaction
+* limitations of scale interpretation
+* inability to identify unknown-horizon effects
+
+Do not claim more than the experimental design supports.
+
+---
+
+# 45. FINAL OUTPUT FILES
+
+Create:
+
+`Payoff_Scaling_Analysis/analysis.py`
+
+`Payoff_Scaling_Analysis/analysis_report.md`
+
+`Payoff_Scaling_Analysis/findings.md`
+
+`Payoff_Scaling_Analysis/dataset_summary.csv`
+
+`Payoff_Scaling_Analysis/feature_summary.csv`
+
+`Payoff_Scaling_Analysis/group_summary.csv`
+
+`Payoff_Scaling_Analysis/correlation_results.csv`
+
+`Payoff_Scaling_Analysis/scaling_results.csv`
+
+`Payoff_Scaling_Analysis/statistical_tests.csv`
+
+`Payoff_Scaling_Analysis/figure_inventory.csv`
+
+`Payoff_Scaling_Analysis/robustness_results.csv`
+
+and all figures.
+
+---
+
+# 46. FINAL QUESTION
+
+The final report must answer this question explicitly:
+
+> **If the numerical magnitude of the prisoner's-dilemma payoff matrix is changed by five orders of magnitude while its strategic structure remains identical, do frontier LLMs behave as if they understand the game strategically, or are their behaviors sensitive to the numerical scale of incentives?**
+
+Then answer:
+
+1. Which models are most scale-sensitive?
+2. Which models are most scale-invariant?
+3. Is scale sensitivity monotonic?
+4. Is there a threshold?
+5. Does scale affect cooperation?
+6. Does scale affect endgame defection?
+7. Does scale affect reciprocity?
+8. Does scale affect exploitation?
+9. Does scale affect fairness/inequality?
+10. Does the effect differ across languages?
+11. Does the effect differ across personality pairings?
+12. Are the effects robust to excluding AR/CN?
+13. Are there behavioral regimes?
+14. Are there Pareto-frontier shifts?
+15. What are the strongest publication-worthy discoveries?
+
+The final conclusion must distinguish clearly between:
+
+**mechanical payoff scaling**
+
+and
+
+**behavioral sensitivity to payoff scaling**.
+
+The latter is the primary scientific target.

@@ -1,0 +1,19 @@
+section,test,comparison,statistic,p_value,n,p_fdr,ci_lo,ci_hi,effect_size_note
+payoff,Spearman,own coop vs own utility,-0.0146922300934742,0.0228391402018941,24000,0.0228391402018941,,,
+payoff,Spearman,opp coop vs own utility,0.9161155738642436,0.0,24000,0.0,,,
+payoff,Spearman,joint coop vs welfare,0.9846765871624236,0.0,12000,0.0,,,
+scaling,"OLS slope on log10(lambda), cluster-robust on design cell",coop_rate ~ log10(lambda),0.01336579527637056,1.5388827431975281e-10,24000,3.850569992051354e-10,0.009273535488844253,0.017458055063896867,slope per decade of lambda
+scaling,"OLS slope on log10(lambda), cluster-robust on design cell",efficiency ~ log10(lambda),0.005999746772073119,1.217195353784398e-07,24000,1.826894056074105e-07,0.0037771948989444907,0.008222298645201747,slope per decade of lambda
+scaling,"OLS slope on log10(lambda), cluster-robust on design cell",utility ~ log10(lambda),0.0047997974176586,1.2171953537836206e-07,24000,1.826894056074105e-07,0.003021755919155698,0.0065778389161615025,slope per decade of lambda
+scaling,"OLS slope on log10(lambda), cluster-robust on design cell",first_coop ~ log10(lambda),0.023645508688002574,3.1159717396710395e-23,24000,4.673957609506559e-22,0.01897789902720881,0.028313118348796337,slope per decade of lambda
+scaling,"OLS slope on log10(lambda), cluster-robust on design cell",endgame_drop ~ log10(lambda),0.011548800502325101,4.522300223246176e-10,24000,9.690643335527521e-10,0.007918359238052217,0.015179241766597986,slope per decade of lambda
+scaling,"OLS slope on log10(lambda), cluster-robust on design cell",reciprocity ~ log10(lambda),-0.007936436670134307,0.0007672578495397721,24000,0.0008852975186997371,-0.012559961800494145,-0.0033129115397744708,slope per decade of lambda
+scaling,"OLS slope on log10(lambda), cluster-robust on design cell",joint_coop ~ log10(lambda),0.01336579527637062,1.5402279968205415e-10,12000,3.850569992051354e-10,0.00927345021655579,0.01745814033618545,slope per decade of lambda
+scaling,"OLS slope on log10(lambda), cluster-robust on design cell",joint_utility ~ log10(lambda),0.004799797417658257,1.21792937071607e-07,12000,1.826894056074105e-07,0.003021718869291577,0.006577875966024936,slope per decade of lambda
+scaling,"OLS slope on log10(lambda), cluster-robust on design cell",utility_gap ~ log10(lambda),0.00038740480093880404,0.7961666552816613,12000,0.807553982973886,-0.0025520694554282213,0.0033268790573058294,slope per decade of lambda
+scaling,"OLS slope on log10(lambda), cluster-robust on design cell",gini ~ log10(lambda),0.000362518466805844,0.807553982973886,12000,0.807553982973886,-0.002554449644605678,0.003279486578217366,slope per decade of lambda
+scaling,"OLS slope on log10(lambda), cluster-robust on design cell",p_CC ~ log10(lambda),0.010633191811920434,2.0789714395834936e-05,12000,2.8349610539774915e-05,0.005736688801397258,0.01552969482244361,slope per decade of lambda
+scaling,"OLS slope on log10(lambda), cluster-robust on design cell",p_DD ~ log10(lambda),-0.016098398740821175,7.800468713542171e-17,12000,3.900234356771086e-16,-0.019884265553011576,-0.012312531928630775,slope per decade of lambda
+scaling,"OLS slope on log10(lambda), cluster-robust on design cell",p_exploit ~ log10(lambda),0.005465206928899454,0.000556152897406491,12000,0.0006951911217581139,0.0023623201844224545,0.008568093673376454,slope per decade of lambda
+scaling,"OLS slope on log10(lambda), cluster-robust on design cell",dd_absorbed ~ log10(lambda),-0.014180737157880013,5.574404697552179e-15,12000,2.090401761582067e-14,-0.01773800612972895,-0.010623468186031076,slope per decade of lambda
+scaling,Levene equal variance across lambda,joint_coop dispersion,13.388754640795298,1.3794986029775435e-21,12000,1.0346239522331576e-20,,,

@@ -1,0 +1,136 @@
+table,column,dtype,n,n_unique,pct_missing,role,examples,min,max,mean,median,std,q01,q25,q50,q75,q99,skew,kurtosis,cv
+raw CSV (lambda=1 slice),game_id,object,1200,40,0.0,identifier,game_0 | game_1 | game_2 | game_3,,,,,,,,,,,,,
+raw CSV (lambda=1 slice),language,object,1200,5,0.0,grouping / experimental factor,ar | cn | en | fr,,,,,,,,,,,,,
+raw CSV (lambda=1 slice),n_rounds_is_known,bool,1200,1,0.0,"CONSTANT - schema slot, carries no information here",True,,,,,,,,,,,,,
+raw CSV (lambda=1 slice),max_rounds,int64,1200,1,0.0,"CONSTANT - schema slot, carries no information here",10,10.0,10.0,10.0,10.0,0.0,10.0,10.0,10.0,10.0,10.0,0.0,0.0,0.0
+raw CSV (lambda=1 slice),played_rounds,int64,1200,1,0.0,"CONSTANT - schema slot, carries no information here",10,10.0,10.0,10.0,10.0,0.0,10.0,10.0,10.0,10.0,10.0,0.0,0.0,0.0
+raw CSV (lambda=1 slice),agents_communicate,bool,1200,1,0.0,"CONSTANT - schema slot, carries no information here",False,,,,,,,,,,,,,
+raw CSV (lambda=1 slice),agent1_name,object,1200,1,0.0,"CONSTANT - schema slot, carries no information here",agent1,,,,,,,,,,,,,
+raw CSV (lambda=1 slice),agent1_llm,object,1200,6,0.0,grouping / experimental factor (LLM identity),claude-haiku-4-5-20251001 | gemini-3.1-flash-lite-preview | gemini-3.5-flash-lite | gpt-5.4-nano-2026-03-17,,,,,,,,,,,,,
+raw CSV (lambda=1 slice),agent1_personality,object,1200,10,0.0,"experimental condition (persona, localised string)",متعاون | أناني | 合作型的 | 自私型的,,,,,,,,,,,,,
+raw CSV (lambda=1 slice),agent1_knows_opponent_with_prob,int64,1200,1,0.0,"CONSTANT - schema slot, carries no information here",0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+raw CSV (lambda=1 slice),agent1_strategies,object,1200,300,0.0,"OUTCOME (action sequence, Python literal list)","['OptionB', 'OptionB', 'OptionB', 'Optio | ['OptionA', 'OptionB', 'OptionB', 'Optio | ['OptionB', 'OptionA', 'OptionB', 'Optio | ['OptionB', 'OptionA', 'OptionB', 'Optio",,,,,,,,,,,,,
+raw CSV (lambda=1 slice),agent1_scores,object,1200,616,0.0,"PAYOFF (penalty sequence, Python literal list)","[2, 2, 2, 2, 2, 2, 2, 2, 2, 2] | [0, 10, 2, 2, 2, 2, 2, 2, 2, 2] | [10, 6, 10, 6, 2, 10, 6, 10, 2, 10] | [10, 6, 10, 6, 10, 2, 10, 2, 10, 6]",,,,,,,,,,,,,
+raw CSV (lambda=1 slice),agent1_messages,object,1200,1,0.0,"CONSTANT - schema slot, carries no information here",[],,,,,,,,,,,,,
+raw CSV (lambda=1 slice),agent2_name,object,1200,1,0.0,"CONSTANT - schema slot, carries no information here",agent2,,,,,,,,,,,,,
+raw CSV (lambda=1 slice),agent2_llm,object,1200,6,0.0,grouping / experimental factor (LLM identity),claude-haiku-4-5-20251001 | gemini-3.1-flash-lite-preview | gemini-3.5-flash-lite | gpt-5.4-nano-2026-03-17,,,,,,,,,,,,,
+raw CSV (lambda=1 slice),agent2_personality,object,1200,10,0.0,"experimental condition (persona, localised string)",متعاون | أناني | 合作型的 | 自私型的,,,,,,,,,,,,,
+raw CSV (lambda=1 slice),agent2_knows_opponent_with_prob,int64,1200,1,0.0,"CONSTANT - schema slot, carries no information here",0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,
+raw CSV (lambda=1 slice),agent2_strategies,object,1200,303,0.0,"OUTCOME (action sequence, Python literal list)","['OptionB', 'OptionB', 'OptionB', 'Optio | ['OptionB', 'OptionA', 'OptionB', 'Optio | ['OptionA', 'OptionA', 'OptionA', 'Optio | ['OptionA', 'OptionA', 'OptionA', 'Optio",,,,,,,,,,,,,
+raw CSV (lambda=1 slice),agent2_scores,object,1200,616,0.0,"PAYOFF (penalty sequence, Python literal list)","[2, 2, 2, 2, 2, 2, 2, 2, 2, 2] | [10, 0, 2, 2, 2, 2, 2, 2, 2, 2] | [0, 6, 0, 6, 2, 0, 6, 0, 2, 0] | [0, 6, 0, 6, 0, 2, 0, 2, 0, 6]",,,,,,,,,,,,,
+raw CSV (lambda=1 slice),agent2_messages,object,1200,1,0.0,"CONSTANT - schema slot, carries no information here",[],,,,,,,,,,,,,
+rounds,model,category,240000,6,0.0,grouping / experimental factor (LLM identity),Claude-Haiku-4.5 | Gemini-3.1-Flash-Lite | Gemini-3.5-Flash-Lite | GPT-5.4-Nano,,,,,,,,,,,,,
+rounds,language,category,240000,5,0.0,grouping / experimental factor (prompt language),ar | cn | en | fr,,,,,,,,,,,,,
+rounds,scale,float64,240000,10,0.0,SCALING VARIABLE (payoff multiplier lambda),0.01 | 0.1 | 0.25 | 0.5,0.01,1000.0,111.886,1.5,297.48096408462044,0.01,0.25,1.5,10.0,1000.0,2.6208916513678697,4.9589530240447885,2.6587863010977286
+rounds,game_uid,object,240000,12000,0.0,identifier (unique game),x0.01_ar_claude-haiku-4-5-20251001#000 | x0.01_ar_claude-haiku-4-5-20251001#001 | x0.01_ar_claude-haiku-4-5-20251001#002 | x0.01_ar_claude-haiku-4-5-20251001#003,,,,,,,,,,,,,
+rounds,cell,object,240000,1200,0.0,"identifier (design cell, matched across lambda by CRN)",Claude-Haiku-4.5|ar|game_0 | Claude-Haiku-4.5|ar|game_1 | Claude-Haiku-4.5|ar|game_2 | Claude-Haiku-4.5|ar|game_3,,,,,,,,,,,,,
+rounds,game_id,object,240000,40,0.0,identifier inside a file,game_0 | game_1 | game_2 | game_3,,,,,,,,,,,,,
+rounds,pairing,int64,240000,4,0.0,experimental condition (personality pairing 0-3),0 | 1 | 2 | 3,0.0,3.0,1.5,1.5,1.1180363179946502,0.0,0.75,1.5,2.25,3.0,0.0,-1.3600033333416663,0.7453575453297668
+rounds,rep,int64,240000,10,0.0,replicate index,0 | 1 | 2 | 3,0.0,9.0,4.5,4.5,2.8722873072071375,0.0,2.0,4.5,7.0,9.0,0.0,-1.2242429292588375,0.6382860682682527
+rounds,agent,int64,240000,2,0.0,player identifier (1 or 2),1 | 2,1.0,2.0,1.5,1.5,0.5000010416699219,1.0,1.0,1.5,2.0,2.0,0.0,-2.000016666875003,0.3333340277799479
+rounds,personality,category,240000,2,0.0,experimental condition (own persona),cooperative | selfish,,,,,,,,,,,,,
+rounds,opp_personality,category,240000,2,0.0,experimental condition (opponent persona),cooperative | selfish,,,,,,,,,,,,,
+rounds,dyad,category,240000,4,0.0,"experimental condition (pairing, focal-oriented)",CvC | CvS | SvC | SvS,,,,,,,,,,,,,
+rounds,round,int64,240000,10,0.0,temporal index,1 | 2 | 3 | 4,1.0,10.0,5.5,5.5,2.8722873072071375,1.0,3.0,5.5,8.0,10.0,0.0,-1.2242429292588375,0.5222340558558431
+rounds,action,category,240000,2,0.0,"OUTCOME (own move, C/D)",D | C,,,,,,,,,,,,,
+rounds,opp_action,category,240000,2,0.0,outcome (opponent move),D | C,,,,,,,,,,,,,
+rounds,outcome,category,240000,4,0.0,OUTCOME (joint outcome CC/CD/DC/DD),DD | CD | DC | CC,,,,,,,,,,,,,
+rounds,payoff_raw,float64,240000,28,0.0,"PAYOFF as recorded (penalty, still multiplied by lambda)",0.06 | 0.1 | 0.0 | 0.02,0.0,10000.0,445.94201833333335,2.5,1619.9333277573069,0.0,0.06,2.5,20.0,10000.0,4.682810856543864,22.373203271472768,3.6326097590257507
+rounds,log_scale,float64,240000,10,0.0,"SCALING VARIABLE, log10 lambda",-2.0 | -1.0 | -0.6020599913279624 | -0.3010299956639812,-2.0,3.0,0.3096910013008056,0.1505149978319906,1.38106001773072,-2.0,-0.6020599913279624,0.1505149978319906,1.0,3.0,0.34569120264714137,-0.4424723926841625,4.459477388525358
+rounds,coop,int8,240000,2,0.0,"OUTCOME (cooperation indicator, primary target)",0 | 1,0.0,1.0,0.5895416666666666,1.0,0.49191797913300356,0.0,0.0,1.0,1.0,1.0,-0.3640542393317571,-1.867480073227965,0.8344074845707885
+rounds,opp_coop,int8,240000,2,0.0,outcome (opponent cooperation),0 | 1,0.0,1.0,0.5895416666666666,1.0,0.4919179791330035,0.0,0.0,1.0,1.0,1.0,-0.3640542393317571,-1.8674800732279646,0.8344074845707884
+rounds,payoff_base,float64,240000,4,0.0,PAYOFF in base units (penalty / lambda),6.0 | 10.0 | 0.0 | 2.0,0.0,10.0,4.010016666666667,2.0,3.4785030424487435,0.0,2.0,2.0,6.0,10.0,0.6221453149600975,-0.9867031494807121,0.867453512441447
+rounds,utility,float64,240000,4,0.0,"PAYOFF rescaled to [0,1], higher is better",0.4 | 0.0 | 1.0 | 0.8,0.0,1.0,0.5989983333333334,0.8,0.34785030424448976,0.0,0.4,0.8,0.8,1.0,-0.6221453149600987,-0.9867031494807104,0.5807199868299406
+rounds,efficiency,float64,240000,4,0.0,"PAYOFF vs mutual-cooperation benchmark (1=CC, 0.5=DD)",0.5 | 0.0 | 1.25 | 1.0,0.0,1.25,0.7487479166666666,1.0,0.43481288030609294,0.0,0.5,1.0,1.0,1.25,-0.6221453149600975,-0.9867031494807121,0.5807199868305828
+rounds,round_frac,float64,240000,10,0.0,"temporal index, normalised",0.1 | 0.2 | 0.3 | 0.4,0.1,1.0,0.55,0.55,0.28722873072044214,0.1,0.3,0.55,0.8,1.0,-4.682606481858357e-16,-1.2242429292588373,0.5222340558553493
+rounds,prev_action,object,240000,3,10.0,lagged feature,D | C,,,,,,,,,,,,,
+rounds,prev_opp_action,object,240000,3,10.0,lagged feature,D | C,,,,,,,,,,,,,
+rounds,prev_outcome,object,240000,5,10.0,lagged feature,DD | CD | DC | CC,,,,,,,,,,,,,
+rounds,prev_letter,category,240000,5,0.0,lagged feature (R/S/T/P/E),E | P | S | T,,,,,,,,,,,,,
+rounds,token,category,240000,10,0.0,lagged feature (strategy-classifier alphabet),ED | PD | PC | SD,,,,,,,,,,,,,
+agent_games,model,category,24000,6,0.0,grouping / experimental factor (LLM identity),Claude-Haiku-4.5 | Gemini-3.1-Flash-Lite | Gemini-3.5-Flash-Lite | GPT-5.4-Nano,,,,,,,,,,,,,
+agent_games,language,category,24000,5,0.0,grouping / experimental factor (prompt language),ar | cn | en | fr,,,,,,,,,,,,,
+agent_games,scale,float64,24000,10,0.0,SCALING VARIABLE (payoff multiplier lambda),0.01 | 0.1 | 0.25 | 0.5,0.01,1000.0,111.886,1.5,297.4865420330395,0.01,0.25,1.5,10.0,1000.0,2.6210390885537382,4.96010799836974,2.658836154952715
+agent_games,log_scale,float64,24000,10,0.0,"SCALING VARIABLE, log10 lambda",-2.0 | -1.0 | -0.6020599913279624 | -0.3010299956639812,-2.0,3.0,0.3096910013008057,0.1505149978319906,1.3810859134438602,-2.0,-0.6020599913279624,0.1505149978319906,1.0,3.0,0.34571064936409035,-0.44233033165219826,4.459561006431695
+agent_games,game_uid,object,24000,12000,0.0,identifier (unique game),x0.01_ar_claude-haiku-4-5-20251001#000 | x0.01_ar_claude-haiku-4-5-20251001#001 | x0.01_ar_claude-haiku-4-5-20251001#002 | x0.01_ar_claude-haiku-4-5-20251001#003,,,,,,,,,,,,,
+agent_games,cell,object,24000,1200,0.0,"identifier (design cell, matched across lambda by CRN)",Claude-Haiku-4.5|ar|game_0 | Claude-Haiku-4.5|ar|game_1 | Claude-Haiku-4.5|ar|game_2 | Claude-Haiku-4.5|ar|game_3,,,,,,,,,,,,,
+agent_games,game_id,object,24000,40,0.0,identifier inside a file,game_0 | game_1 | game_2 | game_3,,,,,,,,,,,,,
+agent_games,pairing,int64,24000,4,0.0,experimental condition (personality pairing 0-3),0 | 1 | 2 | 3,0.0,3.0,1.5,1.5,1.1180572818525725,0.0,0.75,1.5,2.25,3.0,0.0,-1.3600333341664932,0.7453715212350484
+agent_games,rep,int64,24000,10,0.0,replicate index,0 | 1 | 2 | 3,0.0,9.0,4.5,4.5,2.872341164333289,0.0,2.0,4.5,7.0,9.0,0.0,-1.224247471337621,0.6382980365185086
+agent_games,agent,int64,24000,2,0.0,player identifier (1 or 2),1 | 2,1.0,2.0,1.5,1.5,0.5000104169921988,1.0,1.0,1.5,2.0,2.0,0.0,-2.0001666875026043,0.3333402779947992
+agent_games,personality,category,24000,2,0.0,experimental condition (own persona),cooperative | selfish,,,,,,,,,,,,,
+agent_games,opp_personality,category,24000,2,0.0,experimental condition (opponent persona),cooperative | selfish,,,,,,,,,,,,,
+agent_games,dyad,category,24000,4,0.0,"experimental condition (pairing, focal-oriented)",CvC | CvS | SvC | SvS,,,,,,,,,,,,,
+agent_games,coop_rate,float64,24000,11,0.0,OUTCOME (per-agent-game cooperation rate),0.4 | 0.6 | 0.5 | 0.3,0.0,1.0,0.5895416666666666,0.7,0.37081961391395685,0.0,0.2,0.7,1.0,1.0,-0.2999830304714437,-1.4475001583140261,0.6289964473768439
+agent_games,opp_coop_rate,float64,24000,11,0.0,outcome rate,0.6 | 0.4 | 0.5 | 0.3,0.0,1.0,0.5895416666666666,0.7,0.37081961391395685,0.0,0.2,0.7,1.0,1.0,-0.2999830304714437,-1.4475001583140261,0.6289964473768439
+agent_games,first_coop,int8,24000,2,0.0,derived,0 | 1,0.0,1.0,0.56575,1.0,0.4956684118093494,0.0,0.0,1.0,1.0,1.0,-0.2653204362298303,-1.9297658868880123,0.876126225027573
+agent_games,last_coop,int8,24000,2,0.0,derived,1 | 0,0.0,1.0,0.5899583333333334,1.0,0.4918511748110184,0.0,0.0,1.0,1.0,1.0,-0.3658254166839837,-1.8663272987281576,0.8337049364689909
+agent_games,utility,float64,24000,59,0.0,"PAYOFF rescaled to [0,1], higher is better",0.66 | 0.4600000000000001 | 0.6 | 0.5,0.0,1.0,0.5989983333333334,0.64,0.25363624307898053,0.0,0.4,0.64,0.8,1.0,-0.5378632050939703,-0.5806551656920806,0.42343397128925875
+agent_games,efficiency,float64,24000,49,0.0,"PAYOFF vs mutual-cooperation benchmark (1=CC, 0.5=DD)",0.825 | 0.575 | 0.75 | 0.625,0.0,1.25,0.7487479166666667,0.8,0.31704530384871593,0.0,0.5,0.8,1.0,1.25,-0.5378632050939702,-0.5806551656920806,0.42343397128924576
+agent_games,payoff_base,float64,24000,49,0.0,PAYOFF in base units (penalty / lambda),3.4 | 5.4 | 4.0 | 5.0,0.0,10.0,4.010016666666666,3.6,2.5363624307897146,0.0,2.0,3.6,6.0,10.0,0.5378632050939702,-0.5806551656920806,0.6325067054890998
+agent_games,payoff_raw,float64,24000,376,0.0,"PAYOFF as recorded (penalty, still multiplied by lambda)",0.34 | 0.54 | 0.39999999999999997 | 0.4,0.0,100000.0,4459.420183333334,40.0,14204.82203343088,0.0,6.0,40.0,380.0,76000.0,4.083756819672925,17.396232628059835,3.185351783292383
+agent_games,cc_rate,float64,24000,11,0.0,outcome rate,0.3 | 0.5 | 0.2 | 0.1,0.0,1.0,0.40545,0.3,0.3755189827928425,0.0,0.1,0.3,0.8,1.0,0.4811763575389475,-1.3241253335512946,0.9261782779451043
+agent_games,cd_rate,float64,24000,11,0.0,outcome rate,0.1 | 0.3 | 0.0 | 0.2,0.0,1.0,0.1840916666666667,0.1,0.26834044024686166,0.0,0.0,0.1,0.3,1.0,1.6078561378422798,1.6183356861821858,1.4576457756381962
+agent_games,dc_rate,float64,24000,11,0.0,outcome rate,0.3 | 0.1 | 0.0 | 0.2,0.0,1.0,0.1840916666666667,0.1,0.26834044024686166,0.0,0.0,0.1,0.3,1.0,1.6078561378422798,1.6183356861821858,1.4576457756381962
+agent_games,dd_rate,float64,24000,11,0.0,outcome rate,0.3 | 0.5 | 0.4 | 0.7,0.0,1.0,0.22636666666666666,0.1,0.3013390932282469,0.0,0.0,0.1,0.4,1.0,1.3191253253850816,0.5982252068711564,1.331199057111973
+agent_games,coop_early,float64,24000,4,0.0,outcome frequency,0.0 | 0.3333333333333333 | 1.0 | 0.6666666666666666,0.0,1.0,0.582875,0.6666666666666666,0.40561986955218693,0.0,0.3333333333333333,0.6666666666666666,1.0,1.0,-0.3006259992848309,-1.5042788309403565,0.6958951225428899
+agent_games,coop_late,float64,24000,4,0.0,outcome frequency,1.0 | 0.3333333333333333 | 0.6666666666666666 | 0.0,0.0,1.0,0.5894305555555555,0.6666666666666666,0.4328317398687685,0.0,0.0,0.6666666666666666,1.0,1.0,-0.3431875230481324,-1.6262362346090637,0.7343218565600352
+agent_games,endgame_drop,float64,24000,11,0.0,BEHAVIOUR (early minus late cooperation),-1.0 | -0.3333333333333333 | -0.6666666666666666 | 0.0,-1.0,1.0,-0.006555555555555565,0.0,0.39716668418486817,-1.0,0.0,0.0,0.0,1.0,-0.08892530345326155,0.9918559088532612,-60.5847484349798
+agent_games,pC_P,float64,24000,18,46.3,conditional cooperation,0.3333333333333333 | 0.0 | 0.2 | 0.25,0.0,1.0,0.38868829007911876,0.25,0.40468797414414825,0.0,0.0,0.25,1.0,1.0,0.5346539911521818,-1.335771891105914,1.04116327780745
+agent_games,pC_R,float64,24000,18,24.65,conditional cooperation,1.0 | 0.0 | 0.6666666666666666 | 0.5,0.0,1.0,0.7522325926979212,1.0,0.37302383038544157,0.0,0.5,1.0,1.0,1.0,-1.2126662218936868,-0.14428800108770856,0.49588894978290193
+agent_games,pC_S,float64,24000,18,50.85,conditional cooperation,0.0 | 1.0 | 0.5 | 0.6666666666666666,0.0,1.0,0.5827770847798823,0.6904761904761905,0.4214583805208744,0.0,0.0,0.6904761904761905,1.0,1.0,-0.39821231099402704,-1.5310296103250314,0.7231896921274131
+agent_games,pC_T,float64,24000,18,50.85,conditional cooperation,0.3333333333333333 | 1.0 | 0.5 | 0.0,0.0,1.0,0.37908465070214814,0.25,0.40220279716237495,0.0,0.0,0.25,0.75,1.0,0.5826617794481755,-1.2677826177697689,1.060984126942114
+agent_games,pC_after_C,float64,24000,30,12.4083,conditional cooperation,0.6 | 1.0 | 0.75 | 0.25,0.0,1.0,0.6547263411120323,0.8571428571428571,0.39484863225404765,0.0,0.2857142857142857,0.8571428571428571,1.0,1.0,-0.6208917993036784,-1.2516562847003885,0.6030743036600751
+agent_games,pC_after_D,float64,24000,30,29.6958,conditional cooperation,0.25 | 0.5 | 0.2 | 0.3333333333333333,0.0,1.0,0.4884465554530154,0.5,0.3987732068630701,0.0,0.0,0.5,1.0,1.0,0.07207851286396064,-1.5823375632914831,0.8164111352842345
+agent_games,reciprocity,float64,24000,90,42.1042,BEHAVIOUR (P(C|oppC) - P(C|oppD)),0.35 | 0.5 | 0.8 | 0.55,-1.0,1.0,0.08613718535273052,0.0,0.3866127709900097,-0.8571428571428572,-0.125,0.0,0.3333333333333333,1.0,0.15757960403799096,0.2014478156941859,4.4883376373030535
+agent_games,strategy_set,object,24000,10,0.0,derived,unclassified | TFT | AllC+TFT+WSLS+GRIM | AllC,,,,,,,,,,,,,
+agent_games,nearest_rule,object,24000,5,0.0,derived,AllD | AllC | TFT | WSLS,,,,,,,,,,,,,
+agent_games,rule_distance,int64,24000,6,0.0,derived,4 | 2 | 3 | 1,0.0,5.0,1.2578333333333334,1.0,1.3340462731354044,0.0,0.0,1.0,2.0,5.0,0.7685392378401312,-0.4659774366099083,1.060590650432281
+agent_games,n_rules_fit,int64,24000,5,0.0,derived,0 | 1 | 4 | 2,0.0,4.0,0.9338333333333333,0.0,1.468461265404133,0.0,0.0,0.0,1.0,4.0,1.433090166527033,0.4041687141951873,1.5725089402864176
+agent_games,strategy,object,24000,7,0.0,BEHAVIOUR (exact memory-one rule label),unclassified | TFT | ambiguous | AllC,,,,,,,,,,,,,
+dyads,game_uid,object,12000,12000,0.0,identifier (unique game),x0.01_ar_claude-haiku-4-5-20251001#000 | x0.01_ar_claude-haiku-4-5-20251001#001 | x0.01_ar_claude-haiku-4-5-20251001#002 | x0.01_ar_claude-haiku-4-5-20251001#003,,,,,,,,,,,,,
+dyads,model,category,12000,6,0.0,grouping / experimental factor (LLM identity),Claude-Haiku-4.5 | Gemini-3.1-Flash-Lite | Gemini-3.5-Flash-Lite | GPT-5.4-Nano,,,,,,,,,,,,,
+dyads,language,category,12000,5,0.0,grouping / experimental factor (prompt language),ar | cn | en | fr,,,,,,,,,,,,,
+dyads,scale,float64,12000,10,0.0,SCALING VARIABLE (payoff multiplier lambda),0.01 | 0.1 | 0.25 | 0.5,0.01,1000.0,111.886,1.5,297.49274012129865,0.01,0.25,1.5,10.0,1000.0,2.6212029325105872,4.961391676934727,2.6588915514121396
+dyads,log_scale,float64,12000,10,0.0,"SCALING VARIABLE, log10 lambda",-2.0 | -1.0 | -0.6020599913279624 | -0.3010299956639812,-2.0,3.0,0.3096910013008057,0.1505149978319906,1.3811146881649583,-2.0,-0.6020599913279624,0.1505149978319906,1.0,3.0,0.3457322601065487,-0.4421724331427117,4.459653920726838
+dyads,cell,object,12000,1200,0.0,"identifier (design cell, matched across lambda by CRN)",Claude-Haiku-4.5|ar|game_0 | Claude-Haiku-4.5|ar|game_1 | Claude-Haiku-4.5|ar|game_2 | Claude-Haiku-4.5|ar|game_3,,,,,,,,,,,,,
+dyads,game_id,object,12000,40,0.0,identifier inside a file,game_0 | game_1 | game_2 | game_3,,,,,,,,,,,,,
+dyads,pairing,int64,12000,4,0.0,experimental condition (personality pairing 0-3),0 | 1 | 2 | 3,0.0,3.0,1.5,1.5,1.1180805764111752,0.0,0.75,1.5,2.25,3.0,0.0,-1.3600666699986106,0.7453870509407835
+dyads,rep,int64,12000,10,0.0,replicate index,0 | 1 | 2 | 3,0.0,9.0,4.5,4.5,2.8724010091379024,0.0,2.0,4.5,7.0,9.0,0.0,-1.224252511610057,0.6383113353639783
+dyads,dyad,category,12000,4,0.0,"experimental condition (pairing, focal-oriented)",CvC | CvS | SvC | SvS,,,,,,,,,,,,,
+dyads,coop_rate_1,float64,12000,11,0.0,outcome rate,0.4 | 0.5 | 0.3 | 0.2,0.0,1.0,0.586625,0.7,0.3695289641506892,0.0,0.2,0.7,1.0,1.0,-0.28287368029665044,-1.462928233753881,0.6299236550619036
+dyads,coop_rate_2,float64,12000,11,0.0,outcome rate,0.6 | 0.5 | 0.4 | 0.2,0.0,1.0,0.5924583333333333,0.7,0.37209832216855826,0.0,0.2,0.7,1.0,1.0,-0.31714562069581864,-1.4318386463276869,0.6280582130983472
+dyads,utility_1,float64,12000,59,0.0,agent-1 copy,0.66 | 0.6 | 0.62 | 0.5800000000000001,0.0,1.0,0.6019150000000001,0.6599999999999999,0.2548317962474525,0.0,0.4,0.6599999999999999,0.8,1.0,-0.5974561535684952,-0.4870614719113515,0.42336840957187055
+dyads,utility_2,float64,12000,59,0.0,agent-2 copy,0.4600000000000001 | 0.6 | 0.5 | 0.42000000000000004,0.0,1.0,0.5960816666666666,0.64,0.2524119436813515,0.0,0.4,0.64,0.8,1.0,-0.4774552932430921,-0.6720386664997156,0.4234519492821479
+dyads,efficiency_1,float64,12000,49,0.0,agent-1 copy,0.825 | 0.75 | 0.775 | 0.725,0.0,1.25,0.7523937500000001,0.825,0.3185397453093041,0.0,0.5,0.825,1.0,1.25,-0.5974561535684952,-0.4870614719113511,0.4233684095718553
+dyads,efficiency_2,float64,12000,49,0.0,agent-2 copy,0.575 | 0.75 | 0.625 | 0.525,0.0,1.25,0.7451020833333334,0.8,0.3155149296016841,0.0,0.5,0.8,1.0,1.25,-0.47745529324309344,-0.6720386664997138,0.42345194928214075
+dyads,payoff_base_1,float64,12000,49,0.0,agent-1 copy,3.4 | 4.0 | 3.8 | 4.2,0.0,10.0,3.9808499999999998,3.4,2.548317962474433,0.0,2.0,3.4,6.0,10.0,0.5974561535684945,-0.48706147191135285,0.6401441808845932
+dyads,payoff_base_2,float64,12000,49,0.0,agent-2 copy,5.4 | 4.0 | 5.0 | 5.8,0.0,10.0,4.039183333333333,3.6,2.5241194368134456,0.0,2.0,3.6,6.0,10.0,0.4774552932430933,-0.6720386664997147,0.6249083610499101
+dyads,payoff_raw_1,float64,12000,355,0.0,agent-1 copy,0.34 | 0.39999999999999997 | 0.4 | 0.38,0.0,100000.0,4488.400225,40.0,14392.522995069337,0.0,6.0,40.0,380.0,80000.0,4.104426750236564,17.559254078504182,3.206604196057257
+dyads,payoff_raw_2,float64,12000,365,0.0,agent-2 copy,0.54 | 0.39999999999999997 | 0.5 | 0.58,0.0,100000.0,4430.440141666667,40.0,14015.147382830019,0.0,6.0,40.0,380.0,74000.0,4.0593675050564,17.189846899259337,3.1633758576315456
+dyads,first_coop_1,int8,12000,2,0.0,outcome frequency,0 | 1,0.0,1.0,0.5465,1.0,0.4978537986869963,0.0,0.0,1.0,1.0,1.0,-0.1868329674877972,-1.9654210402177166,0.9109859079359494
+dyads,first_coop_2,int8,12000,2,0.0,outcome frequency,0 | 1,0.0,1.0,0.585,1.0,0.49274256253755677,0.0,0.0,1.0,1.0,1.0,-0.34506525513184805,-1.8812435380749204,0.8422949786966782
+dyads,coop_early_1,float64,12000,4,0.0,outcome frequency,0.0 | 1.0 | 0.6666666666666666 | 0.3333333333333333,0.0,1.0,0.5729166666666667,0.6666666666666666,0.411561004120158,0.0,0.0,0.6666666666666666,1.0,1.0,-0.2616534875612627,-1.5545933723794498,0.7183610253733667
+dyads,coop_early_2,float64,12000,4,0.0,outcome frequency,0.0 | 0.3333333333333333 | 1.0 | 0.6666666666666666,0.0,1.0,0.5928333333333333,0.6666666666666666,0.39935930622613847,0.0,0.3333333333333333,0.6666666666666666,1.0,1.0,-0.3390344082910304,-1.4491471623232262,0.6736451609099889
+dyads,coop_late_1,float64,12000,4,0.0,outcome frequency,1.0 | 0.3333333333333333 | 0.6666666666666666 | 0.0,0.0,1.0,0.5905555555555555,0.6666666666666666,0.4265712169026131,0.0,0.0,0.6666666666666666,1.0,1.0,-0.34064211361031044,-1.5976565871715802,0.722321910089091
+dyads,coop_late_2,float64,12000,4,0.0,outcome frequency,1.0 | 0.6666666666666666 | 0.0 | 0.3333333333333333,0.0,1.0,0.5883055555555555,0.6666666666666666,0.4390178911718102,0.0,0.0,0.6666666666666666,1.0,1.0,-0.344936560008567,-1.6543996300735497,0.7462412806168927
+dyads,reciprocity_1,float64,12000,90,43.3417,agent-1 copy,0.35 | 0.8 | 0.55 | -0.15000000000000002,-1.0,1.0,0.09442967803388454,0.0,0.37240126643200455,-0.8571428571428572,-0.125,0.0,0.3333333333333333,1.0,0.11953675134732156,0.2907227017243055,3.943688829462857
+dyads,reciprocity_2,float64,12000,90,40.8667,agent-2 copy,0.5 | 0.8 | 0.6666666666666667 | 0.5714285714285714,-1.0,1.0,0.07819177135341172,0.0,0.399620645541429,-0.875,-0.14285714285714285,0.0,0.3333333333333333,1.0,0.19462450867322187,0.11877316258618853,5.110776218832807
+dyads,strategy_1,object,12000,7,0.0,agent-1 copy,unclassified | ambiguous | AllC | AllD,,,,,,,,,,,,,
+dyads,strategy_2,object,12000,7,0.0,agent-2 copy,unclassified | TFT | ambiguous | AllC,,,,,,,,,,,,,
+dyads,joint_utility,float64,12000,59,0.0,WELFARE (dyad mean utility),0.56 | 0.6 | 0.55 | 0.52,0.4,0.8,0.5989983333333333,0.56,0.13240137527320944,0.4,0.5,0.56,0.73,0.8,0.27207342524144756,-1.2641068097309403,0.22103796939870637
+dyads,joint_efficiency,float64,12000,47,0.0,WELFARE (dyad mean efficiency),0.7 | 0.75 | 0.6875 | 0.65,0.5,1.0,0.7487479166666667,0.7,0.1655017190915105,0.5,0.625,0.7,0.9125,1.0,0.2720734252414448,-1.264106809730942,0.22103796939870463
+dyads,joint_coop,float64,12000,28,0.0,derived,0.5 | 0.45 | 0.4 | 0.30000000000000004,0.0,1.0,0.5895416666666666,0.55,0.30117937459570765,0.0,0.4,0.55,0.8500000000000001,1.0,-0.23635367731864723,-0.8807749944105496,0.5108703788463484
+dyads,utility_gap,float64,12000,29,0.0,"FAIRNESS (within-dyad |u1-u2|, 0 = equal)",0.19999999999999996 | 0.0 | 0.09999999999999998 | 0.20000000000000007,0.0,1.0,0.29195,0.19999999999999996,0.319333204205158,0.0,0.0,0.19999999999999996,0.5,1.0,0.9067447823108802,-0.5038916271617278,1.0937941572363692
+dyads,signed_gap,float64,12000,57,0.0,derived,0.19999999999999996 | 0.0 | 0.09999999999999998 | 0.20000000000000007,-1.0,1.0,0.005833333333333334,0.0,0.4326448551484741,-1.0,-0.10000000000000009,0.0,0.19999999999999996,1.0,-0.08902558796783691,0.42513314885225206,74.16768945402413
+dyads,gini,float64,12000,119,0.0,FAIRNESS (Gini of the two utilities),0.17857142857142852 | 0.0 | 0.09090909090909088 | 0.19230769230769226,0.0,1.0,0.27190480110674947,0.13513513513513517,0.3089068676433981,0.0,0.0,0.13513513513513517,0.4545454545454545,1.0,1.0244566704818727,-0.21332161186834542,1.1360846383956333
+dyads,fairness,float64,12000,109,0.0,FAIRNESS (1 - Gini),0.8214285714285715 | 1.0 | 0.9090909090909092 | 0.8076923076923077,0.0,1.0,0.7280951988932505,0.8648648648648648,0.30890686764340475,0.0,0.5454545454545455,0.8648648648648648,1.0,1.0,-1.0244566704818725,-0.21332161186834586,0.42426713994675724
+dyads,p_CC,float64,12000,11,0.0,outcome frequency,0.3 | 0.5 | 0.2 | 0.1,0.0,1.0,0.40545,0.3,0.3755268066754707,0.0,0.1,0.3,0.8,1.0,0.4812064363877162,-1.324151186741602,0.9261975747329405
+dyads,p_CD,float64,12000,11,0.0,outcome frequency,0.1 | 0.0 | 0.2 | 0.4,0.0,1.0,0.181175,0.1,0.2704888470769829,0.0,0.0,0.1,0.225,1.0,1.6582140606274571,1.733727163122376,1.4929700404414676
+dyads,p_DC,float64,12000,11,0.0,outcome frequency,0.3 | 0.0 | 0.2 | 0.1,0.0,1.0,0.18700833333333336,0.1,0.2661540025874226,0.0,0.0,0.1,0.3,1.0,1.5565447895071265,1.5028232408490307,1.423220012944642
+dyads,p_DD,float64,12000,11,0.0,outcome frequency,0.3 | 0.5 | 0.4 | 0.7,0.0,1.0,0.22636666666666666,0.1,0.30134537158378216,0.0,0.0,0.1,0.4,1.0,1.3192077853200879,0.5985999401875128,1.3312267924478671
+dyads,p_exploit,float64,12000,15,0.0,outcome frequency,0.4 | 0.0 | 0.30000000000000004 | 0.2,0.0,1.0,0.3681833333333334,0.30000000000000004,0.3175260119836675,0.0,0.0,0.30000000000000004,0.6,1.0,0.4272116897689107,-1.0204599319810097,0.8624127798207435
+dyads,dd_absorbed,int64,12000,2,0.0,BEHAVIOUR (locked into mutual defection),0 | 1,0.0,1.0,0.09525,0.0,0.2935721709420796,0.0,0.0,0.0,0.0,1.0,2.7578735973456405,5.606801218038746,3.082122529575639
+dyads,longest_dd,int64,12000,11,0.0,derived,3 | 5 | 4 | 2,0.0,10.0,1.7518333333333334,1.0,2.6810779524547685,0.0,0.0,1.0,2.0,10.0,1.9789938623387098,3.10792323707945,1.5304412248814205
+dyads,first_dd,float64,12000,11,44.4667,derived,1.0 | 2.0 | 4.0 | 5.0,1.0,10.0,2.8497899159663866,2.0,2.5050044374930924,1.0,1.0,2.0,4.0,10.0,1.4113515587542436,1.0102767572500122,0.8790137207863707
+dyads,n_switch,int64,12000,10,0.0,derived,3 | 1 | 4 | 2,0.0,9.0,1.69875,1.0,1.861169999484306,0.0,0.0,1.0,3.0,7.0,1.0608156780623645,0.4860158433727939,1.095611478725125

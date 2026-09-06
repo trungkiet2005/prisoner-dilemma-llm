@@ -1,0 +1,35 @@
+ranker,Claude-Haiku-4.5,Qwen3-235B-A22B,GPT-5.4-Nano,Gemini-3.1-Flash-Lite,Grok-4.20-Non-Reasoning,Gemini-3.5-Flash-Lite,ranker_type
+coop_rate,6.0,5.0,4.0,3.0,2.0,1.0,metric
+utility,5.0,6.0,3.0,4.0,2.0,1.0,metric
+efficiency,5.0,6.0,3.0,4.0,2.0,1.0,metric
+p_CC,5.0,6.0,3.0,4.0,1.0,2.0,metric
+p_DD,6.0,5.0,3.0,2.0,4.0,1.0,metric
+p_exploit,3.0,6.0,4.0,5.0,1.0,2.0,metric
+dd_absorbed,3.0,6.0,2.0,1.0,4.0,5.0,metric
+reciprocity,2.0,5.0,4.0,6.0,1.0,3.0,metric
+endgame_drop,2.0,4.0,3.0,6.0,1.0,5.0,metric
+uncond_share,1.0,6.0,2.0,4.0,5.0,3.0,metric
+game_sd,2.0,5.0,3.0,1.0,6.0,4.0,metric
+cond_sd,2.0,5.0,1.0,4.0,6.0,3.0,metric
+lambda_sens,1.0,3.0,5.0,2.0,6.0,4.0,metric
+lang_disparity,6.0,1.0,5.0,3.0,4.0,2.0,metric
+persona_resp,2.0,6.0,4.0,1.0,5.0,3.0,metric
+0.01,5.0,3.0,4.0,2.0,6.0,1.0,payoff scale
+0.1,6.0,4.0,3.0,2.0,5.0,1.0,payoff scale
+0.25,6.0,5.0,3.0,4.0,2.0,1.0,payoff scale
+0.5,6.0,5.0,4.0,2.0,3.0,1.0,payoff scale
+1.0,5.0,6.0,4.0,3.0,1.0,2.0,payoff scale
+2.0,5.0,6.0,3.0,4.0,1.0,2.0,payoff scale
+5.0,5.0,6.0,3.0,4.0,1.0,2.0,payoff scale
+10.0,5.0,6.0,3.0,4.0,1.0,2.0,payoff scale
+100.0,5.0,6.0,2.0,4.0,3.0,1.0,payoff scale
+1000.0,6.0,5.0,3.0,4.0,1.0,2.0,payoff scale
+lang: en,6.0,5.0,1.0,4.0,2.0,3.0,language / pairing
+lang: fr,5.0,6.0,3.0,4.0,1.0,2.0,language / pairing
+lang: ar,6.0,5.0,4.0,2.0,3.0,1.0,language / pairing
+lang: cn,4.0,6.0,5.0,3.0,2.0,1.0,language / pairing
+lang: vn,6.0,5.0,3.0,4.0,1.0,2.0,language / pairing
+pair: CvC,4.0,6.0,3.0,1.0,5.0,2.0,language / pairing
+pair: CvS,6.0,4.0,3.0,5.0,1.0,2.0,language / pairing
+pair: SvC,6.0,4.0,3.0,5.0,2.0,1.0,language / pairing
+pair: SvS,6.0,3.0,4.0,5.0,1.0,2.0,language / pairing

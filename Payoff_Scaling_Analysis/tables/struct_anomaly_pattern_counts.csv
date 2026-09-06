@@ -1,0 +1,6 @@
+pattern,n_games,share_of_12000_games
+"perfect exploitation, all 10 rounds",555,0.04625
+action alternates every round,12,0.001
+joint outcome alternates 8+ rounds,576,0.048
+strongly anti-reciprocal agent,227,0.018916666666666665
+escaped a 5+ round defection lock,753,0.06275

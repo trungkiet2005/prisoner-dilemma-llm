@@ -1,0 +1,381 @@
+var_a,var_b,level,pearson_r,spearman_rho,n,p_value,p_fdr,note
+efficiency,payoff_base,agent_game,-0.9999999999999998,-1.0,24000,0.0,0.0,"identity: utility = (10 - payoff_base)/10, efficiency = 1.25 x utility"
+gini,fairness,dyad,-1.0,-0.9999997572393843,12000,0.0,0.0,identity: fairness = 1 - gini
+utility,payoff_base,agent_game,-1.0,-0.9999752942467729,24000,0.0,0.0,"identity: utility = (10 - payoff_base)/10, efficiency = 1.25 x utility"
+utility,efficiency,agent_game,1.0,0.9999752942467729,24000,0.0,0.0,identity: efficiency = 1.25 x utility
+joint_utility,joint_efficiency,dyad,1.0,0.9998692436568717,12000,0.0,0.0,identity: joint_efficiency = 1.25 x joint_utility
+utility_gap,gini,dyad,0.9936288445616512,0.991068249764029,12000,0.0,0.0,identity: gini = utility_gap / (u1 + u2)
+utility_gap,fairness,dyad,-0.9936288445616512,-0.9910621204191155,12000,0.0,0.0,identity: gini = utility_gap / (u1 + u2)
+joint_coop,joint_efficiency,dyad,0.9728564962096176,0.9853049882840677,12000,0.0,0.0,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+joint_coop,joint_utility,dyad,0.9728564962096176,0.9846765871624237,12000,0.0,0.0,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+p_DD,longest_dd,dyad,0.9464907982337074,0.9825914620526236,12000,0.0,0.0,same construct: all of these summarise the mutual-defection pattern
+joint_utility,p_CC,dyad,0.9826264296097039,0.975050257654412,12000,0.0,0.0,payoff-matrix identity: joint_utility is a linear map of the shares
+joint_efficiency,p_CC,dyad,0.9826264296097035,0.9746244296322514,12000,0.0,0.0,payoff-matrix identity: joint_utility is a linear map of the shares
+joint_coop,p_CC,dyad,0.9130062342226453,0.9315076146564122,12000,0.0,0.0,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+opp_coop_rate,utility,agent_game,0.9100639004036232,0.9161155738642436,24000,0.0,0.0,"payoff-matrix identity: utility = 0.4 + 0.4 opp_coop_rate + 0.2 dc_rate - 0.4 cd_rate, and the opponent's action moves the focal penalty by 6 to 8 against 2 for the focal action"
+opp_coop_rate,payoff_base,agent_game,-0.9100639004036228,-0.9156505407996249,24000,0.0,0.0,"payoff-matrix identity: utility = 0.4 + 0.4 opp_coop_rate + 0.2 dc_rate - 0.4 cd_rate, and the opponent's action moves the focal penalty by 6 to 8 against 2 for the focal action"
+opp_coop_rate,efficiency,agent_game,0.9100639004036228,0.9156505407996249,24000,0.0,0.0,"payoff-matrix identity: utility = 0.4 + 0.4 opp_coop_rate + 0.2 dc_rate - 0.4 cd_rate, and the opponent's action moves the focal penalty by 6 to 8 against 2 for the focal action"
+p_exploit,gini,dyad,0.8996501146174916,0.8902683472658665,12000,0.0,0.0,"exact bound: utility_gap = |p_DC - p_CD| and p_exploit = p_CD + p_DC, so utility_gap <= p_exploit always"
+p_exploit,fairness,dyad,-0.8996501146174912,-0.8902674671699555,12000,0.0,0.0,"exact bound: utility_gap = |p_DC - p_CD| and p_exploit = p_CD + p_DC, so utility_gap <= p_exploit always"
+p_exploit,utility_gap,dyad,0.9007845259651767,0.8751186016834018,12000,0.0,0.0,"exact bound: utility_gap = |p_DC - p_CD| and p_exploit = p_CD + p_DC, so utility_gap <= p_exploit always"
+coop_rate,coop_late,agent_game,0.8789465473875152,0.8673995796846571,24000,0.0,0.0,nested: the second variable is one of the rounds averaged in the first
+last_coop,coop_late,agent_game,0.8632121044057787,0.8655947351513993,24000,0.0,0.0,nested: the second variable is one of the rounds averaged in the first
+coop_rate,pC_after_C,agent_game,0.8820827795705435,0.8649726817603621,21022,0.0,0.0,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+rule_distance,n_rules_fit,agent_game,-0.5996214750528027,-0.8609568887808718,24000,0.0,0.0,identity: rule_distance = 0 exactly when n_rules_fit >= 1
+coop_rate,pC_after_D,agent_game,0.8563823313151149,0.8514679042433096,16873,0.0,0.0,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+coop_rate,coop_early,agent_game,0.8316594051386276,0.8449894357482096,24000,0.0,0.0,nested: the second variable is one of the rounds averaged in the first
+joint_coop,p_DD,dyad,-0.8611396027592165,-0.8392664656813028,12000,0.0,0.0,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+first_coop,coop_early,agent_game,0.8077375031288018,0.8118958208550208,24000,0.0,0.0,nested: the second variable is one of the rounds averaged in the first
+joint_coop,coop_rate_2,dyad,0.8136588104985469,0.8114007882012895,12000,0.0,0.0,identity: joint_coop is the mean of coop_rate_1 and coop_rate_2
+joint_coop,longest_dd,dyad,-0.790523419305288,-0.8113477758130274,12000,0.0,0.0,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+joint_coop,coop_rate_1,dyad,0.8107555836003716,0.8050497422305256,12000,0.0,0.0,identity: joint_coop is the mean of coop_rate_1 and coop_rate_2
+dc_rate,pC_after_C,agent_game,-0.7349914538374658,-0.8001732822452724,21022,0.0,0.0,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+joint_efficiency,coop_rate_2,dyad,0.7936665434761044,0.799449280199651,12000,0.0,0.0,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+joint_utility,coop_rate_2,dyad,0.7936665434761051,0.7982571034415035,12000,0.0,0.0,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+joint_utility,coop_rate_1,dyad,0.7866409976248672,0.7900323019188955,12000,0.0,0.0,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+joint_efficiency,coop_rate_1,dyad,0.7866409976248668,0.7898340759076178,12000,0.0,0.0,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+coop_late,pC_after_C,agent_game,0.794923953506288,0.7884597367838545,21022,0.0,0.0,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+efficiency,cd_rate,agent_game,-0.8354846416572929,-0.7797420161627295,24000,0.0,0.0,payoff-matrix identity: utility = 0.8 cc + 1.0 dc + 0.4 dd
+payoff_base,cd_rate,agent_game,0.8354846416572929,0.7797420161627295,24000,0.0,0.0,payoff-matrix identity: utility = 0.8 cc + 1.0 dc + 0.4 dd
+utility,cd_rate,agent_game,-0.8354846416572932,-0.7796833763701057,24000,0.0,0.0,payoff-matrix identity: utility = 0.8 cc + 1.0 dc + 0.4 dd
+joint_efficiency,p_DD,dyad,-0.7201240748872142,-0.7605667653109088,12000,0.0,0.0,payoff-matrix identity: joint_utility is a linear map of the shares
+joint_utility,p_DD,dyad,-0.7201240748872143,-0.7585907598097515,12000,0.0,0.0,payoff-matrix identity: joint_utility is a linear map of the shares
+p_CC,coop_rate_2,dyad,0.7465657648373603,0.7543581558069012,12000,0.0,0.0,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+coop_rate,cc_rate,agent_game,0.7415274362179741,0.7447038470072406,24000,0.0,0.0,identity: coop_rate = cc_rate + cd_rate
+opp_coop_rate,cc_rate,agent_game,0.7415274362179741,0.7447038470072406,24000,0.0,0.0,identity: opp_coop_rate = cc_rate + dc_rate
+first_coop_1,first_dd,dyad,0.6118802648500439,0.7376683781145902,6664,0.0,0.0,partly mechanical: agent 1's round-1 action is inside every one of these aggregates
+joint_efficiency,longest_dd,dyad,-0.6481011619542212,-0.7358218059539425,12000,1.2775190691665445e-207,4.759384767483205e-207,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+p_CC,coop_rate_1,dyad,0.7365090457560359,0.7347691931976997,12000,0.0,0.0,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+joint_utility,longest_dd,dyad,-0.648101161954221,-0.7337954446630254,12000,1.2775190691665445e-207,4.759384767483205e-207,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+p_DD,coop_rate_2,dyad,-0.6960752196572383,-0.7200010857441634,12000,0.0,0.0,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+coop_rate,last_coop,agent_game,0.7198503898624444,0.718109439173694,24000,0.0,0.0,nested: the second variable is one of the rounds averaged in the first
+coop_rate,dd_rate,agent_game,-0.6994022799893485,-0.7107765102294539,24000,5.839244329811858e-274,2.5214918700736226e-273,partly mechanical: the outcome rates contain the focal action
+opp_coop_rate,dd_rate,agent_game,-0.6994022799893485,-0.7107765102294539,24000,5.83924433069681e-274,2.5214918700736226e-273,partly mechanical: opp_coop_rate = cc_rate + dc_rate
+dd_rate,pC_after_D,agent_game,-0.6902360315975264,-0.71006120489469,16873,0.0,0.0,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+coop_rate_2,longest_dd,dyad,-0.6414736710492217,-0.706627683217968,12000,7.200712586858e-130,1.9972779438000292e-129,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+coop_late,pC_after_D,agent_game,0.7125653056750276,0.7036678220650833,16873,0.0,0.0,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+p_DD,coop_rate_1,dyad,-0.7028043207832353,-0.7018749087860623,12000,0.0,0.0,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+coop_early,pC_after_D,agent_game,0.7024040394550753,0.6933761583203821,16873,0.0,0.0,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+coop_rate_1,longest_dd,dyad,-0.6426760670638039,-0.685305860223028,12000,4.629450282896351e-144,1.3128291847019502e-143,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+cc_rate,pC_after_C,agent_game,0.6903429308311764,0.6804028992529974,21022,0.0,0.0,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+coop_late,cc_rate,agent_game,0.6497790638331973,0.653484250165067,24000,0.0,0.0,partly mechanical: the outcome rates contain the focal action
+coop_rate_1,first_coop_1,dyad,0.6312255548976046,0.6530812608391366,12000,0.0,0.0,partly mechanical: round 1 is one of the 10 rounds averaged
+coop_early,pC_after_C,agent_game,0.6371431253413006,0.6483636404659415,21022,0.0,0.0,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+last_coop,pC_after_C,agent_game,0.6498980402638432,0.6471809689569903,21022,0.0,0.0,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+coop_rate,first_coop,agent_game,0.613112854578427,0.6361354732579249,24000,0.0,0.0,nested: the second variable is one of the rounds averaged in the first
+cd_rate,pC_after_D,agent_game,0.6199152657255923,0.6290539569564769,16873,0.0,0.0,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+cc_rate,dd_rate,agent_game,-0.5788391096172774,-0.6234156469518871,24000,1.497586057209127e-225,5.866831976695549e-225,simplex: the four outcome rates sum to 1
+p_CC,p_DD,dyad,-0.5788391096172777,-0.6234156469518871,12000,1.5300414960182576e-225,5.932813964152427e-225,"simplex: the four outcome shares sum to 1, p_exploit = p_CD + p_DC"
+coop_early,dd_rate,agent_game,-0.6133693213923341,-0.6220450374665467,24000,4.514516936483846e-227,1.786996287358189e-226,partly mechanical: the outcome rates contain the focal action
+p_CD,coop_rate_2,dyad,-0.6001699449164336,-0.6215647362513914,12000,0.0,0.0,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+opp_coop_rate,cd_rate,agent_game,-0.596489910029899,-0.6212603080562551,24000,6.688665139276659e-159,2.033354202340104e-158,partly mechanical: opp_coop_rate = cc_rate + dc_rate
+coop_rate,dc_rate,agent_game,-0.5964899100298989,-0.6212603080562551,24000,6.688665138497299e-159,2.033354202340104e-158,partly mechanical: the outcome rates contain the focal action
+p_DC,coop_rate_1,dyad,-0.5926724130393284,-0.6199658917581721,12000,0.0,0.0,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+coop_early,cc_rate,agent_game,0.6018801107951731,0.6136930445583954,24000,0.0,0.0,partly mechanical: the outcome rates contain the focal action
+p_CC,longest_dd,dyad,-0.5085071781038255,-0.6029350092861289,12000,2.4532423509630968e-144,7.009263859894563e-144,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+coop_late,dd_rate,agent_game,-0.5955030730122902,-0.5920932272145727,24000,6.614393173842534e-224,2.5388579859193567e-223,partly mechanical: the outcome rates contain the focal action
+p_CC,p_exploit,dyad,-0.6333223500157728,-0.5630569102293463,12000,4.5748291181071417e-299,2.094500078169535e-298,"simplex: the four outcome shares sum to 1, p_exploit = p_CD + p_DC"
+coop_early,coop_late,agent_game,0.5528700152472068,0.5553293065079514,24000,0.0,0.0,empirical
+coop_late,dc_rate,agent_game,-0.5458821755765129,-0.5546510677573246,24000,1.8208070388078206e-180,6.123067918114795e-180,partly mechanical: the outcome rates contain the focal action
+p_CD,p_exploit,dyad,0.6004909792366314,0.552886659137718,12000,0.0,0.0,"simplex: the four outcome shares sum to 1, p_exploit = p_CD + p_DC"
+last_coop,pC_after_D,agent_game,0.5546690506866553,0.5528406876663338,16873,0.0,0.0,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+last_coop,cc_rate,agent_game,0.5395100572631808,0.5427398922831665,24000,0.0,0.0,partly mechanical: the outcome rates contain the focal action
+p_DC,p_exploit,dyad,0.5827449439873172,0.5404702894568193,12000,0.0,0.0,"simplex: the four outcome shares sum to 1, p_exploit = p_CD + p_DC"
+coop_late,endgame_drop,agent_game,-0.525161562412911,-0.5294467764632697,24000,0.0,0.0,identity: endgame_drop = coop_early - coop_late
+dc_rate,n_rules_fit,agent_game,-0.33491034951102777,-0.5274599666149162,24000,6.251445632645241e-100,1.5943284163793234e-99,empirical
+p_CC,gini,dyad,-0.554323552498305,-0.5238585311832625,12000,3.330506897665495e-197,1.1718450195491703e-196,"exact bound: utility_gap = |p_DC - p_CD| and p_exploit = p_CD + p_DC, so utility_gap <= p_exploit always"
+p_CC,fairness,dyad,0.554323552498305,0.523857130250793,12000,3.330506897666063e-197,1.1718450195491703e-196,"exact bound: utility_gap = |p_DC - p_CD| and p_exploit = p_CD + p_DC, so utility_gap <= p_exploit always"
+p_DD,first_dd,dyad,-0.4753647151463042,-0.51889475445199,6664,2.269919555989763e-240,9.079678223959052e-240,same construct: all of these summarise the mutual-defection pattern
+last_coop,endgame_drop,agent_game,-0.4997400725933571,-0.5179349616317922,24000,0.0,0.0,partly mechanical: endgame_drop = coop_early - coop_late
+pC_after_C,pC_after_D,agent_game,0.5087180581053525,0.507523478333886,13895,0.0,0.0,identity: reciprocity = pC_after_C - pC_after_D
+coop_early,dc_rate,agent_game,-0.46047276469168624,-0.5034352536624978,24000,5.200708824436204e-119,1.4217765131552212e-118,partly mechanical: the outcome rates contain the focal action
+first_coop,dd_rate,agent_game,-0.4916615487373836,-0.49991596089568685,24000,5.8320270138667404e-173,1.8623279540078666e-172,partly mechanical: the outcome rates contain the focal action
+p_exploit,first_dd,dyad,0.403755927783012,0.49913927168198546,6664,5.722067213336202e-171,1.8119879508897972e-170,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+last_coop,dd_rate,agent_game,-0.4916310911590588,-0.4974364030191666,24000,5.416734715411372e-193,1.8884029283085518e-192,partly mechanical: the outcome rates contain the focal action
+pC_after_C,reciprocity,agent_game,0.5101631823386041,0.49671674377810915,13895,0.0,0.0,identity: reciprocity = pC_after_C - pC_after_D
+utility,cc_rate,agent_game,0.5129329251224374,0.4892930323970869,24000,5.302990308873172e-173,1.7077426418411936e-172,payoff-matrix identity: utility = 0.8 cc + 1.0 dc + 0.4 dd
+payoff_base,cc_rate,agent_game,-0.5129329251224372,-0.4880670760517751,24000,5.3029903088752855e-173,1.7077426418411936e-172,payoff-matrix identity: utility = 0.8 cc + 1.0 dc + 0.4 dd
+efficiency,cc_rate,agent_game,0.512932925122437,0.4880670760517751,24000,5.302990308873777e-173,1.7077426418411936e-172,payoff-matrix identity: utility = 0.8 cc + 1.0 dc + 0.4 dd
+utility,dd_rate,agent_game,-0.3759061806730591,-0.48307261377566213,24000,1.1552082377578634e-78,2.537451620510048e-78,payoff-matrix identity: utility = 0.8 cc + 1.0 dc + 0.4 dd
+efficiency,dd_rate,agent_game,-0.3759061806730591,-0.4821853738370966,24000,1.1552082377578634e-78,2.537451620510048e-78,payoff-matrix identity: utility = 0.8 cc + 1.0 dc + 0.4 dd
+payoff_base,dd_rate,agent_game,0.3759061806730591,0.4821853738370966,24000,1.155208237758522e-78,2.537451620510048e-78,payoff-matrix identity: utility = 0.8 cc + 1.0 dc + 0.4 dd
+p_DC,n_switch,dyad,0.2028223312276196,0.4776501631312005,12000,5.262352285267894e-19,7.841936738830586e-19,"structural bound: n_switch is forced to 0 when the agent never changes action, i.e. at cooperation rates 0 and 1"
+joint_coop,first_coop_1,dyad,0.48249244950079295,0.47156119679979747,12000,0.0,0.0,partly mechanical: agent 1's round-1 action is inside every one of these aggregates
+pC_after_C,n_rules_fit,agent_game,0.44009229086819895,0.4715002619595492,21022,5.402673605134177e-182,1.8330499731705243e-181,empirical
+coop_rate,n_rules_fit,agent_game,0.48609254784975914,0.47028294258688125,24000,9.097763789775427e-164,2.857148958772448e-163,empirical
+dc_rate,rule_distance,agent_game,0.19007292752225155,0.46873303210502554,24000,4.031516676297903e-31,6.6898529999703204e-31,empirical
+p_DD,first_coop_1,dyad,-0.4682428363359493,-0.4647681478352016,12000,0.0,0.0,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+dd_rate,pC_after_C,agent_game,-0.46737329397869365,-0.4643542945147649,21022,0.0,0.0,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+cc_rate,pC_after_D,agent_game,0.45346371692444803,0.4632195210942808,16873,1.153141245402774e-307,5.4774209156631765e-307,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+p_CC,utility_gap,dyad,-0.520192128935121,-0.46235190488586897,12000,2.6177008933175993e-178,8.725669644391998e-178,"exact bound: utility_gap = |p_DC - p_CD| and p_exploit = p_CD + p_DC, so utility_gap <= p_exploit always"
+efficiency,dc_rate,agent_game,0.539812388205521,0.4606925916698175,24000,0.0,0.0,payoff-matrix identity: utility = 0.8 cc + 1.0 dc + 0.4 dd
+payoff_base,dc_rate,agent_game,-0.539812388205521,-0.4606925916698175,24000,0.0,0.0,payoff-matrix identity: utility = 0.8 cc + 1.0 dc + 0.4 dd
+utility,dc_rate,agent_game,0.5398123882055205,0.45944410776435474,24000,0.0,0.0,payoff-matrix identity: utility = 0.8 cc + 1.0 dc + 0.4 dd
+pC_after_D,reciprocity,agent_game,-0.48094014295319987,-0.4536519168957082,13895,0.0,0.0,identity: reciprocity = pC_after_C - pC_after_D
+last_coop,dc_rate,agent_game,-0.44267265985948545,-0.45337902140931186,24000,1.8104777574515726e-156,5.374855842434357e-156,partly mechanical: the outcome rates contain the focal action
+first_coop_1,longest_dd,dyad,-0.42554242869680614,-0.45288163220521466,12000,2.8433459380721258e-84,6.588240588215901e-84,partly mechanical: agent 1's round-1 action is inside every one of these aggregates
+joint_efficiency,first_coop_1,dyad,0.44538436318790015,0.45097352177835043,12000,3.1328987301803915e-285,1.4005900205512338e-284,partly mechanical: agent 1's round-1 action is inside every one of these aggregates
+joint_utility,first_coop_1,dyad,0.4453843631879005,0.4509128614054507,12000,3.1328987301803915e-285,1.4005900205512338e-284,partly mechanical: agent 1's round-1 action is inside every one of these aggregates
+utility_gap,first_dd,dyad,0.3771995476362111,0.44832221863652133,6664,6.103627902765146e-118,1.656699002179111e-117,empirical
+last_coop,coop_early,agent_game,0.4317971149512126,0.4357369518852984,24000,1.9301151678193453e-266,8.240941165970239e-266,empirical
+first_dd,longest_dd,dyad,-0.3626556638235194,-0.4331316891834702,6664,1.9406547960785564e-77,4.238211623619836e-77,same construct: all of these summarise the mutual-defection pattern
+first_coop,cc_rate,agent_game,0.4164984280046197,0.4328792550587546,24000,2.747506956983871e-197,9.849553242017649e-197,partly mechanical: the outcome rates contain the focal action
+longest_dd,dd_absorbed,dyad,0.6388678873022506,0.43266067829290494,12000,2.0977146616163506e-248,8.480123100151204e-248,same construct: all of these summarise the mutual-defection pattern
+first_coop,pC_after_D,agent_game,0.4382965689043149,0.42735698856971605,16873,4.4633267120338115e-212,1.6960641505728483e-211,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+dd_rate,n_rules_fit,agent_game,-0.2999367235124576,-0.4271510990990794,24000,1.692348957846245e-68,3.5727366887865174e-68,empirical
+joint_utility,p_exploit,dyad,-0.4786899422298588,-0.42693849957860375,12000,5.876635038874743e-113,1.5616232970437272e-112,payoff-matrix identity: joint_utility is a linear map of the shares
+joint_efficiency,p_exploit,dyad,-0.47868994222985867,-0.4258310523337416,12000,5.876635038875079e-113,1.5616232970437272e-112,payoff-matrix identity: joint_utility is a linear map of the shares
+p_DC,first_coop_1,dyad,-0.3462405714126987,-0.4206424481670518,12000,2.645414375602885e-82,6.092469471085431e-82,partly mechanical: agent 1's round-1 action is inside every one of these aggregates
+gini,first_dd,dyad,0.347198425228738,0.41952639612841597,6664,4.0907701220801616e-95,9.901227047073003e-95,empirical
+fairness,first_dd,dyad,-0.3471984252287382,-0.4194615140079986,6664,4.0907701220801616e-95,9.901227047073003e-95,empirical
+coop_rate_1,first_dd,dyad,0.4095518484860241,0.41911809980352527,6664,1.9306527809858213e-105,5.094778172045918e-105,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+p_DC,fairness,dyad,-0.5091185789034758,-0.41127516463065733,12000,3.21832589216116e-185,1.10176922434346e-184,"exact bound: utility_gap = |p_DC - p_CD| and p_exploit = p_CD + p_DC, so utility_gap <= p_exploit always"
+p_DC,gini,dyad,0.5091185789034758,0.4112723065108658,12000,3.21832589216116e-185,1.10176922434346e-184,"exact bound: utility_gap = |p_DC - p_CD| and p_exploit = p_CD + p_DC, so utility_gap <= p_exploit always"
+pC_after_C,rule_distance,agent_game,-0.29591653014604924,-0.40641914692778314,21022,3.332127267448925e-98,8.222132218380464e-98,empirical
+p_CD,gini,dyad,0.5551369941164779,0.40632037548536726,12000,8.077348710428616e-258,3.336296206482904e-257,"exact bound: utility_gap = |p_DC - p_CD| and p_exploit = p_CD + p_DC, so utility_gap <= p_exploit always"
+p_CD,fairness,dyad,-0.5551369941164778,-0.40631423904029784,12000,8.077348710432294e-258,3.336296206482904e-257,"exact bound: utility_gap = |p_DC - p_CD| and p_exploit = p_CD + p_DC, so utility_gap <= p_exploit always"
+coop_early,n_rules_fit,agent_game,0.4598166877604971,0.4034014091017591,24000,4.05662070591538e-150,1.176729670418202e-149,empirical
+dc_rate,pC_after_D,agent_game,-0.3980928957771199,-0.40291377388332633,16873,3.646972025154969e-200,1.3198565424370365e-199,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+p_DD,dd_absorbed,dyad,0.513289965749887,0.40032214981516967,12000,2.5052324345516245e-87,5.876471142775416e-87,same construct: all of these summarise the mutual-defection pattern
+joint_utility,gini,dyad,-0.41313098140780635,-0.3998978567449946,12000,1.0507854725202845e-98,2.6097939840384238e-98,"construction: both are built from the same two agent utilities, one as their mean and one as their absolute difference"
+joint_utility,fairness,dyad,0.41313098140780635,0.3998961450755178,12000,1.0507854725202845e-98,2.6097939840384238e-98,"construction: both are built from the same two agent utilities, one as their mean and one as their absolute difference"
+p_CC,first_coop_1,dyad,0.39818924830504004,0.3994955081632189,12000,2.392153046098936e-158,7.214429821568219e-158,partly mechanical: agent 1's round-1 action is inside every one of these aggregates
+joint_efficiency,gini,dyad,-0.4131309814078061,-0.39878512686336554,12000,1.0507854725207337e-98,2.6097939840384238e-98,"construction: both are built from the same two agent utilities, one as their mean and one as their absolute difference"
+joint_efficiency,fairness,dyad,0.413130981407806,0.39878321128548494,12000,1.0507854725207337e-98,2.6097939840384238e-98,"construction: both are built from the same two agent utilities, one as their mean and one as their absolute difference"
+p_DC,utility_gap,dyad,0.5174704312716224,0.3963340401614876,12000,3.2495284182851526e-206,1.1988551446100562e-205,"exact bound: utility_gap = |p_DC - p_CD| and p_exploit = p_CD + p_DC, so utility_gap <= p_exploit always"
+p_exploit,n_switch,dyad,0.2641193282429709,0.3953891789665641,12000,8.164659304024449e-36,1.42319749336206e-35,"structural bound: n_switch is forced to 0 when the agent never changes action, i.e. at cooperation rates 0 and 1"
+joint_coop,first_dd,dyad,0.3812083680802874,0.3940457987887112,6664,1.2131457955557063e-87,2.8633254801935924e-87,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+first_coop,coop_late,agent_game,0.39343608870919305,0.393805847315386,24000,1.8884733062475272e-203,6.900190926673657e-203,empirical
+p_CD,utility_gap,dyad,0.5482506701672613,0.38809743919179485,12000,4.75676984004823e-274,2.1018285339747994e-273,"exact bound: utility_gap = |p_DC - p_CD| and p_exploit = p_CD + p_DC, so utility_gap <= p_exploit always"
+p_CD,first_dd,dyad,0.36020322358717877,0.3861041911973119,6664,2.468868432555889e-92,5.937784837792644e-92,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+first_coop,pC_after_C,agent_game,0.3707316441148592,0.38484708893946973,21022,1.396755981235164e-177,4.615367590168368e-177,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+p_DD,n_switch,dyad,0.11923498104118013,0.3833364454542518,12000,2.1409568401248655e-08,2.7392713779375384e-08,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+first_coop,endgame_drop,agent_game,0.396163022009837,0.37866092865628376,24000,1.6781466544368482e-249,6.856943319204325e-249,partly mechanical: endgame_drop = coop_early - coop_late
+coop_early,endgame_drop,agent_game,0.4187666930643025,0.37335077867578215,24000,1.5089553117901248e-262,6.371144649780527e-262,identity: endgame_drop = coop_early - coop_late
+dd_rate,rule_distance,agent_game,0.10815565727847537,0.37232779051839526,24000,9.458542468457422e-08,1.190147727819146e-07,empirical
+coop_rate_1,n_switch,dyad,-0.24331755737913252,-0.35781029416815996,12000,3.733928027889328e-42,6.887828400960897e-42,"structural bound: n_switch is forced to 0 when the agent never changes action, i.e. at cooperation rates 0 and 1"
+first_coop,dc_rate,agent_game,-0.2951378729046725,-0.3576047560125172,24000,1.9635259891429826e-67,4.0996696476611724e-67,partly mechanical: the outcome rates contain the focal action
+cc_rate,n_rules_fit,agent_game,0.6619636606160813,0.352710353242756,24000,0.0,0.0,empirical
+joint_coop,p_exploit,dyad,-0.2625230024862602,-0.35249699061193973,12000,2.026762464475134e-29,3.2913236602587643e-29,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+coop_rate_1,coop_rate_2,dyad,0.31936923121344735,0.35020471301270406,12000,2.3164390425608772e-36,4.056437033055914e-36,identity: joint_coop is the mean of coop_rate_1 and coop_rate_2
+coop_rate,opp_coop_rate,agent_game,0.31927993843600555,0.3499093747282621,24000,9.15618207481335e-36,1.5887439216571107e-35,"not an identity but not independent either: self-play, so the opponent is the same model and each dyad appears twice"
+joint_coop,dd_absorbed,dyad,-0.4054911026206062,-0.3494554220402662,12000,2.4337653019237245e-57,4.670862700661694e-57,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+n_switch,longest_dd,dyad,-0.0406705715269659,0.3476979828688863,12000,0.02456832200983326,0.026372775038804065,"structural bound: n_switch is forced to 0 when the agent never changes action, i.e. at cooperation rates 0 and 1"
+p_CD,n_switch,dyad,0.11047694586070346,0.34749183477362316,12000,3.5541864055345665e-07,4.370844123311117e-07,"structural bound: n_switch is forced to 0 when the agent never changes action, i.e. at cooperation rates 0 and 1"
+first_coop,n_rules_fit,agent_game,0.405332646394541,0.3432719940343382,24000,1.0535172859116855e-136,2.9436512400473567e-136,empirical
+coop_late,n_rules_fit,agent_game,0.41227302483588546,0.34319772674520904,24000,6.091634519584847e-154,1.7806316288017245e-153,empirical
+coop_rate_2,dd_absorbed,dyad,-0.3401732985165278,-0.34313736581108223,12000,6.264920303765229e-45,1.16130230021014e-44,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+joint_efficiency,dd_absorbed,dyad,-0.31978386051992186,-0.3389401998324998,12000,3.310357320135929e-46,6.166351870841436e-46,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+joint_utility,dd_absorbed,dyad,-0.31978386051992275,-0.338388017351555,12000,3.3103573201350776e-46,6.166351870841436e-46,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+p_CC,p_CD,dyad,-0.38214286107041673,-0.338011525069886,12000,1.6492855369487101e-80,3.708452686630236e-80,"simplex: the four outcome shares sum to 1, p_exploit = p_CD + p_DC"
+joint_coop,n_switch,dyad,-0.2585279561874289,-0.33659816627500844,12000,1.4902173896676678e-40,2.7225125388159318e-40,"structural bound: n_switch is forced to 0 when the agent never changes action, i.e. at cooperation rates 0 and 1"
+coop_rate,rule_distance,agent_game,-0.22543516471467698,-0.3328998438549119,24000,2.646994184456439e-48,5.0042676124052083e-48,empirical
+joint_utility,utility_gap,dyad,-0.37413647474461925,-0.33278804547726437,12000,6.43470396358533e-82,1.4641841354271444e-81,"construction: both are built from the same two agent utilities, one as their mean and one as their absolute difference"
+joint_utility,first_dd,dyad,0.28563508768538537,0.3323345720686765,6664,3.1699264175001027e-37,5.6288413021057235e-37,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+joint_efficiency,utility_gap,dyad,-0.37413647474461914,-0.331665682660922,12000,6.434703963587714e-82,1.4641841354271444e-81,"construction: both are built from the same two agent utilities, one as their mean and one as their absolute difference"
+coop_rate_1,dd_absorbed,dyad,-0.31844107275515815,-0.3304516840433928,12000,1.14702407191652e-38,2.0559865440013095e-38,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+joint_efficiency,first_dd,dyad,0.2856350876853855,0.32984767830034767,6664,3.1699264175016445e-37,5.6288413021057235e-37,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+joint_coop,gini,dyad,-0.21692121874157141,-0.32940838691472185,12000,8.347233721660719e-30,1.3613514224167698e-29,empirical
+joint_coop,fairness,dyad,0.21692121874157141,0.32940714415249095,12000,8.34723372166048e-30,1.3613514224167698e-29,empirical
+cc_rate,cd_rate,agent_game,-0.37469590903022415,-0.3197446922985783,24000,4.4463318137425314e-299,2.0604952307589692e-298,simplex: the four outcome rates sum to 1
+cc_rate,dc_rate,agent_game,-0.3746959090302241,-0.3197446922985783,24000,4.4463318137430385e-299,2.0604952307589692e-298,simplex: the four outcome rates sum to 1
+cd_rate,n_rules_fit,agent_game,-0.2546290432310819,-0.31818164898252693,24000,2.9797089629482104e-59,5.866784486633783e-59,empirical
+first_coop,last_coop,agent_game,0.31081797712018694,0.31081797712018655,24000,2.4620680926928177e-157,7.366817915143864e-157,empirical
+coop_early,rule_distance,agent_game,-0.250944979597131,-0.30660203757970544,24000,1.6209931004486475e-62,3.276475415800458e-62,empirical
+p_CC,p_DC,dyad,-0.367196950791244,-0.30129885939797163,12000,1.7487657416344104e-86,4.0768771890863555e-86,"simplex: the four outcome shares sum to 1, p_exploit = p_CD + p_DC"
+opp_coop_rate,n_rules_fit,agent_game,0.4279976675833876,0.29719609182916645,24000,4.253204541406747e-116,1.146253706194726e-115,empirical
+opp_coop_rate,coop_early,agent_game,0.27629051626636153,0.29640665133685495,24000,6.918182772124472e-33,1.1684042015143552e-32,empirical
+first_coop,rule_distance,agent_game,-0.2806605529818193,-0.2911415608354734,24000,1.979306311871537e-95,4.852492893620542e-95,empirical
+joint_efficiency,p_CD,dyad,-0.2895347926607325,-0.28492726166808485,12000,7.576640047398198e-59,1.4764734451340078e-58,payoff-matrix identity: joint_utility is a linear map of the shares
+joint_utility,p_CD,dyad,-0.2895347926607326,-0.2840642424082109,12000,7.576640047397549e-59,1.4764734451340078e-58,payoff-matrix identity: joint_utility is a linear map of the shares
+opp_coop_rate,coop_late,agent_game,0.2629906998291335,0.2820671481527855,24000,1.1350105373629878e-31,1.908424797335997e-31,empirical
+p_CC,dd_absorbed,dyad,-0.2385277331241945,-0.2800684542248261,12000,1.7227223666964136e-39,3.102533172249465e-39,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+joint_efficiency,n_switch,dyad,-0.2985753802097668,-0.27918949293986317,12000,1.3961758348745163e-75,3.014470552569978e-75,"structural bound: n_switch is forced to 0 when the agent never changes action, i.e. at cooperation rates 0 and 1"
+joint_utility,n_switch,dyad,-0.29857538020976715,-0.2776402459528316,12000,1.396175834874437e-75,3.014470552569978e-75,"structural bound: n_switch is forced to 0 when the agent never changes action, i.e. at cooperation rates 0 and 1"
+last_coop,n_rules_fit,agent_game,0.3602740018593806,0.2757744912072075,24000,1.0201521276776171e-137,2.8715393223518116e-137,empirical
+cd_rate,rule_distance,agent_game,0.06655014286034618,0.2751415510697057,24000,1.4222453434200804e-05,1.6889163453113458e-05,empirical
+joint_coop,p_CD,dyad,-0.1599350401788904,-0.26719653357733814,12000,1.9756520512546707e-25,3.1151360144264513e-25,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+joint_utility,p_DC,dyad,-0.2768343716839498,-0.26554461164445403,12000,1.1251213312508935e-62,2.286342812168308e-62,payoff-matrix identity: joint_utility is a linear map of the shares
+joint_efficiency,p_DC,dyad,-0.27683437168394964,-0.2646745333757624,12000,1.1251213312512465e-62,2.286342812168308e-62,payoff-matrix identity: joint_utility is a linear map of the shares
+joint_coop,utility_gap,dyad,-0.17376631455529556,-0.2593553326094249,12000,8.494792047738416e-20,1.2708744008427551e-19,empirical
+p_exploit,coop_rate_2,dyad,-0.22233268853690905,-0.257094735439635,12000,4.252462839265322e-16,6.074946913236175e-16,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+p_exploit,coop_rate_1,dyad,-0.20405276543637554,-0.2525822897007604,12000,4.182569716694557e-14,5.779550881250659e-14,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+efficiency,pC_after_D,agent_game,-0.3153066863495393,-0.25122553139432613,16873,3.286273452384901e-100,8.437729134503939e-100,empirical
+payoff_base,pC_after_D,agent_game,0.31530668634953934,0.25122553139432613,16873,3.2862734523857444e-100,8.437729134503939e-100,empirical
+joint_coop,p_DC,dyad,-0.15065427165637754,-0.2505568373492339,12000,5.024235120721423e-24,7.824628466697298e-24,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+utility,pC_after_D,agent_game,-0.3153066863495396,-0.24979606965605933,16873,3.2862734523838714e-100,8.437729134503939e-100,empirical
+first_coop_1,n_switch,dyad,-0.20537593339157234,-0.24272238037361404,12000,7.118677462076031e-35,1.2240259889542496e-34,empirical
+gini,n_switch,dyad,0.013170187551333931,0.24164554942183347,12000,0.4497130697482101,0.4557092440115196,empirical
+fairness,n_switch,dyad,-0.013170187551333909,-0.24163568050350764,12000,0.4497130697482089,0.4557092440115196,empirical
+opp_coop_rate,last_coop,agent_game,0.2260109453041819,0.2372871215573331,24000,3.559231728170904e-33,6.065058550246383e-33,empirical
+p_CC,n_switch,dyad,-0.31900696441082554,-0.2363295217269335,12000,2.9570132481159067e-104,7.749414029545135e-104,"structural bound: n_switch is forced to 0 when the agent never changes action, i.e. at cooperation rates 0 and 1"
+coop_late,rule_distance,agent_game,-0.1773340187057602,-0.23613328443054704,24000,5.8179071782157635e-37,1.0282812687079023e-36,empirical
+gini,coop_rate_2,dyad,-0.19526937274118236,-0.2345609662512298,12000,6.298746736732476e-12,8.578938207735989e-12,empirical
+fairness,coop_rate_2,dyad,0.19526937274118236,0.23455831638813945,12000,6.298746736732041e-12,8.578938207735989e-12,empirical
+fairness,coop_rate_1,dyad,0.15697007177681913,0.23305464296474646,12000,2.473196385219864e-08,3.1431927303798696e-08,empirical
+gini,coop_rate_1,dyad,-0.15697007177681913,-0.23305342357312397,12000,2.47319638521995e-08,3.1431927303798696e-08,empirical
+opp_coop_rate,first_coop,agent_game,0.20820268500753505,0.22596082735160966,24000,4.300615345975779e-28,6.954186516897004e-28,empirical
+endgame_drop,pC_after_C,agent_game,-0.21298722776583492,-0.22567385810884114,21022,5.883966783225855e-124,1.620222737410018e-123,empirical
+p_exploit,dd_absorbed,dyad,-0.20503516272175895,-0.22421019037700957,12000,2.3562420951781835e-25,3.699884281684751e-25,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+p_DC,coop_rate_2,dyad,0.34469842134284867,0.22305684249815455,12000,2.2200387594537636e-146,6.3910206711547745e-146,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+coop_rate_2,n_switch,dyad,-0.17687177678880042,-0.21969887431689122,12000,5.1637737494305627e-20,7.755865710607169e-20,"structural bound: n_switch is forced to 0 when the agent never changes action, i.e. at cooperation rates 0 and 1"
+p_CD,first_coop_1,dyad,0.3095336073299466,0.21690857303052735,12000,1.4078340259368034e-160,4.349405933788498e-160,partly mechanical: agent 1's round-1 action is inside every one of these aggregates
+opp_coop_rate,dc_rate,agent_game,0.3441970403993023,0.21418876651451227,24000,1.7944229065865688e-75,3.8307904747353715e-75,identity: opp_coop_rate = cc_rate + dc_rate
+coop_rate,cd_rate,agent_game,0.34419704039930227,0.21418876651451227,24000,1.7944229065117866e-75,3.8307904747353715e-75,identity: coop_rate = cc_rate + cd_rate
+utility_gap,n_switch,dyad,0.02015019836944253,0.20954282414708073,12000,0.2545860673318633,0.26076200966605945,empirical
+coop_late,cd_rate,agent_game,0.3053071172841567,0.2056170697945696,24000,1.7386257859411398e-73,3.690937422668341e-73,partly mechanical: the outcome rates contain the focal action
+p_CD,coop_rate_1,dyad,0.34363736292561503,0.20518605614921234,12000,3.3478210068116237e-161,1.0427639201544402e-160,payoff-matrix identity: joint_coop = p_CC + p_exploit/2 and joint_utility = 0.4 + 0.4 joint_coop - 0.1 p_exploit
+coop_rate_2,first_dd,dyad,0.19605093920627023,0.20307260454518608,6664,1.85750012877696e-20,2.823400195740979e-20,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+coop_early,cd_rate,agent_game,0.3069914190965744,0.20302039304820196,24000,1.714618319153323e-68,3.5997511672832195e-68,partly mechanical: the outcome rates contain the focal action
+p_CC,first_dd,dyad,0.1696396013169948,0.19893148460141372,6664,4.2600187888748773e-13,5.865243260045121e-13,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+n_switch,dd_absorbed,dyad,-0.1864935083608612,-0.1980581263182161,12000,1.8248661540826071e-31,3.054842020050179e-31,"structural bound: n_switch is forced to 0 when the agent never changes action, i.e. at cooperation rates 0 and 1"
+cd_rate,dc_rate,agent_game,-0.29993515495150586,-0.19265823594450118,24000,3.9782092976515417e-156,1.171875607060144e-155,simplex: the four outcome rates sum to 1
+p_CD,p_DC,dyad,-0.29989156815925594,-0.19170687181668905,12000,4.8835942287378796e-91,1.1671483062392417e-90,"simplex: the four outcome shares sum to 1, p_exploit = p_CD + p_DC"
+utility_gap,dd_absorbed,dyad,-0.15592750331505545,-0.19126684168655472,12000,1.239289987315618e-21,1.9065999804855663e-21,empirical
+fairness,dd_absorbed,dyad,0.1480038950390686,0.18623165969147867,12000,2.488149590172453e-20,3.751971604228302e-20,empirical
+gini,dd_absorbed,dyad,-0.14800389503906858,-0.18620208784578932,12000,2.488149590172328e-20,3.751971604228302e-20,empirical
+utility_gap,coop_rate_1,dyad,-0.1273253301324771,-0.18042007416432299,12000,4.127500996417073e-06,4.963450565311669e-06,empirical
+last_coop,rule_distance,agent_game,-0.15791341810252682,-0.18004677661558438,24000,6.156804174564319e-33,1.0444578510421613e-32,empirical
+utility_gap,coop_rate_2,dyad,-0.1548495628717941,-0.1790952480351842,12000,4.915627743577765e-08,6.205775888902162e-08,empirical
+last_coop,cd_rate,agent_game,0.23976399410930643,0.17613018275704137,24000,1.9903734469368712e-58,3.839299034700564e-58,partly mechanical: the outcome rates contain the focal action
+coop_rate_2,first_coop_1,dyad,0.15419962819088692,0.17534460185553213,12000,1.3828026517815982e-12,1.896985587281615e-12,partly mechanical: agent 1's round-1 action is inside every one of these aggregates
+opp_coop_rate,rule_distance,agent_game,-0.13604895866467961,-0.17410013797242732,24000,1.491429434282697e-17,2.196679011734205e-17,empirical
+first_coop,cd_rate,agent_game,0.2644074293687574,0.17283474142795685,24000,1.06399881213751e-66,2.209396440504119e-66,partly mechanical: the outcome rates contain the focal action
+efficiency,pC_after_C,agent_game,-0.1871771083635806,-0.17176087046215535,21022,4.826819864070671e-26,7.642464784778837e-26,empirical
+payoff_base,pC_after_C,agent_game,0.18717710836358067,0.17176087046215535,21022,4.8268198640708447e-26,7.642464784778837e-26,empirical
+utility,pC_after_C,agent_game,-0.18717710836358042,-0.17021637234814777,21022,4.826819864070671e-26,7.642464784778837e-26,empirical
+opp_coop_rate,pC_after_C,agent_game,0.15582011111865582,0.1698782555943054,21022,9.929327278210697e-15,1.392304193992644e-14,partly mechanical: opponent cooperation defines the conditioning event
+p_DC,dd_absorbed,dyad,-0.13903362467271285,-0.16759856400823286,12000,4.0334880572189984e-25,6.307512188243701e-25,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+cc_rate,rule_distance,agent_game,-0.2701697651107442,-0.16447003133402457,24000,3.650710619567164e-80,8.160411973150131e-80,empirical
+n_switch,first_dd,dyad,0.035483432431180496,0.161759564979218,6664,0.03840727398062508,0.04088169219226199,"structural bound: n_switch is forced to 0 when the agent never changes action, i.e. at cooperation rates 0 and 1"
+utility,n_rules_fit,agent_game,0.2871864081938986,0.16026951397911526,24000,4.936516713873785e-60,9.770189329546607e-60,empirical
+payoff_base,n_rules_fit,agent_game,-0.2871864081938983,-0.1601254105580075,24000,4.9365167138761803e-60,9.770189329546607e-60,empirical
+efficiency,n_rules_fit,agent_game,0.28718640819389835,0.1601254105580075,24000,4.936516713873785e-60,9.770189329546607e-60,empirical
+cd_rate,pC_after_C,agent_game,0.23618594165939938,0.1492757265529073,21022,1.004744454376171e-81,2.272636265850863e-81,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+reciprocity_1,dd_absorbed,dyad,0.14118014623705744,0.14556713351104011,6799,3.664829381565208e-14,5.1012277106035864e-14,empirical
+p_CD,dd_absorbed,dyad,-0.1038846597123533,-0.1431078934865038,12000,3.881667932624927e-14,5.38333508904187e-14,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+p_DD,utility_gap,dyad,-0.3009053322207049,-0.14117619932053085,12000,4.814937922325799e-89,1.1435477565523774e-88,"exact bound: utility_gap = |p_DC - p_CD| and p_exploit = p_CD + p_DC, so utility_gap <= p_exploit always"
+utility_gap,longest_dd,dyad,-0.29382497489398895,-0.13740755236111152,12000,1.6717171742567232e-61,3.3611244773415594e-61,empirical
+reciprocity_1,longest_dd,dyad,0.13669520181713216,0.13698305863489493,6799,6.658776022980067e-19,9.884120659111038e-19,empirical
+first_coop_1,dd_absorbed,dyad,-0.13665161360258143,-0.1366516136025811,12000,1.1616482347745137e-11,1.5765226043368402e-11,partly mechanical: agent 1's round-1 action is inside every one of these aggregates
+endgame_drop,reciprocity,agent_game,-0.15557381424114278,-0.13204610066663844,13895,7.15834032102139e-15,1.0074701192548624e-14,empirical
+opp_coop_rate,pC_after_D,agent_game,0.12625527862493607,0.13173376106332493,16873,9.167458052532609e-09,1.1808929016821665e-08,partly mechanical: opponent cooperation defines the conditioning event
+log_scale,first_dd,dyad,0.07706925477631033,0.13103487021037688,6664,3.186334322097018e-10,4.2041911194335647e-10,empirical
+p_CC,reciprocity_1,dyad,0.11335295392062411,0.12010605853393962,6799,6.817856860313189e-15,9.631173259921978e-15,partly mechanical: reciprocity is a contrast between two sub-averages of the same cooperation sequence
+endgame_drop,dc_rate,agent_game,0.12462835137633779,0.11840360727769518,24000,1.9895078267434128e-30,3.272783437932887e-30,empirical
+p_DC,first_dd,dyad,0.08485226453917846,0.1121968035262983,6664,5.468503528420699e-06,6.555303914195159e-06,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+coop_rate,endgame_drop,agent_game,-0.10851460016513392,-0.10705810208315832,24000,3.0271617367433473e-48,5.694660692883524e-48,partly mechanical: endgame_drop = coop_early - coop_late
+joint_utility,reciprocity_1,dyad,0.09232963065206669,0.10347065542475513,6799,1.0233771924749992e-10,1.3741460535000233e-10,partly mechanical: reciprocity is a contrast between two sub-averages of the same cooperation sequence
+joint_efficiency,reciprocity_1,dyad,0.09232963065206673,0.10256568152818413,6799,1.0233771924750175e-10,1.3741460535000233e-10,partly mechanical: reciprocity is a contrast between two sub-averages of the same cooperation sequence
+p_CD,p_DD,dyad,-0.156520132729009,0.10040082072805999,12000,9.907931764456922e-31,1.6369626393450567e-30,"simplex: the four outcome shares sum to 1, p_exploit = p_CD + p_DC"
+endgame_drop,cc_rate,agent_game,-0.09343802534346925,-0.09727688886485403,24000,1.665128071264496e-36,2.9293919772245767e-36,empirical
+utility,rule_distance,agent_game,-0.06750705642738664,-0.09609076114775444,24000,7.545563683791707e-07,9.131573884843838e-07,empirical
+efficiency,rule_distance,agent_game,-0.0675070564273865,-0.09560620587336519,24000,7.54556368379178e-07,9.131573884843838e-07,empirical
+payoff_base,rule_distance,agent_game,0.0675070564273865,0.09560620587336519,24000,7.545563683792014e-07,9.131573884843838e-07,empirical
+p_CD,longest_dd,dyad,-0.17201945693678466,0.09125909710566811,12000,1.8024547023731177e-35,3.113330849553567e-35,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+endgame_drop,pC_after_D,agent_game,-0.06323527126039385,-0.08929613817652679,16873,1.760608212993094e-09,2.2756160576101212e-09,empirical
+coop_late,reciprocity,agent_game,0.08376408173467584,0.0880163230426715,13895,2.6207057736947253e-11,3.5440149252811234e-11,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+dc_rate,dd_rate,agent_game,-0.15646918426973963,0.08657316550305934,24000,1.2308214423635502e-39,2.22720070524768e-39,simplex: the four outcome rates sum to 1
+cd_rate,dd_rate,agent_game,-0.1564691842697397,0.08657316550305934,24000,1.2308214423737179e-39,2.22720070524768e-39,simplex: the four outcome rates sum to 1
+log_scale,n_switch,dyad,0.0937918126420847,0.08446285266841055,12000,7.852356651490414e-28,1.26436251168066e-27,empirical
+cc_rate,reciprocity,agent_game,0.09291169170654262,0.08368620369874114,13895,1.4614300733544348e-21,2.239288015623731e-21,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+p_exploit,longest_dd,dyad,-0.29686558257260837,-0.0749244273513328,12000,2.489854831557985e-41,4.570747999961518e-41,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+last_coop,reciprocity,agent_game,0.07525400217040441,0.07442833608262019,13895,1.3746566146475503e-09,1.7889366902947575e-09,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+p_DC,p_DD,dyad,-0.15644633753141482,0.07191888150383345,12000,1.1302051721290403e-27,1.8121433139621742e-27,"simplex: the four outcome shares sum to 1, p_exploit = p_CD + p_DC"
+log_scale,first_coop_1,dyad,0.06847088844986372,0.07179906003460296,12000,6.036897012866024e-17,8.85722341656019e-17,empirical
+p_DD,p_exploit,dyad,-0.26446894427867657,-0.07079298301876073,12000,7.684060123965234e-59,1.4897667587279535e-58,"simplex: the four outcome shares sum to 1, p_exploit = p_CD + p_DC"
+coop_early,reciprocity,agent_game,-0.09474705833267395,-0.07070605555564441,13895,6.006685062886238e-10,7.870828703092312e-10,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+joint_coop,reciprocity_1,dyad,0.0621772770695385,0.07010715652673837,6799,1.0156856455100808e-05,1.209907665497902e-05,partly mechanical: reciprocity is a contrast between two sub-averages of the same cooperation sequence
+p_exploit,reciprocity_1,dyad,-0.14203247981649783,-0.06950388781031909,6799,3.8412379027687236e-21,5.862130132739418e-21,partly mechanical: reciprocity is a contrast between two sub-averages of the same cooperation sequence
+log_scale,dd_absorbed,dyad,-0.06671349097874622,-0.06903373992423378,12000,5.574404697546283e-15,7.904006660699954e-15,empirical
+log_scale,first_coop,agent_game,0.06588372021933141,0.06866060042247052,24000,3.115971739678845e-23,4.8329357595018814e-23,empirical
+p_DD,fairness,dyad,0.2571765384453339,0.0684279066936503,12000,1.624940429328605e-63,3.337715476458851e-63,"exact bound: utility_gap = |p_DC - p_CD| and p_exploit = p_CD + p_DC, so utility_gap <= p_exploit always"
+p_DD,gini,dyad,-0.257176538445334,-0.06842741145318294,12000,1.624940429328651e-63,3.337715476458851e-63,"exact bound: utility_gap = |p_DC - p_CD| and p_exploit = p_CD + p_DC, so utility_gap <= p_exploit always"
+fairness,longest_dd,dyad,0.2587860979204758,0.0674459446858238,12000,3.5892595427874706e-51,6.819593131296486e-51,empirical
+gini,longest_dd,dyad,-0.2587860979204758,-0.06744465808697848,12000,3.589259542787624e-51,6.819593131296486e-51,empirical
+dc_rate,reciprocity,agent_game,-0.09936678343712282,-0.06636996638145606,13895,4.413425647492166e-22,6.817486772548874e-22,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+log_scale,coop_early,agent_game,0.06449717742994732,0.0657849661964844,24000,8.908439721423343e-19,1.317201203945864e-18,empirical
+log_scale,joint_utility,dyad,0.05006798985331486,0.06361929689492204,12000,1.2179293707141625e-07,1.5075347259654131e-07,empirical
+log_scale,joint_efficiency,dyad,0.05006798985331476,0.06333046518903038,12000,1.2179293707141583e-07,1.5075347259654131e-07,empirical
+first_coop,reciprocity,agent_game,-0.08729043743613099,-0.06309190608803797,13895,1.710066773340396e-09,2.2178340405097287e-09,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+p_DC,longest_dd,dyad,-0.17934428745690398,0.062219095292999994,12000,8.416392491491211e-34,1.4406437598048017e-33,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+log_scale,p_CC,dyad,0.0391068150993808,0.059984746158055366,12000,2.0789714395808644e-05,2.4458487524480755e-05,empirical
+log_scale,cc_rate,agent_game,0.039106815099380784,0.059984746158055366,24000,2.078147324787508e-05,2.4458487524480755e-05,empirical
+log_scale,rule_distance,agent_game,0.05594525611798752,0.05927526223356664,24000,1.6725003262783774e-16,2.416540395383207e-16,empirical
+log_scale,joint_coop,dyad,0.06129136897232857,0.05669016060317266,12000,1.540227996817613e-10,2.03932626756339e-10,empirical
+p_exploit,first_coop_1,dyad,-0.026542472248949255,-0.05453103224951977,12000,0.21524832993932597,0.22106585237011858,partly mechanical: agent 1's round-1 action is inside every one of these aggregates
+reciprocity,n_rules_fit,agent_game,-0.015688201590172635,-0.05220583683736707,13895,0.13988844794022395,0.1452393721783746,empirical
+log_scale,coop_rate_1,dyad,0.05216225307629335,0.05213909835343513,12000,6.032344781367832e-10,7.877288717937376e-10,empirical
+pC_after_D,n_rules_fit,agent_game,0.058026870904050815,0.051862111432061576,16873,0.004899675097770764,0.005365638435599107,empirical
+log_scale,coop_rate,agent_game,0.04977976052380104,0.05094464919182525,24000,1.538882743198048e-10,2.03932626756339e-10,empirical
+log_scale,opp_coop_rate,agent_game,0.04977976052380104,0.05094464919182525,24000,1.5388827431980195e-10,2.03932626756339e-10,empirical
+dd_rate,reciprocity,agent_game,0.057901233540444276,0.05050808956271334,13895,5.144787029478585e-07,6.306513132909234e-07,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+endgame_drop,efficiency,agent_game,0.03190092621268816,0.050318768993298596,24000,0.0012545964648422744,0.0013980840370676371,empirical
+endgame_drop,payoff_base,agent_game,-0.03190092621268814,-0.050318768993298596,24000,0.0012545964648422744,0.0013980840370676371,empirical
+endgame_drop,utility,agent_game,0.03190092621268803,0.05014637259415371,24000,0.0012545964648422697,0.0013980840370676371,empirical
+p_DC,reciprocity_1,dyad,-0.07886630852905696,-0.04994557119663066,6799,1.2444688792849788e-08,1.597628966649635e-08,partly mechanical: reciprocity is a contrast between two sub-averages of the same cooperation sequence
+log_scale,coop_rate_2,dyad,0.047417383933700104,0.049726153344294796,12000,3.588195939211058e-08,4.545048189667341e-08,empirical
+coop_rate_1,reciprocity_1,dyad,0.04219167617105222,0.047812046100234235,6799,0.0003684837884998205,0.00042820746064199325,partly mechanical: reciprocity is a contrast between two sub-averages of the same cooperation sequence
+coop_rate_2,reciprocity_1,dyad,0.05332995071929028,0.04773777218985261,6799,0.0009111028684566777,0.001042828584378125,partly mechanical: reciprocity is a contrast between two sub-averages of the same cooperation sequence
+log_scale,longest_dd,dyad,-0.09829181204136721,-0.04506741649791168,12000,3.5386988996294103e-31,5.89783149938235e-31,empirical
+reciprocity_1,n_switch,dyad,-0.08542053926246537,-0.0436271680982288,6799,1.0053406893448227e-06,1.2127919427016908e-06,empirical
+coop_late,payoff_base,agent_game,0.09091014351531831,0.042334105840914266,24000,7.087452671408053e-05,8.261447899187301e-05,payoff-matrix link: own utility is a linear map of the outcome rates
+coop_late,efficiency,agent_game,-0.09091014351531836,-0.042334105840914266,24000,7.087452671408012e-05,8.261447899187301e-05,payoff-matrix link: own utility is a linear map of the outcome rates
+log_scale,pC_after_D,agent_game,0.03455868535458381,0.04204042855736943,16873,6.332675139261463e-06,7.5673476506897984e-06,empirical
+first_coop_1,reciprocity_1,dyad,-0.07656535816859292,-0.041426804112722114,6799,1.4590558236375248e-05,1.7272311930911507e-05,empirical
+coop_late,utility,agent_game,-0.09091014351531826,-0.041263655252205364,24000,7.087452671408053e-05,8.261447899187301e-05,payoff-matrix link: own utility is a linear map of the outcome rates
+log_scale,p_CD,dyad,0.016968558974351178,0.038902286370615165,12000,0.00904481494653936,0.009764288862741355,empirical
+reciprocity,rule_distance,agent_game,-0.09558962703649423,-0.03733632883681458,13895,8.725852844935066e-17,1.2655817103340935e-16,empirical
+fairness,reciprocity_1,dyad,0.11887439996282805,0.037029517712144966,6799,3.243837524216373e-16,4.651540600763202e-16,empirical
+gini,reciprocity_1,dyad,-0.11887439996282807,-0.03702076729585546,6799,3.2438375242164434e-16,4.651540600763202e-16,empirical
+log_scale,endgame_drop,agent_game,0.04015917327926096,0.03639935422374981,24000,4.5223002232532887e-10,5.946277110160034e-10,empirical
+log_scale,dd_rate,agent_game,-0.07378157109242682,-0.033154286411894794,24000,7.789028766145856e-17,1.135700425725342e-16,empirical
+log_scale,p_DD,dyad,-0.07378157109242685,-0.033154286411894794,12000,7.800468713534586e-17,1.135700425725342e-16,empirical
+endgame_drop,cd_rate,agent_game,-0.019197963234217415,-0.03268043904485444,24000,0.012799362404867478,0.01377835046416329,empirical
+utility_gap,reciprocity_1,dyad,-0.11234145515783778,-0.03209217798048094,6799,2.329698565747796e-14,3.254725937441774e-14,empirical
+last_coop,efficiency,agent_game,-0.06296035927350314,-0.032025185099627936,24000,0.0010664018374201651,0.0011989133083421975,payoff-matrix link: own utility is a linear map of the outcome rates
+last_coop,payoff_base,agent_game,0.06296035927350313,0.032025185099627936,24000,0.0010664018374201651,0.0011989133083421975,payoff-matrix link: own utility is a linear map of the outcome rates
+endgame_drop,rule_distance,agent_game,-0.06302763809606415,-0.032016455102834386,24000,7.279422757963984e-07,8.894471537062102e-07,empirical
+last_coop,utility,agent_game,-0.06296035927350309,-0.031162067429885056,24000,0.0010664018374201539,0.0011989133083421975,payoff-matrix link: own utility is a linear map of the outcome rates
+p_CD,reciprocity_1,dyad,-0.06941994048959721,-0.029795037653645298,6799,2.132641807860344e-07,2.631181451256269e-07,partly mechanical: reciprocity is a contrast between two sub-averages of the same cooperation sequence
+log_scale,p_exploit,dyad,0.02377152509871476,0.02930317384843913,12000,0.0005561528974056429,0.0006404184879216495,empirical
+log_scale,payoff_base,agent_game,-0.026135588985390718,-0.028491868268585414,24000,1.217195353786876e-07,1.5075347259654131e-07,empirical
+log_scale,efficiency,agent_game,0.02613558898539072,0.028491868268585414,24000,1.217195353786881e-07,1.5075347259654131e-07,empirical
+log_scale,utility,agent_game,0.02613558898539085,0.0283540181419361,24000,1.2171953537868896e-07,1.5075347259654131e-07,empirical
+coop_rate,reciprocity,agent_game,0.024648189506216955,0.028338975884139386,13895,0.0027022888490743397,0.0029937893954759447,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+log_scale,dc_rate,agent_game,0.014064075278056897,0.02832107370143077,24000,0.0005560046412562225,0.0006404184879216495,empirical
+log_scale,cd_rate,agent_game,0.014064075278056896,0.02832107370143077,24000,0.0005560046412562262,0.0006404184879216495,empirical
+first_dd,dd_absorbed,dyad,0.203374696694537,0.028181375877023483,6664,4.391511580958994e-16,6.250091388630778e-16,same construct: all of these summarise the mutual-defection pattern
+fairness,first_coop_1,dyad,-0.03278101184001426,0.026172598053044213,12000,0.13362327789779205,0.13911464548263283,empirical
+gini,first_coop_1,dyad,0.03278101184001427,-0.026155426139627822,12000,0.13362327789779171,0.13911464548263283,empirical
+log_scale,reciprocity,agent_game,-0.028147347957356437,-0.0258209438695072,13895,0.0007672578495398316,0.0008808398272662719,empirical
+endgame_drop,dd_rate,agent_game,0.022554376828063778,0.02449105038258063,24000,0.008308137702972472,0.008994565034557093,empirical
+log_scale,coop_late,agent_game,0.02359219545170562,0.024233489109270714,24000,0.0017311798089138112,0.0019235331210153456,empirical
+log_scale,n_rules_fit,agent_game,0.01106376518707515,-0.024065394045684287,24000,0.17311688228616517,0.17876199801288795,empirical
+endgame_drop,n_rules_fit,agent_game,0.020308687983713727,0.021049236054220495,24000,0.0344002142356483,0.036719329802096495,empirical
+cd_rate,reciprocity,agent_game,-0.06861286446241185,-0.020230758015919784,13895,1.17121685073343e-10,1.5671211383052937e-10,partly mechanical: the conditional cooperation rates are sub-averages of the same action sequence
+p_DD,reciprocity_1,dyad,0.011252099905701949,0.018467704193652817,6799,0.4426079953947796,0.45091431166224194,"structural: DD rounds are exactly the rounds in which neither agent cooperates, so the DD pattern bounds cooperation and utility"
+log_scale,last_coop,agent_game,0.016519412842226903,0.018389654790219253,24000,0.0250823292317254,0.02684869044522719,empirical
+log_scale,p_DC,dyad,0.01111488679890316,0.018016896815534728,12000,0.06754917840854535,0.07130191054235342,empirical
+log_scale,reciprocity_1,dyad,-0.0238568488185383,-0.017144920041623143,6799,0.040435183368323066,0.042920027039002134,empirical
+coop_rate,efficiency,agent_game,-0.08515802588103825,-0.015867456192344184,24000,0.000981681512347871,0.0011135491781856482,payoff-matrix link: own utility is a linear map of the outcome rates
+coop_rate,payoff_base,agent_game,0.08515802588103821,0.015867456192344184,24000,0.000981681512347871,0.0011135491781856482,payoff-matrix link: own utility is a linear map of the outcome rates
+coop_rate,utility,agent_game,-0.08515802588103831,-0.014692230093474251,24000,0.000981681512347874,0.0011135491781856482,payoff-matrix link: own utility is a linear map of the outcome rates
+log_scale,gini,dyad,0.0016208107739940332,0.012776279368834608,12000,0.8075539829736497,0.8075539829736497,empirical
+log_scale,fairness,dyad,-0.001620810773993999,-0.012773669069580933,12000,0.8075539829736486,0.8075539829736497,empirical
+coop_early,payoff_base,agent_game,0.06577293792976767,0.010577787883202896,24000,0.004596746449819541,0.0050484498581833325,payoff-matrix link: own utility is a linear map of the outcome rates
+coop_early,efficiency,agent_game,-0.06577293792976767,-0.010577787883202896,24000,0.004596746449819561,0.0050484498581833325,payoff-matrix link: own utility is a linear map of the outcome rates
+log_scale,pC_after_C,agent_game,-0.010464581608128168,-0.010303998165001334,21022,0.15729939006270677,0.16287130306220318,empirical
+coop_early,utility,agent_game,-0.06577293792976772,-0.009528529055240523,24000,0.004596746449819552,0.0050484498581833325,payoff-matrix link: own utility is a linear map of the outcome rates
+opp_coop_rate,reciprocity,agent_game,0.01238212536835663,0.00950747644816547,13895,0.2789842579518076,0.2849839194131368,partly mechanical: opponent cooperation defines the conditioning event
+log_scale,utility_gap,dyad,0.0016755240413367726,0.007527045377606756,12000,0.796166655281405,0.8003791772670209,empirical
+pC_after_D,rule_distance,agent_game,-0.0044883231908221365,-0.0035298563450126353,16873,0.7930494740762275,0.799360212596728,empirical
+reciprocity_1,first_dd,dyad,0.025092343860951157,-0.0030217650128925503,5382,0.2077855736879477,0.21397972358108436,empirical
+utility,reciprocity,agent_game,0.01815033955812936,0.0018586937474573074,13895,0.09564049399687881,0.10011952539618169,empirical
+opp_coop_rate,endgame_drop,agent_game,-0.004435918419257824,-0.0016919599577161991,24000,0.6451575111692629,0.6520208889476593,empirical
+payoff_base,reciprocity,agent_game,-0.018150339558129346,-0.0016410297063027682,13895,0.0956404939968783,0.10011952539618169,empirical
+efficiency,reciprocity,agent_game,0.018150339558129357,0.0016410297063027682,13895,0.09564049399687805,0.10011952539618169,empirical
+first_coop,efficiency,agent_game,-0.05258598645148513,-0.0010970702840737562,24000,0.005507265502397758,0.005979316831174709,payoff-matrix link: own utility is a linear map of the outcome rates
+first_coop,payoff_base,agent_game,0.05258598645148517,0.0010970702840737562,24000,0.005507265502397739,0.005979316831174709,payoff-matrix link: own utility is a linear map of the outcome rates
+utility_gap,first_coop_1,dyad,0.04476367352049651,-0.0007980733150203355,12000,0.04059798714096138,0.04297279975923488,empirical
+first_coop,utility,agent_game,-0.05258598645148515,-0.0004773519463985801,24000,0.005507265502397752,0.005979316831174709,payoff-matrix link: own utility is a linear map of the outcome rates

@@ -1,0 +1,7 @@
+test,statistic,df,p_value,residual_sd_ratio_max_min,p_fdr
+Breusch-Pagan of replicate residuals on the design matrix,1002.2498520809062,13.0,5.747468897543437e-206,,1.4368672243858594e-205
+Koenker / Cook-Weisberg on the cell mean and its square,299.2473661160311,2.0,1.0453460580207201e-65,,1.7422434300345334e-65
+Levene on replicate residuals across lambda,3.445567742310352,9.0,0.00029848380907392656,1.2173076206781004,0.00029848380907392656
+Levene on replicate residuals across model,455.6466635972406,5.0,0.0,4.742826916390339,0.0
+Levene on replicate residuals across pairing,29.447459487340026,3.0,5.824789243172499e-19,1.5704977485799125,7.280986553965624e-19
+"overdispersion vs 20 independent binary decisions (variance ratio, not a test)",1.9557563257140809,,,,

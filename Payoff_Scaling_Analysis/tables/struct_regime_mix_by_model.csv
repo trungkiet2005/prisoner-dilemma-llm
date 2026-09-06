@@ -1,0 +1,7 @@
+model,Mutual cooperator,Exploited cooperator,Late converter,Endgame defector,Exploiter,Mutual defector
+Claude-Haiku-4.5,0.0715,0.04075,0.26125,0.3355,0.04075,0.25025
+Qwen3-235B-A22B,0.0425,0.3255,0.02075,0.0845,0.2815,0.24525
+GPT-5.4-Nano,0.20925,0.0825,0.2485,0.3465,0.0345,0.07875
+Gemini-3.1-Flash-Lite,0.25325,0.27125,0.011,0.1665,0.276,0.022
+Grok-4.20-Non-Reasoning,0.47075,0.08325,0.24525,0.00375,0.02275,0.17425
+Gemini-3.5-Flash-Lite,0.44,0.11875,0.1025,0.228,0.0535,0.05725

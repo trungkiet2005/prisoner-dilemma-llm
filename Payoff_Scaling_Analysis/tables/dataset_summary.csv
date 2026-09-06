@@ -1,0 +1,29 @@
+property,value
+corpus_path,Dataset/data_fairgame_frontier_llm
+n_files,300
+on_disk_bytes,5499003
+n_raw_rows,12000
+n_games,12000
+n_agent_games,24000
+n_agent_rounds,240000
+n_payoff_scales,10
+scales,"0.01, 0.1, 0.25, 0.5, 1.0, 2.0, 5.0, 10.0, 100.0, 1000.0"
+n_models,6
+models,"Claude-Haiku-4.5, GPT-5.4-Nano, Gemini-3.1-Flash-Lite, Gemini-3.5-Flash-Lite, Grok-4.20-Non-Reasoning, Qwen3-235B-A22B"
+n_languages,5
+languages,"ar, cn, en, fr, vn"
+n_dyad_types,4
+reps_per_cell,10
+rounds_per_game,10
+design_cells,1200
+grid_complete,True
+total_missing_cells,0
+duplicate_raw_rows,0
+all_selfplay,True
+all_seq_len_10,True
+action_alphabet,"C, D"
+n_cooperate,141490
+n_defect,98510
+overall_coop_rate,0.589542
+payoff_max_abs_error,1.1102230246251565e-16
+payoff_frac_exact,1.0
