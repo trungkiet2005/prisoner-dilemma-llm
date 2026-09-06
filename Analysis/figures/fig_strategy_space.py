@@ -83,14 +83,15 @@ def main():
                  va="bottom", fontweight="bold", zorder=7)
     axA.scatter([0.0], [0.0], s=46, marker="s", facecolors=S.SURFACE,
                 edgecolors=S.INK_2, linewidths=1.4, zorder=6)
-    axA.annotate("AllC, AllD,\nWSLS", (0.0, 0.0), xytext=(8, -10),
+    axA.annotate("AllC, AllD,\nWSLS", (0.0, 0.0), xytext=(-10, 6),
                  textcoords="offset points", fontsize=S.FS_NOTE,
-                 color=S.INK_2, ha="left", va="top", zorder=7,
+                 color=S.INK_2, ha="right", va="bottom", zorder=7,
                  linespacing=1.15)
     S.strip(axA, grid_axis="both")
     axA.set_xlabel("reciprocity      answer the opponent")
     axA.set_ylabel("persistence      answer yourself")
     axA.set_xlim(-0.62, 1.12)
+    axA.set_ylim(-0.12, 1.08)
     S.panel(axA, "a", "off the reciprocity axis")
 
     # --- b: the three contrasts, model by model ----------------------------

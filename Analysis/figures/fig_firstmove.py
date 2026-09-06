@@ -104,10 +104,10 @@ def main():
         print(f"    {S.MODEL_SHORT[m]:11s} sub-unit {row[0]:+.3f}   "
               f"supra-unit {row[1]:+.3f}")
 
-    fig = plt.figure(figsize=(S.FULL, 4.0))
-    gs = fig.add_gridspec(2, 6, height_ratios=[1.0, 1.45], hspace=0.68,
+    fig = plt.figure(figsize=(S.FULL, 4.25))
+    gs = fig.add_gridspec(2, 6, height_ratios=[1.0, 1.42], hspace=0.68,
                           wspace=0.35, left=0.065, right=0.985,
-                          top=0.92, bottom=0.10)
+                          top=0.93, bottom=0.12)
     # 5 top panels span columns across the width: 5 subplots in top row
     gs_top = gs[0, :].subgridspec(1, 5, wspace=0.25)
     tops = [fig.add_subplot(gs_top[0, i]) for i in range(5)]
@@ -191,31 +191,37 @@ def main():
               filled=False)
         S.dot(axC, sup, y, color=S.MODEL_C[m], marker=S.MODEL_M[m], size=22)
     S.zero_rule(axC, 0.0, vertical=True, lw=0.9)
-    axC.text(0.035, len(S.MODEL_ORDER) - 0.55,
-             "the instruction\nas written", fontsize=5.9, color=S.MUTED,
-             ha="left", va="center", linespacing=1.15)
-    top_m = S.MODEL_ORDER[0]
-    for j, name in ((0, "sub-unit"), (1, "supra-unit")):
-        axC.annotate(name, xy=(gaps[top_m][j], len(S.MODEL_ORDER) - 1),
-                     xytext=(0, 9), textcoords="offset points", fontsize=5.9,
-                     color=S.MODEL_C[top_m], ha="center", va="bottom")
+    # Clean top legend and zero-rule label well above data points
+    top_y = len(S.MODEL_ORDER) - 0.45
+    axC.scatter([-1.0], [top_y], s=22, marker="o", facecolor=S.SURFACE,
+                edgecolor=S.INK_2, linewidth=1.1, zorder=5)
+    axC.text(-0.94, top_y, "sub-unit", fontsize=5.7, color=S.INK_2,
+             ha="left", va="center")
+    axC.scatter([-0.55], [top_y], s=22, marker="o", facecolor=S.INK_2,
+                edgecolor=S.INK_2, linewidth=1.1, zorder=5)
+    axC.text(-0.49, top_y, "supra-unit", fontsize=5.7, color=S.INK_2,
+             ha="left", va="center")
+    axC.text(0.03, top_y, "the instruction\nas written", fontsize=5.6,
+             color=S.MUTED, ha="left", va="center", linespacing=1.1)
+
     axC.set_yticks(ys)
     axC.set_yticklabels([S.MODEL_SHORT[m] for m in S.MODEL_ORDER])
     for lab, m in zip(axC.get_yticklabels(), S.MODEL_ORDER):
         lab.set_color(S.MODEL_C[m])
     S.strip(axC, grid_axis="x")
     axC.tick_params(axis="y", length=0)
-    axC.set_xlim(-1.1, 0.42)
+    axC.set_xlim(-1.12, 0.45)
     axC.set_xticks([-1.0, -0.5, 0.0])
-    axC.set_ylim(-0.8, len(S.MODEL_ORDER) - 0.05)
+    axC.set_ylim(-0.7, len(S.MODEL_ORDER) - 0.1)
     axC.set_xlabel("told cooperative minus told selfish")
     S.panel(axC, "c", "told cooperative opens C less")
 
     S.caption(fig,
-             "20,000 opening moves, 400 per model and payoff scale; bands and "
-             "intervals are 95% percentile bootstraps over agent-games;\n"
-             "shading on a and the open markers on c are the sub-unit regime, "
-             "the two scales at which every payoff printed is at most 1", y=-0.005)
+              "20,000 opening moves, 400 per model and payoff scale; bands and "
+              "intervals are 95% percentile bootstraps over agent-games;\n"
+              "shading on a and open markers on c are the sub-unit regime, "
+              "the two scales at which every payoff printed is at most 1",
+              y=0.01)
 
     S.save(fig, "f_firstmove")
 

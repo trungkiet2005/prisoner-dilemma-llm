@@ -97,13 +97,13 @@ def main():
               f"ambiguous {row.ambiguous:5.1f}%  attributed {row.unmatched:5.1f}%")
 
     fig = plt.figure(figsize=(S.FULL, 3.50))
-    gs = fig.add_gridspec(2, 6, height_ratios=[1.0, 1.28], hspace=0.76,
-                          wspace=0.35, left=0.065, right=0.985,
-                          top=0.91, bottom=0.12)
-    gs_top = gs[0, :].subgridspec(1, 5, wspace=0.24)
+    gs = fig.add_gridspec(2, 1, height_ratios=[1.0, 1.30], hspace=0.76,
+                          left=0.065, right=0.985, top=0.91, bottom=0.12)
+    gs_top = gs[0, 0].subgridspec(1, 5, wspace=0.24)
     tops = [fig.add_subplot(gs_top[0, i]) for i in range(5)]
-    axB = fig.add_subplot(gs[1, 0:3])
-    axC = fig.add_subplot(gs[1, 3:6])
+    gs_bot = gs[1, 0].subgridspec(1, 2, wspace=0.44, width_ratios=[1.08, 0.92])
+    axB = fig.add_subplot(gs_bot[0, 0])
+    axC = fig.add_subplot(gs_bot[0, 1])
 
     # --- a: the mix of each model, stacked, one panel per model ------------
     lam = np.array(S.SCALES, dtype=float)
@@ -172,7 +172,7 @@ def main():
         lab.set_fontweight("bold")
     S.strip(axB, grid_axis="x")
     axB.tick_params(axis="y", length=0)
-    axB.set_ylim(-0.65, len(order) - 0.25)
+    axB.set_ylim(-0.65, len(order) - 0.05)
     axB.set_xlim(-68, 68)
     axB.set_xticks([-60, -30, 0, 30, 60])
     axB.set_xticklabels(["-60", "-30", "0", "+30", "+60%"])
@@ -182,8 +182,8 @@ def main():
     import matplotlib.patches as mpatches
     handles = [mpatches.Patch(facecolor=S.STRAT_C[k], edgecolor="none",
                                label=S.STRAT_LABEL[k]) for k in S.STRAT_ORDER]
-    axB.legend(handles=handles, loc="upper left", ncol=4, frameon=False,
-               fontsize=5.8, handlelength=0.9, handletextpad=0.3, columnspacing=0.6)
+    axB.legend(handles=handles, loc="upper left", ncol=2, frameon=False,
+               fontsize=5.8, handlelength=0.9, handletextpad=0.3, columnspacing=0.8)
 
     # --- c: where the labels come from -------------------------------------
     for j, k in enumerate(S.STRAT_ORDER):
