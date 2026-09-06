@@ -93,7 +93,7 @@ prisoner's dilemma, and cooperate without reciprocity}
 \address{$^{1}$School of Computing, Engineering and Digital Technologies, Teesside University, Middlesbrough, United Kingdom\\
 $^{2}$Faculty of Information Technology, University of Science (HCMUS), Ho Chi Minh City, Vietnam\\
 $^{3}$Faculty of Computer Science and Engineering, Ho Chi Minh City University of Technology (HCMUT), Ho Chi Minh City, Vietnam\\
-$^{4}$Vietnam National University -- Ho Chi Minh City (VNU-HCM), Ho Chi Minh City, Vietnam\\
+$^{4}$Vietnam National University, Ho Chi Minh City (VNU-HCM), Ho Chi Minh City, Vietnam\\
 $^{5}$Luxembourg Institute of Science and Technology (LIST), Luxembourg\\[4pt]
 $^{\dagger}$These authors contributed equally to this work.\\
 $^{\star}$Corresponding authors.}
@@ -186,7 +186,7 @@ intention can be conceptualised as an agent's \emph{strategy}: a decision rule
 mapping an interaction history to the next
 action~\cite{han2011role,diStefanoIntention2023,Han2012ALIFEjournal,fujimoto2019functional}.
 The canonical strategies of repeated games, Always Cooperate, Always Defect,
-Tit-for-Tat and Win-Stay--Lose-Shift~\cite{Axelrod1980Effective,sigmund:2010bo},
+Tit-for-Tat and Win-Stay-Lose-Shift~\cite{Axelrod1980Effective,sigmund:2010bo},
 supply an interpretable vocabulary for such intentions, and prior work has
 shown that they can be inferred from noisy behavioural trajectories by
 supervised learning~\cite{han2011role,diStefanoIntention2023} and extended by
@@ -220,7 +220,7 @@ subgroup~\cite{argyle2023out}. What none of these manipulations can supply is a
 null.
 
 The choice of units is not usually stated as a design decision at all, because
-in the theory it is not one. A payoff matrix is a von Neumann--Morgenstern
+in the theory it is not one. A payoff matrix is a von Neumann-Morgenstern
 utility, defined only up to a positive affine
 transformation~\cite{von2007theory,luce1957games}, so writing the same dilemma
 with cells ten times larger changes no preference, no best reply, no
@@ -391,7 +391,12 @@ Option~A pays less in both columns and is therefore the dominant, defecting
 action, while mutual Option~B at 2 beats mutual Option~A at 6 and is the
 cooperative one; cooperation means Option~B throughout this paper. The polarity
 was checked against the data as well as against the prompt
-(appendix~\ref{appendix:corpus}).
+(appendix~\ref{appendix:corpus}). The realised payoffs faithfully reproduce the
+theoretical dilemma structure: own cooperation correlates with own utility at
+Spearman $\rho = -0.015$, while the opponent's cooperation correlates at
+$\rho = +0.916$ and dyad welfare correlates with joint cooperation at
+$\rho = +0.985$, confirming that the models experience the actual strategic
+incentives of the game.
 
 The manipulation multiplies all four cells by a positive constant $\lam$
 (figure~\ref{fig:overview}b), taking ten values spanning five orders of
@@ -402,7 +407,7 @@ the history block records realised penalties, so $\lam$ is present in every
 prompt of the game and not only the first. We treat the printed penalties as
 the agent's utilities, as the prompt's minimisation instruction directs;
 because $\lam u$ with $\lam > 0$ is a positive affine transformation of a
-von Neumann--Morgenstern utility~\cite{von2007theory,luce1957games}, the
+von Neumann-Morgenstern utility~\cite{von2007theory,luce1957games}, the
 predicted effect on an agent playing the game is exactly zero. It is this that
 separates the present manipulation from a manipulation of the stakes, whose
 behavioural effect is expected rather than
@@ -483,7 +488,7 @@ metrics such as cooperation rates, these capture what agents do rather than the
 decision rule behind it. Following prior work on inferring canonical strategies
 from noisy repeated-game data~\cite{han2011role,Han2012ALIFEjournal,diStefanoIntention2023},
 we read every agent-game against the four canonical rules AllC, AllD,
-Tit-for-Tat and Win-Stay--Lose-Shift. The read-out reports which of the four a
+Tit-for-Tat and Win-Stay-Lose-Shift. The read-out reports which of the four a
 ten-round trajectory most \emph{resembles}. It is not an identification of the
 strategy a model is running, and no claim in this paper treats it as one.
 
@@ -569,6 +574,23 @@ $\lam = 0.01$ and saturates near 0.65; Claude Haiku 4.5 dips to a minimum at
 $\lam = 0.25$ and recovers; Gemini 3.5 Flash-Lite oscillates within a high
 band; Qwen3 235B-A22B drifts downward across the whole range.
 
+The departure from scale invariance is non-monotone and concentrated at
+sub-unit stakes. A saturated categorical specification in $\lam$ outperforms a
+linear trend by $146.2$ AIC units, capturing essentially all Akaike weight,
+while the flat point null predicted by expected-utility theory is rejected
+decisively. Relative to mid-ladder play, sub-unit multipliers ($\lam = 0.01$ and
+$\lam = 0.1$) suppress dyad cooperation by $-0.112$ and $-0.084$ respectively,
+whereas scaling from $\lam = 1$ to $\lam = 1000$ produces no further
+systematic movement. This concentration points to a numerical-salience
+mechanism: fractional penalties appear to read as inconsequential stakes that
+weaken the cooperative framing, whereas once numbers reach ordinary magnitude,
+further inflation changes little. Crucially, while cooperation, mutual defection
+lock-in, and opening moves respond strongly across the ladder, within-dyad
+distributional equity remains invariant: the slopes of the within-dyad utility
+gap and Gini coefficient against $\log_{10}\lam$ are both $0.0004$ ($p = 0.80$).
+Payoff magnitude shifts aggregate cooperation without altering how payoffs are
+divided within the pair.
+
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/f_landscape.pdf}
@@ -624,6 +646,20 @@ within-model range is 0.249, an attenuation of $1.62$ times
 average $-0.10$ and run from $-0.72$ to $+0.85$, with six of the ten pairs
 negative (figure~\ref{fig:landscape}b). Curves that move in opposite directions
 cancel when added.
+
+Underlying this cancellation is a structural divide in how the models select
+policies: cooperation in this corpus is not a single graded Gaussian quantity,
+but a mixture over distinct policy regimes (appendix~\ref{appendix:pooling}).
+Across the 24{,}000 agent-games, $11.1\%$ never cooperate and $28.5\%$ always
+cooperate, so that two discrete boundary atoms carry $39.5\%$ of all mass
+compared to $18.2\%$ expected under a flat distribution across the 11 attainable
+rates. Crucially, the extent of boundary play varies seven-fold across models:
+Claude Haiku 4.5 exhibits an interior, unimodal distribution with only $8.6\%$
+boundary mass, while Qwen3 235B-A22B ($60.4\%$) and Grok 4.20 ($59.8\%$) are
+degenerate pure-policy players switching between extreme unconditional
+cooperation and defection. Pooling across models therefore conflates two
+distinct phenomena: how often a model commits to an unconditional pure policy,
+and which pure policy it selects.
 
 A variance decomposition on the 250 cell means makes the same point in another
 currency (table~\ref{tab:S-variance}, appendix~\ref{appendix:variance}). The model accounts for $45.4\%$ of
@@ -744,7 +780,7 @@ $18.0\%$ to $79.0\%$ as AllD falls from $66.5\%$ to $8.8\%$.
 This last result leans hardest on the learned component, and the provenance is
 not uniform across the four labels: AllC and AllD are anchored in part by exact
 matching, whereas over the corpus $94.6\%$ of the Tit-for-Tat labels and
-$97.1\%$ of the Win-Stay--Lose-Shift labels are attributions made where no
+$97.1\%$ of the Win-Stay-Lose-Shift labels are attributions made where no
 canonical rule fits (appendix~\ref{appendix:readout_full}). A movement in the Tit-for-Tat share is
 therefore a statement about which canonical rule the play most resembles, not a
 claim that the model is running Tit-for-Tat.
@@ -754,7 +790,7 @@ claim that the model is running Tit-for-Tat.
 \includegraphics[width=\linewidth]{figures/f_strategy_mix.pdf}
 \caption{\textbf{Strategy attribution across payoff scales and provenance breakdown.}
 (a) Stacked area share of canonical memory-one strategy attributions (AllC, AllD, TFT, WSLS) across the ten payoff scales for each of the five models.
-(b) Strategy read-out provenance: exactly deduced (single canonical match), ambiguous (multiple matching rules), and unmatched (LSTM attribution on trajectories consistent with no textbook rule). Over the corpus, $94.2\%$ of Tit-for-Tat and $96.8\%$ of Win-Stay--Lose-Shift labels are attributions on unmatched play, establishing that labels indicate resemblance rather than faithful execution.}
+(b) Strategy read-out provenance: exactly deduced (single canonical match), ambiguous (multiple matching rules), and unmatched (LSTM attribution on trajectories consistent with no textbook rule). Over the corpus, $94.2\%$ of Tit-for-Tat and $96.8\%$ of Win-Stay-Lose-Shift labels are attributions on unmatched play, establishing that labels indicate resemblance rather than faithful execution.}
 \label{fig:mix}
 \end{figure}
 
@@ -779,13 +815,25 @@ is the timing an initial disposition read off the magnitudes of the matrix
 would produce. It does not rule out a further effect on how history is weighed,
 and this design does not separate the two.
 
+This timing indicates that the payoff multiplier operates as an ex-ante stance
+selector rather than an in-game dynamic modifier (appendix~\ref{appendix:firstmove_detail}).
+Across the ten scales, the multiplier re-weights unconditional policy
+probabilities: the share of agent-games committing to unconditional defection
+collapses from $21.3\%$ at $\lam = 0.01$ to $8.9\%$ at $\lam = 1000$ (Spearman
+$\rho = -0.47$), with the sharpest shift concentrated at the sub-unit boundary.
+Meanwhile, round-by-round cooperation curves across rounds 1 to 10 remain
+near-parallel across five decades of scale: games run at $\lam = 0.01$,
+$\lam = 1.0$, and $\lam = 1000$ exhibit virtually identical decay slopes.
+Payoff magnitude shifts the initial intercept chosen at round 1, but leaves the
+trajectory of backward induction unchanged.
+
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/f_firstmove.pdf}
 \caption{\textbf{Opening move cooperation against the payoff scale.}
 At round 1 the agent has observed only the matrix and instructions, with zero interaction history.
 (a) Round 1 cooperation rate across payoff scales $\lam$ for each model.
-(b) Across-scale cooperation range on the opening move (solid bars) compared to rounds 2--10 (hatched bars), demonstrating that scale sensitivity is established before any history exists.}
+(b) Across-scale cooperation range on the opening move (solid bars) compared to rounds 2 to 10 (hatched bars), demonstrating that scale sensitivity is established before any history exists.}
 \label{fig:firstmove}
 \end{figure}
 

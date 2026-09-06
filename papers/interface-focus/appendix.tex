@@ -59,7 +59,7 @@
   {\large\itshape Payoff scale reshapes how language models play the
    prisoner's dilemma}
 \end{center}
-\vspace{1.5em}
+\vspace{1.0em}
 
 \appendix
 
@@ -69,6 +69,9 @@
 \counterwithin{figure}{section}
 \counterwithin{table}{section}
 
+\setcounter{tocdepth}{2}
+\tableofcontents
+\clearpage
 
 % ===========================================================================
 \section{Supplement to the methods}\label{appendix:methodology}
@@ -101,6 +104,16 @@ to minimise, and is therefore the dominant, defecting action, while mutual
 Option~B at $2\lam$ beats mutual Option~A at $6\lam$ and is the cooperative
 one. In the data, the realised penalties recorded for each pair of actions
 reproduce that matrix. Cooperation means Option~B throughout.
+
+The empirical logs confirm that the models experience the actual strategic
+tension of the prisoner's dilemma rather than an artifact of prompt confusion.
+Own cooperation correlates with own utility at Spearman $\rho = -0.015$,
+confirming that unilateral cooperation is privately unrewarding. Conversely, the
+opponent's cooperation correlates with own utility at Spearman $\rho = +0.916$,
+confirming that the partner's move governs individual payoff. At the dyad level,
+total welfare correlates with joint cooperation at Spearman $\rho = +0.985$,
+demonstrating that mutual cooperation maximizes collective surplus. The empirical
+incentive structure thus faithfully reproduces the theoretical dilemma.
 
 \subsection{Endpoints, seeds, parsing and fallback}\label{appendix:endpoints}
 
@@ -474,6 +487,35 @@ models the main text reports.
 This is not a power problem. Collecting more dyads tightens the interval around
 $\bar{c}$; it does not make $\bar{c}$ a better description of any $c_m$.
 
+The cancellation of model curves under pooling reflects an underlying
+structural divide in how models play: per-game cooperation is not a graded
+Gaussian quantity, but a mixture over distinct policy regimes
+(figure~\ref{fig:coop_dist}). Across all 24{,}000 agent-games, $11.1\%$ never
+cooperate and $28.5\%$ always cooperate, so that two discrete boundary atoms
+carry $39.5\%$ of all play against $18.2\%$ expected under a flat distribution
+across the 11 attainable rates.
+
+Crucially, this boundary concentration is a model-level trait rather than an
+invariant property of the task. In Claude Haiku 4.5, boundary mass accounts for
+only $8.6\%$ of play; its distribution is unimodal with an interior mode at
+$0.2$, reflecting an adaptive policy that explores intermediate action
+frequencies. In stark contrast, Qwen3 235B-A22B ($60.4\%$ boundary mass) and
+Grok 4.20 ($59.8\%$ boundary mass) play predominantly degenerate pure
+strategies, switching between always cooperating and always defecting. A single
+pooled mean cooperation rate therefore conflates two distinct phenomena: how
+often a model commits to an unconditional pure policy, and which pure policy it
+selects.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/fa5_coop_dist.pdf}
+\caption{\textbf{Bimodal cooperation distribution and model-level policy heterogeneity.}
+(a) Pooled cooperation distribution across 24{,}000 agent-games, showing extreme boundary inflation: $11.1\%$ of games never cooperate and $28.5\%$ always cooperate, totaling $39.5\%$ boundary mass compared to $18.2\%$ under a flat reference benchmark.
+(b) Empirical cumulative distribution function (ECDF), displaying the steep vertical steps at the defection and cooperation boundaries.
+(c) Decomposition into never-cooperate ($c=0$), interior mixed play ($0 < c < 1$), and always-cooperate ($c=1$) across all six models. The boundary share varies seven-fold across models, from $8.6\%$ in Claude Haiku 4.5 (unimodal interior distribution) to $60.4\%$ in Qwen3 235B-A22B and $59.8\%$ in Grok 4.20 (predominantly degenerate pure-policy play).}
+\label{fig:coop_dist}
+\end{figure}
+
 \subsection{The sixth model, Gemini 3.1 Flash-Lite}\label{appendix:sixth_model}
 
 The sixth model was run on the identical grid, with the identical protocol, and
@@ -537,6 +579,33 @@ is upward-biased, and the ratios are therefore descriptive rather than tests.
 The comparison is still informative because the bias runs the same way in every
 model while the ratio does not, spanning 0.47 in Qwen3 235B-A22B to 3.68 in
 Gemini 3.1 Flash-Lite.
+
+Figure~\ref{fig:mechanism} identifies the mechanism through which the payoff
+multiplier alters behaviour. The multiplier acts by re-weighting the
+probabilities of unconditional policies before play begins, rather than by
+reshaping within-game backward induction or adaptive learning. Across the
+ten-scale ladder, the share of agents committing to unconditional defection
+falls from $21.3\%$ at $\lam = 0.01$ to $8.9\%$ at $\lam = 1000$ (Spearman
+$\rho = -0.47$), with the sharpest transition occurring across the sub-unit
+boundary $\lam \leq 0.1$. Meanwhile, the unconditional cooperation share rises
+modestly from $24.2\%$ to $29.0\%$ (Spearman $\rho = +0.05$).
+
+In contrast, the within-game trajectories across rounds 1 to 10 remain
+near-parallel across five orders of magnitude: games run at $\lam = 0.01$,
+$\lam = 1.0$, and $\lam = 1000$ exhibit virtually identical dynamic decay
+profiles (figure~\ref{fig:mechanism}c). The payoff scale therefore acts as an
+ex-ante stance selector on the opening move, establishing the cooperative
+climate of the dyad before any interaction history has elapsed.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/fa6_mechanism.pdf}
+\caption{\textbf{The scaling mechanism: ex-ante policy re-weighting versus within-game dynamics.}
+(a) Share of agent-games playing never-cooperate ($c=0$), interior mixed strategies, and always-cooperate ($c=1$) across the ten payoff scales $\lam$. The never-cooperate share drops from $21.3\%$ at $\lam = 0.01$ to $8.9\%$ at $\lam = 1000$.
+(b) Opposing trajectories of the two boundary atoms against $\log_{10}\lam$: the always-cooperate share rises modestly (Spearman $\rho = +0.05$), while the never-cooperate share falls substantially (Spearman $\rho = -0.47$), showing that the scale effect is concentrated in the relief of unconditional defection at sub-unit stakes.
+(c) Round-by-round cooperation rate across rounds 1 to 10 for three anchor scales ($\lam = 0.01$, $\lam = 1.0$, and $\lam = 1000$). The three decay curves remain near-parallel throughout the game, establishing that payoff magnitude sets the initial stance at round 1 rather than modifying within-game dynamic adaptation.}
+\label{fig:mechanism}
+\end{figure}
 
 \input{supp_tables_auto}
 

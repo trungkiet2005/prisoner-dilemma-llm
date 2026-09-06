@@ -37,6 +37,7 @@ from figstyle import (BAND, INK, MODEL_C, MODEL_LABEL, MODEL_M,   # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 TAB = HERE / "tables"
+DATA = HERE / "data"
 
 # The evolutionary tables name the four rules in the capitals the game-theory
 # literature uses; the read-out names the same four rules in the mixed case the
@@ -360,6 +361,200 @@ def fa4_classifier(t01):
 
 
 # --------------------------------------------------------------------------
+def fa5_cooperation_distribution(g: pd.DataFrame):
+    """The bimodal cooperation distribution and boundary mass heterogeneity.
+
+    Panel (a) is the pooled cooperation distribution over all 24,000
+    agent-games, highlighting the extreme boundary concentration (11.1%
+    never-C, 28.5% always-C, 39.5% boundary mass).
+    Panel (b) is the empirical cumulative distribution function showing the two
+    vertical boundary jumps.
+    Panel (c) is the model-level breakdown into never-C, interior mixed, and
+    always-C, revealing that the boundary mass ranges seven-fold, from 8.6% in
+    Claude Haiku 4.5 to 60.4% in Qwen3 235B-A22B.
+    """
+    fig = plt.figure(figsize=(W2, 2.35))
+    gs = fig.add_gridspec(1, 3, width_ratios=[1.0, 0.95, 1.35], wspace=0.34)
+
+    # (a) Pooled distribution
+    ax0 = fig.add_subplot(gs[0])
+    panel_tag(ax0, "a", dx=-0.22)
+    cr = g["coop_rate"].to_numpy()
+    bins = np.linspace(-0.05, 1.05, 12)
+    counts, _ = np.histogram(cr, bins=bins)
+    pcts = 100.0 * counts / len(cr)
+    centers = np.linspace(0, 1, 11)
+
+    bar_cols = ["#d55e00" if i == 0 else "#0072b2" if i == 10 else "#778492"
+                for i in range(11)]
+    ax0.bar(centers, pcts, width=0.08, color=bar_cols, edgecolor="white",
+            linewidth=0.4, zorder=2)
+    ax0.axhline(100.0 / 11, color=MUTED, lw=0.7, ls=":", label="uniform ref (9.1%)",
+                zorder=3)
+    ax0.set_xlabel("cooperation rate")
+    ax0.set_ylabel("share of agent-games (\\%)".replace("\\", ""))
+    ax0.set_xlim(-0.08, 1.08)
+    ax0.set_xticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
+    ax0.set_ylim(0, 34)
+    hgrid(ax0)
+    ax0.text(0.0, pcts[0] + 1.2, f"{pcts[0]:.1f}%", ha="center", va="bottom",
+             fontsize=5.2, color="#d55e00", fontweight="bold")
+    ax0.text(1.0, pcts[-1] + 1.2, f"{pcts[-1]:.1f}%", ha="center", va="bottom",
+             fontsize=5.2, color="#0072b2", fontweight="bold")
+    ax0.text(0.5, 26, f"boundary mass:\n{pcts[0]+pcts[-1]:.1f}%", ha="center",
+             fontsize=5.4, color=INK,
+             bbox=dict(boxstyle="round,pad=0.2", fc=BAND, ec=RULE, lw=0.5))
+
+    # (b) ECDF
+    ax1 = fig.add_subplot(gs[1])
+    panel_tag(ax1, "b", dx=-0.22)
+    sx = np.sort(cr)
+    sy = np.arange(1, len(sx) + 1) / len(sx)
+    ax1.step(sx, sy, where="post", color=INK, lw=1.2, zorder=3)
+    ax1.axhline((cr == 0).mean(), color="#d55e00", lw=0.7, ls="--", alpha=0.8,
+                label=f"zero jump ({(cr==0).mean():.1%})")
+    ax1.axhline(1.0 - (cr == 1).mean(), color="#0072b2", lw=0.7, ls="--", alpha=0.8,
+                label=f"unit jump ({(cr==1).mean():.1%})")
+    ax1.set_xlabel("cooperation rate")
+    ax1.set_ylabel("cumulative probability")
+    ax1.set_xlim(-0.05, 1.05)
+    ax1.set_ylim(-0.02, 1.05)
+    ax1.set_xticks([0, 0.25, 0.5, 0.75, 1.0])
+    hgrid(ax1)
+    ax1.legend(loc="center right", fontsize=5.0)
+
+    # (c) Model-level breakdown
+    ax2 = fig.add_subplot(gs[2])
+    panel_tag(ax2, "c", dx=-0.20)
+    models = MODEL_ORDER_ALL[::-1]
+    y = np.arange(len(models))
+    c_never, c_mixed, c_always = [], [], []
+    for m in models:
+        gm = g[g.model == m]
+        c_never.append(100.0 * (gm.coop_rate == 0).mean())
+        c_always.append(100.0 * (gm.coop_rate == 1).mean())
+        c_mixed.append(100.0 * ((gm.coop_rate > 0) & (gm.coop_rate < 1)).mean())
+    c_never = np.array(c_never)
+    c_mixed = np.array(c_mixed)
+    c_always = np.array(c_always)
+
+    h = 0.58
+    ax2.barh(y, c_never, height=h, color="#d55e00", edgecolor="white", lw=0.3,
+             label="Never-C (0)", zorder=2)
+    ax2.barh(y, c_mixed, left=c_never, height=h, color="#c0c7cf", edgecolor="white",
+             lw=0.3, label="Interior (0,1)", zorder=2)
+    ax2.barh(y, c_always, left=c_never + c_mixed, height=h, color="#0072b2",
+             edgecolor="white", lw=0.3, label="Always-C (1)", zorder=2)
+
+    for yi, m, nv, al in zip(y, models, c_never, c_always):
+        tot = nv + al
+        ax2.text(101.5, yi, f"{tot:.1f}% boundary", va="center", ha="left",
+                 fontsize=5.2, color=MODEL_C[m],
+                 fontweight="bold" if m in ["Claude-Haiku-4.5", "Qwen3-235B-A22B"] else "normal")
+
+    ax2.set_yticks(y)
+    ax2.set_yticklabels([MODEL_LABEL[m] for m in models], fontsize=5.8)
+    ax2.set_xlim(0, 136)
+    ax2.set_xticks([0, 25, 50, 75, 100])
+    ax2.set_xlabel("share of model agent-games (\\%)".replace("\\", ""))
+    hgrid(ax2, axis="x")
+    ax2.legend(loc="upper center", bbox_to_anchor=(0.42, 1.18), ncol=3,
+               fontsize=5.2, handlelength=1.2)
+
+    print(f"  [fa5] pooled boundary mass: {pcts[0]+pcts[-1]:.2f}% "
+          f"(never={pcts[0]:.2f}%, always={pcts[-1]:.2f}%)")
+    save(fig, "fa5_coop_dist")
+
+
+# --------------------------------------------------------------------------
+def fa6_scaling_mechanism(g: pd.DataFrame, r: pd.DataFrame):
+    """The scaling mechanism: ex-ante policy re-weighting vs parallel dynamic decay.
+
+    Panel (a) shows the composition of unconditional policies vs interior play
+    across the ten scales.
+    Panel (b) shows the opposition between always-C and never-C across
+    log(lambda).
+    Panel (c) displays the round-by-round cooperation decay curves for lambda in
+    {0.01, 1, 1000}, demonstrating that the trajectories are near-parallel and
+    the scale effect is established at round 1.
+    """
+    fig = plt.figure(figsize=(W2, 2.35))
+    gs = fig.add_gridspec(1, 3, width_ratios=[1.15, 1.0, 1.15], wspace=0.35)
+
+    scales = sorted(g.scale_nominal.unique())
+    res = []
+    for s in scales:
+        gs_df = g[g.scale_nominal == s]
+        res.append({
+            "scale": s,
+            "always_C": 100.0 * (gs_df.coop_rate == 1).mean(),
+            "never_C": 100.0 * (gs_df.coop_rate == 0).mean(),
+            "mixed": 100.0 * ((gs_df.coop_rate > 0) & (gs_df.coop_rate < 1)).mean(),
+        })
+    sh = pd.DataFrame(res).set_index("scale")
+
+    # (a) Stacked policy mix across scales
+    ax0 = fig.add_subplot(gs[0])
+    panel_tag(ax0, "a", dx=-0.18)
+    x = np.arange(len(scales))
+    w = 0.65
+    ax0.bar(x, sh["never_C"], w, color="#d55e00", edgecolor="white", lw=0.3,
+            label="Never-C", zorder=2)
+    ax0.bar(x, sh["mixed"], w, bottom=sh["never_C"], color="#c0c7cf",
+            edgecolor="white", lw=0.3, label="Interior", zorder=2)
+    ax0.bar(x, sh["always_C"], w, bottom=sh["never_C"] + sh["mixed"],
+            color="#0072b2", edgecolor="white", lw=0.3, label="Always-C", zorder=2)
+    ax0.set_xticks(x)
+    ax0.set_xticklabels([f"{s:g}" for s in scales], rotation=90, fontsize=5.8)
+    ax0.set_xlabel(r"payoff scale $\lambda$")
+    ax0.set_ylabel("share of agent-games (\\%)".replace("\\", ""))
+    ax0.set_ylim(0, 105)
+    hgrid(ax0)
+    ax0.legend(loc="upper center", bbox_to_anchor=(0.5, 1.18), ncol=3,
+               fontsize=5.2, handlelength=1.2)
+
+    # (b) Opposition of the two atoms against log lambda
+    ax1 = fig.add_subplot(gs[1])
+    panel_tag(ax1, "b", dx=-0.22)
+    ax1.plot(scales, sh["always_C"], "o-", color="#0072b2", lw=1.3, markersize=3.2,
+             label=r"Always-C ($\rho=+0.05$)")
+    ax1.plot(scales, sh["never_C"], "s-", color="#d55e00", lw=1.3, markersize=3.2,
+             label=r"Never-C ($\rho=-0.47$)")
+    logscale_axis(ax1)
+    ax1.set_ylabel("share of agent-games (\\%)".replace("\\", ""))
+    ax1.set_ylim(0, 42)
+    hgrid(ax1)
+    ax1.legend(loc="center right", fontsize=5.2)
+    ax1.text(0.04, 0.08, "sub-unit $\\lambda \\leq 0.1$:\nNever-C mass inflates",
+             transform=ax1.transAxes, fontsize=5.2, color=INK)
+
+    # (c) Dynamic decay across rounds
+    ax2 = fig.add_subplot(gs[2])
+    panel_tag(ax2, "c", dx=-0.20)
+    curve_styles = [
+        (0.01, "#d55e00", "o", r"$\lambda = 0.01$ (sub-unit)"),
+        (1.0, "#0072b2", "s", r"$\lambda = 1.0$ (unit)"),
+        (1000.0, "#009e73", "^", r"$\lambda = 1000$ (mega)")
+    ]
+    for s, col, mk, lab in curve_styles:
+        rs = r[r.scale_nominal == s].groupby("round")["coop"].mean()
+        ax2.plot(rs.index, rs.values, marker=mk, color=col, lw=1.3, markersize=3.2,
+                 label=lab)
+    ax2.set_xlabel("round")
+    ax2.set_ylabel("round cooperation rate")
+    ax2.set_xticks(range(1, 11))
+    ax2.set_ylim(0.42, 0.68)
+    hgrid(ax2)
+    ax2.legend(loc="lower left", fontsize=5.2)
+    ax2.text(0.96, 0.92, "parallel decay:\nscale shifts intercept,\nnot within-game slope",
+             transform=ax2.transAxes, fontsize=5.2, ha="right", va="top", color=INK)
+
+    print(f"  [fa6] Never-C scale 0.01 -> 1000: {sh.loc[0.01, 'never_C']:.2f}% "
+          f"-> {sh.loc[1000.0, 'never_C']:.2f}%")
+    save(fig, "fa6_mechanism")
+
+
+# --------------------------------------------------------------------------
 def main():
     use_style()
     t01 = pd.read_csv(TAB / "T01_classifier.csv")
@@ -369,6 +564,9 @@ def main():
     t14 = pd.read_csv(TAB / "T14_egt_stationary.csv")
     t15 = pd.read_csv(TAB / "T15_egt_vs_llm.csv")
     t17 = pd.read_csv(TAB / "T17_egt_noise_calibration.csv")
+
+    g = pd.read_parquet(DATA / "games.parquet")
+    r = pd.read_parquet(DATA / "rounds.parquet")
 
     # fa2 is drawn at one noise level; say which, rather than leaving the
     # reader to infer it from a column that is not plotted.
@@ -380,7 +578,10 @@ def main():
     fa2_egt_vs_llm(t15)
     fa3_supp_model(t02, t10s, t10t)
     fa4_classifier(t01)
+    fa5_cooperation_distribution(g)
+    fa6_scaling_mechanism(g, r)
 
 
 if __name__ == "__main__":
     main()
+
