@@ -20,22 +20,21 @@ HERE = Path(__file__).resolve().parent
 # Figures are written straight into the manuscript directory so that the
 # manuscript directory is self-contained and there is still no manual copy
 # step.  The destination is configurable so that the same pipeline can feed a
-# second manuscript, but the default is unchanged: with neither variable set
-# this resolves to paper_scaling/figures exactly as before.
-DEFAULT_PAPER_DIR = HERE.parents[1] / "paper_scaling"
-PAPER_DIR = Path(os.environ.get("PD_PAPER_DIR", DEFAULT_PAPER_DIR))
+# second manuscript; with neither variable set it resolves to the manuscript
+# currently under submission, papers/interface-focus/figures.
+PAPER_DIR = Path(os.environ.get("PD_PAPER_DIR", HERE.parents[1] / "papers" / "interface-focus"))
 FIGDIR = Path(os.environ.get("PD_FIGDIR", PAPER_DIR / "figures"))
 
 # Deliberately NOT created here.  This module is imported by the table scripts
 # too, and creating the directory at import time left an empty `figures/` beside
 # every manuscript that only ever received tables.  `save()` creates it.
 
-# True only when the figures are going to their historical home.  The figure
-# files were renamed f1_..f8_ for the second manuscript, whose figure directory
-# already holds 29 legacy PDFs called fig01_, fig02_ and so on; writing the old
-# fig1_..fig6_ names alongside the new ones keeps paper_scaling building from
-# an unedited main.tex.  See LEGACY_ALIAS in s05_figures.py.
-IS_DEFAULT_FIGDIR = FIGDIR.resolve() == (DEFAULT_PAPER_DIR / "figures").resolve()
+# True only when the figures are aimed at the superseded paper_scaling draft in
+# legacy/.  Its main.tex still includes the pre-rename fig1_..fig6_ stems, so
+# those aliases are written alongside the current f1_..f8_ names when, and only
+# when, that draft is the target.  See LEGACY_ALIAS in s05_figures.py.
+LEGACY_PAPER_DIR = HERE.parents[1] / "legacy" / "paper_scaling"
+IS_LEGACY_FIGDIR = FIGDIR.resolve() == (LEGACY_PAPER_DIR / "figures").resolve()
 
 MM = 1 / 25.4
 W1 = 89 * MM          # single column

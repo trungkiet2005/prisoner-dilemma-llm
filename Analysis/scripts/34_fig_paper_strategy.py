@@ -38,7 +38,7 @@ from pdlib.ingest import payoff_matrix
 
 use_paper_style()
 
-PAPERFIG = Path(__file__).resolve().parents[2] / "paper" / "figures"
+PAPERFIG = Path(__file__).resolve().parents[2] / "papers" / "deduce-before-you-label" / "figures"
 
 # --------------------------------------------------------------------------
 # encodings

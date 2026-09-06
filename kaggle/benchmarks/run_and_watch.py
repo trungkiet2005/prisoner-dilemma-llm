@@ -130,7 +130,7 @@ def main():
                     help="slug model, ví dụ google/gemini-3.5-flash-lite")
     ap.add_argument("--attach", action="store_true",
                     help="không chạy mới, chỉ bám run đang chạy rồi tải về")
-    ap.add_argument("--dest", default=str(HERE.parent.parent / "results" / "kbench_download"))
+    ap.add_argument("--dest", default=str(HERE.parent.parent / "results" / "kbench"))
     ap.add_argument("--collect-into", default=None,
                     help="chép CSV vào thư mục Dataset (vd Dataset/data_fairgame_frontier_llm)")
     ap.add_argument("--poll", type=int, default=30, help="giây giữa 2 lần đọc log")

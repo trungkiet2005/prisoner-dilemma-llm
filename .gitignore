@@ -27,7 +27,23 @@ __pycache__/
 .venv/
 venv/
 
+# --- LaTeX: artefact biên dịch --------------------------------------------
+# Giữ .aux và .bbl: main.tex đọc appendix.aux qua xr, và Overleaf cần .bbl.
+*.log
+*.blg
+*.out
+*.toc
+*.bcf
+*.run.xml
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+!Analysis/scaling/*.log
+
+# --- riêng tư: KHÔNG public -------------------------------------------------
+# Thư từ toà soạn, ghi chú nội bộ, giấy tờ cá nhân.
+private/
+
 # --- OS ----------------------------------------------------------------------
 .DS_Store
 Thumbs.db
-claude.md

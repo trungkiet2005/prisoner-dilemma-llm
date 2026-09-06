@@ -102,7 +102,7 @@ TAB = Path(os.environ.get("PD_SCALING_TABLES", HERE / "tables"))
 TAB.mkdir(parents=True, exist_ok=True)
 # The manuscript directory is configurable in the same way as figstyle.PAPER_DIR
 # and s07_supplementary.PAPER_DIR, so one pipeline can feed either manuscript.
-PAPER_DIR = Path(os.environ.get("PD_PAPER_DIR", HERE.parents[1] / "paper_scaling"))
+PAPER_DIR = Path(os.environ.get("PD_PAPER_DIR", HERE.parents[1] / "papers" / "interface-focus"))
 
 DPS = 200
 mp.dps = DPS

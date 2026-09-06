@@ -13,7 +13,7 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="$(cd "$HERE/../.." && pwd)"
 CR="D:/AI_PhD/GameTheory/kaggle_for_research"
 TASK="prisoner-dilemma-fairgame"
-DEST="$REPO/results/kbench_download"          # tuyệt đối: đường dẫn tương đối từng
+DEST="$REPO/results/kbench"          # tuyệt đối: đường dẫn tương đối từng
                                               # làm dữ liệu rơi ra ngoài repo
 # account:model1,model2,model3
 ASSIGN=(

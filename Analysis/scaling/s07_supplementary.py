@@ -28,7 +28,7 @@ TAB = HERE / "tables"
 # The manuscript directory is configurable so the same pipeline can feed a
 # second manuscript, exactly as figstyle.PAPER_DIR is.  The default is
 # unchanged: with PD_PAPER_DIR unset this resolves to paper_scaling/ as before.
-PAPER_DIR = Path(os.environ.get("PD_PAPER_DIR", HERE.parents[1] / "paper_scaling"))
+PAPER_DIR = Path(os.environ.get("PD_PAPER_DIR", HERE.parents[1] / "papers" / "interface-focus"))
 PAPER_DIR.mkdir(parents=True, exist_ok=True)
 OUT = PAPER_DIR / "supp_tables_auto.tex"
 

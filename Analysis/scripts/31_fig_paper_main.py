@@ -49,7 +49,7 @@ from pdlib.natstyle import (DATADIR, FRONTIER, HORIZON, INK, INK2, LANG_ORDER,
 
 use_journal_style()
 
-PAPERFIG = Path(__file__).resolve().parents[2] / "paper" / "figures"
+PAPERFIG = Path(__file__).resolve().parents[2] / "papers" / "deduce-before-you-label" / "figures"
 PAPERFIG.mkdir(parents=True, exist_ok=True)
 
 STATE_ORDER = ["R", "S", "T", "P"]

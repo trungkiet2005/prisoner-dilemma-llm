@@ -32,7 +32,7 @@ from pdlib.egtstyle import (FILL, FIG_W, FS, INK, MUTED, PAGE, RULE, SPINE,
 
 use_paper_style()
 
-PAPERFIG = Path(__file__).resolve().parents[2] / "paper_scaling" / "figures"
+PAPERFIG = Path(__file__).resolve().parents[2] / "legacy" / "paper_scaling" / "figures"
 PAPERFIG.mkdir(parents=True, exist_ok=True)
 
 # --------------------------------------------------------------------------

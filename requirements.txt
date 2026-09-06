@@ -1,0 +1,21 @@
+# Analysis pipeline (Analysis/) and the Kaggle Benchmarks arm (kaggle/benchmarks/).
+# Pins are the versions present on the machine the analysis is run from.
+# FAIRGAME/ carries its own requirements.txt for the simulation framework.
+
+numpy==2.3.5
+pandas==2.3.3
+pyarrow==22.0.0          # games.parquet
+matplotlib==3.10.8
+scikit-learn==1.8.0
+statsmodels==0.14.6
+torch==2.9.1             # LSTM strategy read-out, s01_train_lstm.py
+mpmath==1.3.0            # 200-digit arithmetic in s09_egt.py
+# egttools drives the evolutionary baseline grid in s09_egt.py. It is not
+# installed on the machine these pins were read from, so no version is
+# asserted here; latest on PyPI is 0.1.14.2.
+egttools
+pytest==9.1.1
+
+# Kaggle Benchmarks arm only
+kaggle==2.2.4
+kaggle-benchmarks==0.6.1

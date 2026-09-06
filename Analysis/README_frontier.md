@@ -17,7 +17,7 @@ Two deliverables come out of the same pipeline:
   written straight into `paper/figures/`. Those figures read their panel
   numbers out of the `T_S*` / `T_FR*` CSVs and compute nothing of their own, so
   a main-text panel cannot drift from the table behind it. See
-  [../paper/README.md](../paper/README.md) for what each one carries.
+  [../papers/deduce-before-you-label/README.md](../papers/deduce-before-you-label/README.md) for what each one carries.
 
 `33_strategy_stats.py` is the slow step (~3 min): it runs the 69-rule extended
 library plus its shuffled null over all 4,800 agent-games, the motif mining,

@@ -25,7 +25,7 @@ import pandas as pd
 
 from pdlib.style import TABDIR
 
-OUT = Path(__file__).resolve().parents[2] / "paper_scaling" / "supp_tables.tex"
+OUT = Path(__file__).resolve().parents[2] / "legacy" / "paper_scaling" / "supp_tables.tex"
 
 ARM_ORDER = ["ten-scale", "three-scale"]
 ARM_LABEL = {"ten-scale": "ten scales", "three-scale": "three scales"}

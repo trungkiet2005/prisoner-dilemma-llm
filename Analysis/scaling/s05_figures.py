@@ -36,7 +36,7 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from figstyle import (BAND, INK, IS_DEFAULT_FIGDIR, LANG_C,  # noqa: E402
+from figstyle import (BAND, INK, IS_LEGACY_FIGDIR, LANG_C,  # noqa: E402
                       LANG_LABEL, LANG_M, LANG_ORDER,
                       MODEL_C, MODEL_LABEL, MODEL_M, MODEL_ORDER, MODEL_SHORT, MUTED,
                       PROV_C, PROV_LABEL, PROV_ORDER, RULE, SCALES, STRAT_C,
@@ -66,7 +66,7 @@ LEGACY_ALIAS = {
 
 def alias(name):
     """Legacy stems to emit beside `name`, empty away from the default dir."""
-    return LEGACY_ALIAS.get(name, ()) if IS_DEFAULT_FIGDIR else ()
+    return LEGACY_ALIAS.get(name, ()) if IS_LEGACY_FIGDIR else ()
 
 
 # MODEL_SHORT carries a newline so it can sit under a tick; the annotation
@@ -654,7 +654,7 @@ def main():
     f6_ruleforce(d, t10s, t10t)
     f7_strategy_mix(d)
     f8_firstmove(r, t08)
-    if IS_DEFAULT_FIGDIR:
+    if IS_LEGACY_FIGDIR:
         # paper_scaling/main.tex still includes fig4_strategy.pdf and its
         # caption still describes the pooled stack, so that exact figure is
         # redrawn here rather than aliased onto the new panel (a).
