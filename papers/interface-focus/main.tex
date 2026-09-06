@@ -394,7 +394,7 @@ was checked against the data as well as against the prompt
 (appendix~\ref{appendix:corpus}).
 
 The manipulation multiplies all four cells by a positive constant $\lam$
-(figure~\ref{fig:scaling}a), taking ten values spanning five orders of
+(figure~\ref{fig:overview}b), taking ten values spanning five orders of
 magnitude, $\lam \in \{0.01, 0.1, 0.25, 0.5, 1, 2, 5, 10, 100, 1000\}$, and
 changes nothing else in the prompt. Two details bear on interpretation:
 $T = 0$ prints as 0 at every scale, so only three of the four numbers move, and
@@ -414,6 +414,20 @@ free parameter: the largest number shown is $10\lam$, so every payoff printed
 is at most 1 exactly when $\lam \leq 0.1$, which two of the ten scales satisfy.
 The scaled matrix at all ten values is tabulated in
 appendix~\ref{appendix:payoff_scaling}.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/f_overview.pdf}
+\caption{\textbf{Study design and the invariance being tested.}
+(a) The empirical lane crosses the payoff-scaled game with six frontier models,
+five prompt languages and four persona pairings; the main text reports the five
+stable model identifiers. The analytical lane gives the same scaled game to the
+evolutionary baseline, and the two lanes meet only in the final comparison.
+(b) The experimental knob: every entry of the penalty matrix is multiplied by
+the same positive constant $\lam$. This changes the printed magnitudes while
+leaving preferences, best replies and deterministic game dynamics unchanged.}
+\label{fig:overview}
+\end{figure}
 
 \subsection{Models, prompt languages, personas and protocol}\label{sec:protocol}
 
@@ -499,9 +513,12 @@ The cooperation rate of an agent-game is the share of its ten decisions that
 are Option~B; a cell mean averages the agent-games of a cell, and round-level
 analyses use the binary decision itself. Because the two agents of a dyad play
 each other and the ten rounds inside an agent-game are strongly autocorrelated,
-every interval was computed by resampling whole dyads with replacement, 1{,}500
-draws, percentile method~\cite{efron1993introduction}, and every regression
-clustered its standard errors on the dyad. Because the range over the ten
+inferential intervals in the generated statistical tables were computed by
+resampling whole dyads with replacement, 1{,}500 draws, percentile
+method~\cite{efron1993introduction}, and every regression clustered its standard
+errors on the dyad. Descriptive intervals that appear only in the redesigned
+figures use 2{,}000 resamples of the figure's stated unit; they are visual aids
+and are not used for hypothesis tests. Because the range over the ten
 scales is a maximum minus a minimum, and so positive by construction, its
 bootstrap interval quantifies the precision of the range and not its distance
 from zero; the permutation test supplies the test. Because the null is a
@@ -538,7 +555,7 @@ of those decisions.
 \subsection{Cooperation moves under a transformation that cannot matter}\label{sec:payoff_magnitude}
 
 Cooperation depends on the payoff scale in all five models
-(figure~\ref{fig:scaling}b, table~\ref{tab:effect}). The range across the ten
+(figure~\ref{fig:landscape}, table~\ref{tab:effect}). The range across the ten
 scales runs from 0.081 \ci{0.062}{0.135} in Claude Haiku 4.5 to 0.636
 \ci{0.588}{0.686} in Grok 4.20.
 
@@ -548,7 +565,7 @@ draws can return, and $p = 0.0025$ in Claude Haiku 4.5), and the per-model
 logistic regression rejects the joint null on the nine scale contrasts
 ($\chi^2_9 = 32.3$ to $1227.3$, all $p \leq 2\times10^{-4}$), the largest
 contrast against $\lam = 1$ ranging from 0.36 to 3.74 in log-odds
-(figure~\ref{fig:inference}a,b and table~\ref{tab:effect}).
+(table~\ref{tab:effect}).
 
 The shapes are unlike one another. Grok 4.20 cooperates 0.274 at $\lam = 0.01$,
 the lowest rate these data contain, and 0.910 at $\lam = 2$, the highest: the
@@ -561,33 +578,21 @@ band; Qwen3 235B-A22B drifts downward across the whole range.
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=\linewidth]{figures/f1_scaling.pdf}
-\caption{\textbf{Cooperation against the payoff scale in five language models.}
-(a) The same prisoner's dilemma at three payoff scales, shown to the agent as
-penalties to be minimised.
-(b) Cooperation against the payoff scale, one curve per model; the shaded band
-marks the two scales at which every payoff printed is at most 1.
-(c) The curves of (b) centred within model, with their average in black. Each
-point in (b) and (c) averages 200 dyads; the envelope around each curve in (b)
-is a 95\% percentile interval from 1{,}500 bootstrap resamples of whole dyads.}
-\label{fig:scaling}
+\includegraphics[width=\linewidth]{figures/f_landscape.pdf}
+\caption{\textbf{The cooperation response is model-specific.}
+(a) Mean cooperation for every model at each of the ten payoff scales.
+(b) Small multiples put one model's scale-response curve in the foreground and
+the other four in grey, making the disagreement in shape visible without
+pooling the series.
+(c) The within-model range across the ten scales, with the five-model pooled
+range shown as a dashed reference and its bootstrap interval shaded. The pooled
+curve is not a representative model: two model curves fall with the scale while
+the pooled curve rises, and the pooled shape is dominated by the model with the
+largest excursion.}
+\label{fig:landscape}
 \end{figure}
 
-\begin{figure}[!htbp]
-\centering
-\includegraphics[width=\linewidth]{figures/f2_inference.pdf}
-\caption{\textbf{The departure from invariance, tested three ways.}
-(a) Across-scale range of cooperation per model, with a 95\% interval from the
-dyad bootstrap and the $p$ value of a permutation test that shuffles the payoff
-scale among whole dyads; $0.0005$ is the smallest value 2{,}000 draws can
-return.
-(b) Largest absolute log-odds contrast against $\lam = 1$ in a per-model
-logistic regression of the round-level decision, with the clustered Wald
-statistic on its nine scale contrasts.
-(c) Correlation between the ten-point curve shapes of each pair of models,
-after centring each curve within model. Six of the ten pairs are negative.}
-\label{fig:inference}
-\end{figure}
+
 
 \input{tables_auto}
 
@@ -612,17 +617,26 @@ The sensitivity differences are the new observation. The range of cooperation
 across the ten scales itself depends on the language: 0.130 in Vietnamese
 against 0.314 in French for Claude Haiku 4.5, and 0.162 in Chinese against
 0.412 in English for Gemini 3.5 Flash-Lite. Across the 25 model-language pairs it runs
-from 0.083, in Qwen3 235B-A22B in French, to 0.855, in Grok 4.20 in English
-(figure~\ref{fig:heterogeneity}a). Scale sensitivity is a property of the model
-and the language together, not of the model alone.
+from 0.083, in Qwen3 235B-A22B in French, to 0.855, in Grok 4.20 in English.
+Figure~\ref{fig:language} makes the same interaction visible after removing
+language-level differences: scale sensitivity is a property of the model and
+the language together, not of the model alone.
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=\linewidth]{figures/f3_language.pdf}
-\caption{\textbf{Cooperation against the payoff scale, by model and prompt
-language.} One panel per model, one curve per prompt language; the annotation
-gives the smallest and largest across-scale range among that model's five
-languages. Each point averages 40 dyads.}
+\includegraphics[width=\linewidth]{figures/f_language.pdf}
+\caption{\textbf{Prompt language changes the payoff-scale effect.}
+(a) Mean cooperation for every prompt language at each payoff scale, pooled
+over the five main-text models; the regime boundary separates the two scales at
+which every printed payoff is at most 1 from the remaining eight.
+(b) Supra-unit minus sub-unit cooperation by language, with a 95\% percentile
+bootstrap interval for the pooled estimate and the five model-specific effects
+shown separately.
+(c) The five language curves after subtracting each language's own mean, so a
+pure level difference is removed and only the difference in shape remains.
+The pooled panels are descriptive summaries; the model-specific markers and the
+per-model language ranges in the text are retained because the models do not
+share one common response curve.}
 \label{fig:language}
 \end{figure}
 
@@ -631,13 +645,13 @@ languages. Each point averages 40 dyads.}
 That the shapes disagree has a direct consequence for reporting. Averaging the
 five model curves gives a pooled curve whose range is 0.154, while the mean
 within-model range is 0.249, an attenuation of $1.62$ times
-(figure~\ref{fig:scaling}c). The pairwise correlations between model curves
+(figure~\ref{fig:landscape}c). The pairwise correlations between model curves
 average $-0.10$ and run from $-0.72$ to $+0.85$, with six of the ten pairs
-negative (figure~\ref{fig:inference}c). Curves that move in opposite directions
+negative (appendix~\ref{appendix:pooling}). Curves that move in opposite directions
 cancel when added.
 
 A variance decomposition on the 250 cell means makes the same point in another
-currency (figure~\ref{fig:heterogeneity}b). The model accounts for $45.4\%$ of
+currency (appendix~\ref{appendix:variance}). The model accounts for $45.4\%$ of
 the variance across cells and the model-by-language interaction for $17.0\%$.
 The payoff scale carries $5.8\%$ as a main effect and is significant
 ($F_{9,144} = 10.64$, $p < 10^{-3}$), but its interaction with the model
@@ -655,17 +669,7 @@ therefore reports a quantity whose significance turns on which models happen to
 be in the panel, and whose size, 0.154 against a typical within-model 0.249,
 matches no member of it.
 
-\begin{figure}[!htbp]
-\centering
-\includegraphics[width=\linewidth]{figures/f4_heterogeneity.pdf}
-\caption{\textbf{Where the movement lives.}
-(a) Across-scale range of cooperation for each model-by-language pair; the
-range of the ranges is an order of magnitude, from 0.083 to 0.855.
-(b) Share of the variance across the 250 cell means carried by each term of a
-type-II analysis of variance. The interaction of the payoff scale with the
-model carries about three times what the scale main effect carries.}
-\label{fig:heterogeneity}
-\end{figure}
+
 
 \subsection{The payoff scale gates the persona instruction}\label{sec:persona}
 
@@ -675,7 +679,9 @@ not gradually (figure~\ref{fig:persona}, table~\ref{tab:persona}). The natural
 boundary is where the printed numbers stop being sub-unit, at $\lam \leq 0.1$
 (\S\ref{sec:gameImportance}). The persona effect shifts across it in all five
 models and every shift excludes zero, from 0.138 \ci{0.090}{0.185} in Grok 4.20
-to 0.680 \ci{0.625}{0.736} in Gemini 3.5 Flash-Lite.
+to 0.680 \ci{0.625}{0.736} in Gemini 3.5 Flash-Lite. At the two sub-unit
+scales the effect is negative in all five models: every model cooperates more
+when told it is selfish than when told it is cooperative.
 
 Whether the sign reverses is the stronger claim, and we hold it to a test on
 each regime rather than to a comparison of two point estimates. Two models of
@@ -709,14 +715,18 @@ depends on the payoff scale like everything else measured here
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=\linewidth]{figures/f5_persona.pdf}
-\caption{\textbf{The persona effect against the payoff scale.} The persona
-effect is the cooperation rate under a cooperative persona minus that under a
-selfish one.
-(a) The effect against the payoff scale, each point averaging 200 dyads; the
-shaded band marks the two scales at which every payoff printed is at most 1.
-(b) The same contrast as two regime means: open markers at $\lam \leq 0.1$,
-filled markers at $\lam \geq 0.25$ (table~\ref{tab:persona}).}
+\includegraphics[width=\linewidth]{figures/f_persona.pdf}
+\caption{\textbf{The payoff scale gates the persona instruction.}
+The persona effect is cooperation under a cooperative persona minus cooperation
+under a selfish one.
+(a) Cooperation under the two persona instructions in the sub-unit regime:
+all five slopes run towards more cooperation under the selfish instruction.
+(b) The same comparison above the regime boundary; Claude Haiku 4.5 and Gemini
+3.5 Flash-Lite turn over, while GPT-5.4 Nano is nearly neutral and Qwen3
+235B-A22B and Grok 4.20 remain inverted.
+(c) The persona effect at each payoff scale. Open rings mark the two models
+whose confidence intervals establish a sign reversal between regimes
+(table~\ref{tab:persona}); shading marks $\lam \leq 0.1$.}
 \label{fig:persona}
 \end{figure}
 
@@ -730,8 +740,7 @@ the whole corpus, all six models included, $23.0\%$ of agent-games are matched
 exactly by one rule, $17.5\%$ by several at once and $59.6\%$ by none.
 
 Play becomes less rule-governed as the payoffs grow in four models of five, and
-shows no trend in the fifth (figure~\ref{fig:ruleforce}a,
-table~\ref{tab:strategy}). Pooling the five, the share matched exactly by one
+shows no trend in the fifth (table~\ref{tab:strategy}). Pooling the five, the share matched exactly by one
 canonical rule falls from $38.6\%$ at $\lam = 0.01$ to $17.3\%$ at
 $\lam = 10^{3}$, and the share matched by none rises from $51.6\%$ to $64.0\%$.
 The trend is significant and negative in Claude Haiku 4.5 ($\beta = -0.545$ per
@@ -749,7 +758,7 @@ whole corpus the result is therefore four models moving one way, one showing no
 trend and one moving the other, and that is the form the evidence supports.
 
 The continuous version needs no labels at all: the number of rounds violating
-the nearest canonical rule (figure~\ref{fig:ruleforce}b). It rises from 0.48 to
+the nearest canonical rule (table~\ref{tab:strategy}). It rises from 0.48 to
 1.36 in Gemini 3.5 Flash-Lite and from 0.27 to 1.14 in Qwen3 235B-A22B between
 the smallest and largest scale, with significant positive trends there and in
 Claude Haiku 4.5. Grok 4.20 moves the other way, falling from 0.92 to 0.37
@@ -757,7 +766,7 @@ Claude Haiku 4.5. Grok 4.20 moves the other way, falling from 0.92 to 0.37
 the canonical rules as the payoffs grow and one drifts towards them.
 
 The composition shifts too, and the models do not shift together
-(figure~\ref{fig:mix}). Pooled across the five, the AllC share rises from
+(figure~\ref{fig:mix}a,b). Pooled across the five, the AllC share rises from
 $38.1\%$ to $45.8\%$ of agent-games between the extreme scales and the
 Tit-for-Tat share from $9.1\%$ to $12.7\%$, both at the expense of AllD, which
 falls from $43.6\%$ to $28.3\%$. That pooled figure conceals the same
@@ -768,42 +777,32 @@ from $6.8\%$ to $14.2\%$, and Grok 4.20 inverts, its AllC share rising from
 $18.0\%$ to $79.0\%$ as AllD falls from $66.5\%$ to $8.8\%$.
 
 This last result leans hardest on the learned component, and the provenance is
-not uniform across the four labels: AllC and AllD are anchored in part by exact
-matching, whereas over the corpus $94.6\%$ of the Tit-for-Tat labels and
-$97.1\%$ of the Win-Stay--Lose-Shift labels are attributions made where no
-canonical rule fits (appendix~\ref{appendix:readout_full}). A movement in the Tit-for-Tat share is
+not uniform across the four labels: among the five main-text models, AllC and
+AllD are anchored in part by exact matching, whereas $94.2\%$ of the
+Tit-for-Tat labels and $96.8\%$ of the Win-Stay--Lose-Shift labels are
+attributions made where no canonical rule fits (figure~\ref{fig:mix}c). The
+corresponding all-six values are $94.6\%$ and $97.1\%$
+(appendix~\ref{appendix:readout_full}). A movement in the Tit-for-Tat share is
 therefore a statement about which canonical rule the play most resembles, not a
 claim that the model is running Tit-for-Tat.
 
-\begin{figure}[!htbp]
-\centering
-\includegraphics[width=\linewidth]{figures/f6_ruleforce.pdf}
-\caption{\textbf{How closely play follows the canonical memory-one rules,
-against the payoff scale.} Both panels are computed by exact matching, with no
-learned component.
-(a) Share of agent-games matched exactly by one canonical rule, one line per
-model, annotated with that model's trend per decade of $\lam$; all five trends
-are negative, and only in GPT-5.4 Nano is the trend not distinguishable from
-zero (table~\ref{tab:strategy}). The shaded band marks the two scales at which
-every payoff printed is at most 1.
-(b) Mean number of rounds, out of the ten played, violating the nearest
-canonical rule. Here the trends do not all have the same sign: Grok 4.20 runs
-against the other four (table~\ref{tab:strategy}).}
-\label{fig:ruleforce}
-\end{figure}
+
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=\linewidth]{figures/f7_strategy_mix.pdf}
-\caption{\textbf{Share of agent-games carrying each canonical label, against
-the payoff scale.} One panel per canonical rule: (a) AllC, (b) Tit-for-Tat,
-(c) Win-Stay--Lose-Shift, (d) AllD. Each point is the share of that model's 400
-agent-games at that scale carrying the label, and shaded bands mark the two
-scales at which every payoff printed is at most 1. The AllC and AllD panels
-rest partly on exact rule matching, whereas over the corpus $94.6\%$ of the
-Tit-for-Tat labels and $97.1\%$ of the Win-Stay--Lose-Shift labels are
-attributions made where no canonical rule fits, so those two panels should be
-read as a resemblance rather than as an identification.}
+\includegraphics[width=\linewidth]{figures/f_strategy_mix.pdf}
+\caption{\textbf{The payoff scale changes the composition of play.}
+(a) One stacked profile per model: the four canonical labels sum to one at each
+payoff scale, so swelling and shrinking bands show how the mixture changes.
+(b) Total-variation distance between the label mixtures at the two extreme
+scales, with a bootstrap interval and a dashed sampling floor obtained from two
+draws from one fixed mixture; four models clear that floor and Qwen3 235B-A22B
+does not.
+(c) Provenance of each label in the five-model corpus. A label is deduced when
+exactly one canonical rule reproduces the trajectory, ambiguous when several
+rules do, and attributed by the learned read-out when none fits. The Tit-for-Tat
+and Win-Stay--Lose-Shift bands are therefore resemblance statements, not claims
+that the models implement those rules.}
 \label{fig:mix}
 \end{figure}
 
@@ -814,13 +813,23 @@ its opponent's history, or on the reading of the matrix itself. The opening
 move separates the two: at round 1 nothing but the matrix and the instructions
 has been seen.
 
-The effect is already present at round 1 (figure~\ref{fig:firstmove}): in four
+The effect is already present at round 1 (figure~\ref{fig:firstmove}a): in four
 models of five the range of opening-move cooperation across the ten scales
 exceeds the range over rounds 2 to 10, by factors of 2.0 in Claude Haiku 4.5,
 1.9 in Gemini 3.5 Flash-Lite, 1.3 in GPT-5.4 Nano and 1.2 in Grok 4.20; the
-exception is Qwen3 235B-A22B at 0.47. The two windows rest on 400 and 3{,}600
+exception is Qwen3 235B-A22B at 0.47
+(appendix~\ref{appendix:firstmove_detail}). The two windows rest on 400 and 3{,}600
 decisions per cell, so their ranges are not variance-matched and these ratios
 are descriptive rather than tests.
+
+Across the 50 model-by-scale cells, opening-move cooperation tracks overall
+cooperation, but that pooled association is carried largely by between-model
+level differences: within individual models the two quantities can move quite
+differently (figure~\ref{fig:firstmove}b). The persona manipulation is visible
+at the same time point. In every main-text model the opening-move contrast is
+negative when pooled by regime, so an agent told to be cooperative is initially
+less likely to cooperate; the size of that inversion is itself scale-dependent
+(figure~\ref{fig:firstmove}c).
 
 The reading we take from this is deflationary about dynamics. Whatever the
 payoff scale does, most of it is already done before the game has begun. That
@@ -830,12 +839,18 @@ and this design does not separate the two.
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=\linewidth]{figures/f8_firstmove.pdf}
-\caption{\textbf{Cooperation on the opening move, against the payoff scale.} At
-round 1 the agent has seen only the matrix and the instructions.
-(a) Cooperation on the opening move, one curve per model.
-(b) Range of cooperation across the ten scales, on the opening move (solid) and
-over rounds 2 to 10 (hatched).}
+\includegraphics[width=\linewidth]{figures/f_firstmove.pdf}
+\caption{\textbf{The payoff-scale effect is present before strategic
+interaction begins.}
+(a) Opening-move cooperation against the payoff scale, one small multiple per
+model; at round 1 the agent has seen the matrix, prompt language and persona but
+no history.
+(b) Opening-move cooperation against cooperation over all ten rounds across the
+50 model-by-scale cells. The pooled association is strong, but within-model
+movement need not follow the diagonal.
+(c) The opening-move persona contrast, cooperative instruction minus selfish
+instruction, below and above the sub-unit boundary. Intervals are descriptive
+95\% percentile bootstraps over agent-games.}
 \label{fig:firstmove}
 \end{figure}
 
