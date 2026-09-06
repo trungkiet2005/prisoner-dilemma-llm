@@ -862,9 +862,10 @@ claim that the model is running Tit-for-Tat.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/f_strategy_mix.pdf}
-\caption{\textbf{Strategy attribution across payoff scales and provenance breakdown.}
+\caption{\textbf{Strategy attribution across payoff scales, composition shift, and provenance breakdown.}
 (a) Stacked area share of canonical memory-one strategy attributions (AllC, AllD, TFT, WSLS) across the ten payoff scales for each of the five models.
-(b) Strategy read-out provenance: exactly deduced (single canonical match), ambiguous (multiple matching rules), and unmatched (LSTM attribution on trajectories consistent with no textbook rule). Over the corpus, $94.2\%$ of Tit-for-Tat and $96.8\%$ of Win-Stay-Lose-Shift labels are attributions on unmatched play, establishing that labels indicate resemblance rather than faithful execution.}
+(b) Net strategy share changes between extreme scales ($\lam = 10^{3}$ minus $\lam = 0.01$) across the four canonical rules with total variation distance $D_{\mathrm{TV}}$ in parentheses.
+(c) Strategy read-out provenance: exactly deduced (single canonical match), ambiguous (multiple matching rules), and unmatched (LSTM attribution on trajectories consistent with no textbook rule). Over the corpus, $94.2\%$ of Tit-for-Tat and $96.8\%$ of Win-Stay-Lose-Shift labels are attributions on unmatched play, establishing that labels indicate resemblance rather than faithful execution.}
 \label{fig:mix}
 \end{figure}
 

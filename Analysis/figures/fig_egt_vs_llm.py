@@ -46,9 +46,13 @@ def main():
     llm = {"ALLC": t.llm_AllC.to_numpy(), "TFT": t.llm_TFT.to_numpy(),
            "WSLS": t.llm_WSLS.to_numpy(), "ALLD": t.llm_AllD.to_numpy()}
 
-    fig = plt.figure(figsize=(S.FULL, 2.45))
-    gs = fig.add_gridspec(1, 3, width_ratios=[1, 1, 1.12], wspace=0.55)
-    axA, axB, axC = (fig.add_subplot(gs[0, i]) for i in range(3))
+    fig = plt.figure(figsize=(S.FULL, 5.6))
+    gs = fig.add_gridspec(2, 2, height_ratios=[1.0, 0.92], hspace=0.48,
+                          wspace=0.32, left=0.08, right=0.98,
+                          top=0.94, bottom=0.10)
+    axA = fig.add_subplot(gs[0, 0])
+    axB = fig.add_subplot(gs[0, 1])
+    axC = fig.add_subplot(gs[1, :])
 
     # --- a, b: the two strategy mixes, drawn the same way ------------------
     for ax, mix, letter, claim in (
@@ -108,11 +112,10 @@ def main():
                  fontsize=S.FS_NOTE, color=S.STRAT_C["ALLD"], ha="right",
                  va="bottom")
 
-    fig.text(0.5, -0.06,
-             r"finite population $Z=100$, Fermi pairwise comparison, "
-             r"$\beta=0.1$, execution error $\epsilon=0.05$, ten rounds; "
-             r"corpus pooled over five models, five languages and four persona pairings",
-             ha="center", va="top", fontsize=S.FS_NOTE, color=S.MUTED)
+    S.caption(fig,
+              r"finite population $Z=100$, Fermi pairwise comparison, $\beta=0.1$, execution error $\epsilon=0.05$, ten rounds;" + "\n"
+              r"corpus pooled over five models, five languages and four persona pairings",
+              y=0.01)
 
     S.save(fig, "f_egt_vs_llm")
 

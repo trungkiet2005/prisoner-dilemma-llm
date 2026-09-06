@@ -663,6 +663,37 @@
       \field{volume}{26}
       \field{year}{2023}
     \endentry
+    \entry{nowak2006five}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=6b63180e77466ce81c34087d70a19cb9}{%
+           family={Nowak},
+           familyi={N\bibinitperiod},
+           given={Martin\bibnamedelima A.},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \strng{namehash}{6b63180e77466ce81c34087d70a19cb9}
+      \strng{fullhash}{6b63180e77466ce81c34087d70a19cb9}
+      \strng{fullhashraw}{6b63180e77466ce81c34087d70a19cb9}
+      \strng{bibnamehash}{6b63180e77466ce81c34087d70a19cb9}
+      \strng{authorbibnamehash}{6b63180e77466ce81c34087d70a19cb9}
+      \strng{authornamehash}{6b63180e77466ce81c34087d70a19cb9}
+      \strng{authorfullhash}{6b63180e77466ce81c34087d70a19cb9}
+      \strng{authorfullhashraw}{6b63180e77466ce81c34087d70a19cb9}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Science}
+      \field{number}{5805}
+      \field{title}{Five rules for the evolution of cooperation}
+      \field{volume}{314}
+      \field{year}{2006}
+      \field{pages}{1560\bibrangedash 1563}
+      \range{pages}{4}
+      \verb{doi}
+      \verb 10.1126/science.1133755
+      \endverb
+    \endentry
     \entry{kim2021win}{article}{}{}
       \name{author}{3}{}{%
         {{hash=16ea5883675fcaf080d3ab638de5cdb4}{%

@@ -55,9 +55,15 @@ def main():
     canon = D.canonical_frame().set_index("rule")
     cc = D.contrasts(canon)
 
-    fig = plt.figure(figsize=(S.FULL, 2.58))
-    gs = fig.add_gridspec(1, 3, width_ratios=[1.0, 1.28, 0.92], wspace=0.45)
-    axA, axB, axC = (fig.add_subplot(gs[0, i]) for i in range(3))
+    fig = plt.figure(figsize=(S.FULL, 5.7))
+    gs = fig.add_gridspec(2, 2, height_ratios=[1.15, 0.85], hspace=0.45,
+                          wspace=0.28, left=0.085, right=0.975,
+                          top=0.94, bottom=0.14)
+    axA = fig.add_subplot(gs[0, 0])
+    axC = fig.add_subplot(gs[0, 1])
+    axB = fig.add_subplot(gs[1, :])
+    axA.set_box_aspect(1)
+    axC.set_box_aspect(1)
 
     # --- a: the plane the two main effects span ----------------------------
     for m in S.MODEL_ORDER:
@@ -137,11 +143,11 @@ def main():
                           markerfacecolor=S.SURFACE, markeredgewidth=1.2,
                           label="textbook rule"))
     fig.legend(handles=handles, loc="lower center", ncol=6,
-               bbox_to_anchor=(0.5, -0.15), fontsize=S.FS_NOTE)
-    fig.text(0.5, -0.215,
-             f"{len(c)} cells, one per model, payoff scale and language; "
-             "bars are means over cells with a 95% bootstrap interval",
-             ha="center", va="top", fontsize=S.FS_NOTE, color=S.MUTED)
+               bbox_to_anchor=(0.5, 0.04), fontsize=S.FS_NOTE)
+    S.caption(fig,
+              f"{len(c)} cells, one per model, payoff scale and language; "
+              "bars are means over cells with a 95% bootstrap interval",
+              y=0.005)
 
     S.save(fig, "f_strategy_space")
 

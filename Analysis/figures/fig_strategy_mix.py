@@ -96,13 +96,14 @@ def main():
         print(f"    {COLS[k]:5s} n={int(row.n):5d}  deduced {row.deduced:5.1f}%  "
               f"ambiguous {row.ambiguous:5.1f}%  attributed {row.unmatched:5.1f}%")
 
-    fig = plt.figure(figsize=(S.FULL, 3.05))
-    gs = fig.add_gridspec(2, 5, height_ratios=[1.0, 0.86], hspace=0.80,
-                          wspace=0.24, left=0.062, right=0.995,
-                          top=0.905, bottom=0.135)
-    tops = [fig.add_subplot(gs[0, i]) for i in range(5)]
-    axB = fig.add_subplot(gs[1, 0:2])
-    axC = fig.add_subplot(gs[1, 3:5])
+    fig = plt.figure(figsize=(S.FULL, 3.50))
+    gs = fig.add_gridspec(2, 6, height_ratios=[1.0, 1.28], hspace=0.76,
+                          wspace=0.35, left=0.065, right=0.985,
+                          top=0.91, bottom=0.12)
+    gs_top = gs[0, :].subgridspec(1, 5, wspace=0.24)
+    tops = [fig.add_subplot(gs_top[0, i]) for i in range(5)]
+    axB = fig.add_subplot(gs[1, 0:3])
+    axC = fig.add_subplot(gs[1, 3:6])
 
     # --- a: the mix of each model, stacked, one panel per model ------------
     lam = np.array(S.SCALES, dtype=float)
@@ -147,30 +148,42 @@ def main():
                      fontweight="bold")
         acc += h
 
-    # --- b: how far the mix travels between the extreme scales -------------
-    order = sorted(S.MODEL_ORDER, key=lambda m: move[m][0])
+    # --- b: game-theoretic composition shift (lambda=1000 minus lambda=0.01) ---
+    order = sorted(S.MODEL_ORDER, key=lambda m: move[m][0], reverse=True)
     ys = np.arange(len(order))
+    bar_h = 0.16
+    offsets = [0.24, 0.08, -0.08, -0.24]  # AllC, TFT, WSLS, AllD top to bottom
+
+    S.zero_rule(axB, 0.0, vertical=True, lw=0.8)
     for y, m in zip(ys, order):
-        o, lo, hi, _ = move[m]
-        axB.hlines(y, 0, o, color=S.MODEL_C[m], lw=1.1, zorder=2)
-        axB.hlines(y, lo, hi, color=S.MODEL_C[m], lw=2.6, alpha=0.30, zorder=3)
-        S.dot(axB, o, y, color=S.MODEL_C[m], marker=S.MODEL_M[m], size=24)
-        axB.text(o + 0.022, y, f"{o:.2f}", fontsize=S.FS_NOTE,
-                 color=S.INK_2, ha="left", va="center")
-    axB.axvline(floor, color=S.INK_2, lw=0.9, linestyle=(0, (3, 2)), zorder=4)
-    axB.text(floor + 0.012, len(order) - 0.42, "sampling floor", fontsize=5.9,
-             color=S.INK_2, ha="left", va="center")
+        s_lo = t[(t.model == m) & (t.scale == LO)].iloc[0]
+        s_hi = t[(t.model == m) & (t.scale == HI)].iloc[0]
+        o = move[m][0]
+        for off, k in zip(offsets, S.STRAT_ORDER):
+            col = COLS[k]
+            delta = float(s_hi[col] - s_lo[col])
+            axB.barh(y + off, delta, height=bar_h, color=S.STRAT_C[k],
+                     edgecolor="none", zorder=3)
+
     axB.set_yticks(ys)
-    axB.set_yticklabels([S.MODEL_SHORT[m] for m in order])
+    axB.set_yticklabels([f"{S.MODEL_SHORT[m]} ({move[m][0]:.2f})" for m in order])
     for lab, m in zip(axB.get_yticklabels(), order):
         lab.set_color(S.MODEL_C[m])
+        lab.set_fontweight("bold")
     S.strip(axB, grid_axis="x")
     axB.tick_params(axis="y", length=0)
-    axB.set_ylim(-0.7, len(order) - 0.3)
-    axB.set_xlim(0, 0.78)
-    axB.set_xticks([0, 0.2, 0.4, 0.6])
-    axB.set_xlabel("share relabelled between the extreme scales")
-    S.panel(axB, "b", "four of five move, Qwen3 does not")
+    axB.set_ylim(-0.65, len(order) - 0.25)
+    axB.set_xlim(-68, 68)
+    axB.set_xticks([-60, -30, 0, 30, 60])
+    axB.set_xticklabels(["-60", "-30", "0", "+30", "+60%"])
+    axB.set_xlabel(r"change in share: $\lambda=1000$ minus $\lambda=0.01$ ($D_{\mathrm{TV}}$ in parens)")
+    S.panel(axB, "b", "composition shift between extreme scales")
+
+    import matplotlib.patches as mpatches
+    handles = [mpatches.Patch(facecolor=S.STRAT_C[k], edgecolor="none",
+                               label=S.STRAT_LABEL[k]) for k in S.STRAT_ORDER]
+    axB.legend(handles=handles, loc="upper left", ncol=4, frameon=False,
+               fontsize=5.8, handlelength=0.9, handletextpad=0.3, columnspacing=0.6)
 
     # --- c: where the labels come from -------------------------------------
     for j, k in enumerate(S.STRAT_ORDER):
@@ -210,10 +223,9 @@ def main():
 
     S.caption(fig,
              "five models, ten payoff scales, 400 agent-games per cell, 20,000 in all; "
-             "the grey rule under a marks the scales at which every payoff printed is "
-             "at most 1; "
-             "the pale bar on b is a 95% bootstrap interval, the dashed rule the 95th "
-             "percentile of the distance between two draws from one fixed mixture", y=-0.005)
+             "the grey rule under a marks the scales at which every payoff printed is at most 1;\n"
+             r"b shows net strategy share changes between $\lambda=1000$ and $\lambda=0.01$ with total variation distance in parentheses; "
+             "c shows attribution provenance", y=-0.005)
 
     S.save(fig, "f_strategy_mix")
 

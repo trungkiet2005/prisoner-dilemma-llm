@@ -104,13 +104,18 @@ def main():
         print(f"    {S.MODEL_SHORT[m]:11s} sub-unit {row[0]:+.3f}   "
               f"supra-unit {row[1]:+.3f}")
 
-    fig = plt.figure(figsize=(S.FULL, 3.30))
-    gs = fig.add_gridspec(2, 5, height_ratios=[1.0, 0.96], hspace=0.84,
-                          wspace=0.26, left=0.062, right=0.995,
-                          top=0.905, bottom=0.125)
-    tops = [fig.add_subplot(gs[0, i]) for i in range(5)]
-    axB = fig.add_subplot(gs[1, 0:2])
-    axC = fig.add_subplot(gs[1, 3:5])
+    fig = plt.figure(figsize=(S.FULL, 4.0))
+    gs = fig.add_gridspec(2, 6, height_ratios=[1.0, 1.45], hspace=0.68,
+                          wspace=0.35, left=0.065, right=0.985,
+                          top=0.92, bottom=0.10)
+    # 5 top panels span columns across the width: 5 subplots in top row
+    gs_top = gs[0, :].subgridspec(1, 5, wspace=0.25)
+    tops = [fig.add_subplot(gs_top[0, i]) for i in range(5)]
+    # Two square panels in bottom row: centered nicely
+    axB = fig.add_subplot(gs[1, 0:3])
+    axC = fig.add_subplot(gs[1, 3:6])
+    axB.set_box_aspect(1)
+    axC.set_box_aspect(1)
 
     # --- a: one small panel per model, the others behind in grey -----------
     for i, (ax, m) in enumerate(zip(tops, S.MODEL_ORDER)):
@@ -158,9 +163,9 @@ def main():
     for m, x, y, ha in (
         ("Claude-Haiku-4.5", 0.02, 0.31, "left"),
         ("Qwen3-235B-A22B", 0.02, 0.62, "left"),
-        ("GPT-5.4-Nano", 0.62, 0.24, "center"),
-        ("Gemini-3.5-Flash-Lite", 0.44, 0.93, "left"),
-        ("Grok-4.20-Non-Reasoning", 1.0, 0.20, "right"),
+        ("Gemini-3.5-Flash-Lite", 0.36, 0.92, "left"),
+        ("GPT-5.4-Nano", 0.86, 0.44, "right"),
+        ("Grok-4.20-Non-Reasoning", 0.98, 0.18, "right"),
     ):
         sel = cells.model == m
         rw = float(np.corrcoef(cells.fm[sel], cells.cr[sel])[0, 1])
@@ -208,7 +213,7 @@ def main():
 
     S.caption(fig,
              "20,000 opening moves, 400 per model and payoff scale; bands and "
-             "intervals are 95% percentile bootstraps over agent-games\n"
+             "intervals are 95% percentile bootstraps over agent-games;\n"
              "shading on a and the open markers on c are the sub-unit regime, "
              "the two scales at which every payoff printed is at most 1", y=-0.005)
 

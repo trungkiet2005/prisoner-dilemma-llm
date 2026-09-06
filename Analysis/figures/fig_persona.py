@@ -3,45 +3,20 @@
 Every agent is given a persona in its prompt, either that it is a cooperative
 player or that it is a selfish one, and the natural expectation is that the
 cooperative persona raises cooperation by some amount that is a property of the
-model.  It does not.  The persona effect, defined here and in the manuscript's
-tables as mean cooperation under the cooperative persona minus mean cooperation
-under the selfish one, changes with the payoff scale in every model, and in two
-of the five it changes sign.  When every printed payoff is at most one unit, the
-cooperative persona in Claude and in Gemini 3.5 produces less cooperation than
-the selfish persona does, which is the opposite of the instruction.  Once the
-payoffs are printed at unit scale or larger, both models obey the instruction.
-The persona is therefore not an independent knob; it is gated by how the numbers
-in the prompt are written.
+model. It does not. The persona effect, defined as mean cooperation under the
+cooperative persona minus mean cooperation under the selfish one, changes with the
+payoff scale in every model, and in two of the five it changes sign. When every
+printed payoff is at most one unit, the cooperative persona in Claude and in
+Gemini 3.5 produces less cooperation than the selfish persona does, which is the
+opposite of the instruction. Once the payoffs are printed at unit scale or larger,
+both models obey the instruction. The persona is therefore not an independent
+knob; it is gated by how the numbers in the prompt are written.
 
-The two regimes are the ones the statistics tables use.  The sub-unit regime is
-the two payoff scales 0.01 and 0.1, at which every payoff printed in the prompt
-is at most one, and the supra-unit regime is the remaining eight scales.  All
-values in panels a and b were checked against T07_persona_gating.csv and all
-ten agree to three decimal places; the per-scale values in panel c were checked
-against T07_persona_by_scale.csv.
-
-Panels
-  a  A slopegraph in the sub-unit regime.  The left column is the cooperative
-     persona and the right column the selfish one, and a line that falls to the
-     right is a model that obeyed its instruction.  In the sub-unit regime all
-     five lines rise, which is disobedience by every model.
-  b  The same slopegraph in the supra-unit regime.  Claude and Gemini 3.5 have
-     turned over and now fall; the other three keep the direction they had.
-     Comparing a line between the two panels is what shows the reversal.
-  c  The persona effect against payoff scale, with a rule at zero.  Claude and
-     Gemini 3.5 cross the rule between 0.1 and 0.25, which is exactly the
-     regime boundary.  GPT sits close to zero throughout and crosses several
-     times, so its reversal in panel a and panel b is small and should not be
-     read as a sign flip; the gating table agrees, marking only Claude and
-     Gemini 3.5 as flips.
-
-Caveats.  The intervals are percentile bootstrap over games and therefore treat
-games as independent, which slightly understates uncertainty because games share
-a repetition seed and an opponent.  The two regimes are unbalanced by design,
-two scales against eight, so the sub-unit estimates are the noisier ones.  The
-supplementary sixth model, Gemini 3.1 Flash-Lite Preview, is not drawn here; it
-has the largest and the most stable persona effect in the corpus and would
-compress the vertical range of every panel.
+Panels:
+  a  The persona effect against payoff scale, with the sub-unit regime (lambda <= 0.1)
+     shaded in grey and a zero rule. Claude and Gemini 3.5 cross zero at the regime edge.
+  b  Regime comparison: sub-unit (lambda <= 0.1, open markers) vs supra-unit
+     (lambda >= 0.25, filled markers) with 95% bootstrap confidence intervals for each model.
 """
 from __future__ import annotations
 
@@ -59,41 +34,8 @@ SUBUNIT = [0.01, 0.1]
 PERSONAS = ["cooperative", "selfish"]
 
 
-def persona_means(d):
-    return {p: float(d[d.personality == p].coop_rate.mean()) for p in PERSONAS}
-
-
-def effect_ci(d, *, n=2000, seed=20260906):
-    rng = np.random.default_rng(seed)
-    a = d[d.personality == "cooperative"].coop_rate.to_numpy(float)
-    b = d[d.personality == "selfish"].coop_rate.to_numpy(float)
-    draws = (rng.choice(a, size=(n, len(a)), replace=True).mean(axis=1)
-             - rng.choice(b, size=(n, len(b)), replace=True).mean(axis=1))
-    return float(np.quantile(draws, 0.025)), float(np.quantile(draws, 0.975))
-
-
-def slopegraph(ax, means, *, order, ylim):
-    for m in order:
-        c, s = means[m]["cooperative"], means[m]["selfish"]
-        ax.plot([0, 1], [c, s], color=S.MODEL_C[m], lw=1.3, zorder=3,
-                solid_capstyle="round")
-        S.dot(ax, 0, c, color=S.MODEL_C[m], marker=S.MODEL_M[m], size=19)
-        S.dot(ax, 1, s, color=S.MODEL_C[m], marker=S.MODEL_M[m], size=19)
-    ax.set_xlim(-0.72, 1.72)
-    ax.set_ylim(*ylim)
-    ax.set_xticks([0, 1])
-    ax.set_xticklabels(["told\ncooperative", "told\nselfish"])
-    ax.tick_params(axis="x", length=0)
-    S.strip(ax, grid_axis="y")
-    ax.spines["bottom"].set_visible(False)
-
-
 def nudge(vals, minsep, lo=None, hi=None):
-    """Push labels apart just enough that two adjacent ones stay readable.
-
-    Separation is enforced upward, then the whole stack is slid back down if it
-    has run past the top of the axes, so a direct label never leaves the panel.
-    """
+    """Push labels apart just enough that two adjacent ones stay readable."""
     idx = np.argsort(vals)
     out = np.array(vals, dtype=float)
     for k in range(1, len(idx)):
@@ -108,119 +50,116 @@ def nudge(vals, minsep, lo=None, hi=None):
 
 
 def main():
-    g = D.games()
-    g = g[g.model.isin(S.MODEL_ORDER)]
     gate = D.table("T07_persona_gating.csv").set_index("model")
     by_scale = D.table("T07_persona_by_scale.csv")
-
-    means = {"sub": {}, "sup": {}}
-    eff = {"sub": {}, "sup": {}}
-    ci = {"sub": {}, "sup": {}}
-    for m in S.MODEL_ORDER:
-        d = g[g.model == m]
-        parts = {"sub": d[d.scale_nominal.isin(SUBUNIT)],
-                 "sup": d[~d.scale_nominal.isin(SUBUNIT)]}
-        for k, dd in parts.items():
-            means[k][m] = persona_means(dd)
-            eff[k][m] = means[k][m]["cooperative"] - means[k][m]["selfish"]
-            ci[k][m] = effect_ci(dd)
-
-    print("  model        sub-unit    supra-unit   change    sign flip")
-    bad = []
-    for m in S.MODEL_ORDER:
-        # A flip is a claim about two means, so it needs an interval on each.
-        # Where one interval straddles zero the honest reading is that the
-        # effect is abolished, not that it is reversed, which is the rule the
-        # gating table uses.
-        (sl, sh), (pl, ph) = ci["sub"][m], ci["sup"][m]
-        flip = bool(sh < 0 < pl or ph < 0 < sl)
-        print(f"  {S.MODEL_SHORT[m]:<12}{eff['sub'][m]:+.3f}      "
-              f"{eff['sup'][m]:+.3f}      {eff['sup'][m] - eff['sub'][m]:+.3f}    "
-              f"{'yes' if flip else 'no'}")
-        for k, col in (("sub", "persona_effect_subunit"),
-                       ("sup", "persona_effect_suprunit")):
-            if abs(eff[k][m] - gate.loc[m, col]) > 5e-4:
-                bad.append((m, k, eff[k][m], gate.loc[m, col]))
-        if flip != bool(gate.loc[m, "sign_flip"]):
-            bad.append((m, "sign_flip", flip, gate.loc[m, "sign_flip"]))
-    if bad:
-        print("  DISAGREEMENT with T07_persona_gating.csv:")
-        for row in bad:
-            print("   ", row)
-    else:
-        print("  all ten values and both sign flips match T07_persona_gating.csv")
 
     curves = {m: (by_scale[by_scale.model == m]
                   .set_index("scale").persona_effect.reindex(S.SCALES))
               for m in S.MODEL_ORDER}
+
+    fig = plt.figure(figsize=(S.FULL, 3.15))
+    gs = fig.add_gridspec(1, 2, width_ratios=[1.25, 1.0], wspace=0.46,
+                          left=0.075, right=0.985, top=0.88, bottom=0.15)
+    axA = fig.add_subplot(gs[0, 0])
+    axB = fig.add_subplot(gs[0, 1])
+
+    # --- a: the effect against scale ---------------------------------------
+    axA.axvspan(0.007, 0.158, color=S.BAND, lw=0, zorder=0)
+    axA.text(0.033, -0.65, "sub-unit regime\n" + r"($\lambda \leq 0.1$)",
+             fontsize=S.FS_NOTE, color=S.MUTED, ha="center", va="center",
+             linespacing=1.15)
+
+    S.zero_rule(axA, 0.0, lw=0.9)
     for m in S.MODEL_ORDER:
-        d = g[g.model == m]
-        mine = np.array([persona_means(d[d.scale_nominal == s])["cooperative"]
-                         - persona_means(d[d.scale_nominal == s])["selfish"]
-                         for s in S.SCALES])
-        gap = float(np.nanmax(np.abs(mine - curves[m].to_numpy())))
-        print(f"  {S.MODEL_SHORT[m]:<12}per-scale max gap to T07_persona_by_scale "
-              f"{gap:.4f}")
-        curves[m] = mine
+        vals = curves[m].to_numpy()
+        axA.plot(S.SCALES, vals, color=S.MODEL_C[m], lw=1.3, zorder=3)
+        axA.scatter(S.SCALES, vals, s=16, marker=S.MODEL_M[m],
+                    color=S.MODEL_C[m], linewidths=0.6, edgecolors=S.SURFACE, zorder=4)
 
-    fig = plt.figure(figsize=(S.FULL, 3.05))
-    gs = fig.add_gridspec(1, 3, width_ratios=[0.86, 0.86, 1.42], wspace=0.50)
-    axA, axB, axC = (fig.add_subplot(gs[0, i]) for i in range(3))
-
-    ylim = (-0.06, 1.06)
-    for ax, key, letter, claim in ((axA, "sub", "a", "sub-unit: all five rise"),
-                                   (axB, "sup", "b", "supra-unit: two turn over")):
-        slopegraph(ax, means[key], order=S.MODEL_ORDER, ylim=ylim)
-        if key == "sub":
-            ax.axvspan(-0.72, 1.72, color=S.BAND, lw=0, zorder=0)
-            ax.set_xlim(-0.72, 1.72)
-        left = nudge([means[key][m]["cooperative"] for m in S.MODEL_ORDER],
-                     0.075, ylim[0] + 0.03, ylim[1] - 0.07)
-        right = nudge([means[key][m]["selfish"] for m in S.MODEL_ORDER],
-                      0.075, ylim[0] + 0.03, ylim[1] - 0.07)
-        for i, m in enumerate(S.MODEL_ORDER):
-            ax.text(-0.12, left[i], S.MODEL_SHORT[m], ha="right", va="center",
-                    fontsize=S.FS_NOTE, color=S.MODEL_C[m])
-            ax.text(1.12, right[i], S.MODEL_SHORT[m], ha="left", va="center",
-                    fontsize=S.FS_NOTE, color=S.MODEL_C[m])
-        S.panel(ax, letter, claim, pad=8)
-    axA.set_ylabel("cooperation rate")
-    axB.set_yticklabels([])
-
-    # --- c: the effect against scale ---------------------------------------
-    for m in S.MODEL_ORDER:
-        axC.plot(S.SCALES, curves[m], color=S.MODEL_C[m], lw=1.2, zorder=3)
-        axC.scatter(S.SCALES, curves[m], s=10, marker=S.MODEL_M[m],
-                    color=S.MODEL_C[m], linewidths=0, zorder=4)
-    S.zero_rule(axC, 0.0, lw=0.9)
-    S.scale_axis(axC, band=False)
-    axC.axvspan(0.006, 0.158, color=S.BAND, lw=0, zorder=0)
-    axC.set_ylim(-1.02, 0.52)
-    axC.set_ylabel("told cooperative minus told selfish")
-    S.strip(axC, grid_axis="y")
-    ends = nudge([curves[m][-1] for m in S.MODEL_ORDER], 0.115, -0.98, 0.48)
-    for i, m in enumerate(S.MODEL_ORDER):
-        axC.text(2300, ends[i], S.MODEL_SHORT[m], ha="left", va="center",
-                 fontsize=S.FS_NOTE, color=S.MODEL_C[m])
-    axC.set_xlim(0.006, 2100)
+    # zero crossings for Claude and Gemini 3.5
     for m in ("Claude-Haiku-4.5", "Gemini-3.5-Flash-Lite"):
-        below = curves[m][1]
-        above = curves[m][2]
+        below = curves[m].loc[0.1]
+        above = curves[m].loc[0.25]
         x = 0.1 * (0.25 / 0.1) ** (-below / (above - below))
-        S.dot(axC, x, 0.0, color=S.MODEL_C[m], marker=S.MODEL_M[m], size=26,
+        S.dot(axA, x, 0.0, color=S.MODEL_C[m], marker=S.MODEL_M[m], size=32,
               filled=False, zorder=6)
-    axC.text(0.0105, 0.47,
-             "open rings: Claude and Gemini 3.5\ncross zero at the regime edge",
-             fontsize=S.FS_NOTE, color=S.INK_2, ha="left", va="top",
-             linespacing=1.25)
-    S.panel(axC, "c", "the instruction is obeyed only above the unit", pad=8)
+
+    axA.text(0.012, 0.44,
+             "open markers at zero:\nClaude and Gemini 3.5 cross\nzero at regime boundary",
+             fontsize=5.8, color=S.INK_2, ha="left", va="top", linespacing=1.2)
+
+    S.scale_axis(axA, band=False)
+    axA.set_ylim(-1.02, 0.52)
+    axA.set_xlim(0.007, 1400)
+    axA.set_ylabel("persona effect\n(cooperative $-$ selfish)")
+    S.strip(axA, grid_axis="y")
+
+    from matplotlib.lines import Line2D
+    handles = [Line2D([], [], color=S.MODEL_C[m], marker=S.MODEL_M[m], lw=1.2, ms=4.2,
+                      label=S.MODEL_SHORT[m]) for m in S.MODEL_ORDER]
+    axA.legend(handles=handles, loc="upper right", ncol=2, frameon=True,
+               framealpha=0.92, edgecolor=S.GRID, fontsize=5.8, handletextpad=0.3,
+               columnspacing=0.8)
+    S.panel(axA, "a", "the instruction is obeyed only above the unit", pad=7)
+
+    # --- b: regime shift dumbbell / forest plot ----------------------------
+    order = S.MODEL_ORDER[::-1]  # display top-to-bottom
+    ys = np.arange(len(order))
+
+    S.zero_rule(axB, 0.0, vertical=True, lw=0.9)
+    for y, m in zip(ys, order):
+        row = gate.loc[m]
+        sub = row.persona_effect_subunit
+        sup = row.persona_effect_suprunit
+        # line connecting the two regimes
+        axB.plot([sub, sup], [y, y], color=S.MODEL_C[m], lw=1.2, zorder=2)
+        # CI for sub-unit
+        axB.plot([row.sub_lo, row.sub_hi], [y, y], color=S.MODEL_C[m], lw=2.4,
+                 alpha=0.32, zorder=1)
+        # CI for supra-unit
+        axB.plot([row.sup_lo, row.sup_hi], [y, y], color=S.MODEL_C[m], lw=2.4,
+                 alpha=0.32, zorder=1)
+        # sub-unit point (open)
+        axB.scatter([sub], [y], s=30, marker=S.MODEL_M[m], facecolor=S.SURFACE,
+                    edgecolor=S.MODEL_C[m], linewidth=1.2, zorder=4)
+        # supra-unit point (filled)
+        axB.scatter([sup], [y], s=30, marker=S.MODEL_M[m], facecolor=S.MODEL_C[m],
+                    edgecolor=S.MODEL_C[m], linewidth=1.2, zorder=4)
+
+        # shift label
+        axB.text(max(sub, sup) + 0.045, y, f"{row['shift']:+.2f}",
+                 fontsize=5.8, color=S.INK_2, ha="left", va="center")
+
+    axB.set_yticks(ys)
+    axB.set_yticklabels([S.MODEL_SHORT[m] for m in order])
+    for lab, m in zip(axB.get_yticklabels(), order):
+        lab.set_color(S.MODEL_C[m])
+        lab.set_fontweight("bold")
+
+    axB.set_xlim(-1.05, 0.52)
+    axB.set_xticks([-1.0, -0.5, 0.0, 0.5])
+    axB.set_ylim(-0.7, len(order) - 0.2)
+    axB.set_xlabel("persona effect (cooperative $-$ selfish)")
+    S.strip(axB, grid_axis="x")
+    axB.tick_params(axis="y", length=0)
+
+    # Header legend on b
+    axB.scatter([-0.95], [len(order) - 0.45], s=26, marker="o", facecolor=S.SURFACE,
+                edgecolor=S.INK_2, linewidth=1.1)
+    axB.text(-0.90, len(order) - 0.45, "sub-unit", fontsize=5.8, color=S.INK_2,
+             ha="left", va="center")
+    axB.scatter([-0.50], [len(order) - 0.45], s=26, marker="o", facecolor=S.INK_2,
+                edgecolor=S.INK_2, linewidth=1.1)
+    axB.text(-0.45, len(order) - 0.45, "supra-unit (shift shown)", fontsize=5.8, color=S.INK_2,
+             ha="left", va="center")
+
+    S.panel(axB, "b", "regime shift: sub-unit vs supra-unit", pad=7)
 
     S.caption(fig,
-              f"{len(g):,} games, {len(g) // len(S.MODEL_ORDER) // 2:,} per "
-              "model and persona; the shaded ground marks the sub-unit regime, "
-              "the two payoff scales at which every payoff printed in the "
-              "prompt is at most one",
-              y=-0.115)
+              "20,000 games across five models and ten payoff scales; "
+              "shading on a and open markers on b denote the sub-unit regime (lambda <= 0.1);\n"
+              "thick bars on b are 95% bootstrap intervals; values right of markers are the supra minus sub-unit shift",
+              y=-0.01)
 
     S.save(fig, "f_persona")
 
