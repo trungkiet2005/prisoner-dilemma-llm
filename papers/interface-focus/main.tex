@@ -83,7 +83,8 @@
 \begin{document}
 
 %%%% Article title
-\title{Payoff scale reshapes how language models play the prisoner's dilemma}
+\title{Frontier language-model agents violate payoff-scale invariance in the
+prisoner's dilemma, and cooperate without reciprocity}
 
 %%%% Authors ($\dagger$: equal contribution, $\star$: corresponding authors)
 \author{The Anh Han$^{1,\dagger,\star}$, Trung-Kiet Huynh$^{2,4,\dagger}$, Dao-Sy Duy-Minh$^{2,4,\dagger}$, Thanh-Bang Cao$^{3,4}$, Phong-Hao Le$^{3,4}$, Hong-Dan Nguyen$^{3,4}$, Phu-Quy Nguyen-Lam$^{2,4}$, Minh-Luan Nguyen-Vo$^{3,4}$, Hong-Phat Pham$^{3,4}$, Phu-Hoa Pham$^{2,4}$, Thien-Kim Than$^{3,4}$, Chi-Nguyen Tran$^{3,4}$, Huy Tran$^{3,4}$, Gia-Thoai Tran-Le$^{3,4}$, Alessio Buscemi$^{5}$ and Le Hong Trang$^{3,4,\star}$}
@@ -838,34 +839,188 @@ over rounds 2 to 10 (hatched).}
 \label{fig:firstmove}
 \end{figure}
 
-\subsection{Comparison with an evolutionary baseline}\label{sec:egt_pointer}
+\subsection{Where the scale does act: the evolutionary baseline}\label{sec:egt_pointer}
 
-The same payoff matrix, sign-flipped so that lower penalties become higher
-utilities and then scaled by $\lam$, also drives an analytical baseline. We
-computed the stationary distribution of a pairwise-comparison imitation process
-in the small-mutation limit over the same four canonical memory-one rules under
-a per-round execution error, in a finite well-mixed population
-($Z = 100$, $\beta = 0.1$, $r = 10$), on the same ten-value grid
-(appendix~\ref{appendix:egt}). Combining evolutionary modelling with
-language-model simulations in this way has proved informative in recent studies
-of governance dilemmas~\cite{balabanova2025media,buscemi2025llms}.
+The scale is inert in the theory of the game, but it is not inert everywhere,
+and locating the one place it does act sharpens what the corpus is being
+compared against.
 
-The baseline and the corpus move in opposite directions. Evolutionary theory
-predicts that raising the payoff scale concentrates the population on Always
-Defect, from a stationary frequency of 0.267 at $\lam = 0.01$ to 1.000 by
-$\lam = 100$, because a larger $\lam$ multiplies the payoff differences that
-the Fermi update responds to and so sharpens selection against any rule that
-can be exploited. The corpus does the
-reverse in aggregate: over the same grid its pooled AllD share falls from
-$43.6\%$ to $28.3\%$ while its AllC share rises from $38.1\%$ to $45.8\%$. The
-baseline is also language-blind by construction, whereas the
-model-by-language interaction carries $17.0\%$ of the variance across cells
-here. We read the comparison as a measurement of the gap rather than as a
-falsification of either object: what the gap sizes is everything these agents
-bring that an evolutionary model does not, from alignment training to the
-cooperative bias of a human text corpus. The full grid, a precision audit of
-the numerics, and a comparison matched to execution-noise levels estimated from
-the read-out itself are in appendix~\ref{appendix:egt}.
+It does nothing to the deterministic dynamics. Multiplying the payoff matrix by
+a positive constant multiplies the replicator field by that constant, so the
+orbits are the same curves traversed faster and every rest point stays where it
+was. Figure~\ref{fig:simplex} draws the field on the four faces of the
+three-simplex the four canonical rules span, once, because there is only one
+picture to draw: the matrix at $\lam = 1000$ is exactly $10^{5}$ times the
+matrix at $\lam = 0.01$, and over 2{,}000 random population states the
+normalised fields agree to $4 \times 10^{-14}$.
+
+It does act on a finite population. The same matrix, sign-flipped so that lower
+penalties become higher utilities, drives a pairwise-comparison imitation
+process over the same four rules under a per-round execution error
+($Z = 100$, $\beta = 0.1$, $r = 10$, $\epsilon = 0.05$;
+appendix~\ref{appendix:egt}). There $\lam$ and the selection intensity $\beta$
+enter the Fermi update only through their product, so raising the scale is
+raising selection pressure, and the small-mutation-limit stationary
+distribution moves accordingly. Figure~\ref{fig:invasion} shows what that does
+to the invasion structure: at $\lam = 0.01$ every fixation probability is
+within a whisker of drift and the four rules share the population; at
+$\lam = 1$ the familiar structure appears, with AllC invaded and AllD
+accumulating; by $\lam = 10$ AllD holds $96.9\%$. Combining evolutionary
+modelling with language-model simulations in this way has proved informative in
+recent studies of governance
+dilemmas~\cite{balabanova2025media,buscemi2025llms}.
+
+The baseline and the corpus then move in opposite directions
+(figure~\ref{fig:egtllm}). The baseline's AllD share rises from 0.267 at
+$\lam = 0.01$ to 1.000 by $\lam = 100$. The corpus does the reverse and then
+flattens: its pooled AllD share falls from $43.6\%$ to $28.3\%$ while its AllC
+share rises from $38.1\%$ to $45.8\%$, and at $\lam = 1000$ the two accounts
+stand at 1.000 against 0.283.
+
+That gap is not an artefact of the three constants the baseline was solved at.
+We solved the same model on 80 settings, $Z \in \{50, 100, 200, 500\}$ crossed
+with $\beta \in \{0.01, 0.05, 0.1, 0.5, 1\}$ and
+$\epsilon \in \{0, 0.05, 0.1, 0.2\}$, at the same ten scales, 800 cells each
+carried at 200 significant digits (figure~\ref{fig:robustness}). The AllD share
+rises with the payoff scale in 80 of 80 settings and passes $90\%$ in 80 of 80;
+the median rise is 0.716 and the smallest is 0.195. The rise is monotone in 61
+of the 80, and every one of the 19 exceptions is at $\epsilon = 0$, where the
+share dips before it rises, which is the qualification the baseline already
+carries (appendix~\ref{appendix:egt}). The direction of the prediction is
+therefore a property of the model rather than of its parameters, and the
+empirical curve does not lie inside the family at any setting.
+
+We read this as a measurement of the gap rather than as a falsification of
+either object. What the gap sizes is everything these agents bring that an
+evolutionary model does not, from alignment training to the cooperative bias of
+a human text corpus; the baseline is also language-blind by construction,
+whereas the model-by-language interaction carries $17.0\%$ of the variance
+across cells here. Section~\ref{sec:conditioning} identifies one concrete
+component of it. A precision audit of the numerics and a comparison matched to
+execution-noise levels estimated from the read-out itself are in
+appendix~\ref{appendix:egt}.
+
+\subsection{What the agents condition on}\label{sec:conditioning}
+
+The baseline rests on a mechanism, and the mechanism can be measured directly
+in the corpus rather than inferred from the gap. What sustains cooperation
+against invasion by defectors in the evolutionary account is
+\emph{reciprocity}: conditioning one's next move on what the partner just did.
+Tit-for-tat is the pure case.
+
+The predecessor of a round is a pair, this agent's own last action and its
+partner's, so the four conditional cooperation probabilities form a two-by-two
+design and decompose without remainder into a level and three contrasts. We
+name them for what they are. \emph{Reciprocity} is the partner main effect,
+$p(C \mid \text{partner } C) - p(C \mid \text{partner } D)$, and is what
+tit-for-tat is made of. \emph{Persistence} is the own main effect,
+$p(C \mid \text{own } C) - p(C \mid \text{own } D)$. \emph{Matching} is the
+interaction, and is what win-stay lose-shift is made of. The four canonical
+rules sit at known coordinates, which is what makes the space readable: AllC
+and AllD are both zero on all three contrasts and differ only in level,
+tit-for-tat is reciprocity 1, win-stay lose-shift is matching 1.
+
+Written in those terms the corpus is not off the reciprocity axis by a little
+(figure~\ref{fig:strategyspace}). Averaged over the 212 model-by-scale-by-language
+cells with all four predecessors observed at least thirty times, the own effect
+exceeds the partner effect in every one of the five models, by factors of 1.2
+(Claude Haiku 4.5, 0.288 against 0.243), 2.0 (GPT-5.4 Nano, 0.277 against
+0.141), 3.4 (Gemini 3.5 Flash-Lite, 0.573 against 0.169) and 3.7 (Grok 4.20,
+0.690 against 0.189); in Qwen3 235B-A22B the partner effect is negative
+($-0.095$) while the own effect is 0.749. A principal-component analysis of the
+raw five-vector, given no knowledge of the contrasts, recovers the same
+geometry.
+
+These agents cooperate, and at the larger scales they cooperate a great deal,
+but they are not doing it by answering their partner. They are conditioning
+predominantly on their own previous action, which is the one thing an
+evolutionary account of cooperation gives no weight to, and it is a concrete
+component of the gap in section~\ref{sec:egt_pointer}: a population of agents
+that ignores its partner cannot support the reciprocal equilibria the baseline
+is built out of, whatever its cooperation rate.
+
+One caution governs the arithmetic. The contrast $p_{CD} - p_{DC}$, which is
+the tempting one-line summary because it compares the two predecessors on which
+the pair disagreed, is not a reciprocity measure: it equals persistence minus
+reciprocity exactly, so it confounds the two main effects and can report
+anti-reciprocity where the partner effect is in fact positive.
+
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/f_simplex.pdf}
+\caption{\textbf{The deterministic dynamics do not see the payoff scale.}
+Replicator flow on each of the four faces of the three-simplex spanned by the
+canonical rules, one face per strategy left out, at $\lam = 1$,
+$\epsilon = 0.05$ and ten rounds. Filled circles are stable rest points, open
+circles unstable. Only one row is drawn because rescaling the payoffs
+multiplies the field by a constant and moves nothing: the matrix at
+$\lam = 1000$ is exactly $10^{5}$ times the matrix at $\lam = 0.01$, and over
+2{,}000 random population states the normalised fields agree to
+$4 \times 10^{-14}$.}
+\label{fig:simplex}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/f_invasion.pdf}
+\caption{\textbf{Where the payoff scale does act: the invasion structure of a
+finite population.} Nodes are the four monomorphic states, node area is the
+small-mutation-limit stationary probability, and an edge is drawn where a
+single mutant fixes more often than neutral drift $1/Z$ would carry it, labelled
+in multiples of that drift. $Z = 100$, Fermi pairwise comparison,
+$\beta = 0.1$, $\epsilon = 0.05$. Because $\lam$ and $\beta$ enter the update
+rule only through their product, raising the scale is raising selection
+pressure. The panels stop at $\lam = 10$ because the float64 fixation
+probabilities underflow beyond it; those cells are solved at 200 digits instead
+(appendix~\ref{appendix:egt}).}
+\label{fig:invasion}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/f_egt_vs_llm.pdf}
+\caption{\textbf{The evolutionary baseline and the corpus move in opposite
+directions.} (a) The baseline's stationary distribution over the four canonical
+rules across the ten payoff scales, drawn as a stacked band. (b) The corpus's
+strategy mix on the same axis, drawn identically. (c) The AllD share alone,
+both accounts on one axis, with the gap shaded. Baseline at $Z = 100$,
+$\beta = 0.1$, $\epsilon = 0.05$, ten rounds; the corpus pooled over five
+models, five languages and four persona pairings.}
+\label{fig:egtllm}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/f_robustness.pdf}
+\caption{\textbf{The baseline's direction is a property of the model, not of
+its parameters.} (a) The AllD share against the payoff scale, one hairline per
+evolutionary setting, with the setting reported in the text drawn heavy.
+(b) The rise in the AllD share from the smallest scale to the largest, by
+execution error. (c) The corpus on the same axis as the family. Eighty
+settings, $Z \in \{50, 100, 200, 500\}$ crossed with
+$\beta \in \{0.01, 0.05, 0.1, 0.5, 1\}$ and
+$\epsilon \in \{0, 0.05, 0.1, 0.2\}$, ten payoff scales, 800 cells each solved
+at 200 significant digits. The rise is monotone at every positive $\epsilon$;
+all 19 exceptions are at $\epsilon = 0$.}
+\label{fig:robustness}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/f_strategy_space.pdf}
+\caption{\textbf{The agents condition on themselves, not on their partner.}
+(a) Cells in the reciprocity by persistence plane, with the canonical rules at
+their exact coordinates; AllC, AllD and win-stay lose-shift all have both main
+effects zero and so coincide at the origin. (b) The three contrasts per model,
+against the value each canonical rule would give, with 95\% bootstrap intervals
+over cells. (c) The first two principal components of the raw five-vector,
+which is given no knowledge of the contrasts and recovers the same geometry.
+A cell is one model, payoff scale and prompt language; a predecessor observed
+fewer than thirty times yields no estimate and the cell is dropped, leaving 212
+of 250.}
+\label{fig:strategyspace}
+\end{figure}
 
 
 % ===========================================================================
