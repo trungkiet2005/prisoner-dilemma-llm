@@ -558,8 +558,10 @@ cell on 48,000.
 * **Collection order:** Gemini-3.5-Flash-Lite first, then
   Gemini-3.1-Flash-Lite-Preview (2026-09-02), GPT-5.4-Nano (2026-09-03),
   Claude-Haiku-4.5 and Qwen3-235B-A22B (2026-09-05), Grok-4.20-Non-Reasoning (2026-09-05).
-* **Sampling:** decoding parameters are the provider defaults exposed through the Kaggle
-  Model Proxy; the only output constraint is a tight `max_tokens` cap. The released
-  CSVs contain only valid action tokens, but they do not retain retry/fallback counters,
-  so the terminal fallback rate cannot be reconstructed from this corpus alone.
+* **Sampling:** the task explicitly sets `temperature=1.0` and a deterministic
+  common-random-number seed for each cell/round/agent, and caps output with
+  `max_tokens=128`; optional provider parameters are dropped when an endpoint rejects
+  them. The released CSVs contain only valid action tokens, but they do not retain
+  retry/fallback counters, so the terminal fallback rate cannot be reconstructed from
+  this corpus alone.
 * **This card:** written 2026-09-06 from a full scan of all 300 files.
