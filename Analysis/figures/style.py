@@ -129,6 +129,15 @@ RC = {
     "savefig.facecolor": SURFACE,
     "font.family": "sans-serif",
     "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"],
+    # Without this, matplotlib sets body text in the sans family above but
+    # every $\lambda$ in DejaVu, so a figure ships two typefaces and the Greek
+    # letters do not match the prose beside them.  "custom" routes mathtext
+    # back through font.sans-serif.
+    "mathtext.fontset": "custom",
+    "mathtext.rm": "sans",
+    "mathtext.it": "sans:italic",
+    "mathtext.bf": "sans:bold",
+    "mathtext.default": "it",
     "font.size": 7.4, "axes.titlesize": 7.8, "axes.labelsize": 7.4,
     "xtick.labelsize": 6.9, "ytick.labelsize": 6.9, "legend.fontsize": 7.0,
     "axes.edgecolor": HAIRLINE, "axes.linewidth": 0.6, "axes.labelcolor": INK_2,
@@ -167,17 +176,24 @@ def strip(ax, *, left=True, bottom=True, grid_axis="y"):
         ax.grid(True, axis=grid_axis, zorder=0)
 
 
-def panel(ax, letter, claim=None, *, pad=6, x=0.0):
+def panel(ax, letter, claim=None, *, pad=6, x=0.0, gap=10.5):
     """Panel letter in bold, then the claim the panel makes, above the axes.
 
     The claim is the figure's argument and belongs where the eye lands first,
     not at the end of a caption three inches below.
+
+    The gap between the letter and the claim is in points, not in axes
+    fractions.  An axes fraction is a different distance on a narrow panel than
+    on a wide one, which put the claim on top of the letter every time a figure
+    had a narrow panel in it.
     """
     ax.set_title(letter, loc="left", pad=pad, x=x,
                  fontsize=FS_PANEL, color=INK, fontweight="bold")
     if claim:
-        ax.text(x + 0.030, 1.0, claim, transform=ax.transAxes,
-                ha="left", va="bottom", fontsize=FS_CLAIM, color=INK_2)
+        ax.annotate(claim, xy=(x, 1.0), xycoords="axes fraction",
+                    xytext=(gap, pad - 4), textcoords="offset points",
+                    ha="left", va="bottom", fontsize=FS_CLAIM, color=INK_2,
+                    annotation_clip=False)
 
 
 def scale_axis(ax, *, band=True, label=r"payoff scale $\lambda$", ticks=True):
