@@ -10,12 +10,12 @@ scikit-learn==1.8.0
 statsmodels==0.14.6
 torch==2.9.1             # LSTM strategy read-out, s01_train_lstm.py
 mpmath==1.3.0            # 200-digit arithmetic in s09_egt.py
-# egttools drives the evolutionary baseline grid in s09_egt.py. It is not
-# installed on the machine these pins were read from, so no version is
-# asserted here; latest on PyPI is 0.1.14.2.
-egttools
+egttools==0.1.14.2       # evolutionary baseline and invasion diagrams
 pytest==9.1.1
 
 # Kaggle Benchmarks arm only
 kaggle==2.2.4
 kaggle-benchmarks==0.6.1
+
+# The analysis runs on the conda env `egt` (Python 3.12): egttools has no wheel
+# for Python 3.14 and its build needs a C++ toolchain this machine lacks.
