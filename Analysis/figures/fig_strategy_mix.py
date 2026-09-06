@@ -208,14 +208,12 @@ def main():
         axC.text(x, len(S.STRAT_ORDER) - 1 + 0.44, txt, fontsize=5.9,
                  color=S.INK_2, ha="center", va="bottom")
 
-    fig.text(0.5, -0.005,
+    S.caption(fig,
              "five models, ten payoff scales, 400 agent-games per cell, 20,000 in all; "
              "the grey rule under a marks the scales at which every payoff printed is "
-             "at most 1\n"
+             "at most 1; "
              "the pale bar on b is a 95% bootstrap interval, the dashed rule the 95th "
-             "percentile of the distance between two draws from one fixed mixture",
-             ha="center", va="top", fontsize=S.FS_NOTE, color=S.MUTED,
-             linespacing=1.5)
+             "percentile of the distance between two draws from one fixed mixture", y=-0.005)
 
     S.save(fig, "f_strategy_mix")
 

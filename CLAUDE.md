@@ -27,6 +27,27 @@ models and the supplement all six.
 | the collection plan and its experiment numbers | `legacy/paper_scaling/RUN_PLAN.md` |
 | how a Kaggle run becomes data | `results/README.md` |
 | the open-weight arm's payoff caveat | `Analysis/README.md` |
+| the figure palette, geometry and helpers | `Analysis/figures/style.py` |
+| the memory-one read-out and its contrasts | `Analysis/figures/data.py` |
+
+## The environment
+
+The analysis runs on the conda env `egt` (Python 3.12):
+`/d/Anaconda/envs/egt/python.exe`. egttools has no wheel for the system Python
+3.14 and building it needs a C++ toolchain this machine does not have.
+
+## Two figure generations
+
+`Analysis/scaling/s05_figures.py` draws the original set, `f1_`..`f8_`, which
+`main.tex` currently includes. `Analysis/figures/` draws the replacement set,
+`f_`-prefixed, one script per figure, all importing `style.py`. Both write into
+`papers/interface-focus/figures/`; the names do not collide, so the two
+generations coexist until the manuscript has moved over.
+
+The replacement set exists for two reasons. The old figures are drawn 183 mm
+wide against a 170 mm column, so LaTeX scales all of them to 93% and prints
+7 pt labels at 6.5 pt; and several of them are five overlapping curves where a
+heatmap or a small multiple says the same thing at a glance.
 
 Figures and the three `*_auto.tex` table files are **generated**. Never edit them
 by hand; edit the script and rerun.
@@ -78,6 +99,17 @@ number, a figure or a framing from one into the other.
 6. **Strategy labels are not identifications.** TFT and WSLS shares are 94.6% and
    97.1% LSTM attributions on trajectories matching no canonical rule. Say
    "resembles", not "plays".
+7. **egttools underflows in float64 at large `beta * lambda`.** At
+   `epsilon = 0.05` and `lambda >= 100` the fixation probabilities reach exactly
+   zero, the embedded chain gains a second absorbing state, and the eigen solver
+   returns whichever basis vector it lands on: it reports `WSLS = 1.0` where the
+   answer is `AllD = 1.0`. `s09_egt.py` solves those cells at 200 digits and
+   records `n_absorbing_float64` per cell. Never draw a float64 stationary
+   distribution without checking it against `T14_egt_stationary.csv`;
+   `fig_invasion.py` shows the guard.
+8. **`pCD - pDC` is not a reciprocity measure.** It equals persistence minus
+   reciprocity exactly, so it confounds the two main effects of the two-by-two
+   predecessor design. Use `data.contrasts`.
 
 ## House style
 

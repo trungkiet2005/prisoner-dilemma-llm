@@ -72,7 +72,7 @@ def effect_ci(d, *, n=2000, seed=20260906):
     return float(np.quantile(draws, 0.025)), float(np.quantile(draws, 0.975))
 
 
-def slopegraph(ax, means, *, order, ylim, label_side="both"):
+def slopegraph(ax, means, *, order, ylim):
     for m in order:
         c, s = means[m]["cooperative"], means[m]["selfish"]
         ax.plot([0, 1], [c, s], color=S.MODEL_C[m], lw=1.3, zorder=3,
@@ -171,6 +171,9 @@ def main():
     for ax, key, letter, claim in ((axA, "sub", "a", "sub-unit: all five rise"),
                                    (axB, "sup", "b", "supra-unit: two turn over")):
         slopegraph(ax, means[key], order=S.MODEL_ORDER, ylim=ylim)
+        if key == "sub":
+            ax.axvspan(-0.72, 1.72, color=S.BAND, lw=0, zorder=0)
+            ax.set_xlim(-0.72, 1.72)
         left = nudge([means[key][m]["cooperative"] for m in S.MODEL_ORDER],
                      0.075, ylim[0] + 0.03, ylim[1] - 0.07)
         right = nudge([means[key][m]["selfish"] for m in S.MODEL_ORDER],
@@ -206,18 +209,18 @@ def main():
         x = 0.1 * (0.25 / 0.1) ** (-below / (above - below))
         S.dot(axC, x, 0.0, color=S.MODEL_C[m], marker=S.MODEL_M[m], size=26,
               filled=False, zorder=6)
-    axC.annotate("Claude and Gemini 3.5 cross\nzero exactly at the regime edge",
-                 (0.185, 0.012), xytext=(0.0105, 0.47), fontsize=S.FS_NOTE,
-                 color=S.INK_2, ha="left", va="top", linespacing=1.25,
-                 arrowprops=dict(arrowstyle="-", color=S.MUTED, lw=0.6,
-                                 shrinkA=4, shrinkB=4))
+    axC.text(0.0105, 0.47,
+             "open rings: Claude and Gemini 3.5\ncross zero at the regime edge",
+             fontsize=S.FS_NOTE, color=S.INK_2, ha="left", va="top",
+             linespacing=1.25)
     S.panel(axC, "c", "the instruction is obeyed only above the unit", pad=8)
 
-    fig.text(0.5, -0.115,
-             f"{len(g):,} games, {len(g) // 10 // 2:,} per model and persona; "
-             "shaded band is the sub-unit regime, where every printed payoff is "
-             "at most one",
-             ha="center", va="top", fontsize=S.FS_NOTE, color=S.MUTED)
+    S.caption(fig,
+              f"{len(g):,} games, {len(g) // len(S.MODEL_ORDER) // 2:,} per "
+              "model and persona; the shaded ground marks the sub-unit regime, "
+              "the two payoff scales at which every payoff printed in the "
+              "prompt is at most one",
+              y=-0.115)
 
     S.save(fig, "f_persona")
 

@@ -91,6 +91,15 @@ MODEL_ORDER_ALL = MODEL_ORDER + ["Gemini-3.1-Flash-Lite-Preview"]
 
 SCALES = [0.01, 0.1, 0.25, 0.5, 1.0, 2.0, 5.0, 10.0, 100.0, 1000.0]
 
+# The sub-unit regime is the two scales at which every payoff the prompt prints
+# is at most 1, since the largest entry of the matrix is 10.  It is NOT
+# "lambda < 1": at lambda = 0.25 the prompt already prints 2.5.  This is
+# s03_stats.SUBUNIT and figstyle.SUBUNIT_MAX, and the statistics the manuscript
+# reports use that split, so the shaded band has to agree with them.
+SUBUNIT = [0.01, 0.1]
+SUBUNIT_MAX = 0.1
+SUBUNIT_EDGE = 0.158        # geometric midpoint of 0.1 and 0.25, for the band
+
 LANG_LABEL = {"en": "English", "fr": "French", "ar": "Arabic",
               "cn": "Chinese", "vn": "Vietnamese"}
 LANG_ORDER = ["en", "fr", "cn", "ar", "vn"]
@@ -204,7 +213,7 @@ def scale_axis(ax, *, band=True, label=r"payoff scale $\lambda$", ticks=True):
         ax.set_xticklabels(["0.01", "0.1", "1", "10", "100", "1000"])
     ax.set_xlim(0.006, 1700)
     if band:
-        ax.axvspan(0.006, 1.0, color=BAND, lw=0, zorder=0)
+        ax.axvspan(0.006, SUBUNIT_EDGE, color=BAND, lw=0, zorder=0)
     if label:
         ax.set_xlabel(label)
 
@@ -262,17 +271,85 @@ def heat_tiles(ax, arr, row_labels, col_labels, *, cmap="viridis", vmin=None,
     return im
 
 
-def save(fig, name, *, figdir=None, tight=True):
+def caption(fig, text, *, y=-0.02, width_frac=0.98):
+    """A bottom caption wrapped to the figure's own width.
+
+    A single long line of `fig.text` does not wrap.  With `bbox_inches="tight"`
+    it then pushes the saved bounding box out past the figure, and the file on
+    disk is wider than the column even though `fig.get_size_inches()` still
+    says otherwise, so LaTeX scales the whole figure down and every label with
+    it.  Wrapping here is what keeps the saved width honest.
+    """
+    import textwrap
+    # 0.50 em per character is a good enough average for this sans face at
+    # these sizes; the assertion in `save` catches the cases where it is not.
+    chars = int(fig.get_size_inches()[0] * width_frac * 72.0 / (FS_NOTE * 0.50))
+    wrapped = "\n".join(textwrap.wrap(" ".join(text.split()), chars))
+    return fig.text(0.5, y, wrapped, ha="center", va="top",
+                    fontsize=FS_NOTE, color=MUTED, linespacing=1.4)
+
+
+def _tight_size(fig):
+    fig.canvas.draw()
+    bb = fig.get_tightbbox(fig.canvas.get_renderer())
+    return bb.width + 2 * PAD, bb.height + 2 * PAD
+
+
+def save(fig, name, *, figdir=None, tight=True, strict=True, fit=True):
+    """Save at exactly the column width, so the type is the size it says.
+
+    `bbox_inches="tight"` trims to the ink, so the file on disk is almost never
+    the size `figsize` declared: a caption or an outside legend makes it wider,
+    and ordinary margins make it narrower.  LaTeX then scales whatever it gets
+    to `\\linewidth`, which silently rescales every label in the figure, by 128%
+    in one case here and by 74% in another.  Two figures at nominally the same
+    font size then print at different sizes.
+
+    So measure the tight box, grow or shrink the canvas by the difference, and
+    measure again.  Font sizes are in points and do not move when the canvas
+    does, so this changes only how much room the axes get.  Two passes are
+    enough to land inside a thousandth of an inch.
+    """
     d = Path(figdir) if figdir else FIGDIR
     d.mkdir(parents=True, exist_ok=True)
-    w = fig.get_size_inches()[0]
-    if w > FULL + 1e-3:
-        print(f"  !! {name} is {w:.3f} in wide but the column is {FULL:.3f} in; "
-              "LaTeX will scale it down and shrink every label")
+    declared = tuple(fig.get_size_inches())
+
+    if tight and fit:
+        # A wrapped caption re-wraps as the canvas grows, so the fit can
+        # oscillate by a line's worth of width, so it cannot be driven to zero.
+        # Stop within a sixteenth of an inch, which is under a 1% rescale and is
+        # invisible, and keep the best pass rather than the last one.
+        best = None
+        for _ in range(6):
+            real_w, _real_h = _tight_size(fig)
+            err = abs(real_w - FULL)
+            if best is None or err < best[0]:
+                best = (err, tuple(fig.get_size_inches()))
+            if err < 6e-2:
+                break
+            w, h = fig.get_size_inches()
+            fig.set_size_inches(w + (FULL - real_w), h)
+        if abs(_tight_size(fig)[0] - FULL) > best[0]:
+            fig.set_size_inches(*best[1])
+
     kw = dict(dpi=DPI, facecolor=SURFACE)
     if tight:
         kw.update(bbox_inches="tight", pad_inches=PAD)
     for ext in ("pdf", "png"):
         fig.savefig(d / f"{name}.{ext}", **kw)
+
+    real_w, real_h = _tight_size(fig)
     plt.close(fig)
-    print(f"  wrote {name}.pdf/.png  ({w:.2f} x {fig.get_size_inches()[1]:.2f} in)")
+
+    flag = ""
+    if abs(real_w - FULL) > 8e-2:
+        flag = (f"  !! saved {real_w:.3f} in against a {FULL:.3f} in column, "
+                f"so LaTeX will rescale to {100 * FULL / real_w:.0f}%")
+        if strict:
+            raise SystemExit(
+                f"{name}:{flag}\n"
+                "     the fit pass could not reach the column width.  Usually "
+                "an unwrapped caption: use S.caption.  Pass fit=False only if "
+                "the figure is deliberately narrower than the column.")
+    print(f"  wrote {name}.pdf/.png  (declared {declared[0]:.2f} x "
+          f"{declared[1]:.2f}, saved {real_w:.2f} x {real_h:.2f} in){flag}")

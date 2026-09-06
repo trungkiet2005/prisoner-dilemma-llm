@@ -108,7 +108,8 @@ def main():
               f"{shift[lang]:+.3f}   [{lo:+.3f}, {hi:+.3f}]"
               + ("   contains zero" if lo <= 0 <= hi else ""))
     spread = max(shift.values()) - min(shift.values())
-    print(f"  level spread across languages {max(lvl.values()) - min(lvl.values()):.3f}; "
+    lvl_spread = max(lvl.values()) - min(lvl.values())
+    print(f"  level spread across languages {lvl_spread:.3f}; "
           f"scale-effect spread {spread:.3f}")
     for lang in S.LANG_ORDER:
         print(f"  {lang}: " + ", ".join(f"{S.MODEL_SHORT[m]} {v:+.3f}"
@@ -192,10 +193,12 @@ def main():
                           markerfacecolor=S.INK, label="all five pooled"))
     fig.legend(handles=handles, loc="lower center", ncol=6,
                bbox_to_anchor=(0.5, -0.055), fontsize=S.FS_NOTE)
-    fig.text(0.5, -0.100,
-             f"{len(g):,} games from five models, 400 per language and scale; "
-             "intervals are 95% percentile bootstrap over games",
-             ha="center", va="top", fontsize=S.FS_NOTE, color=S.MUTED)
+    S.caption(fig,
+              f"{len(g):,} games from five models, 400 per language and payoff "
+              "scale; the interval on each pooled estimate is a 95% percentile "
+              "bootstrap over games, and the small markers are the five models "
+              "separately",
+              y=-0.095)
 
     S.save(fig, "f_language")
 

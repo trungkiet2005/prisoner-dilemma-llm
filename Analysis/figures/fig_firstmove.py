@@ -105,7 +105,7 @@ def main():
               f"supra-unit {row[1]:+.3f}")
 
     fig = plt.figure(figsize=(S.FULL, 3.30))
-    gs = fig.add_gridspec(2, 5, height_ratios=[1.0, 0.96], hspace=0.92,
+    gs = fig.add_gridspec(2, 5, height_ratios=[1.0, 0.96], hspace=0.84,
                           wspace=0.26, left=0.062, right=0.995,
                           top=0.905, bottom=0.125)
     tops = [fig.add_subplot(gs[0, i]) for i in range(5)]
@@ -139,8 +139,8 @@ def main():
             ax.spines["left"].set_visible(False)
         ax.set_xlabel(S.MODEL_SHORT[m], color=S.MODEL_C[m], fontsize=S.FS_NOTE,
                       fontweight="bold", labelpad=3.0)
-        ax.text(0.02, 0.965, f"range {t08.loc[m].range_round1:.2f}",
-                transform=ax.transAxes, ha="left", va="top",
+        ax.text(0.98, 0.03, f"range {t08.loc[m].range_round1:.2f}",
+                transform=ax.transAxes, ha="right", va="bottom",
                 fontsize=5.9, color=S.MODEL_C[m])
 
     S.panel(tops[0], "a", "the scale is there on move 1")
@@ -155,18 +155,17 @@ def main():
         sel = cells.model == m
         axB.scatter(cells.cr[sel], cells.fm[sel], s=13, color=S.MODEL_C[m],
                     marker=S.MODEL_M[m], linewidths=0, alpha=0.85, zorder=3)
-    for m, dx, dy, ha, va in (
-        ("Claude-Haiku-4.5", -0.02, 0.05, "right", "bottom"),
-        ("GPT-5.4-Nano", 0.0, -0.06, "center", "top"),
-        ("Gemini-3.5-Flash-Lite", 0.0, 0.05, "center", "bottom"),
-        ("Qwen3-235B-A22B", -0.03, 0.0, "right", "center"),
-        ("Grok-4.20-Non-Reasoning", 0.03, -0.02, "left", "top"),
+    for m, x, y, ha in (
+        ("Claude-Haiku-4.5", 0.02, 0.31, "left"),
+        ("Qwen3-235B-A22B", 0.02, 0.62, "left"),
+        ("GPT-5.4-Nano", 0.62, 0.24, "center"),
+        ("Gemini-3.5-Flash-Lite", 0.44, 0.93, "left"),
+        ("Grok-4.20-Non-Reasoning", 1.0, 0.20, "right"),
     ):
         sel = cells.model == m
         rw = float(np.corrcoef(cells.fm[sel], cells.cr[sel])[0, 1])
-        axB.text(cells.cr[sel].mean() + dx, cells.fm[sel].mean() + dy,
-                 f"{S.MODEL_SHORT[m]}  r={rw:+.2f}", fontsize=5.9,
-                 color=S.MODEL_C[m], ha=ha, va=va, zorder=6)
+        axB.text(x, y, f"{S.MODEL_SHORT[m]}  r={rw:+.2f}", fontsize=5.9,
+                 color=S.MODEL_C[m], ha=ha, va="center", zorder=6)
     S.strip(axB, grid_axis="both")
     axB.set_xlim(0, 1.0)
     axB.set_ylim(0, 1.0)
@@ -190,12 +189,11 @@ def main():
     axC.text(0.035, len(S.MODEL_ORDER) - 0.55,
              "the instruction\nas written", fontsize=5.9, color=S.MUTED,
              ha="left", va="center", linespacing=1.15)
-    axC.annotate("sub-unit", xy=(gaps["Gemini-3.5-Flash-Lite"][0], 2),
-                 xytext=(0, -11), textcoords="offset points", fontsize=5.9,
-                 color=S.MODEL_C["Gemini-3.5-Flash-Lite"], ha="center", va="top")
-    axC.annotate("supra-unit", xy=(gaps["Gemini-3.5-Flash-Lite"][1], 2),
-                 xytext=(0, -11), textcoords="offset points", fontsize=5.9,
-                 color=S.MODEL_C["Gemini-3.5-Flash-Lite"], ha="center", va="top")
+    top_m = S.MODEL_ORDER[0]
+    for j, name in ((0, "sub-unit"), (1, "supra-unit")):
+        axC.annotate(name, xy=(gaps[top_m][j], len(S.MODEL_ORDER) - 1),
+                     xytext=(0, 9), textcoords="offset points", fontsize=5.9,
+                     color=S.MODEL_C[top_m], ha="center", va="bottom")
     axC.set_yticks(ys)
     axC.set_yticklabels([S.MODEL_SHORT[m] for m in S.MODEL_ORDER])
     for lab, m in zip(axC.get_yticklabels(), S.MODEL_ORDER):
@@ -204,17 +202,15 @@ def main():
     axC.tick_params(axis="y", length=0)
     axC.set_xlim(-1.1, 0.42)
     axC.set_xticks([-1.0, -0.5, 0.0])
-    axC.set_ylim(-0.8, len(S.MODEL_ORDER) - 0.2)
+    axC.set_ylim(-0.8, len(S.MODEL_ORDER) - 0.05)
     axC.set_xlabel("told cooperative minus told selfish")
-    S.panel(axC, "c", "the persona bites, inverted")
+    S.panel(axC, "c", "told cooperative opens C less")
 
-    fig.text(0.5, -0.005,
-             "24,000 opening moves, 400 per model and payoff scale; bands and "
+    S.caption(fig,
+             "20,000 opening moves, 400 per model and payoff scale; bands and "
              "intervals are 95% percentile bootstraps over agent-games\n"
              "shading on a and the open markers on c are the sub-unit regime, "
-             "the two scales at which every payoff printed is at most 1",
-             ha="center", va="top", fontsize=S.FS_NOTE, color=S.MUTED,
-             linespacing=1.5)
+             "the two scales at which every payoff printed is at most 1", y=-0.005)
 
     S.save(fig, "f_firstmove")
 

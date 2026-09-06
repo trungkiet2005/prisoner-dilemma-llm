@@ -121,14 +121,13 @@ def main():
                       label="one evolutionary setting")]
     fig.legend(handles=handles, loc="lower center", ncol=1,
                bbox_to_anchor=(0.5, -0.12), fontsize=S.FS_NOTE)
-    fig.text(0.5, -0.175,
+    S.caption(fig,
              rf"{n_set} settings: $Z\in\{{50,100,200,500\}}$, "
              rf"$\beta\in\{{0.01,0.05,0.1,0.5,1\}}$, "
              rf"$\epsilon\in\{{0,0.05,0.1,0.2\}}$, ten payoff scales, "
              "each solved at 200 digits.  The rise is monotone at every "
              r"positive $\epsilon$; the exceptions are at $\epsilon=0$, "
-             "where the share dips before it rises",
-             ha="center", va="top", fontsize=S.FS_NOTE, color=S.MUTED)
+             "where the share dips before it rises", y=-0.175)
 
     S.save(fig, "f_robustness")
 
