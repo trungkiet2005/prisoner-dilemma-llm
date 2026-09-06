@@ -9,11 +9,12 @@ Gemini ghép thẳng vào cùng bảng phân tích với 7 model open-source.
 NHỮNG THỨ GIỮ Y HỆT NHÁNH OPEN-SOURCE (điều kiện để so sánh có nghĩa)
 ─────────────────────────────────────────────────────────────────────
   · Payoff: config `prisoner_dilemma_nocomm_round_known_conventional.json`
-    → w1=6 w2=10 w3=0 w4=2 (T=10 R=6 P=2 S=0) — ĐÚNG bản nhánh frontier dùng.
+    → w1=6 w2=10 w3=0 w4=2. Agents minimise penalties, so OptionA is defect
+    and OptionB is cooperate; in penalty notation T=0 R=2 P=6 S=10.
     ⚠️ Lần chạy open-source TRƯỚC lỡ dùng `..._mild.json` (w1=8) nên không so sánh
     được; notebook + task này là bản sửa.
-  · Payoff scaling: λ ∈ {0.01, 0.1, 1, 10, 100, 1000} — 6 mức (frontier chỉ 3).
-  · 30 vòng, agent BIẾT tổng số vòng, KHÔNG giao tiếp, không dừng sớm.
+  · Payoff scaling: λ ∈ {0.01, 0.1, 0.25, 0.5, 1, 2, 5, 10, 100, 1000}.
+  · 10 vòng, agent BIẾT tổng số vòng, KHÔNG giao tiếp, không dừng sớm.
   · 5 ngôn ngữ (en, fr, ar, cn, vn) × 4 tổ hợp tính cách × 10 rep = 200 game/λ.
   · Prompt: COPY NGUYÊN VĂN `FAIRGAME/resources/game_templates/prisoner_dilemma_*`
     (bản .rtf cn/vn đã qua `rtf_to_text`), dựng lại đúng logic `PromptCreator`:
@@ -33,8 +34,8 @@ chênh lệch giữa các λ là do payoff, không phải do nhiễu sampling.
 
 QUY MÔ & CHI PHÍ — ĐỌC TRƯỚC KHI CHẠY FULL
 ─────────────────────────────────────────────────────────────────────
-  6 λ × 5 lang × 4 tổ hợp × 10 rep = 1200 game
-  1200 game × 30 vòng × 2 agent    = 72.000 lượt gọi model
+  10 λ × 5 lang × 4 tổ hợp × 10 rep = 2000 game/model
+  2000 game × 10 vòng × 2 agent      = 40.000 lượt gọi model
 Prompt ~400–700 token, output ~5–20 token. Với gemini-flash-lite ≈ vài chục USD
 và nhiều giờ. LUÔN chạy smoke test trước:
 
