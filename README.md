@@ -28,16 +28,20 @@ reference/   the FAIRGAME paper
 | **agent 1: OptionA** | `w1`, `w1` | `w3`, `w2` |
 | **agent 1: OptionB** | `w2`, `w3` | `w4`, `w4` |
 
-Agents minimise a penalty, so `w1 = 6, w2 = 10, w3 = 0, w4 = 2` (the
-*conventional* config) is the payoff matrix `T = 10, R = 6, P = 2, S = 0` that
-`Analysis/` reads, with `OptionA` meaning cooperate. Every entry is then
-multiplied by the payoff scale λ.
+Agents minimise a penalty. Under the *conventional* config
+`w1 = 6, w2 = 10, w3 = 0, w4 = 2`, OptionA is the strictly dominant
+**defecting** action and OptionB is the **cooperative** action: mutual OptionB
+costs 2 each, whereas mutual OptionA costs 6 each. In the manuscript's penalty
+notation the four canonical cells are `T = 0, R = 2, P = 6, S = 10`;
+equivalently, on utility `u = -penalty` they are
+`T = 0, R = -2, P = -6, S = -10`. Every entry is then multiplied by the
+payoff scale λ.
 
 ## The corpora
 
 | arm | models | payoff scales λ | rounds | horizon |
 |---|---|---|---|---|
-| frontier | 6 models, incl. Claude Haiku 4.5, GPT-5.4 Nano, Gemini 3.5 Flash-Lite, Qwen3-235B, Grok 4.20 | ten values, 0.01 to 1000 | 30 | announced |
+| frontier | 6 models, incl. Claude Haiku 4.5, GPT-5.4 Nano, Gemini 3.5 Flash-Lite, Qwen3-235B, Grok 4.20 | ten values, 0.01 to 1000 | 10 | announced |
 | open-weight | Qwen2.5 7/32/72B, Gemma-2 9/27B, Llama-3.1-8B, Llama-3.3-70B | 0.01, 0.1, 1, 10, 100, 1000 | 30 | announced |
 | archived frontier | Claude-3.5-Haiku, GPT-4o, Mistral-Large | 0.1, 1, 10 | 10 | hidden |
 
@@ -67,21 +71,36 @@ to `R: 6.0`.
 | [`legacy/paper_scaling`](legacy/README.md) | the pre-restructure draft of the Interface Focus paper | superseded |
 
 Figures and tables in `papers/interface-focus` are generated, never typed. The
-pipeline writes into that directory by default, so a number cannot drift between
-the data and the manuscript.
+current main text uses the 11 redesigned figures under `Analysis/figures/`;
+the supplementary figures and all numerical tables remain generated from
+`Analysis/scaling/`.
 
 ## Reproducing
 
 ```bash
 pip install -r requirements.txt
 
-# rebuild the current manuscript's figures and tables from Dataset/
+# rebuild the current manuscript's statistics and tables from Dataset/
 cd Analysis/scaling
 python s00_build.py && python s01_train_lstm.py && python s02_readout.py
 python s03_stats.py && python s04_strategy_stats.py
-python s05_figures.py && python s05b_appendix_figures.py
 python s06_tables.py && python s07_supplementary.py && python s09_egt.py
+python s05b_appendix_figures.py
 python s08_verify_paper.py     # recomputes every quoted number, fails on disagreement
+
+# rebuild the 11 redesigned main-text figures
+cd ../figures
+python fig_overview.py
+python fig_landscape.py
+python fig_language.py
+python fig_persona.py
+python fig_strategy_mix.py
+python fig_firstmove.py
+python fig_simplex.py
+python fig_invasion.py
+python fig_egt_vs_llm.py
+python fig_robustness.py
+python fig_strategy_space.py
 
 # the older three-scale study
 python Analysis/run_all.py
