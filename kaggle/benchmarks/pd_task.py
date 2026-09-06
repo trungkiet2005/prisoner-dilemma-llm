@@ -394,7 +394,7 @@ _TRANSIENT = ("429", "503", "500", "502", "504", "overloaded",
 # Lỗi tạm thời đáng chờ lâu hơn hẳn lỗi thật: chờ CHÍNH LÀ cách xử lý đúng cho nó, còn
 # với lỗi thật thì retry chỉ tổ đốt thời gian. Dùng chung một ngân sách 6 lượt là thứ
 # đã giết run grok-4.20 (1040035) sau khi nó đã chạy được game đầu tiên.
-TRANSIENT_MAX_ATTEMPTS = int(os.environ.get("PD_TRANSIENT_ATTEMPTS", "14"))
+TRANSIENT_MAX_ATTEMPTS = int(os.environ.get("PD_TRANSIENT_ATTEMPTS", "40"))
 _AUTH_ERR = ("expired token", "authentication", "unauthorized", "401",
              "invalid api key", "invalid_api_key")
 # Quota cũng trả 403 nên PHẢI tách khỏi _AUTH_ERR: reauth không tạo thêm credit, mà

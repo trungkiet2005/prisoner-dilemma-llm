@@ -5,44 +5,46 @@ Reallocating 'name_of_file' (item size: 1) to 9 items.
 The style file: unsrtnat.bst
 Reallocating 'name_of_file' (item size: 1) to 11 items.
 Database file #1: references.bib
-You've used 25 entries,
+Warning--can't use both volume and number fields in fontana2024nicer
+You've used 40 entries,
             2481 wiz_defined-function locations,
-            718 strings with 9798 characters,
-and the built_in function-call counts, 11226 in all, are:
-= -- 937
-> -- 659
-< -- 17
-+ -- 246
-- -- 196
-* -- 913
-:= -- 1798
-add.period$ -- 95
-call.type$ -- 25
-change.case$ -- 46
-chr.to.int$ -- 25
-cite$ -- 25
-duplicate$ -- 533
-empty$ -- 966
-format.name$ -- 243
-if$ -- 2382
+            820 strings with 12741 characters,
+and the built_in function-call counts, 17438 in all, are:
+= -- 1471
+> -- 990
+< -- 27
++ -- 372
+- -- 292
+* -- 1441
+:= -- 2793
+add.period$ -- 152
+call.type$ -- 40
+change.case$ -- 76
+chr.to.int$ -- 40
+cite$ -- 41
+duplicate$ -- 824
+empty$ -- 1518
+format.name$ -- 364
+if$ -- 3694
 int.to.chr$ -- 1
-int.to.str$ -- 26
-missing$ -- 29
-newline$ -- 152
-num.names$ -- 75
-pop$ -- 205
+int.to.str$ -- 41
+missing$ -- 42
+newline$ -- 239
+num.names$ -- 120
+pop$ -- 309
 preamble$ -- 1
-purify$ -- 25
+purify$ -- 40
 quote$ -- 0
-skip$ -- 332
+skip$ -- 507
 stack$ -- 0
-substring$ -- 555
-swap$ -- 98
-text.length$ -- 4
+substring$ -- 860
+swap$ -- 142
+text.length$ -- 8
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 163
-warning$ -- 0
-while$ -- 86
+type$ -- 268
+warning$ -- 1
+while$ -- 136
 width$ -- 0
-write$ -- 368
+write$ -- 588
+(There was 1 warning)

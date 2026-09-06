@@ -28,6 +28,9 @@ import statsmodels.api as sm
 import statsmodels.formula.api as smf
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from figstyle import MODEL_ORDER  # noqa: E402  the five models the main text reports
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE / "data"
@@ -134,6 +137,11 @@ def t13_pooled(d):
 def main():
     d = pd.read_parquet(DATA / "readout.parquet")
 
+    # Per-model tables cover all six models in the corpus; the pooled table is
+    # a statement about a set of models, so it is computed on the five the main
+    # text reports and again on all six for the supplement.
+    d_main = d[d.model.isin(MODEL_ORDER)]
+
     print("T10 provenance")
     per, trend = t10_provenance(d)
     per.to_csv(TAB / "T10_provenance_by_scale.csv", index=False)
@@ -151,10 +159,13 @@ def main():
     trend12.to_csv(TAB / "T12_label_trend.csv", index=False)
     print(trend12.round(4).to_string(index=False))
 
-    print("\nT13 pooled")
-    t13 = t13_pooled(d)
+    print("\nT13 pooled (main-text models)")
+    t13 = t13_pooled(d_main)
     t13.to_csv(TAB / "T13_pooled_strategy.csv", index=False)
     print(t13.round(2).to_string(index=False))
+
+    print("\nT13 pooled (all six, for the supplement)")
+    t13_pooled(d).to_csv(TAB / "T13_pooled_strategy_all.csv", index=False)
     print(f"\nwrote tables to {TAB}")
 
 

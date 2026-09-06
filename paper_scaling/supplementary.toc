@@ -1,11 +1,15 @@
 \contentsline {section}{\numberline {S1}Scope of the corpus}{1}{section.1}%
-\contentsline {section}{\numberline {S2}Cooperation, by scale, model and language}{1}{section.2}%
-\contentsline {section}{\numberline {S3}Variance decomposition}{2}{section.3}%
-\contentsline {section}{\numberline {S4}Persona}{2}{section.4}%
-\contentsline {section}{\numberline {S5}Strategy read-out}{2}{section.5}%
-\contentsline {subsection}{\numberline {S5.1}What the two branches do}{2}{subsection.5.1}%
-\contentsline {subsection}{\numberline {S5.2}Provenance, and which claims depend on the classifier}{3}{subsection.5.2}%
-\contentsline {subsection}{\numberline {S5.3}Validation}{3}{subsection.5.3}%
-\contentsline {section}{\numberline {S6}Why the model curves cancel under pooling}{3}{section.6}%
-\contentsline {section}{\numberline {S7}Reproduction}{3}{section.7}%
-\contentsline {section}{\numberline {S8}Supplementary tables}{4}{section.8}%
+\contentsline {section}{\numberline {S2}Protocol and collection detail}{2}{section.2}%
+\contentsline {subsection}{\numberline {S2.1}Seeds}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {S2.2}Parsing and fallback}{2}{subsection.2.2}%
+\contentsline {subsection}{\numberline {S2.3}Resampling and permutation}{2}{subsection.2.3}%
+\contentsline {section}{\numberline {S3}Cooperation, by scale, model and language}{3}{section.3}%
+\contentsline {section}{\numberline {S4}Variance decomposition}{3}{section.4}%
+\contentsline {section}{\numberline {S5}Persona}{3}{section.5}%
+\contentsline {section}{\numberline {S6}Strategy read-out}{3}{section.6}%
+\contentsline {subsection}{\numberline {S6.1}What the two branches do}{3}{subsection.6.1}%
+\contentsline {subsection}{\numberline {S6.2}Provenance, and which claims depend on the classifier}{4}{subsection.6.2}%
+\contentsline {subsection}{\numberline {S6.3}Validation}{4}{subsection.6.3}%
+\contentsline {section}{\numberline {S7}Why the model curves cancel under pooling}{5}{section.7}%
+\contentsline {section}{\numberline {S8}Reproduction}{5}{section.8}%
+\contentsline {section}{\numberline {S9}Supplementary tables}{5}{section.9}%

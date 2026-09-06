@@ -95,17 +95,17 @@ def m(model, label, scale):
 
 
 chk("GPT AllC 0.01", 29.8, m("GPT-5.4-Nano", "AllC", 0.01), 0.06)
-chk("GPT AllC 1000", 50.8, m("GPT-5.4-Nano", "AllC", 1000.0), 0.06)
+chk("GPT AllC 1000", 50.7, m("GPT-5.4-Nano", "AllC", 1000.0), 0.06)
 chk("GPT AllD 0.01", 46.0, m("GPT-5.4-Nano", "AllD", 0.01), 0.06)
 chk("GPT AllD 1000", 17.5, m("GPT-5.4-Nano", "AllD", 1000.0), 0.06)
 chk("G3.5 AllC 0.01", 73.8, m("Gemini-3.5-Flash-Lite", "AllC", 0.01), 0.06)
 chk("G3.5 AllC 1000", 51.5, m("Gemini-3.5-Flash-Lite", "AllC", 1000.0), 0.06)
 chk("G3.5 TFT 0.01", 6.8, m("Gemini-3.5-Flash-Lite", "TFT", 0.01), 0.06)
-chk("G3.5 TFT 1000", 14.3, m("Gemini-3.5-Flash-Lite", "TFT", 1000.0), 0.06)
+chk("G3.5 TFT 1000", 14.2, m("Gemini-3.5-Flash-Lite", "TFT", 1000.0), 0.06)
 
 t11 = pd.read_csv(TAB / "T11_rule_distance.csv").set_index("model")
 chk("G3.5 dist min", 0.48, t11.loc["Gemini-3.5-Flash-Lite", "dist_at_min_scale"], 0.006)
-chk("G3.5 dist max", 1.37, t11.loc["Gemini-3.5-Flash-Lite", "dist_at_max_scale"], 0.006)
+chk("G3.5 dist max", 1.36, t11.loc["Gemini-3.5-Flash-Lite", "dist_at_max_scale"], 0.006)
 chk("Qwen dist min", 0.27, t11.loc["Qwen3-235B-A22B", "dist_at_min_scale"], 0.006)
 chk("Qwen dist max", 1.14, t11.loc["Qwen3-235B-A22B", "dist_at_max_scale"], 0.006)
 
@@ -132,7 +132,7 @@ chk("GPT range", 0.243, t03.loc["GPT-5.4-Nano", "range"])
 chk("GPT range lo", 0.200, t03.loc["GPT-5.4-Nano", "lo"])
 chk("GPT range hi", 0.290, t03.loc["GPT-5.4-Nano", "hi"])
 chk("G3.1 range", 0.072, t03.loc["Gemini-3.1-Flash-Lite-Preview", "range"])
-chk("G3.5 range", 0.191, t03.loc["Gemini-3.5-Flash-Lite", "range"])
+chk("G3.5 range", 0.190, t03.loc["Gemini-3.5-Flash-Lite", "range"])
 chk("GPT coop min", 0.438, t03.loc["GPT-5.4-Nano", "coop_min"])
 
 # ---- variance decomposition --------------------------------------------------
@@ -157,7 +157,7 @@ for mod, sub, sup, sh, lo, hi in [
     chk(f"{mod} persona shift", sh, t07.loc[mod, "shift"])
     chk(f"{mod} shift lo", lo, t07.loc[mod, "shift_lo"])
     chk(f"{mod} shift hi", hi, t07.loc[mod, "shift_hi"])
-chk("Qwen persona sub", -0.912, t07.loc["Qwen3-235B-A22B", "persona_effect_subunit"])
+chk("Qwen persona sub", -0.911, t07.loc["Qwen3-235B-A22B", "persona_effect_subunit"])
 chk("Qwen persona sup", -0.679, t07.loc["Qwen3-235B-A22B", "persona_effect_suprunit"])
 chk("G3.1 shift", 0.103, t07.loc["Gemini-3.1-Flash-Lite-Preview", "shift"])
 chk("Qwen shift", 0.233, t07.loc["Qwen3-235B-A22B", "shift"])

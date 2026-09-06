@@ -26,6 +26,9 @@ import statsmodels.api as sm
 import statsmodels.formula.api as smf
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from figstyle import MODEL_ORDER  # noqa: E402  the five models the main text reports
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE / "data"
@@ -84,34 +87,50 @@ def _range_over_scales(d):
     return float(m.max() - m.min())
 
 
+def unordered_pairing(s):
+    """CvS and SvC are one dyad seen from its two sides, so they share a stratum."""
+    return s.map({"CvC": "CC", "SvS": "SS", "CvS": "CS", "SvC": "CS"})
+
+
 def permutation_p(d, observed, strata, n_perm=N_PERM, seed=SEED):
     """P(range >= observed) when the scale label is shuffled within strata.
 
     Shuffling *within* language and persona keeps every other feature of the
     design intact, so the only thing destroyed is the association between the
     payoff scale and behaviour, which is exactly the null the theorem asserts.
+
+    The unit shuffled is the DYAD, not the agent-game. The payoff scale was
+    assigned to a whole dyad, so under the null both agent-games of a dyad carry
+    the same label, exactly as they do in the data. Shuffling agent-games
+    independently would break that pairing and draw from a null narrower than
+    the true one, making the p-value anti-conservative. It is the same
+    dependence that makes every interval here resample whole dyads and every
+    regression cluster on them.
     """
     rng = np.random.default_rng(seed)
-    d = d.sort_values(strata + ["scale_nominal"]).reset_index(drop=True)
-    key = d[strata].astype(str).agg("|".join, axis=1)
-    scode = pd.factorize(d["scale_nominal"], sort=True)[0]
-    ncell = int(scode.max()) + 1
+    key = d[strata].astype(str).agg("|".join, axis=1).to_numpy()
+    code = pd.factorize(d["scale_nominal"], sort=True)[0]
+    ncell = int(code.max()) + 1
     v = d["coop_rate"].to_numpy(dtype=float)
+    uid = d["game_uid"].to_numpy()
 
-    # The design is balanced, so every stratum has the same size and the whole
-    # permutation reduces to shuffling the rows of one matrix.
-    sizes = key.value_counts()
-    assert sizes.nunique() == 1, f"unbalanced strata: {sorted(sizes.unique())}"
-    ns, sz = len(sizes), int(sizes.iloc[0])
-    V = v.reshape(ns, sz)
-    SC = scode.reshape(ns, sz).ravel()
-    denom = np.bincount(SC, minlength=ncell)
+    # One label per dyad per stratum; scale is constant within a dyad, which
+    # s00_build.py enforces, so taking it per dyad loses nothing.
+    blocks = []
+    for k in np.unique(key):
+        idx = np.where(key == k)[0]
+        _, inv = np.unique(uid[idx], return_inverse=True)
+        lab = np.zeros(inv.max() + 1, dtype=int)
+        lab[inv] = code[idx]
+        blocks.append((idx, inv, lab))
 
     hits = 0
     for _ in range(n_perm):
-        order = np.argsort(rng.random((ns, sz)), axis=1)
-        Vp = np.take_along_axis(V, order, axis=1).ravel()
-        m = np.bincount(SC, weights=Vp, minlength=ncell) / denom
+        newcode = np.empty_like(code)
+        for idx, inv, lab in blocks:
+            newcode[idx] = rng.permutation(lab)[inv]
+        denom = np.bincount(newcode, minlength=ncell)
+        m = np.bincount(newcode, weights=v, minlength=ncell) / denom
         if float(m.max() - m.min()) >= observed:
             hits += 1
     return (hits + 1) / (n_perm + 1)
@@ -148,7 +167,8 @@ def t03_effect_size(g):
         B = boot_matrix(S, N)
         lo, hi = ci(np.nanmax(B, axis=1) - np.nanmin(B, axis=1))
         obs = _range_over_scales(d)
-        p = permutation_p(d, obs, ["language", "dyad"])
+        p = permutation_p(d.assign(pairing=unordered_pairing(d["dyad"])),
+                          obs, ["language", "pairing"])
         mm = d.groupby("scale_nominal")["coop_rate"].mean()
         rows.append({"model": m, "range": obs, "lo": lo, "hi": hi, "p_perm": p,
                      "argmin_scale": mm.idxmin(), "argmax_scale": mm.idxmax(),
@@ -234,13 +254,25 @@ def t07_persona(g):
         S, N, keys = cell_matrices(raw, ["regime", "personality"])
         idx = {k: i for i, k in enumerate(keys)}
         B = boot_matrix(S, N)
-        contrast = ((B[:, idx["sup|cooperative"]] - B[:, idx["sup|selfish"]])
-                    - (B[:, idx["sub|cooperative"]] - B[:, idx["sub|selfish"]]))
+        sub_draws = B[:, idx["sub|cooperative"]] - B[:, idx["sub|selfish"]]
+        sup_draws = B[:, idx["sup|cooperative"]] - B[:, idx["sup|selfish"]]
+        sub_lo, sub_hi = ci(sub_draws)
+        sup_lo, sup_hi = ci(sup_draws)
+        contrast = sup_draws - sub_draws
         lo, hi = ci(contrast)
+
+        # A sign flip is a claim about two means, so it needs a test on each of
+        # them and not a comparison of two point estimates. We call it a flip
+        # only when both regime intervals exclude zero and they fall on opposite
+        # sides of it. Where one interval straddles zero the honest reading is
+        # that the effect is abolished, not that it is reversed.
+        flip = bool((sub_hi < 0 < sup_lo) or (sup_hi < 0 < sub_lo))
         out.append({"model": m, "persona_effect_subunit": sub,
                     "persona_effect_suprunit": sup, "shift": sup - sub,
                     "shift_lo": lo, "shift_hi": hi,
-                    "sign_flip": bool(np.sign(sub) != np.sign(sup))})
+                    "sub_lo": sub_lo, "sub_hi": sub_hi,
+                    "sup_lo": sup_lo, "sup_hi": sup_hi,
+                    "sign_flip": flip})
     return per, pd.DataFrame(out)
 
 
@@ -289,6 +321,17 @@ def main():
     g = pd.read_parquet(DATA / "games.parquet")
     r = pd.read_parquet(DATA / "rounds.parquet")
 
+    # The corpus holds six models; the main text reports five and the
+    # supplement reports the sixth (see figstyle.MODEL_ORDER for which and
+    # why). Per-model tables below are computed for ALL six, and s06_tables.py
+    # selects the five it prints. The two POOLED quantities, the pooling
+    # attenuation and the variance decomposition, are statements about a set of
+    # models rather than about one, so they are computed on the five the main
+    # text reports, and again on all six for the supplement.
+    g_main = g[g.model.isin(MODEL_ORDER)]
+    r_main = r[r.model.isin(MODEL_ORDER)] if "model" in r.columns else r
+    print(f"corpus {g.model.nunique()} models; main text {g_main.model.nunique()}")
+
     print("T02 cooperation by scale x model")
     t02_scale_by_model(g).to_csv(TAB / "T02_scale_by_model.csv", index=False)
 
@@ -297,19 +340,28 @@ def main():
     t03.to_csv(TAB / "T03_effect_size.csv", index=False)
     print(t03.round(4).to_string(index=False))
 
-    print("\nT04 pooling")
-    t04, corr = t04_pooling(g)
+    print("\nT04 pooling (main-text models)")
+    t04, corr = t04_pooling(g_main)
     t04.to_csv(TAB / "T04_pooling.csv", index=False)
     corr.to_csv(TAB / "T04_shape_correlations.csv")
     print(t04.round(4).to_string(index=False))
 
+    print("T04 pooling (all six, for the supplement)")
+    t04a, corra = t04_pooling(g)
+    t04a.to_csv(TAB / "T04_pooling_all.csv", index=False)
+    corra.to_csv(TAB / "T04_shape_correlations_all.csv")
+    print(t04a.round(4).to_string(index=False))
+
     print("\nT05 language")
     t05_language(g).to_csv(TAB / "T05_language.csv", index=False)
 
-    print("T06 variance decomposition")
-    t06 = t06_variance_decomposition(g)
+    print("T06 variance decomposition (main-text models)")
+    t06 = t06_variance_decomposition(g_main)
     t06.to_csv(TAB / "T06_variance.csv", index=False)
     print(t06.round(3).to_string(index=False))
+
+    print("T06 variance decomposition (all six, for the supplement)")
+    t06_variance_decomposition(g).to_csv(TAB / "T06_variance_all.csv", index=False)
 
     print("\nT07 persona")
     per, t07 = t07_persona(g)

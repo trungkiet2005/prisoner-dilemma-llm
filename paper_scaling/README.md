@@ -4,11 +4,22 @@ Major revision, 2026-09-05. The manuscript, its analysis pipeline, its figures a
 its tables were all rebuilt from scratch against the completed frontier corpus. No
 number, figure or table survives from the earlier "Units matter" draft.
 
+Restructured for *Interface Focus*, 2026-09-06. The section order is now
+Introduction, Material and methods, Results, Discussion, Conclusion, back matter:
+Methods moved ahead of Results and was expanded, the Introduction gained an explicit
+research-gap paragraph and three numbered contributions, the Abstract was cut from
+about twenty numerals to three, the six Results subsections were merged into four,
+the Discussion was stripped of statistics, and a Conclusion plus Royal Society back
+matter were added. Operational collection detail moved from Methods into the
+supplement rather than being deleted. No claim and no number changed, except five
+prose figures corrected to agree with the machine-generated tables (see below).
+
 ## What the paper claims
 
 One contribution, of the **insight** kind: multiplying every payoff by a positive
 constant is inert under the theory - it changes no preference, best reply,
-equilibrium or replicator trajectory - and yet it moves cooperation by up to 0.243,
+equilibrium or orbit of the replicator dynamics - and yet it moves cooperation by
+up to 0.243,
 reverses the sign of the persona instruction in three models of five, and changes
 which canonical strategy the transcript matches. Because the effect has a different
 shape in each model, pooling across models reports it as almost absent.
@@ -17,23 +28,55 @@ Section by section:
 
 | Section | Claim | Evidence |
 |---|---|---|
-| 2.1 | The design, and its completeness guard | - |
-| 2.2 | Cooperation moves in all five models | Table 1, Fig. 1b; permutation test, clustered Wald test |
-| 2.3 | Pooling reports the effect as almost absent | Fig. 1c; variance decomposition, shape correlations |
-| 2.4 | The prompt language sets the size of the effect | Fig. 2; language x scale interaction |
-| 2.5 | The scale gates the persona instruction | Table 2, Fig. 3; sub-unit vs supra-unit contrast |
-| 2.6 | The strategy played changes, not just the rate | Table 3, Figs. 4 and 5; hybrid rule-base + LSTM read-out |
-| 2.7 | The effect is present on the opening move | Fig. 6 |
+| 2 | The design, its completeness guard, the protocol and every statistic | - |
+| 3.1 | Cooperation moves in all five models, and pooling hides it | Table 1, Fig. 1b,c; permutation test, clustered Wald test, variance decomposition, shape correlations |
+| 3.2 | The language sets the size of the effect; the scale gates the persona | Fig. 2, Fig. 3, Table 2; language x scale interaction, sub-unit vs supra-unit contrast |
+| 3.3 | The strategy read-out changes, not just the rate (secondary analysis) | Table 3, Figs. 4 and 5; hybrid rule-base + LSTM read-out |
+| 3.4 | The effect is present on the opening move | Fig. 6 |
 
 Figure 5 gives one panel per canonical strategy (AllC, TFT, WSLS, AllD), share
 against the ten payoff scales, five model lines, on a shared vertical axis
 because the four shares sum to 100% within each model and scale.
 
-A caution that governs how Figure 5 may be read, and that the caption, §2.6 and
-the Discussion all state: the AllC and AllD labels carry deduced shares of 26.0%
+A caution that governs how Figure 5 may be read, and that the caption, §2.6, §3.3
+and the Discussion all state: the AllC and AllD labels carry deduced shares of 26.0%
 and 32.7%, but TFT and WSLS are 95.4% and 97.3% LSTM attributions on
 trajectories matching no canonical rule. A move in the TFT panel is a
-resemblance, not an identification. Table S7 carries the full breakdown.
+resemblance, not an identification. Table S8 carries the full breakdown.
+
+## Corrections made during the 2026-09-06 restructure
+
+Two classes of defect were found while moving the text around, and both are fixed.
+
+**The cell arithmetic in Methods was wrong.** The old draft said "each of the 250
+model-by-language-by-scale cells contains exactly 200 dyads", which multiplies out to
+50,000 rather than the 10,000 the corpus holds. Checked against `games.parquet`: a
+model-by-language-by-scale cell holds **40** dyads (four persona pairings x ten
+replicates), and 200 is the size of a **model-by-scale** cell once the five languages
+are pooled. Methods now says both.
+
+**Five prose figures disagreed with the tables printed beside them.** In each case
+the underlying value is an exact tie and the prose rounded up where the generated
+table's format string rounds down. The tables are authoritative, so the prose and the
+`s08_verify_paper.py` ledger were both moved onto the table's value.
+
+| quantity | prose said | tables say | source value |
+|---|---|---|---|
+| Gemini 3.5 Flash-Lite cooperation range | 0.191 | 0.190 | 0.1904999999999999 |
+| Qwen3 persona effect, sub-unit | -0.912 | -0.911 | -0.9115 |
+| Gemini 3.5 rounds violating nearest rule, max scale | 1.37 | 1.36 | 1.365 |
+| GPT-5.4 Nano AllC share at lambda = 1000 | 50.8% | 50.7% | 50.74999999999999 |
+| Gemini 3.5 TFT share at lambda = 1000 | 14.3% | 14.2% | 14.249999999999998 |
+
+Two disclosures were also added to the manuscript rather than left implicit. The
+Arabic and Chinese prompt templates state the payoff cells as penalties while phrasing
+the goal sentence as maximising a reward; the templates are reproduced unaltered from
+the published protocol, so the paper now says in Methods, Results and the Discussion
+that a *level* difference between languages is a difference between two stimuli, and
+why the *scale* result is unaffected (the wording is identical at every lambda). And
+the claim that play becomes less rule-governed is now qualified everywhere it appears:
+it holds in three models of five and reverses significantly in a fourth, so stating it
+pooled was the very error the paper argues against.
 
 ## Scope of the data
 
@@ -42,7 +85,8 @@ Fixed by decision on 2026-09-05, and deliberately narrow:
 - **`Dataset/data_fairgame_frontier_llm`** - the only corpus of language-model
   transcripts used. 10 payoff scales x 5 models x 5 languages x 4 persona pairings
   x 10 replicates x 10 rounds x 2 agents = 10,000 dyads, 20,000 agent-games,
-  200,000 decisions, with every cell at exactly 200 dyads.
+  200,000 decisions, with every model-by-language-by-scale cell at exactly 40
+  dyads and every model-by-scale cell at exactly 200.
 - **`Dataset/noise_dataset`** - synthetic AllC/AllD/TFT/WSLS trajectories at four
   execution-noise levels. This trains the LSTM branch of the strategy read-out and
   contains no language-model output at all.
@@ -70,7 +114,7 @@ pdflatex supplementary && pdflatex supplementary
 ```
 
 Both currently build with **0 errors, 0 undefined references and 0 overfull boxes**;
-main is 13 pages, the supplement 8.
+main is 19 pages, the supplement 9.
 
 `tables_auto.tex` and `supp_tables_auto.tex` are machine-generated. Do not edit them,
 and do not retype a number from them into the prose - regenerate instead.
@@ -86,15 +130,18 @@ python Analysis/scaling/s01_train_lstm.py      # noise corpus -> models/strategy
 python Analysis/scaling/s02_readout.py         # hybrid read-out -> readout.parquet
 python Analysis/scaling/s03_stats.py           # T02..T09      (~3 min, bootstrap + permutation)
 python Analysis/scaling/s04_strategy_stats.py  # T10..T13
-python Analysis/scaling/s05_figures.py         # Figs 1-5
+python Analysis/scaling/s05_figures.py         # Figs 1-6
 python Analysis/scaling/s06_tables.py          # -> paper_scaling/tables_auto.tex
 python Analysis/scaling/s07_supplementary.py   # -> paper_scaling/supp_tables_auto.tex
-python Analysis/scaling/s08_verify_paper.py    # 92 prose numbers vs the data
+python Analysis/scaling/s08_verify_paper.py    # 97 prose numbers vs the data
 ```
 
 `s08_verify_paper.py` is the guard on the one thing the generated tables cannot
-protect: the figures typed by hand into the Results and Discussion prose. It
-recomputes all 92 of them and exits non-zero on any mismatch. Run it after any
+protect: the figures typed by hand into the Results and Discussion prose. Note its
+limit - it never opens `main.tex`, so it proves the script's ledger agrees with the
+data, not that the manuscript still prints those values. Deleting a sentence that
+carries a number will not trip it. It
+recomputes all 97 of them and exits non-zero on any mismatch. Run it after any
 change to the corpus, the pipeline, or a quoted number.
 
 Seeds are fixed: 1234 for classifier training, 20260905 for the bootstrap and the
@@ -145,4 +192,9 @@ grep -n -- "---" paper_scaling/main.tex | grep -v "^[0-9]*:%"   # empty
 python -c "import re;print([l for l in open('paper_scaling/main.tex',encoding='utf-8') if re.search('[—–]',l)])"   # []
 ```
 
-The only `--` in the manuscript is `Neumann--Morgenstern`, which the rule exempts.
+The only `--` in `main.tex` is `Neumann--Morgenstern`, which the rule exempts.
+The check above greps `main.tex` only, so it does not see the reference list:
+`references.bib` still contains one `---`, inside the published BioSystems title
+"Coevolutionary games---a mini review", and that one stays because it is the
+title as printed. Run the same two checks over `references.bib` and
+`supplementary.tex` before submission.

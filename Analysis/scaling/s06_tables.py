@@ -30,18 +30,21 @@ def table_effect(t03, t09):
         rows.append(
             f"{MODEL_LABEL[m]} & {a['coop_min']:.3f} & {a['coop_max']:.3f} & "
             f"{a['range']:.3f} & [{a['lo']:.3f},\\,{a['hi']:.3f}] & "
-            f"{fmt_p(a['p_perm'])} & {b['wald_chi2_scale']:.1f} & {fmt_p(b['p_scale'])} \\\\")
+            f"${a['p_perm']:.4f}$ & {b['wald_chi2_scale']:.1f} & {fmt_p(b['p_scale'])} \\\\")
     body = "\n".join(rows)
     return f"""\\begin{{table}}[t]
 \\centering
-\\caption{{\\textbf{{Cooperation moves with the payoff scale in every model.}}
-Minimum and maximum cooperation rate over the ten scales, their range, a
-95\\% confidence interval on that range from a bootstrap that resamples whole
-dyads, and a permutation test that shuffles the scale label within language and
-persona (2{{,}}000 draws, so $0.0005$ is the smallest attainable value). The last
-two columns give a Wald test on the nine scale contrasts of a per-model logistic
-regression of the round-level decision, with standard errors clustered on the
-dyad ($n=40{{,}}000$ decisions and $2{{,}}000$ clusters per model).}}
+\\caption{{\\textbf{{Cooperation rate over the ten payoff scales, by model.}}
+Minimum, maximum and range of the cooperation rate over the ten scales, a
+95\\% confidence interval on the range from a bootstrap resampling whole dyads,
+and a permutation test shuffling the scale label within language and persona
+(2{{,}}000 draws, so $0.0005$ is the smallest attainable value). Ranges are
+computed before rounding and may differ by $0.001$ from the rounded minimum and
+maximum. The last two columns are a Wald test on the nine scale contrasts of a
+per-model logistic regression of the round-level decision, standard errors
+clustered on the dyad ($n=40{{,}}000$ decisions, $2{{,}}000$ clusters per
+model). Each entry pools 200 dyads per scale, the five languages by four persona
+pairings.}}
 \\label{{tab:effect}}
 \\small
 \\begin{{tabular}}{{lccccccc}}
@@ -64,24 +67,29 @@ def table_persona(t07):
         r = t07.loc[m]
         flip = "yes" if r["sign_flip"] else "no"
         rows.append(
-            f"{MODEL_LABEL[m]} & ${r['persona_effect_subunit']:+.3f}$ & "
-            f"${r['persona_effect_suprunit']:+.3f}$ & {r['shift']:.3f} & "
+            f"{MODEL_LABEL[m]} & ${r['persona_effect_subunit']:+.3f}$ "
+            f"$[{r['sub_lo']:+.3f},\\,{r['sub_hi']:+.3f}]$ & "
+            f"${r['persona_effect_suprunit']:+.3f}$ "
+            f"$[{r['sup_lo']:+.3f},\\,{r['sup_hi']:+.3f}]$ & {r['shift']:.3f} & "
             f"[{r['shift_lo']:.3f},\\,{r['shift_hi']:.3f}] & {flip} \\\\")
     body = "\n".join(rows)
     return f"""\\begin{{table}}[t]
 \\centering
-\\caption{{\\textbf{{The payoff scale gates the persona instruction.}}
-The persona effect is the cooperation rate of an agent told it is cooperative
-minus that of an agent told it is selfish. It is reported separately for the two
+\\caption{{\\textbf{{Persona effect below and above the sub-unit boundary, by
+model.}} The persona effect is the cooperation rate of an agent told it is cooperative
+minus that of an agent told it is selfish, reported separately for the two
 scales at which every payoff printed is at most 1 ($\\lam \\leq 0.1$) and for the
-eight at which some payoff exceeds it. The shift between the two regimes carries
-a 95\\% confidence interval from the dyad bootstrap; the last column records
-whether the persona effect changes sign.}}
+eight at which some payoff exceeds it. Intervals are 95\\% confidence intervals
+from the dyad bootstrap. A sign flip is recorded only where both regime
+intervals exclude zero and fall on opposite sides of it, so a model whose
+supra-unit interval straddles zero is one whose persona effect is abolished
+rather than reversed.}}
 \\label{{tab:persona}}
-\\small
+\\footnotesize
+\\setlength{{\\tabcolsep}}{{3pt}}
 \\begin{{tabular}}{{lccccc}}
 \\toprule
-& \\multicolumn{{2}}{{c}}{{persona effect}} & & & \\\\
+& \\multicolumn{{2}}{{c}}{{persona effect, with 95\\% CI}} & & & \\\\
 \\cmidrule(lr){{2-3}}
 Model & $\\lam \\leq 0.1$ & $\\lam \\geq 0.25$ & shift & 95\\% CI & sign flip \\\\
 \\midrule
@@ -107,14 +115,15 @@ def table_strategy(t10, t11):
     body = "\n".join(rows)
     return f"""\\begin{{table}}[t]
 \\centering
-\\caption{{\\textbf{{Larger payoffs make play less rule-governed in three models of
-five.}} The left block gives the share of agent-games matched exactly by one of
-the four canonical rules, below and above the sub-unit boundary, and the
-coefficient of a logistic regression of that indicator on $\\log_{{10}}\\lam$. The
-right block gives the mean number of rounds that violate the nearest canonical
-rule at the smallest and largest scale, and the same trend fitted by least
-squares. Both use standard errors clustered on the dyad. Neither quantity
-depends on the learned classifier.}}
+\\caption{{\\textbf{{Rule agreement and rule distance against the payoff scale,
+by model.}} Both $\\beta$ columns are per decade of $\\lam$ and their sign differs between
+models. The left block gives the share of agent-games matched exactly by one of
+the four canonical rules, below and above the sub-unit boundary, with the
+coefficient of a logistic regression of that indicator on $\\log_{{10}}\\lam$; the
+right block the mean number of rounds violating the nearest canonical rule at
+the smallest and largest scale, with the same trend fitted by least squares.
+Both cluster standard errors on the dyad, and neither depends on the learned
+classifier.}}
 \\label{{tab:strategy}}
 \\small
 \\setlength{{\\tabcolsep}}{{4pt}}

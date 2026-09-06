@@ -39,6 +39,16 @@ Gemini-3.5-Flash-Lite,5.0,14.75,21.25,64.0
 Gemini-3.5-Flash-Lite,10.0,11.5,19.5,69.0
 Gemini-3.5-Flash-Lite,100.0,14.000000000000002,26.0,60.0
 Gemini-3.5-Flash-Lite,1000.0,16.25,22.25,61.5
+Grok-4.20-Non-Reasoning,0.01,52.5,0.0,47.5
+Grok-4.20-Non-Reasoning,0.1,36.75,4.0,59.25
+Grok-4.20-Non-Reasoning,0.25,15.0,44.5,40.5
+Grok-4.20-Non-Reasoning,0.5,21.25,16.5,62.25000000000001
+Grok-4.20-Non-Reasoning,1.0,17.5,50.5,32.0
+Grok-4.20-Non-Reasoning,2.0,8.75,69.25,22.0
+Grok-4.20-Non-Reasoning,5.0,14.75,53.75,31.5
+Grok-4.20-Non-Reasoning,10.0,13.750000000000002,69.0,17.25
+Grok-4.20-Non-Reasoning,100.0,30.0,15.0,55.00000000000001
+Grok-4.20-Non-Reasoning,1000.0,15.5,62.5,22.0
 Qwen3-235B-A22B,0.01,77.0,7.5,15.5
 Qwen3-235B-A22B,0.1,67.25,19.5,13.25
 Qwen3-235B-A22B,0.25,63.0,5.75,31.25

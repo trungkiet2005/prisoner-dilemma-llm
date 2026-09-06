@@ -82,6 +82,11 @@ MODEL_MAP = {
     # mixture-of-experts model in the corpus.
     "claude-haiku-4-5-20251001": "Claude-Haiku-4.5",
     "qwen3-235b-a22b-instruct-2507": "Qwen3-235B-A22B",
+    # Added 2026-09-05 (grok payoff-scaling sweep). Sixth frontier model; first xAI
+    # model in the corpus. The `-non-reasoning` variant is the one collected: the
+    # `-reasoning` sibling costs ~12x and runs ~13x slower for the same grid, and it
+    # is a DIFFERENT model, so the two must never be mixed within one lambda curve.
+    "grok-4.20-0309-non-reasoning": "Grok-4.20-Non-Reasoning",
     "gemma_3_12b": "Gemma-3-12B",
     "llama-3-1-8b": "Llama-3.1-8B",
     "qwen3_8b": "Qwen3-8B",

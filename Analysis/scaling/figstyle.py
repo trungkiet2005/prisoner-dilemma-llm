@@ -38,6 +38,7 @@ MODEL_C = {
     "Gemini-3.1-Flash-Lite-Preview": "#009e73",
     "Gemini-3.5-Flash-Lite": "#cc79a7",
     "Qwen3-235B-A22B": "#5d3a9b",
+    "Grok-4.20-Non-Reasoning": "#e69f00",
 }
 MODEL_M = {
     "Claude-Haiku-4.5": "o",
@@ -45,6 +46,7 @@ MODEL_M = {
     "Gemini-3.1-Flash-Lite-Preview": "^",
     "Gemini-3.5-Flash-Lite": "D",
     "Qwen3-235B-A22B": "v",
+    "Grok-4.20-Non-Reasoning": "P",
 }
 MODEL_LABEL = {
     "Claude-Haiku-4.5": "Claude Haiku 4.5",
@@ -52,6 +54,7 @@ MODEL_LABEL = {
     "Gemini-3.1-Flash-Lite-Preview": "Gemini 3.1 Flash-Lite",
     "Gemini-3.5-Flash-Lite": "Gemini 3.5 Flash-Lite",
     "Qwen3-235B-A22B": "Qwen3 235B-A22B",
+    "Grok-4.20-Non-Reasoning": "Grok 4.20",
 }
 MODEL_SHORT = {
     "Claude-Haiku-4.5": "Claude\nHaiku 4.5",
@@ -59,16 +62,33 @@ MODEL_SHORT = {
     "Gemini-3.1-Flash-Lite-Preview": "Gemini\n3.1 FL",
     "Gemini-3.5-Flash-Lite": "Gemini\n3.5 FL",
     "Qwen3-235B-A22B": "Qwen3\n235B",
+    "Grok-4.20-Non-Reasoning": "Grok\n4.20",
 }
-MODEL_ORDER = ["Claude-Haiku-4.5", "GPT-5.4-Nano",
-               "Gemini-3.1-Flash-Lite-Preview", "Gemini-3.5-Flash-Lite",
-               "Qwen3-235B-A22B"]
+# The corpus holds six models.  The main text reports five of them and the
+# electronic supplementary material reports the sixth, Gemini 3.1 Flash-Lite,
+# in full.  The reason is that its identifier names a *preview* endpoint, which
+# the provider does not pin to a fixed version, so it is not a stable object of
+# study in the way the other five are.  Nothing is hidden by the split: every
+# figure and table the main text carries for the five is reproduced for the
+# sixth in the supplement, and the pooled quantities are given both ways.
+MODEL_ORDER = ["Claude-Haiku-4.5", "GPT-5.4-Nano", "Gemini-3.5-Flash-Lite",
+               "Qwen3-235B-A22B", "Grok-4.20-Non-Reasoning"]
+
+SUPPLEMENT_ONLY = ["Gemini-3.1-Flash-Lite-Preview"]
+
+# Every model in the corpus, main text first, for supplementary tables that
+# report all six together.
+MODEL_ORDER_ALL = MODEL_ORDER + SUPPLEMENT_ONLY
 
 LANG_ORDER = ["en", "fr", "vn", "cn", "ar"]
 LANG_LABEL = {"en": "English", "fr": "French", "vn": "Vietnamese",
               "cn": "Chinese", "ar": "Arabic"}
 LANG_C = {"en": "#111111", "fr": "#0072b2", "vn": "#009e73",
           "cn": "#e69f00", "ar": "#cc79a7"}
+# One marker per language as well as one colour: four of the five colours land
+# within 50 luminance levels of one another, and the journal prints in black
+# and white unless colour figures are paid for.
+LANG_M = {"en": "o", "fr": "s", "vn": "^", "cn": "D", "ar": "v"}
 
 STRAT_ORDER = ["AllC", "TFT", "WSLS", "AllD"]
 STRAT_C = {"AllC": "#0072b2", "TFT": "#2a7fa8",
@@ -122,7 +142,10 @@ def logscale_axis(ax, label=r"payoff scale $\lambda$", sparse=True):
 
     Only the decades carry text: the grid is geometric but unevenly spaced
     (0.25, 0.5, 2, 5 sit close together on a log axis) and labelling all ten
-    collides at column width.
+    collides at column width.  Checked again: adding 0.25 overprints the 0.1 label
+    and adding 100 overprints the 1000 label in the five-panel figure 2, so this
+    list is the widest one that stays legible.  The scales the prose names by
+    value are located for the reader by the shaded sub-unit band instead.
     """
     ax.set_xscale("log")
     ax.set_xticks(SCALES)

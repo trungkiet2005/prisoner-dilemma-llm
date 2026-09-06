@@ -20,7 +20,8 @@ import numpy as np
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from figstyle import (BAND, INK, LANG_C, LANG_LABEL, LANG_ORDER,  # noqa: E402
+from figstyle import (BAND, INK, LANG_C, LANG_LABEL, LANG_M,  # noqa: E402
+                      LANG_ORDER,
                       MODEL_C, MODEL_LABEL, MODEL_M, MODEL_ORDER, MODEL_SHORT, MUTED,
                       PROV_C, PROV_LABEL, PROV_ORDER, RULE, SCALES, STRAT_C,
                       STRAT_ORDER, STRAT_TITLE, W1, W2, hgrid, logscale_axis,
@@ -49,7 +50,7 @@ def fig1(g, t02, t03, t04):
     xs = [0.46, 0.76]
     for k, lam in enumerate([0.01, 1, 1000]):
         top = 0.93 - 0.26 * k
-        cells = [[0 * lam, 2 * lam], [6 * lam, 10 * lam]]
+        cells = [[6 * lam, 0 * lam], [10 * lam, 2 * lam]]
         ax.text(0.0, top, rf"$\lambda={lam:g}$", fontsize=7, color=INK,
                 va="center")
         for j, opp in enumerate(["A", "B"]):
@@ -64,7 +65,7 @@ def fig1(g, t02, t03, t04):
                         color=INK, ha="center", va="center")
         ax.add_patch(plt.Rectangle((0.33, top - 0.170), 0.60, 0.135,
                                    fill=False, ec=RULE, lw=0.6))
-    ax.text(0.0, 0.05, "years of imprisonment, to be minimised.\n"
+    ax.text(0.0, 0.05, "years of imprisonment, to be minimized.\n"
                        "Identical preferences, best replies,\n"
                        "equilibria and replicator dynamics.",
             fontsize=6, color=MUTED, style="italic", va="bottom")
@@ -93,7 +94,7 @@ def fig1(g, t02, t03, t04):
     for m in MODEL_ORDER:
         d = per_model.loc[m]
         ax.plot(d.index, d.values - d.mean(), color=MODEL_C[m], lw=0.8,
-                alpha=0.55)
+                alpha=0.75, marker=MODEL_M[m], markersize=2.2)
     ax.plot(pooled.index, pooled.values - pooled.mean(), color=INK, lw=1.8,
             marker="o", markersize=3.4, label="average over models", zorder=5)
     ax.axhline(0, color=MUTED, lw=0.6, ls=(0, (3, 2)))
@@ -117,7 +118,8 @@ def fig2(g, t05):
             s = (d[d.language == lang].groupby("scale_nominal")["coop_rate"]
                  .mean())
             ax.plot(s.index, s.values, color=LANG_C[lang], lw=0.95,
-                    marker="o", markersize=2.2, label=LANG_LABEL[lang])
+                    marker=LANG_M[lang], markersize=2.2,
+                    label=LANG_LABEL[lang])
         logscale_axis(ax)
         ax.set_title(MODEL_LABEL[m], fontsize=6.8)
         ax.set_ylim(0.0, 1.0)
@@ -126,7 +128,6 @@ def fig2(g, t05):
         ax.text(0.03, 0.03, f"range {rng.min():.2f}-{rng.max():.2f}",
                 transform=ax.transAxes, fontsize=5.8, color=MUTED)
     axes[0].set_ylabel("cooperation rate")
-    panel_tag(axes[0], "a", dx=-0.30)
     axes[2].legend(loc="upper center", bbox_to_anchor=(0.5, -0.24), ncol=5,
                    handlelength=1.5, columnspacing=1.2)
     save(fig, "fig2_language")
@@ -235,7 +236,9 @@ def fig5_mix(d):
             ax.plot(s.index, s.values, color=MODEL_C[m], marker=MODEL_M[m],
                     label=MODEL_LABEL[m])
         logscale_axis(ax)
-        ax.set_title(STRAT_TITLE[lab], fontsize=7.5, color=STRAT_C[lab],
+        # 6.8 rather than 7.5 so the centred title clears the bold panel
+        # letter now that both are set in INK.
+        ax.set_title(STRAT_TITLE[lab], fontsize=6.8, color=INK,
                      fontweight="bold")
         ax.set_ylim(0, 80)
         hgrid(ax)
@@ -244,8 +247,9 @@ def fig5_mix(d):
     panel_tag(axes[0], "a", dx=-0.28)
     for tag, ax in zip("bcd", axes[1:]):
         panel_tag(ax, tag, dx=-0.10)
-    axes[0].text(0.0316, 76, "payoffs $\\leq 1$", ha="center", fontsize=5.6,
-                 color=MUTED)
+    for ax in axes:
+        ax.text(0.011, 76, "payoffs $\\leq 1$", ha="left", fontsize=5.6,
+                color=MUTED)
     axes[1].legend(loc="upper center", bbox_to_anchor=(1.05, -0.26), ncol=5,
                    handlelength=1.6, columnspacing=1.2)
     save(fig, "fig5_strategy_mix")
@@ -281,11 +285,11 @@ def fig6(r, t08):
            edgecolor=[MODEL_C[m] for m in MODEL_ORDER], lw=0.9, hatch="////",
            label="rounds 2-10")
     ax.set_xticks(x)
-    ax.set_xticklabels([MODEL_LABEL[m].replace(" ", "\n", 1)
-                        for m in MODEL_ORDER], fontsize=5.6)
+    ax.set_xticklabels([MODEL_SHORT[m] for m in MODEL_ORDER], fontsize=5.8)
     ax.set_ylabel("range of cooperation\nacross the ten scales")
     hgrid(ax)
-    ax.legend(loc="upper right", handlelength=1.4)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=2,
+              handlelength=1.4)
     save(fig, "fig6_firstmove")
 
 

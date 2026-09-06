@@ -1,12 +1,32 @@
 % ---------------------------------------------------------------------------
 % Payoff scale reshapes how language models play the prisoner's dilemma.
 %
-% Venue-neutral journal format: single column, Methods last, numbered references.
+% Royal Society (Interface Focus) order: Introduction, Material and methods,
+% Results, Discussion, Conclusion, back matter, numbered references.
 %
 %   pdflatex main && bibtex main && pdflatex main && pdflatex main
 %
 % Every number in this file is produced by Analysis/scaling/s00..s06 and the
 % three tables are machine-generated into tables_auto.tex.  Do not retype them.
+% s08_verify_paper.py re-checks every prose number against the data; run it
+% after touching any figure quoted here.
+% ---------------------------------------------------------------------------
+% ---------------------------------------------------------------------------
+% SUBMISSION ROUTE - READ BEFORE SUBMITTING.  % >>> FILL IN <<<
+%
+% Interface Focus does not accept unsolicited research articles.  It publishes
+% theme issues only; every research article in the venue carries a publisher-
+% inserted "One contribution of N to a theme issue '...'" footnote.  A
+% manuscript uploaded without a commission is returned before review.  The two
+% legitimate routes are (a) being named as an author in an accepted theme-issue
+% proposal by a Guest Editor, or (b) proposing a theme issue to the publisher.
+%
+% If no invitation exists, retarget J. R. Soc. Interface (RSIF): same publisher,
+% same house style, takes unsolicited research articles, overlapping scope.
+% Everything below transfers unchanged.
+%
+% Record here which route applies:  [ ] Guest Editor invitation from ______
+%                                   [ ] retargeted to RSIF
 % ---------------------------------------------------------------------------
 \documentclass[11pt,a4paper]{article}
 
@@ -32,532 +52,977 @@
 \graphicspath{{figures/}}
 
 \newcommand{\lam}{\lambda}
-\newcommand{\ci}[2]{[#1,\,#2]}
+% The interval is always labelled: a bare bracketed pair is ambiguous between
+% a confidence interval, a range and a support, and the venue never prints one.
+\newcommand{\ci}[2]{(95\% CI #1, #2)}
 
 \title{\bfseries Payoff scale reshapes how language models play the
 prisoner's dilemma}
 
-\author[1]{Author One}
+% >>> FILL IN <<<  Full given names and surnames, as printed.  Superscript
+% numerals mark affiliations; $\ast$ marks the corresponding author, whose
+% e-mail is printed.  ORCID is MANDATORY for the submitting author (entered in
+% the submission system, not printed by the journal) and strongly encouraged
+% for the rest; record them here so they are not lost.
+%   ORCID  Author One: 0000-0000-0000-0000
+%   ORCID  Author Two: 0000-0000-0000-0000
+% Use \texttt and not \path for the e-mail: \path is fragile and \affil is a
+% moving argument.
+\author[1,$\ast$]{Author One}
 \author[1,2]{Author Two}
 \affil[1]{Affiliation One}
 \affil[2]{Affiliation Two}
+\affil[$\ast$]{Corresponding author: \texttt{name@institution.example}}
 \date{}
 
 \begin{document}
 \maketitle
 
+% ---------------------------------------------------------------------------
+% Abstract + Keywords, revised.
+%
+% Word count of the abstract body: 198 words (Royal Society hard cap is 200).
+% Counted with a whitespace split; "200,000" counts as one word.  TWO words of
+% headroom - recount after every edit here, do not assume there is slack.
+% One paragraph, no citations, no unexplained abbreviations or acronyms.
+% Three numerals only: 200{,}000, 0.243, and the "at most 1" threshold.
+%
+% Keywords: six, lower case, COMMA separated (production style guide asks for
+% commas and a maximum of six; the draft used semicolons).
+% ---------------------------------------------------------------------------
+
 \begin{abstract}
 \noindent
 Multiplying every payoff in a game by a positive constant leaves preferences,
-best replies, equilibria and replicator dynamics untouched, so for an agent
-playing the game the predicted effect of that rescaling is zero by theorem
-rather than by convention. We use it as an instrument. Five frontier language
-models played an iterated prisoner's dilemma across ten payoff scales spanning
-five orders of magnitude, crossed with five prompt languages and two persona instructions. The grid is complete and exactly balanced:
-10{,}000 dyads, 20{,}000 agent-games and 200{,}000 decisions. Cooperation moves in every model, by up to
-0.243 \ci{0.200}{0.290}, and the movement has a different shape in each one, so
-the average over models reports a 0.048 swing where the typical model shows
-0.136. In a variance decomposition the scale has no significant main effect: $0.7\%$
-of cell variance, $p=0.36$. Its interactions with model ($6.5\%$) and with
-prompt language ($3.8\%$) are both significant, which is what a pooled
-benchmark is built to miss. The scale also gates the persona
-instruction. Where every payoff printed is at most 1, the effect of telling a
-model it is cooperative rather than selfish reverses sign in three models of
-five, shifting by 0.680 \ci{0.625}{0.736} in the largest case. Reading the
-transcripts with a hybrid rule-base and LSTM classifier shows the change is not only in how often the models cooperate but
-in what they play. The share of agent-games matched exactly by a canonical
-memory-one rule falls from $31.4\%$
-to $19.5\%$ as the payoffs grow, and among the labels the classifier assigns,
-the mix moves from unconditional towards reciprocal strategies. The effect is already present on the opening move,
-before any history exists, in four models of five. A cooperation rate reported
-for a language model is a statement about one arbitrary choice of units, and
-should be published with its scale sensitivity.
+best replies, equilibria and the orbits of the replicator dynamics untouched,
+so the predicted effect of that rescaling is zero
+by theorem rather than by convention. Whether language models respect that
+invariance is untested. Using it as an instrument, we had five frontier language
+models play an iterated prisoner's dilemma across ten payoff scales, crossed
+with prompt language and persona instruction, on a complete, balanced grid of
+200{,}000 decisions. Cooperation moves in every model, by up to 0.243
+(95\% CI 0.200, 0.290), and the movement has a different shape in each, so
+averaging over models reports it as almost absent. Its size depends on the
+prompt language. The scale also gates the persona instruction, reversing its
+sign in two models of five where every printed payoff is at most 1. In three
+models of five what is played changes too, becoming less consistent with any
+canonical memory-one rule, while a fourth moves the other way. The effect is
+already present on the opening move. Cooperation rates reported for language
+models should therefore be interpreted together with their sensitivity to
+payoff scale.
 \end{abstract}
 
-\noindent\textbf{Keywords:} machine behaviour; large language models; iterated
-prisoner's dilemma; payoff scaling; utility invariance; benchmark validity
+\noindent\textbf{Keywords:} machine behaviour, large language models, iterated
+prisoner's dilemma, payoff scaling, utility invariance, benchmark validity
+
+
+% ---------------------------------------------------------------------------
+% Section 1: Introduction.  Replaces main.tex lines 80-161 in full.
+%
+% Progression: (i) LLMs as strategic agents -> (ii) representational
+% sensitivity and what it cannot settle -> (iii) invariance -> the gap ->
+% four research questions -> three numbered contributions -> scope.
+%
+% Numbers used here: "10{,}000 dyads" (one clause, Methods states the rest)
+% and "0.243" (contribution 1).  Both already appear elsewhere in the
+% manuscript and are checked by Analysis/scaling/s08_verify_paper.py.
+% Counts of models, languages, questions and contributions are design facts,
+% not statistics.
+% ---------------------------------------------------------------------------
 
 \section{Introduction}
+\label{sec:intro}
 
 Language models are increasingly deployed as agents that negotiate, coordinate
-and decide on behalf of their
-users~\citep{park2023generative,dafoe2021cooperative}, and a fast-growing
-literature measures how they behave when they do. The instrument of choice is
-the classical game, and the prisoner's dilemma above all, because its strategy
-space is mapped and its predictions are
-sharp~\citep{axelrod1981evolution,axelrod1984evolution,nowak1992tit,nowak2006five,press2012iterated}.
-Studies in this vein report cooperation rates, departures from Nash play, and
-model-specific
-signatures~\citep{akata2023playing,phelps2023investigating,fontana2024nicer,mei2024turing,lore2024strategic},
-and those numbers increasingly feed models of mixed human-machine
-populations~\citep{paiva2018engineering,santos2018social,rahwan2019machine}.
+and decide for their users~\citep{park2023generative,dafoe2021cooperative}, and
+a fast-growing
+literature measures how they behave when they do: through behavioural economics
+and cognitive psychology~\citep{binz2023using,horton2023large,aher2023using},
+and through the classical games, where a chatbot's play can be hard to tell from
+a human's~\citep{mei2024turing}. The prisoner's dilemma is the workhorse, its
+strategy space mapped and its predictions
+sharp~\citep{axelrod1981evolution,axelrod1984evolution,nowak1992tit,nowak1993strategy,nowak2006five,press2012iterated}.
+Within it the models turn out to be individual rather than uniform: GPT-4
+defects for good after a single defection yet fails to coordinate where the game
+rewards alternation~\citep{akata2023playing}, other models forgive at rates no
+human population shows~\citep{fontana2024nicer}, the weight given to the
+structure of the game rather than to the story around it differs within a single
+generation~\citep{lore2024strategic}, and a model told that it is selfish moves
+in the instructed direction without carrying it into conditioned
+reciprocity~\citep{phelps2023investigating}. These studies share an unremarked
+reporting convention: each summarizes a model by a cooperation rate, or a few of
+them, measured at one payoff matrix.
 
-Every one of those measurements is made at a particular payoff matrix. The
-matrix is written down once, in whatever units the experimenter chose, and the
-cooperation rate is then reported as a property of the model. The choice of
-units is not usually stated as a design decision at all, because in the theory
-it is not one. A payoff matrix is a von Neumann--Morgenstern utility, and such
-a utility is defined only up to a positive affine
-transformation~\citep{vonneumann1944theory,luce1957games}. Writing the same
+Against that convention sits a body of work showing that what is measured on a
+language model depends on things the measurement was not about. Accuracy moves
+with the order of the in-context examples~\citep{lu2022fantastically}, and with
+formatting choices that leave the meaning of the prompt intact, by margins wide
+enough to swamp the differences between the models being
+compared~\citep{sclar2024quantifying}.
+Instructions about who the model is are equally consequential: a persona changes
+what a model produces~\citep{deshpande2023toxicity}, shifts measured
+capability~\citep{salewski2023context}, and, conditioned on a demographic
+backstory, reproduces the response distribution of the matching human
+subgroup~\citep{argyle2023out}. What none of these manipulations can supply is a
+null.
+
+The choice of units is not usually stated as a design decision at all, because
+in the theory it is not one. A payoff matrix is a von Neumann--Morgenstern utility, defined only up
+to a positive affine
+transformation~\citep{vonneumann1944theory,luce1957games}, so writing the same
 dilemma with cells ten times larger changes no preference, no best reply, no
-equilibrium and no replicator trajectory. Under the theory the two matrices are
-not two games written differently. They are one game.
+equilibrium and no orbit of the replicator dynamics. Under the theory the two
+matrices are not two games written differently. They are one game. The theory of
+the iterated dilemma inherits the indifference, turning on the ordering of the
+four payoffs and on ratios among them and never on their absolute
+size~\citep{axelrod1981evolution,nowak1992tit,nowak1993strategy,press2012iterated},
+and the modelling literature normalizes the scale
+away~\citep{szabo2007evolutionary,perc2010coevolutionary}. Current theory
+works at the indifference rather than merely permitting it: where social
+learners update on the payoff they last received instead of on an expected
+payoff, the condition for conditional cooperation to persist under strong
+selection loses the benefit and the cost of cooperation altogether and turns on
+the ordering of the payoffs alone~\citep{glynatsi2024evolution}.
 
-This equivalence makes a positive rescaling the sharpest available probe of
-whether a language model is playing the game it was shown. Most manipulations one might
-apply to a game-theoretic prompt have arguable effects: a change of framing
-carries new words~\citep{tversky1981framing,kahneman1979prospect}, a change of
-persona carries new information about the agent~\citep{deshpande2023toxicity},
-a change of language carries a different training distribution. A rescaling
-carries none of these. It changes the numerals and nothing else. If behaviour
-is a function of the game, the effect is exactly zero, and that null needs no
-defending because it is a theorem. If behaviour moves, then whatever the model
-is responding to is not the game.
+The invariance belongs to the theory, not to people: human valuation is neither
+linear in magnitude nor anchored at zero~\citep{kahneman1979prospect}, and human
+choice reverses between logically equivalent descriptions of one
+problem~\citep{tversky1981framing}. That gap has since been argued to be
+structural rather than incidental, with the linguistic description of an action
+entering the utility function directly and a shift proposed from outcome-based
+to language-based preferences~\citep{capraro2024language}.
 
-Sensitivity to details that should not matter is already documented for
-language models in other settings. Accuracy shifts with the order of in-context
-examples~\citep{lu2022fantastically} and with semantically equivalent
-rephrasings of a prompt~\citep{sclar2024quantifying}. Those findings establish
-that surface form matters; they do not settle what happens inside a game,
-because reordering examples or rewording an instruction has no theoretical
-guarantee attached. Payoff rescaling does, and the guarantee is what makes the
-measurement interpretable: any movement is a measured departure from a stated
-invariance, not a difference between two conditions whose expected gap was
-unknown to begin with.
+Two things are established, and they have not been put together. The first is
+that what a language model does depends on features of the prompt that carry
+no task content: the order of the examples, the formatting, the persona, the
+language. The second is that multiplying every payoff by a positive constant
+carries no task content in the strictest sense available, because the matrix
+it produces is not a second game but the same one. What is not known is
+whether the strategic behaviour of a language model respects that invariance.
+To our knowledge, no study has asked. Every manipulation in the sensitivity
+literature could legitimately change behaviour, so a measured change under any
+of them is at worst a nuisance and at best a finding, against an expected
+effect nobody had specified. The same holds of the human framing results that
+motivate language-based preferences, where a label such as donate rather than
+boost carries connotation, so what is under test there is an assumption about
+preferences and not a theorem about their
+representation~\citep{capraro2024language}. A rescaling is the one manipulation
+whose expected effect is specified, and specified as zero, so a measured
+departure has a stated reference value rather than a comparison condition.
 
-This paper takes the rescaling as its object of study, and asks four questions
-of it. Does strategic behaviour survive multiplying every payoff by a positive
-constant, and by how much does it fail to? Does the answer depend on the
-language the game is posed in, and on the persona the model is told to adopt?
-Does the rescaling change only how often a model cooperates, or the strategy it
-is playing? And where in the game does the effect enter: at the opening move,
-before any history exists, or through the course of play?
+What follows if the invariance fails is a question about what a published
+cooperation rate means. Machine behaviour proposes that autonomous systems be
+studied empirically, with the instruments of the behavioural sciences, because
+what such a system does is not deducible from how it was
+built~\citep{rahwan2019machine}. Those instruments arrive with a known
+difficulty: a behavioural manipulation almost never carries a predicted effect,
+so a measured change has to be read against a comparison condition the
+experimenter chose. The invariance classes of decision theory are the exception,
+supplying a manipulation whose predicted effect is a stated number, and the
+number is zero.
 
-We answer them on a complete and exactly balanced grid: five frontier models,
-ten payoff scales from $\lam = 0.01$ to $\lam = 10^{3}$, five prompt languages,
-two persona instructions in all four pairings, ten replicates and ten rounds.
-The corpus holds 10{,}000 dyads, 20{,}000 agent-games and 200{,}000 recorded
-decisions.
-Four findings follow. First, cooperation moves in all five models, by up to
-0.243, and the movement is significant against a permutation null that destroys
-only the association with the scale. Second, the shape of the movement differs
-between models to the point of anticorrelation, so pooling reports the effect
-as roughly a third of its typical within-model size. In a variance
-decomposition the scale main effect is not significant while its interactions
-are.
-Third, the scale gates the persona instruction, reversing its sign in three
-models of five below the point where every printed payoff falls to 1 or less.
-Fourth, the strategy itself changes: play becomes measurably less rule-governed
-as the payoffs grow, and the composition moves from unconditional towards
-reciprocal rules. The effect is already visible on the opening move.
+The consequences run through the strands of machine behaviour this study
+touches. The persona line is the one place where the experimenter addresses the
+agent about its social role, and whether it takes hold turns out to depend on
+the units the matrix was printed in. The departure is already present on the
+opening move, which locates it in the reading of the matrix rather than in the
+weighing of a history. We report no evolutionary dynamics of our own; what we
+report is a constraint on an input such dynamics take, since models of mixed
+human-machine populations carry the cooperativeness of the artificial agent as a
+parameter and ask where the population
+settles~\citep{santos2018social,han2011intention,han2013good,perc2017statistical,paiva2018engineering}.
+A rate partly determined by the experimenter's units is not the quantity those
+models need, and if the dependence takes a different form in each model it is
+invisible to exactly the pooled designs the field uses to summarize many models
+at once.
 
-We should be explicit about what this design can and cannot establish. It
-measures departures from an invariance across a broad but finite grid; it does
-not identify the mechanism inside the model that produces them, and with five
-models it cannot support claims about model families or scale in parameters.
-The corpus is one game, one prompt template family and one horizon, so the
-generality of the specific shapes reported here is untested. What the design
-does establish is that the departures exist, are large relative to their
-sampling variability, and are structured rather than noisy.
+We take the rescaling as our object of study, and ask four questions of it. Does
+strategic behaviour survive multiplying every payoff by a positive constant, and
+by how much does it fail to? Does the answer depend on the prompt language, and
+on the persona the model is told to adopt? Does the rescaling change only how
+often a model cooperates, or the strategy it is playing? And does the effect
+enter at the opening move or through the course of play? We answer them on a
+complete and exactly balanced grid of 10{,}000 dyads (\S\ref{sec:methods}).
+
+Here, we turn a theorem into an instrument, and report three things. First, a
+positive rescaling of the payoffs has a predicted behavioural effect of
+exactly zero, and we use it to ask whether five frontier language models are
+playing the game they were shown: all five depart from the invariance, by up
+to 0.243 in cooperation. Second, we show that the departure has a different
+shape in each model, to the point of anticorrelation, so that pooling models
+returns no significant main effect of the payoff scale while every model in the
+pool is moving substantially; the same holds one level down, since the size of
+the departure depends on the prompt language as well as on the model.
+Per-model, per-language reporting is therefore a matter of validity rather than
+of presentation. Third, we show that the departure is structural and not a
+shift in level: the payoff scale gates the persona instruction, reversing its
+sign in two models of five and abolishing it in a third, play becomes
+measurably less consistent with any
+canonical memory-one rule in three models of five while a fourth moves
+significantly the other way, and the effect is already present on the opening
+move, before any history exists.
+
+% NOTE TO AUTHORS.  The scope-and-limitations paragraph that used to close this
+% section has been folded into \S4.5, where the venue puts limitations; nothing
+% it said is lost.
+%
+% NOTE TO AUTHORS. selfpreprint2026scaling, an earlier preprint by the present
+% authors on this corpus, is cited once (Methods 2.2, the polarity check).
+% Royal Society practice expects prior related work by the same authors to have
+% its relationship to the present article stated. Consider one sentence at the
+% start of \S4.5 saying what the preprint reports relative to this article; it
+% is left unwritten because that relationship could not be verified from the
+% repository.  % >>> FILL IN <<<
+
+
+% ---------------------------------------------------------------------------
+% Section 2: Material and methods, for paper_scaling/main.tex.
+%
+% Fragment only.  Insert between the Introduction and the Results.
+% Macros assumed present in the preamble: \lam, \ci, \path, \citep.
+%
+% NOTES FOR THE AUTHORS - two corrections against the previous draft, both
+% following the code rather than the prose:
+%   (1) a model-by-language-by-scale cell holds 40 dyads, not 200; 200 is the
+%       size of a model-by-scale cell.  The old Methods said 250 cells of 200
+%       dyads, which multiplies out to 50,000 rather than 10,000.
+%   (2) the achieved parse-failure and fallback rates are not carried in the
+%       released tables, so only the 0.02 assertion threshold is stated.
+% ---------------------------------------------------------------------------
+
+\section{Material and methods}
+\label{sec:methods}
+
+\subsection{Experimental design}
+
+The design is a complete factorial crossing of five language models, ten payoff
+scales, five prompt languages, four persona pairings and ten replicates.
+
+The unit of collection is the dyad, one ten-round game between two agents of the
+same model, contributing two agent-games, an agent-game being the ten decisions
+one agent takes in one game. Each of the 250
+model-by-language-by-scale cells holds exactly 40 dyads, the four persona
+pairings by ten replicates; pooling the five languages gives 200 dyads and 400
+agent-games in each of the 50 model-by-scale cells. The corpus is 10{,}000
+dyads, 20{,}000 agent-games and 200{,}000 decisions.
+
+Balance is enforced rather than assumed: the build refuses to write its tables
+unless every cell is complete and each game's recorded payoffs recover the scale
+its cell was run at (electronic supplementary material, \S S1).
+
+\subsection{The game and the payoff transformation}
+
+Both agents receive the prisoner's-dilemma prompt of the FAIRGAME
+protocol~\citep{fairgame2025} in its no-communication, announced-horizon
+condition. It casts the game as a criminal interrogation, states the four
+payoffs as years of imprisonment, names the two actions OptionA and OptionB,
+carries the running history of play, announces the horizon (in English,
+\emph{There are 10 rounds to decide.}) and instructs the agent to minimize its
+penalty.
+
+At $\lam = 1$ the agent is shown $T = 0$, $R = 2$, $P = 6$, $S = 10$ in penalty
+units, with $T$ the temptation, $R$ the reward for mutual cooperation, $P$ the
+punishment for mutual defection and $S$ the sucker's payoff. The ordering
+$T < R < P < S$ is the image of the familiar $T > R > P > S$ on utilities
+$u = -\text{penalty}$, and $2R > T + S$ holds on those utilities, so alternation
+is not preferred to mutual cooperation. OptionA pays less in both
+columns and is therefore the dominant, defecting action, while mutual OptionB at
+2 beats mutual OptionA at 6 and is the cooperative one; cooperation means
+OptionB throughout this paper. The polarity was checked against data as
+well as against the prompt~\citep{selfpreprint2026scaling}, by reproducing a
+published cooperation curve from these tables (electronic supplementary
+material, \S S1).
+
+The manipulation multiplies all four cells by a positive constant $\lam$
+(figure~\ref{fig:scaling}a), taking
+ten values spanning five orders of magnitude,
+$\lam \in \{0.01, 0.1, 0.25, 0.5, 1, 2, 5, 10, 100, 1000\}$, and changes nothing
+else in the prompt. Products print as integers wherever they are integral, so at
+$\lam = 1$ the prompt is character-for-character the conventional one. Two
+details bear on interpretation: $T = 0$ prints as 0 at every scale, so only
+three of the four numbers move, and the history block records realised
+penalties, so $\lam$ is present in every prompt of the game and not only the
+first. We treat the printed penalties as the agent's utilities, as the prompt's
+minimization instruction directs. On that premise, and
+because $\lam u$ with $\lam > 0$ is a positive affine transformation of a von
+Neumann--Morgenstern utility~\citep{vonneumann1944theory,luce1957games}, the
+predicted effect on an agent playing the game is exactly zero. An agent that
+instead applies a non-linear valuation to years of imprisonment is not bound by
+the invariance; \S\ref{sec:discussion} returns to readings of that kind.
+
+\subsection{Models, prompt languages and personas}
+
+Five frontier models were run, each against itself; two different models were
+never paired. They were Claude Haiku 4.5, GPT-5.4 Nano, Gemini 3.1 Flash-Lite,
+Gemini 3.5 Flash-Lite and Qwen3 235B-A22B, served through the Kaggle Benchmarks
+model proxy on an OpenAI-compatible chat-completions endpoint. Their endpoint
+identifiers, two of which are not pinned to a release date, are in the
+electronic supplementary material, \S S2.
+% >>> FILL IN <<<  State the collection date range for these five endpoints in
+% the electronic supplementary material.  For hosted proprietary models served
+% from an unpinned endpoint, the date is the only thing that fixes what was
+% actually run, and it is not recorded anywhere in this repository.
+
+The prompt languages are English, French, Vietnamese, Chinese and Arabic. The
+templates are byte-identical copies of the FAIRGAME resource files, compared
+against them byte for byte before every collection run (electronic
+supplementary material, \S S2). Artefacts of those files are reproduced rather
+than repaired, the consequential one being that the Arabic and Chinese versions
+state the four cells as penalties but phrase the goal sentence as maximizing a
+reward. We therefore treat the five languages as five distinct stimuli rather
+than five renderings of one.
+
+Each agent also receives one line naming its persona, in the language of the
+prompt: in English, \emph{You are cooperative.} or \emph{You are selfish.} The
+two are crossed in all four ordered pairings, ten replicates each.
+The opponent's persona is never disclosed (electronic supplementary
+material, \S S2), so a pairing reaches a player only through the opponent's
+realised behaviour, and not before round 2. We therefore treat it as a design
+factor and a regression covariate rather than as information the agent held.
+
+\subsection{Protocol and data collection}
+
+Every game runs ten rounds. Moves are simultaneous: both agents see the same
+history, rounds 1 to $r-1$, and the round is scored once both have replied.
+Decisions are elicited as free text and parsed by the protocol's own
+matcher (electronic supplementary material, \S S2.2).
+
+Sampling runs at temperature 1.0, under a common-random-numbers scheme that
+gives a given round of a given replicate the same seed at every payoff scale. A
+hosted endpoint honours a seed on a best-effort basis, so this is variance
+reduction rather than determinism, and its achieved effect is not measured here
+(electronic supplementary material, \S S2.1).
+
+A reply the matcher cannot resolve is regenerated, up to two further attempts,
+and if all three fail the decision is recorded as OptionA, which under this
+framing is defection: the fallback can only push a measured cooperation rate
+down, never up, and it cannot manufacture the cooperative behaviour reported
+here. Each collection run asserts that its fallback rate is at most 0.02 and
+fails otherwise, but the achieved rates are not carried in the released per-game
+tables, so we cannot report how they vary with the payoff scale (electronic
+supplementary material, \S S2.2).
+
+\subsection{Statistical analysis}
+
+The cooperation rate of an agent-game is the share of its ten decisions that are
+OptionB; a cell mean averages the agent-games of a cell, and round-level
+analyses use the binary decision itself. Because the two agents of a dyad play
+each other and the ten rounds inside an agent-game are strongly autocorrelated,
+every interval was computed by resampling whole dyads with replacement,
+1{,}500 draws, percentile method at the 2.5th and 97.5th
+centiles~\citep{efron1993introduction}, and every regression clustered its
+standard errors on the dyad (electronic supplementary material, \S S2.3).
+Because the range over the ten scales is a maximum minus a minimum, and so
+positive by construction, its bootstrap interval quantifies the precision of the
+range and not its distance from zero; the permutation test supplies the test.
+
+Because the null is a theorem, the matching test destroys the association with
+the payoff scale and leaves the rest of the design as observed. We shuffled the scale label among whole dyads, the unit to which
+the scale was assigned, within strata of prompt language by persona pairing
+inside each model,
+and recomputed the range of the ten scale means (electronic supplementary
+material, \S S2.3). With 2{,}000 draws and a $p$-value of
+(hits $+\,1$)/(draws $+\,1$) the smallest attainable value is 0.0005.
+
+For each model we fitted a logistic regression of the round-level decision on
+the payoff scale as a ten-level factor, with prompt language, own persona and
+opponent persona as covariates, $\lam = 1$ as reference and standard errors
+clustered on the dyad: $n = 40{,}000$ decisions in 2{,}000 clusters per model,
+tested by a Wald test on the nine scale contrasts jointly. The variance
+decomposition is a type-II analysis of variance on the 250 cell means, with
+terms for model, language and payoff scale and their three two-way interactions
+and no three-way term, so the residual on 144 degrees of freedom is the omitted
+three-way interaction and every $F$ is tested against it (electronic
+supplementary material, \S S4).
+
+Every payoff printed is at most 1 exactly when $\lam \leq 0.1$, which two of the
+ten scales satisfy, since with base payoffs $0, 2, 6, 10$ the largest number the
+prompt prints is $10\lam$. The persona result contrasts those two scales with
+the remaining eight, as a difference of differences with an interval from the
+same dyad bootstrap. Where a trend across the whole grid is wanted instead,
+$\log_{10}\lam$ enters as a continuous predictor, because the transformation is
+multiplicative. Analyses were run in Python, and the package versions are listed
+in the electronic supplementary material, \S S7.
+
+\subsection{Strategy read-out}
+
+The read-out reports which of four canonical rules, AllC, AllD, Tit-for-Tat and
+Win-Stay-Lose-Shift, a ten-round trajectory most \emph{resembles}. It is not an
+identification of the strategy a model is running, and no claim in this paper
+treats it as one.
+
+All four rules are memory-one, so asking whether a trajectory is precisely what
+one of them would have played is a per-token lookup, with no learning in it. The
+answer is a \emph{set} rather than a label, because over ten rounds several
+rules routinely prescribe the same moves; the three provenances, the agent-games
+matched exactly by one rule (deduced), by several at once (ambiguous) and by
+none (unmatched), are recorded separately and never merged. The same matcher
+yields a continuous quantity needing no labels at all, the number of rounds
+violating the nearest rule.
+
+Where the rules leave the answer open, a single-layer
+LSTM~\citep{hochreiter1997long} arbitrates. It is trained on the synthetic
+corpus alone, which holds canonical trajectories of those four rules at four
+levels of execution noise and no language-model output whatever; accuracy is
+$98.5\%$ in distribution and falls to $93.6\%$ and $81.1\%$ on the two noise
+levels held out entirely (electronic supplementary material, \S S6). The rule
+base decides first and the classifier ranks only within the set it returns, so
+it can never overturn a deduction; it decides alone only where no rule fits,
+and its share of the labels is very unevenly spread across the four rules, which
+bounds how the composition may be read (\S\ref{sec:results}).
+
+
+% ---------------------------------------------------------------------------
+% Section 3, Results.  Six subsections merged into four.
+%
+% Old 2.1 (Design) is deleted: Materials and methods now precedes Results and
+% carries the design, the guard on cell completeness and the action mapping.
+% Old 2.2 + 2.3 -> 3.1 ; old 2.4 + 2.5 -> 3.2 ; old 2.6 -> 3.3 ; old 2.7 -> 3.4.
+%
+% Every numeral below is carried verbatim from the previous draft, from
+% tables_auto.tex or from supplementary.tex.  Nothing is recomputed or
+% re-rounded here.  Two numbers that lived only in the Discussion, the
+% corpus-wide provenance split and its two label-level deduced shares, have
+% been moved into 3.3; see the report accompanying this fragment.
+%
+% All six figure environments and \input{tables_auto} are preserved, in the
+% float order of the previous draft.
+% ---------------------------------------------------------------------------
 
 \section{Results}
+\label{sec:results}
 
-\subsection{Design}
-
-Both agents in each dyad are given the standard prisoner's-dilemma prompt of
-the FAIRGAME protocol~\citep{fairgame2025}, which states the payoffs as years
-of imprisonment and instructs the agent to minimise them. At $\lam = 1$ the
-matrix the agent is shown is $T=0$, $R=2$, $P=6$, $S=10$ in those penalty
-units, so that the mutually cooperative cell carries the lowest symmetric
-penalty and the unilateral defection cell carries none at all. Under this
-framing OptionA is the dominant, defecting action and OptionB is the
-cooperative one, and cooperation rates below are computed accordingly. The
-manipulation multiplies all four cells by $\lam$, taking ten values from
-$0.01$ to $10^{3}$ (Fig.~\ref{fig:scaling}a). Nothing else in the prompt
-changes.
-
-The grid is crossed with five prompt languages (English, French, Vietnamese,
-Chinese, Arabic), with a persona instruction that names each agent as
-cooperative or selfish in all four pairings, and with ten replicates. Each game
-runs ten rounds, with the horizon announced. Every one of the 250 cells of
-the design contains exactly 200 dyads; the build refuses to proceed otherwise,
-because a silently truncated cell is a failure this kind of corpus is prone to.
-Overall cooperation is 0.565.
+Across the 200{,}000 recorded decisions cooperation is 0.565.
 
 \subsection{Cooperation moves under a transformation that cannot matter}
 
 Cooperation depends on the payoff scale in all five models
-(Fig.~\ref{fig:scaling}b, Table~\ref{tab:effect}). The range across the ten
+(figure~\ref{fig:scaling}b, table~\ref{tab:effect}). The range across the ten
 scales runs from 0.072 \ci{0.060}{0.133} in Gemini 3.1 Flash-Lite to 0.243
-\ci{0.200}{0.290} in GPT-5.4 Nano, with Gemini 3.5 Flash-Lite at 0.191
-\ci{0.165}{0.240}. Confidence intervals resample whole dyads rather than
-rounds, because the two agents of a dyad play each other and the ten rounds
-within an agent-game are strongly autocorrelated.
+\ci{0.200}{0.290} in GPT-5.4 Nano, with Gemini 3.5 Flash-Lite at 0.190
+\ci{0.165}{0.240}.
 
-Because the null here is a theorem, the appropriate test destroys the
-association with the scale and leaves everything else in place. Shuffling the
-scale label within language and persona, and recomputing the range 2{,}000
-times, puts the observed value beyond every permuted one in all five models
-($p = 0.0005$, the smallest value 2{,}000 draws can return). We also fit a per-model logistic regression of the round-level decision on the
-scale as a ten-level factor, with language and both personas as covariates and
-standard errors clustered on the dyad. It rejects the joint null on the nine
-scale contrasts in every model ($\chi^2_9$ between 32.3 and 164.1, all
-$p \leq 2\times10^{-4}$). The largest contrast against $\lam = 1$ ranges from
-0.36 to 0.74 in log-odds.
+The observed range falls in the extreme upper tail of the permuted distribution
+in every model (table~\ref{tab:effect}:
+$p = 0.0005$ in four of the five, the smallest value 2{,}000 draws can return,
+and $p = 0.0025$ in Claude Haiku 4.5), and the per-model logistic regression
+rejects the joint null on the nine scale contrasts in every model
+($\chi^2_9 = 32.3$ to $164.1$, all $p \leq 2\times10^{-4}$), the largest
+contrast against $\lam = 1$ ranging from 0.36 to 0.74 in log-odds.
 
 The shapes are unlike one another. GPT-5.4 Nano rises steeply from 0.438 at
 $\lam = 0.01$ and saturates near 0.65; Gemini 3.1 Flash-Lite drifts downward
 across the whole range; Claude Haiku 4.5 dips to a minimum at $\lam = 0.25$ and
-recovers; Gemini 3.5 Flash-Lite oscillates within a high band. Only the
-direction of the smallest scales is at all shared, and even that is not
-universal.
+recovers; Gemini 3.5 Flash-Lite oscillates within a high band.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{fig1_scaling.pdf}
-\caption{\textbf{A rescaling that cannot matter, and does.}
-\textbf{(a)} The same prisoner's dilemma at three payoff scales. The agent is
-shown years of imprisonment and told to minimise them; multiplying every cell
-by $\lam$ leaves preferences, best replies, equilibria and replicator dynamics
-unchanged.
-\textbf{(b)} Cooperation against the payoff scale for each model, with 95\%
-intervals from a bootstrap that resamples whole dyads. The shaded band marks
-the two scales at which every payoff printed is at most 1. Each point
-aggregates 200 dyads.
-\textbf{(c)} The same curves centred within model, with their average in black.
-The models disagree in shape to the point of anticorrelation, so the average
-swings 0.048 where the typical model swings 0.136.}
+\caption{\textbf{Cooperation against the payoff scale in five language models.}
+(a) The same prisoner's dilemma at three payoff scales, shown to the agent as
+years of imprisonment to be minimized. The three panels are one game and not
+three.
+(b) Cooperation against the payoff scale, one curve per model. The shaded band
+marks the two scales at which every payoff printed is at most 1.
+(c) The curves of (b) centred within model, with their average in black.
+Each point in (b) and (c) averages 200 dyads, and the intervals are 95\%
+percentile intervals from 1{,}500 bootstrap resamples of whole dyads.}
 \label{fig:scaling}
 \end{figure}
 
 \input{tables_auto}
 
-\subsection{Averaging across models reports the effect as almost absent}
+That disagreement has a direct consequence for reporting. Averaging the five
+model curves gives a pooled curve whose range is
+0.048, while the mean within-model range is 0.136, an attenuation of $2.8$
+times (figure~\ref{fig:scaling}c). The pairwise correlations between model curves
+average $-0.10$ and run from $-0.72$ to $+0.73$, with six of the ten pairs
+negative. Curves that move in opposite directions cancel when added.
 
-The disagreement in shape has a direct consequence for how such measurements
-are usually reported. Averaging the five model curves gives a pooled curve
-whose range is 0.048, while the mean within-model range is 0.136, an
-attenuation of $2.8$ times (Fig.~\ref{fig:scaling}c). The cause is visible in
-the pairwise correlations between model curves: they average $-0.10$ and run
-from $-0.72$ to $+0.73$, with six of the ten pairs negative. Curves that move
-in opposite directions cancel when added.
-
-A variance decomposition on the 250 cell means makes the same point in the
-language a benchmark report would use. The model accounts for $56.5\%$ of the
+A variance decomposition on the 250 cell means makes the same point. The model
+accounts for $56.5\%$ of the
 variance across cells and the model-by-language interaction for $19.7\%$. The
 payoff scale as a main effect accounts for $0.7\%$ and is not significant
 ($F_{9,144} = 1.10$, $p = 0.36$). Its interactions are: model by scale carries
-$6.5\%$ ($p < 10^{-3}$) and language by scale $3.8\%$ ($p = 0.041$). A study
-that fits a main effect for the payoff scale, pooling models and languages,
-will therefore conclude correctly that there is no average effect, and will be
-wrong about every individual model in the pool.
+$6.5\%$ ($p < 10^{-3}$) and language by scale $3.8\%$ ($p = 0.041$), the last
+of which is the weakest test reported here and is not the evidence the language
+claim rests on.
 
-\subsection{The prompt language sets how large the effect is}
+\subsection{The size of the scale effect depends on the prompt language}
 
-The prompt language changes both the level of cooperation and its sensitivity
-to the scale (Fig.~\ref{fig:language}). Level differences are large and
-model-specific, which is why the model-by-language interaction dominates the
-decomposition above: Claude Haiku 4.5 cooperates 0.574 in Chinese and 0.234 in
-Vietnamese, while GPT-5.4 Nano cooperates 0.798 in English and 0.458 in Arabic.
+Neither prompt factor outside the game is neutral with respect to the payoff
+scale. Taking the prompt language first, both the level of cooperation and its sensitivity to the scale differ with it
+(figure~\ref{fig:language}). Level differences are large
+and model-specific, which is why the model-by-language interaction dominates
+the decomposition above: Claude Haiku 4.5 cooperates 0.574 in Chinese and 0.234
+in Vietnamese, while GPT-5.4 Nano cooperates 0.798 in English and 0.458 in
+Arabic.
 
-The sensitivity differences are the new observation. Within a single model, the
-range of cooperation across the ten scales itself depends on the language:
-0.136 in English against 0.314 in French for Claude Haiku 4.5, and 0.162 in
-Chinese against 0.412 in English for Gemini 3.5 Flash-Lite. Across all
-model-language pairs the range runs from 0.080 to 0.449. The scale sensitivity
-of a model is therefore not a single number even for that model; it is a
-property of the model and the language together, and the language-by-scale
-interaction in the decomposition is significant.
+One caveat attaches to the level comparison rather than to the scale result.
+The Arabic and Chinese templates, reproduced unaltered from the protocol, state
+the four cells as penalties while phrasing the goal sentence as maximizing a
+reward (\S\ref{sec:methods}), so a level difference between two languages here
+is a difference between two stimuli and not between two renderings of one. It
+cannot produce a dependence on the payoff scale, because the wording is
+identical at every scale, and the ranges below are computed within a language.
+
+The sensitivity differences are the new observation. The range of cooperation
+across the ten scales itself depends on the language: 0.136 in English against
+0.314 in French for Claude Haiku 4.5, and 0.162 in Chinese against 0.412 in
+English for Gemini 3.5 Flash-Lite. Across all model-language pairs it runs from
+0.080 to 0.449. Scale sensitivity is therefore a property of the model and the
+language together, not of the model alone.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{fig2_language.pdf}
-\caption{\textbf{The prompt language sets how large the scale effect is.}
-Cooperation against the payoff scale, separately for each model and each of the
-five prompt languages; 40 dyads per point. The annotation in each panel gives
-the smallest and largest across-scale range among that model's five languages.
-The same model can be nearly flat in one language and swing by more than 0.4 in
-another.}
+\caption{\textbf{Cooperation against the payoff scale, by model and prompt
+language.} One panel per model, one curve per prompt language; the annotation in
+each panel gives the smallest and largest across-scale range among that model's
+five languages. Each point averages 40 dyads, the four persona pairings by ten
+replicates.}
 \label{fig:language}
 \end{figure}
 
 \subsection{The payoff scale gates the persona instruction}
 
-Each agent is told it is either a cooperative or a selfish player, and the
-difference between the cooperation rates of those two instructions measures how
-much the persona takes hold. That difference depends on the payoff scale, and
-the dependence is not gradual (Fig.~\ref{fig:persona}, Table~\ref{tab:persona}).
+The difference between the cooperation rates of the two persona instructions
+measures how much the persona takes hold. It depends on the payoff scale, and
+not gradually (figure~\ref{fig:persona}, table~\ref{tab:persona}).
 
-The natural boundary in this design is where the printed numbers stop being
-sub-unit. With base payoffs $0, 2, 6, 10$, the largest number shown is
-$10\lam$, so every payoff is at most 1 exactly when $\lam \leq 0.1$, which two
-of the ten scales satisfy. Across that boundary the persona effect reverses
-sign in three models of five. In Gemini 3.5 Flash-Lite it runs from $-0.456$
-below to $+0.224$ above, a shift of 0.680 \ci{0.625}{0.736}. In Claude Haiku
-4.5 it runs from $-0.222$ to $+0.207$, a shift of 0.429 \ci{0.389}{0.471}, and
-in GPT-5.4 Nano from $-0.135$ to $+0.018$, a shift of 0.153
-\ci{0.105}{0.200}. Below the
-boundary these models cooperate \emph{more} when told they are selfish. The two
-models that do not reverse still move in the same direction, by 0.103
-\ci{0.075}{0.131} and 0.233 \ci{0.210}{0.258}.
+The natural boundary is where the printed numbers stop being sub-unit, at
+$\lam \leq 0.1$ (\S\ref{sec:methods}). The persona effect shifts across it in
+all five models and every shift excludes zero, from 0.103 \ci{0.075}{0.131} in
+Gemini 3.1 Flash-Lite to 0.680 \ci{0.625}{0.736} in Gemini 3.5 Flash-Lite
+(table~\ref{tab:persona}).
 
-The boundary is a fact about magnitude and not about decimal notation, and the
-grid separates the two. At $\lam = 0.25$ the payoffs are $0, 0.5, 1.5, 2.5$:
-still written as decimals, but no longer all below 1. The persona effect at
-that scale already has its supra-unit sign and size in all three reversing
-models. Whatever the models are responding to, it tracks how large the numbers
-are rather than whether a decimal point appears.
+Whether the sign reverses is the stronger claim, and we hold it to a test on
+each regime rather than to a comparison of two point estimates. Two models of
+five reverse: in Gemini 3.5 Flash-Lite and Claude Haiku 4.5 the sub-unit
+interval lies wholly below zero and the supra-unit interval wholly above it, so
+below the boundary these models cooperate \emph{more} when told they are
+selfish. In GPT-5.4 Nano the supra-unit interval straddles zero, so its negative
+sub-unit effect is abolished at the boundary rather than reversed. The other two
+models keep their sign throughout.
 
-Qwen3 235B-A22B deserves separate comment because it inverts the persona
-instruction at every scale, cooperating 0.072 under the cooperative persona
-and 0.798 under the selfish one. The prisoner's dilemma story supports two
-readings of what it means to cooperate, with one's partner or with the
-authorities, and this model appears to resolve that ambiguity opposite to the
-convention the payoff matrix encodes. The inversion is not our subject, but its
-magnitude is scale-dependent in the same way as everything else here: it
-attenuates monotonically from $-0.912$ to $-0.679$ as the payoffs grow.
+The boundary appears to be one of magnitude rather than of decimal notation. At
+$\lam = 0.25$ the payoffs are $0, 0.5, 1.5, 2.5$: still decimals, but no longer
+all below 1, and there the persona effect already has its supra-unit sign and
+size in both reversing models. The grid does not cross notation with
+magnitude fully, since every sub-unit scale in it is decimal-printed too.
+
+Qwen3 235B-A22B inverts the persona instruction at every scale rather than only
+below the boundary (table~\ref{tab:persona}), apparently resolving the story's
+ambiguity about who one cooperates with, one's partner or the authorities,
+opposite to the convention the payoff matrix encodes. The inversion is not our
+subject, but its magnitude depends on the payoff scale like everything else
+measured here (electronic supplementary material, \S S5).
+% The two regime means (-0.911, -0.679) and the two persona-level cooperation
+% rates (0.072, 0.798) are printed in Table 2 and in ESM S5 respectively; the
+% per-scale sequence is not monotone, so no trend is asserted here.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{fig3_persona.pdf}
-\caption{\textbf{The payoff scale gates the persona instruction.}
-\textbf{(a)} Persona effect, the cooperation rate under a cooperative persona
-minus that under a selfish one, against the payoff scale. The shaded band marks
-the two scales at which every payoff printed is at most 1. Three models of five
-cross zero at that boundary.
-\textbf{(b)} The same contrast summarised: open markers give the mean persona
-effect at $\lam \leq 0.1$, filled markers at $\lam \geq 0.25$. Every model
-shifts in the same direction, and the shift excludes zero in all five
-(Table~\ref{tab:persona}).}
+\caption{\textbf{The persona effect against the payoff scale.} The persona
+effect is the cooperation rate under a cooperative persona minus that under a
+selfish one.
+(a) The effect against the payoff scale, each point averaging 200 dyads. The
+shaded band marks the two scales at which every payoff printed is at most 1;
+the effect changes sign across it in two models of five.
+(b) The same contrast as two regime means: open markers at $\lam \leq 0.1$,
+filled markers at $\lam \geq 0.25$ (table~\ref{tab:persona}).}
 \label{fig:persona}
 \end{figure}
 
-\subsection{The scale changes which strategy is played}
+\subsection{The scale also changes what is played}
 
-A cooperation rate compresses a ten-round trajectory to one number, and two
-models with the same rate can be playing different games. We therefore read
-each agent-game against the four canonical memory-one strategies: AllC, AllD,
-Tit-for-Tat and Win-Stay-Lose-Shift. The procedure is hybrid, with a rule base
-doing the deducing and a learned sequence model only ranking what the rules
-leave open (\S\ref{sec:methods}). The distinction matters for how the results
-should be read, so the read-out reports three provenances separately: the
-agent-games where exactly one rule fits the trajectory exactly, where several
-fit and no method could separate them, and where none fits.
+Two models with the same cooperation rate can be
+playing different games, so we read each agent-game against the four canonical
+memory-one strategies (\S\ref{sec:methods}). What the read-out returns is a
+resemblance and not an identification, and the labels below should be read that
+way throughout. Over the whole corpus, $23.0\%$ of agent-games are matched
+exactly by one rule, $13.2\%$ by several at once and $63.7\%$ by none.
+% The corpus-wide split 23.0 / 13.2 / 63.7 previously appeared in main.tex only
+% in the Discussion.  It is moved here, where the three provenances are named,
+% because the Discussion is being stripped of statistics.
 
-Play becomes less rule-governed as the payoffs grow (Fig.~\ref{fig:strategy}a,
-Table~\ref{tab:strategy}). Pooling models, the share matched exactly by one
+Play becomes less rule-governed as the payoffs grow in three models of five,
+and more so in a fourth (figure~\ref{fig:strategy}a, table~\ref{tab:strategy}).
+Pooling models, the share matched exactly by one
 canonical rule falls from $31.4\%$ at $\lam = 0.01$ to $19.5\%$ at
 $\lam = 10^{3}$, and the share matched by none rises from $54.4\%$ to $69.2\%$.
 Per model the trend is significant and negative in Claude Haiku 4.5
 ($\beta = -0.545$ per decade of $\lam$), Qwen3 235B-A22B ($-0.267$) and Gemini
 3.5 Flash-Lite ($-0.242$). It is significant and positive in Gemini 3.1
-Flash-Lite ($+0.125$), and absent in GPT-5.4 Nano ($p = 0.44$). The heterogeneity is the
-same one seen in the cooperation rates, and it would again cancel under
-pooling.
+Flash-Lite ($+0.125$), and absent in GPT-5.4 Nano ($p = 0.44$).
 
-The continuous version of the same measurement needs no labels at all: the
-number of rounds that violate the nearest canonical rule
-(Fig.~\ref{fig:strategy}b). It rises from 0.48 to 1.37 in Gemini 3.5 Flash-Lite
+The continuous version needs no labels at all: the number of rounds violating
+the nearest canonical rule (figure~\ref{fig:strategy}b). It rises from 0.48 to 1.36 in Gemini 3.5 Flash-Lite
 and from 0.27 to 1.14 in Qwen3 235B-A22B between the smallest and largest
-scale, with significant positive trends there and in Claude Haiku 4.5. Because
-this quantity is computed by exact rule matching, it does not depend on the
-classifier at all, which is why we lead the strategy analysis with it.
+scale, with significant positive trends there and in Claude Haiku 4.5.
 
-The composition shifts too, and in a consistent direction: away from
-unconditional and towards reciprocal play (Fig.~\ref{fig:mix}). Pooled
-across models, AllC falls from $45.6\%$ to $40.4\%$ of agent-games and
-Tit-for-Tat rises from $9.2\%$ to $13.0\%$ between the extreme scales. The
-per-model movements are larger and again not uniform. GPT-5.4 Nano moves from
-$29.8\%$ to $50.8\%$ AllC while its AllD share falls from $46.0\%$ to $17.5\%$.
-Gemini 3.5 Flash-Lite moves the other way on AllC, from $73.8\%$ to $51.5\%$,
-with Tit-for-Tat roughly doubling from $6.8\%$ to $14.3\%$.
+The composition shifts too, and the models do not shift together
+(figure~\ref{fig:mix}). Pooled across models the movement is away from
+unconditional and towards reciprocal play, AllC falling from $45.6\%$ to
+$40.4\%$ of agent-games and Tit-for-Tat rising from $9.2\%$ to $13.0\%$ between
+the extreme scales, but that pooled figure conceals the same cancellation:
+GPT-5.4 Nano moves from $29.8\%$ to $50.7\%$ AllC while its AllD share
+falls from $46.0\%$ to $17.5\%$, whereas Gemini 3.5 Flash-Lite moves the other
+way on AllC, from $73.8\%$ to $51.5\%$, with Tit-for-Tat roughly doubling from
+$6.8\%$ to $14.2\%$.
 
-This last result is the one in the paper that leans hardest on the learned
-component, and the provenance is not uniform across the four labels. Of the
-agent-games carrying the AllC label, $26.0\%$ were deduced from an exact rule
-match and a further $29.6\%$ came from a rule set the LSTM ranked within; for
-AllD the deduced share is $32.7\%$. For Tit-for-Tat and Win-Stay-Lose-Shift,
-however, $95.4\%$ and $97.3\%$ of the labels are attributions the LSTM makes on
-trajectories that match no canonical rule at all. A movement in the
-Tit-for-Tat share is therefore a statement about which canonical rule the play
-most resembles, not a claim that the model is running Tit-for-Tat, and we do
-not read it as one.
+This last result leans hardest on the learned component, and the provenance is
+not uniform across the four labels: AllC and AllD are anchored in part by exact
+matching, whereas $95.4\%$ and $97.3\%$ of the Tit-for-Tat and
+Win-Stay-Lose-Shift labels are attributions made where no canonical rule fits
+(electronic supplementary material, \S S6.2). A movement in the Tit-for-Tat
+share is therefore a statement about which canonical rule the play most
+resembles, not a claim that the model is running Tit-for-Tat.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{fig4_strategy.pdf}
-\caption{\textbf{Larger payoffs change what is played, not only how often it
-cooperates.}
-\textbf{(a)} Provenance of the strategy read-out against the payoff scale,
-pooled over models. Exact rule matches become rarer as the payoffs grow.
-\textbf{(b)} Mean number of rounds violating the nearest canonical rule. This
-quantity is computed by exact matching and involves no learned component.}
+\caption{\textbf{How closely play follows the canonical memory-one rules,
+against the payoff scale.} Both panels are computed by exact matching, with no
+learned component.
+(a) Provenance of the strategy read-out, pooled over the five models; this
+panel is illustrative, and the per-model trends, which do not all have the same
+sign, are in table~\ref{tab:strategy}.
+(b) Mean number of rounds, out of the ten played, violating the nearest
+canonical rule.}
 \label{fig:strategy}
 \end{figure}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{fig5_strategy_mix.pdf}
-\caption{\textbf{Which strategy is played, against the payoff scale.}
-One panel per canonical rule: \textbf{(a)} AllC, \textbf{(b)} Tit-for-Tat,
-\textbf{(c)} Win-Stay-Lose-Shift, \textbf{(d)} AllD. Each point is the share of
-that model's 400 agent-games at that scale carrying the label, so the four
-panels sum to 100\% within every model and scale and share a common vertical
-axis. Shaded bands mark the two scales at which every payoff printed is at most
-1. The models do not move together: GPT-5.4 Nano trades AllD for AllC as the
-payoffs grow while Gemini 3.5 Flash-Lite moves the opposite way on AllC, and
-Claude Haiku 4.5 shifts from AllC towards Win-Stay-Lose-Shift. The AllC and
-AllD panels rest partly on exact rule matching, whereas the Tit-for-Tat and
+\caption{\textbf{Share of agent-games carrying each canonical label, against
+the payoff scale.} One panel per canonical rule: (a) AllC, (b) Tit-for-Tat,
+(c) Win-Stay-Lose-Shift, (d) AllD. Each point is the share of that model's 400
+agent-games at that scale carrying the label; the four panels sum to 100\% and
+share a vertical axis, and shaded bands mark the two scales at which every
+payoff printed is at most 1. The AllC and AllD panels rest partly on exact rule
+matching, whereas the Tit-for-Tat and
 Win-Stay-Lose-Shift labels are $95.4\%$ and $97.3\%$ attributions made where no
 canonical rule fits, and should be read as a resemblance rather than as an
 identification.}
 \label{fig:mix}
 \end{figure}
 
-\subsection{The effect is present on the opening move}
+\subsection{The effect is present before any strategic interaction}
 
 A rescaling could act through the course of play, by changing how a model reads
-its opponent's history, or it could act on the reading of the matrix itself.
-The opening move separates the two, because at round 1 no history exists and
-nothing but the matrix and the instructions has been seen.
+its opponent's history, or on the reading of the matrix itself. The opening move
+separates the two: at round 1 nothing but the matrix and the instructions has
+been seen.
 
-The effect is there already (Fig.~\ref{fig:firstmove}). In four models of five the range of opening-move cooperation across the ten
-scales exceeds the range over rounds 2 to 10. The factor is 3.7 in Gemini 3.1
+The effect is already present at round 1 (figure~\ref{fig:firstmove}): in four
+models of five the range of opening-move cooperation across the ten scales
+exceeds the range over rounds 2 to 10, by factors of 3.7 in Gemini 3.1
 Flash-Lite, 2.0 in Claude Haiku 4.5, 1.9 in Gemini 3.5 Flash-Lite and 1.3 in
-GPT-5.4 Nano. The
-exception is Qwen3 235B-A22B, whose opening move is almost entirely determined
-by its persona and therefore sits at 0.50 by construction at nearly every
-scale, leaving little room to vary.
+GPT-5.4 Nano. The exception is Qwen3 235B-A22B, whose opening move sits close
+to 0.50 at most scales. The two windows rest on 400 and 3{,}600 decisions per
+cell, so their ranges are not variance-matched and these ratios are descriptive
+rather than tests.
 
-The reading we take from this is deflationary about dynamics. Whatever the payoff scale does, it does most of it before the game has begun.
-That timing is consistent with the models forming an initial disposition by
-reading the magnitudes off the matrix, and inconsistent with an account in
-which the scale changes how history is weighed.
+The reading we take from this is deflationary about dynamics. Whatever the
+payoff scale does, most of it is already done before the game has begun. That
+is the timing an initial disposition read off the magnitudes of the matrix
+would produce. It does not rule out a further effect on how history is weighed,
+and this design does not separate the two.
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\textwidth]{fig6_firstmove.pdf}
-\caption{\textbf{The scale effect is present before any history exists.}
-\textbf{(a)} Cooperation on the opening move against the payoff scale. At round
-1 the agent has seen the matrix and the instructions and nothing else.
-\textbf{(b)} Range of cooperation across the ten scales, on the opening move
-(solid) and over rounds 2 to 10 (hatched). In four models of five the opening
-move carries the larger range. Qwen3 235B-A22B is the exception: its opening
-move is fixed by its persona at 0.50 and cannot vary.}
+\caption{\textbf{Cooperation on the opening move, against the payoff scale.} At
+round 1 the agent has seen only the matrix and the instructions.
+(a) Cooperation on the opening move, one curve per model.
+(b) Range of cooperation across the ten scales, on the opening move (solid) and
+over rounds 2 to 10 (hatched); in four models of five the opening move carries
+the larger range.}
 \label{fig:firstmove}
 \end{figure}
 
+
+% ---------------------------------------------------------------------------
+% Section 4 (Discussion), Section 5 (Conclusion) and the Royal Society back
+% matter, for paper_scaling/main.tex.
+%
+% Fragment only: paste after the Results section and before
+%   \bibliographystyle{unsrtnat} / \bibliography{references}
+%
+% Numerals in this fragment, and nowhere else in it: 0.243 (Table 1, GPT-5.4
+% Nano cooperation range), 1 (the sub-unit boundary), 0.25 (a grid coordinate).
+% Nothing else here is a number.  The corpus-wide provenance split (23.0 / 13.2
+% / 63.7) previously lived ONLY in the Discussion; it has been removed here and
+% must be stated in the strategy read-out subsection of Results instead.
+% ---------------------------------------------------------------------------
+
 \section{Discussion}
+\label{sec:discussion}
+
+\subsection{Payoff-scale invariance is violated}
 
 The measurement reported here is unusual in having a null that is a theorem.
-That property is what lets a movement of 0.243 in cooperation be read as a
-departure from invariance rather than as the difference between two conditions. All five
-models depart, and none is close to invariant. The departures are structured:
-they enter at the opening move, they scale with the prompt language, they
-reverse the persona instruction below a magnitude boundary, and they change
-which canonical strategy the transcript matches.
+That property lets a movement in cooperation be read as a departure from an
+invariance rather than as the difference between two conditions whose
+expected gap was never specified. The predicted difference between a matrix and
+the same matrix with larger cells is not small, or contested. It is zero.
 
-The practical consequence is for how such numbers are reported. A cooperation
-rate published for a language model is currently understood as a property of
-the model. On this evidence it is a property of the model, the units the matrix
-was written in, and the language it was posed in, jointly. Two laboratories
-running the same protocol with matrices differing by a constant factor would
-report cooperation rates differing by up to 0.24 and would have no way to tell,
-from the numbers alone, that they had not disagreed about the model. We would
-suggest that a scale-sensitivity measurement accompany any published
-cooperation rate, in the same way an error bar does, and that it be measured
-per model rather than pooled.
+All five models depart from it, and none is close to invariant. What makes the
+departures hard to set aside is not their size but their structure: they are
+present on the opening move, before any history exists, their size depends on
+the language the game is posed in, they gate the persona instruction at a
+boundary of magnitude, and they change what the transcripts look like as
+sequences.
 
-The pooling result deserves emphasis because it is the mechanism by which this
-effect could have gone unnoticed. The scale has no significant main effect in
-our data, and a study designed to detect a main effect would have correctly
-found none while every model in it was moving substantially. Heterogeneous
-effects that cancel are invisible to pooled designs by construction, and the
-remedy is not a larger sample but a per-model analysis.
+Sampling variability alone is difficult to reconcile with a pattern of that
+shape. The models appear to be responding to something in the matrix other than
+the game it encodes, though this design does not identify what.
 
-Two observations point beyond benchmark hygiene. The first is that the boundary
-gating the persona instruction is one of magnitude, not of notation. Sub-unit
-payoffs behave differently from supra-unit ones, and $\lam = 0.25$, still
-printed with a decimal point, already behaves like the large scales. The second is that larger payoffs make play measurably less like any
-canonical memory-one rule while shifting the mix towards reciprocity. Both are
-consistent with the models treating the printed magnitudes as carrying
-information about how much is at stake, which is precisely the information a
-positive rescaling does not contain.
+\subsection{Heterogeneity, and why pooled designs miss it}
 
-The limitations are those of the design. Five models cannot support claims
-about families or about parameter count, and the specific shapes we report are
-properties of these five. One game, one prompt template family and one horizon
-of ten rounds leave the generality of the shapes untested, though the
-consistency of the qualitative findings across five models and five languages
-argues they are not artefacts of a single configuration. We measure departures
-from an invariance; we do not identify the mechanism that produces them, and
-nothing here distinguishes a tokenisation effect on numerals from a learned
-association between large stakes and caution. Finally, our reference for
-"large" is the sampling variability of these data, through the dyad bootstrap
-and the permutation null, rather than an independent repeat of the whole
-protocol. A measured test-retest floor from re-run sweeps would be a stronger
-comparison, and it is the obvious next measurement.
+The pooling result deserves emphasis, because it is the mechanism by which an
+effect of this size could have gone unnoticed. The cause is arithmetic rather
+than statistical: the shapes disagree, and several pairs are anticorrelated.
+Heterogeneous effects that cancel are invisible to pooled designs by
+construction.
 
-The strategy read-out carries its own caveat, which is why its provenance is
-reported. Only $23.0\%$ of agent-games are matched exactly by a single
-canonical rule; $13.2\%$ are matched by several at once, which no method can
-separate, and $63.7\%$ by none. The claims we draw from it are deliberately the
-ones that survive those numbers. The share of exact matches and the distance to
-the nearest rule are computed without any learned component; the compositional
-claim is the weakest of the three and is presented as such. The asymmetry
-between labels sharpens that caveat rather than softening it: the AllC and AllD
-labels carry deduced shares of $26.0\%$ and $32.7\%$, while Tit-for-Tat and
-Win-Stay-Lose-Shift are $95.4\%$ and $97.3\%$ attributions to trajectories no
-canonical rule fits. Any reading of the compositional result as evidence that
-these models implement Tit-for-Tat would be unsupported by our data.
+The pooled null is not a weaker version of the per-model result; it is a
+statement about an average model that nobody deploys. Nor is it a question of
+power: more dyads or more models tighten the interval around a quantity that is
+itself near zero. The remedy is a per-model analysis, not a larger sample.
 
-\section{Materials and methods}
-\label{sec:methods}
+The same logic runs one level deeper: the effect depends on the prompt language
+as well as on the model, so a per-model number pooled over languages is the same
+trick played on a smaller stage. The heterogeneity is not a nuisance to be
+averaged away. It is the finding.
 
-\paragraph{Corpus.} Games follow the FAIRGAME
-protocol~\citep{fairgame2025} for the iterated prisoner's dilemma without
-communication, with the number of rounds announced. The design crosses ten
-payoff scales $\lam \in \{0.01, 0.1, 0.25, 0.5, 1, 2, 5, 10, 100, 1000\}$, five
-prompt languages, four persona pairings and ten replicates, at ten rounds per
-game, for the five models named in the figures. Each of the 250
-model-by-language-by-scale cells contains exactly 200 dyads. The ingest refuses
-to write its tables if any cell departs from that, if any game is not ten
-rounds long, or if the payoff scale recovered from the recorded payoffs
-disagrees with the one the cell was run at. Decisions are recorded as OptionA
-or OptionB and mapped to defection and cooperation respectively, following the
-penalty framing of the prompt.
+\subsection{Implications for behavioural benchmarking of language models}
 
-\paragraph{Uncertainty.} The two agents of a dyad play each other, and the ten
-rounds within an agent-game are autocorrelated. All intervals therefore
-resample whole dyads with replacement (1{,}500 draws, percentile
-method~\citep{efron1993introduction}), and all regressions cluster standard
-errors on the dyad. The permutation test
-shuffles the payoff-scale label within language and persona, which leaves the
-design intact and destroys only the association under test, and uses 2{,}000
-draws. The variance decomposition is a type-II analysis of variance on the 250
-cell means, where the design is exactly balanced.
+A cooperation rate published for a language model is currently understood as a
+property of the model. On this evidence it is a joint property of the model, the
+units the matrix was written in, and the language the game was posed in. The
+units are the awkward member of that list, because they are the one nobody is
+asked to record: framings get described, personas get quoted, prompts get
+reproduced in appendices, while the payoff scale is fixed once, silently, on the
+authority of a theorem saying the choice is empty. Two laboratories running the
+same protocol on the same model, with matrices differing by a constant factor,
+could report cooperation rates differing by as much as 0.243, with no way to
+tell from the numbers alone that they had not disagreed about the model.
 
-\paragraph{Strategy read-out.} Each agent-game is encoded as a sequence of
-tokens pairing the previous round's joint outcome with the current action, an
-alphabet shared between real transcripts and a synthetic corpus. A rule base
-then asks, for each of AllC, AllD, Tit-for-Tat and Win-Stay-Lose-Shift, whether
-the trajectory is exactly what that rule would have played given the history
-that actually occurred. The answer is a set rather than a label, because over
-ten rounds several canonical rules routinely prescribe the same moves. A player
-who cooperated throughout against a cooperator is exactly consistent with AllC,
-Tit-for-Tat and Win-Stay-Lose-Shift at once, and reporting all three is correct
-rather than a failure. A single-layer LSTM~\citep{hochreiter1997long}
-(24-dimensional embeddings, 96 hidden units) ranks within that set, and decides
-alone only when no rule fits. It is trained on synthetic trajectories of the
-four rules at zero and 5\% execution noise, balanced at 40{,}320 sequences per
-strategy per level. It reaches $98.5\%$ accuracy on a held-out split, $93.6\%$
-at an unseen 10\% noise level and $81.1\%$ at 20\%. No language-model
-transcript is used in training.
+We would suggest that a scale-sensitivity measurement accompany a published
+cooperation rate, in the way an error bar does, and be measured per model. The
+case is strongest where such rates leave the benchmark and become the parameters
+of a population model.
 
-\paragraph{Availability.} Analysis code, the tidy tables and the scripts that
-generate every figure and table in this paper are in
-\path{Analysis/scaling/}; the transcripts are in
-\path{Dataset/data_fairgame_frontier_llm/}.
+\subsection{Interpretation and possible mechanisms}
+
+Two observations point beyond benchmark hygiene, and both constrain what an
+explanation must account for. The first is that the boundary gating
+the persona instruction appears to be one of magnitude rather than of notation,
+a separation only as strong as the single scale that supports it
+(\S\ref{sec:results}). The second is that the payoff scale moves how closely play tracks any
+canonical memory-one rule at all, and shifts the mix of labels with it. The
+scale is not turning a single dial marked cooperativeness; it is changing the
+shape of the trajectory.
+
+Several accounts are consistent with both. The printed magnitudes may be read
+as stakes, which is exactly what a rescaling does not change; numerals of
+different magnitudes are tokenized differently, so a representation that changes
+with the digit string could change what follows from it with no notion of stakes
+involved; training text may associate large quantities with caution; and
+sub-unit payoffs may fall outside the range in which payoff-like numbers are
+ordinarily met.
+
+We can order none of these. The design measures departures from an invariance;
+it does not manipulate tokenization, vary notation at fixed magnitude beyond
+the one contrast above, or move the framing that supplies the stakes. Nothing
+here should be read as identifying a mechanism.
+
+There is a constructive reading as well as a cautionary one. A programme is
+under way to widen the utility function beyond the economic consequences of an
+action, so that the language describing the action enters it directly, with
+sentiment analysis proposed as the measurement and the replicator dynamics named
+as the destination~\citep{capraro2024language}. Our result sits one level below
+that programme rather than beside it. The evidence for language-based
+preferences comes from manipulations that could legitimately have mattered,
+since a label carries connotation, whereas a positive rescaling carries none and
+is inert by theorem, and the behaviour still moves. A utility that mixes a
+payoff with a score computed from language is no longer scale-free in the payoff
+argument unless the two terms are rescaled together, so before such an object is
+carried into an evolutionary dynamic its invariance class has to be stated. What
+these data say is that at least one class of agents does not behave as though
+the payoff argument were scale-free, and that anything built to describe them
+will have to account for it.
+
+\subsection{Limitations and future work}
+
+This design does not identify the mechanism inside the model that produces the
+departures it measures across a broad but finite grid. Five models cannot
+support claims about model families or about parameter
+count, and what generalizes here is that the shapes differ rather than what any
+one of them is. The corpus is one game, one prompt template family and one
+horizon, so whether the same curves appear in other dilemmas or in longer play
+is untested.
+
+One feature of the stimuli bounds the language comparison. Two of the five
+templates state the payoffs as penalties while phrasing the goal as maximizing a
+reward, and we reproduced rather than repaired them so that the corpus matches
+the published protocol. Because that wording is fixed across the ten scales it
+cannot generate a scale effect, and the within-language sensitivities stand; it
+does mean that a difference in level between two languages is not attributable
+to the language alone.
+
+Our reference for calling a departure large is the sampling variability of these
+data, a bootstrap over dyads and a permutation null, rather than an independent
+repeat of the whole protocol. A measured test-retest floor, from
+sweeps re-run under identical conditions, is the obvious next measurement.
+
+The strategy read-out carries a further caveat, which is why its provenance is
+reported wherever a label appears (\S\ref{sec:methods}). A strategy is a decision
+rule and not a decision, so it is never observed directly, and even where the
+resident rule is fixed by construction, separating the memory-one rules from
+observed play has been shown to need a long run of
+observations~\citep{kim2021win}. Our trajectories are ten rounds long. The claim that play
+becomes less rule-governed rests on exact matching and no learned component.
+The classifier was validated to $20\%$ execution noise, and the two models with
+the largest compositional movements play at close to that deviation from any
+rule, so the read-out is least reliable exactly where it moves most.
+The compositional claim uses labels the classifier supplies wherever the rules
+leave the answer open, is unevenly anchored across the four rules, and is the
+weaker of the two. Any reading of it as evidence that these models implement
+Tit-for-Tat would be unsupported by our data.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+A positive rescaling of a payoff matrix is the rare manipulation whose
+predicted effect is not merely small but exactly zero. Five frontier language
+models were played across ten such rescalings, and every one of them moved. The
+movement is not a uniform bias a calibration could absorb: its shape differs by
+model and its size by prompt language, so the effect very nearly vanishes from
+any analysis that averages models, which is how a departure of this size can
+sit inside a literature that has not reported it.
+
+What follows is a question about design rather than a verdict on any model. A
+cooperation rate measured on a language model is reported as though the matrix
+behind it were an arbitrary and therefore harmless choice. It is arbitrary, and
+it is not harmless. The same argument extends to every invariance the theory
+supplies, from shifts of the payoffs to relabelling of the actions, and each is
+an equally cheap test of whether an agent is playing the game it was shown.
+
+% ---------------------------------------------------------------------------
+% BACK MATTER
+%
+% Printed order, read off published Interface Focus articles, which agree:
+%   Acknowledgements, Ethics, Data accessibility, Declaration of AI use,
+%   Authors' contributions, Conflict of interest declaration, Funding.
+% Acknowledgements comes FIRST, not last.  Do not reproduce the "Contributor
+% Information" or "Associated Data" headings seen in PMC renderings; those are
+% PMC artefacts, not Royal Society sections.
+% Set as bold run-in paragraphs, which is how the journal prints them.  These
+% are the only unnumbered run-in headings in the manuscript; the body uses
+% numbered \section and \subsection.  Keeping the statements in the manuscript
+% is correct even though the submission system now also collects them as form
+% fields.
+%
+% AUTHORS: SIX blocks below are placeholders and must be completed before
+% submission.  They are marked  % >>> FILL IN <<<
+% Data accessibility additionally carries two bracketed placeholders, the
+% Zenodo DOI and the licence.  Royal Society policy refuses "available on
+% request" and requires data AND code public, with a DOI, AT SUBMISSION.
+% ---------------------------------------------------------------------------
+
+\paragraph{Acknowledgements.} We thank the providers of the model-inference
+compute used to collect the corpus.
+% >>> FILL IN <<<  Name the provider of the model-inference compute or credits,
+% and any contributor below the authorship bar.  Interface Focus prints
+% Acknowledgements FIRST in the back matter, ahead of Ethics.
+
+\paragraph{Ethics.} This work did not require ethical approval from a human
+subject or animal welfare committee.
+
+\paragraph{Data accessibility.} Editors and reviewers can reach all three
+components of this work now, at [review link]: the analysis pipeline that
+produces every figure, table and quoted number, with the tidy tables it writes
+and the scripts that draw the figures (\path{Analysis/scaling/}); the transcript
+corpus of language-model games, held as per-game records of the decisions,
+payoffs and conditions of every dyad (\path{Dataset/data_fairgame_frontier_llm/});
+and the synthetic corpus that trains the strategy classifier, which contains no
+language-model output (\path{Dataset/noise_dataset/}). Raw per-turn request and
+reply text was not retained. The same three components will be deposited under
+[licence to be named] in a public archive issuing a citable digital object
+identifier, [archive DOI], which will be in place at publication. Supplementary
+material is available online.
+% >>> FILL IN <<<  [review link] is the GitHub or private "for review" URL that
+% editors and reviewers use at first submission; [archive DOI] and the licence
+% are filled in when the archive is deposited, which must be done by
+% publication.  The corpus form of the last sentence carries a numbered
+% reference, e.g. "Supplementary material is available online [64]."  Three
+% reference-list entries are required and none exists yet:
+%   (1) @misc for the archived analysis code (Zenodo DOI, tagged release),
+%   (2) @misc for the transcript + synthetic corpora (Zenodo DOI, CC-BY-4.0),
+%   (3) @misc for the electronic supplementary material.
+% Add the three @misc entries to references.bib and cite them here at the same
+% time: citing them before they exist would leave the build with undefined
+% references.  Pattern:
+%   @misc{code2026scaling, author = {...}, title = {...}, year = {2026},
+%         publisher = {Zenodo}, doi = {10.5281/zenodo.XXXXXXX}}
+% Royal Society policy requires data AND code to be reachable by editors and
+% reviewers at first submission, and states that "available on request" is not
+% acceptable; a GitHub or private "for review" link satisfies this now, and a
+% permanent DOI archive is required only on publication.  Before submission:
+% paste the review link.  Before publication: deposit the corpus and a tagged
+% release of the code, add both DOIs to references.bib as @misc entries, cite
+% them from this paragraph, and name the licence.
+% Note also that raw per-turn transcripts (prompt, raw reply, seed) were not
+% archived for these five models; only the aggregated CSVs exist.  Do not
+% promise the raw turns here.
+
+\paragraph{Declaration of AI use.} Language models are the object of study here:
+the transcripts analysed were generated by the five models named in
+\S\ref{sec:methods}, through a hosted model-serving platform. Separately, we
+used a large-language-model coding assistant to help implement the analysis
+pipeline and to assist with language editing. All analytical choices,
+statistical specifications and interpretations are the authors', every number is
+produced by the archived pipeline and checked against the data by an automated
+verification script (\path{Analysis/scaling/s08_verify_paper.py}), and no text,
+figure or result was generated by an AI system without author verification.
+% >>> FILL IN <<<  Royal Society policy requires this declaration to be specific
+% and accurate, and reserves the right to ask for the prompts and outputs.  Check
+% the two sentences above against what was actually done, and name the assistant
+% and the serving platform explicitly if the Methods do not.
+
+\paragraph{Authors' contributions.} % >>> FILL IN <<<
+% CRediT roles, lower case, semicolon-separated per author, initials with full
+% stops.  Permitted roles: conceptualization; data curation; formal analysis;
+% funding acquisition; investigation; methodology; project administration;
+% resources; software; supervision; validation; visualization; writing -
+% original draft; writing - review and editing.  The journal prints the last two
+% with an em dash; house style here forbids em dashes, so they are written with
+% a hyphen and the typesetter will normalize them.  Pattern:
+%   A.B.: conceptualization, formal analysis, methodology, software, validation,
+%   visualization, writing - original draft, writing - review and editing;
+%   C.D.: conceptualization, funding acquisition, supervision, writing - review
+%   and editing.
+All authors gave final approval for publication and agreed to be held
+accountable for the work performed therein.
+
+\paragraph{Conflict of interest declaration.} We declare we have no competing
+interests.
+% >>> FILL IN <<<  Replace if any author has a competing interest to declare,
+% including employment by or funding from a developer of any model studied here.
+
+\paragraph{Funding.} No funding has been received for this article.
+% >>> FILL IN <<<
+% Required even when there is none.  Either:
+%   This work was supported by [funder] [grant number] (A.B., C.D.).
+% or:
+%   No funding has been received for this article.
+% A blank Funding section is a production query.
+
 
 \bibliographystyle{unsrtnat}
 \bibliography{references}
