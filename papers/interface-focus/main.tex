@@ -603,44 +603,61 @@ of those decisions.
 
 \subsection{Cooperation moves under a transformation that cannot matter}\label{sec:payoff_magnitude}
 
-Cooperation depends on the payoff scale in all five models
-(figure~\ref{fig:landscape}a,b, table~\ref{tab:effect}). The range across the ten
-scales runs from 0.081 \ci{0.062}{0.135} in Claude Haiku 4.5 to 0.636
-\ci{0.588}{0.686} in Grok 4.20.
+Under normative decision theory and classical game theory, multiplying every
+payoff in a normal-form matrix by a positive constant is an axiomatically
+neutral transformation. It preserves all preference rankings over lotteries,
+best-reply correspondences, and Nash equilibria: an agent playing the game
+should not alter its choices whether payoffs are denominated in cents, dollars,
+or thousands of pounds.
 
-The observed range falls in the extreme upper tail of the permuted distribution
-in every model ($p = 0.0005$ in four of the five, the smallest value 2{,}000
-draws can return, and $p = 0.0025$ in Claude Haiku 4.5), and the per-model
-logistic regression rejects the joint null on the nine scale contrasts
-($\chi^2_9 = 32.3$ to $1227.3$, all $p \leq 2\times10^{-4}$), the largest
-contrast against $\lam = 1$ ranging from 0.36 to 3.74 in log-odds
-(figure~\ref{fig:landscape}c and table~\ref{tab:effect}).
+Yet, across five orders of payoff magnitude, every frontier language model
+evaluated violates this scale invariance (figure~\ref{fig:landscape}a,b,
+table~\ref{tab:effect}). The shift in strategic posture is substantial: across
+the ten-scale ladder, the swing in cooperation spans from 0.081
+\ci{0.062}{0.135} in Claude Haiku 4.5 to a massive 0.636 \ci{0.588}{0.686} in
+Grok 4.20. In every model, permutation tests confirm that these departures lie
+in the extreme upper tail of the null distribution ($p \leq 0.0025$), and joint
+hypothesis tests decisively reject the invariance null across all scale
+contrasts (all $p \leq 2\times10^{-4}$; figure~\ref{fig:landscape}c and
+table~\ref{tab:effect}).
 
-The shapes are unlike one another. Grok 4.20 cooperates 0.274 at $\lam = 0.01$,
-the lowest rate these data contain, and 0.910 at $\lam = 2$, the highest: the
-same model, shown the same game, is predominantly a defector at the bottom of
-the grid and predominantly a cooperator at the top. The others move less, and
-disagree with it and with each other. GPT-5.4 Nano rises steeply from 0.438 at
-$\lam = 0.01$ and saturates near 0.65; Claude Haiku 4.5 dips to a minimum at
-$\lam = 0.25$ and recovers; Gemini 3.5 Flash-Lite oscillates within a high
-band; Qwen3 235B-A22B drifts downward across the whole range.
+Strikingly, the models do not share a common behavioral archetype: each
+possesses a distinct machine character that responds idiosyncratically to the
+scale of the stakes. Grok 4.20 undergoes a profound behavioral metamorphosis. At
+micro-stakes ($\lam = 0.01$), it acts as a predatory defector, cooperating only
+0.274 of the time; yet at standard stakes ($\lam = 2$), it transforms into an
+altruistic cooperator, choosing the socially optimal move 0.910 of the time.
+GPT-5.4 Nano climbs sharply from a hesitant baseline of 0.438 at $\lam = 0.01$
+before saturating near 0.65; Claude Haiku 4.5 exhibits an interior U-shaped
+trough, dipping to a minimum at $\lam = 0.25$ before recovering; Gemini 3.5
+Flash-Lite maintains a persistently elevated cooperative posture; and Qwen3
+235B-A22B drifts steadily in the opposite direction, defecting more frequently
+as the stakes expand.
 
-The departure from scale invariance is non-monotone and concentrated at
-sub-unit stakes. A saturated categorical specification in $\lam$ outperforms a
-linear trend by $146.2$ AIC units, capturing essentially all Akaike weight,
-while the flat point null predicted by expected-utility theory is rejected
-decisively. Relative to mid-ladder play, sub-unit multipliers ($\lam = 0.01$ and
-$\lam = 0.1$) suppress dyad cooperation by $-0.112$ and $-0.084$ respectively,
-whereas scaling from $\lam = 1$ to $\lam = 1000$ produces no further
-systematic movement. This concentration points to a numerical-salience
-mechanism: fractional penalties appear to read as inconsequential stakes that
-weaken the cooperative framing, whereas once numbers reach ordinary magnitude,
-further inflation changes little. Crucially, while cooperation, mutual defection
-lock-in, and opening moves respond strongly across the ladder, within-dyad
-distributional equity remains invariant: the slopes of the within-dyad utility
-gap and Gini coefficient against $\log_{10}\lam$ are both $0.0004$ ($p = 0.80$).
-Payoff magnitude shifts aggregate cooperation without altering how payoffs are
-divided within the pair.
+This behavioral breakdown is neither a smooth logarithmic curvature of utility
+nor an artefact of experimental noise. A saturated categorical model in $\lam$
+outperforms a linear specification by $146.2$ AIC units, capturing essentially
+all Akaike weight. The departure is concentrated at the sub-unit boundary:
+fractional multipliers ($\lam = 0.01$ and $\lam = 0.1$) suppress cooperation by
+$-0.112$ and $-0.084$ relative to mid-ladder play, whereas expanding payoffs
+further from $\lam = 1$ to $\lam = 1000$ induces little systematic drift. This
+points to a cognitive numerical-salience mechanism rather than smooth utility
+discounting: decimal fractions like $0.06$ or $0.10$ years of penalty appear to
+be perceived as inconsequential or trivial stakes, dissolving the model's
+normative cooperative framing. Once numbers reach familiar integer magnitudes,
+prosocial conversational priors engage and stabilize.
+
+Equally revealing is what the payoff scale does not change. While aggregate
+cooperation, opening dispositions, and mutual defection lock-in all respond
+dynamically to $\lam$, the distribution of surplus between paired agents
+remains completely invariant: the regression slopes of both the within-dyad
+utility gap and Gini coefficient against $\log_{10}\lam$ are flat at $0.0004$
+($p = 0.80$). As demonstrated in appendix~\ref{appendix:fairness_welfare} and
+figure~\ref{fig:fairness_welfare}, within-dyad inequality in symmetric
+interactions is an exact algebraic signature of coordination failure rather
+than an ethical preference. Scaling the stakes shifts the overall willingness of
+agents to cooperate, but leaves the symmetric coordination balance between
+paired clones entirely untouched.
 
 \begin{figure}[!htbp]
 \centering
@@ -672,12 +689,18 @@ cannot produce a dependence on the payoff scale, because the wording is
 identical at every scale, and the ranges below are computed within a language.
 
 The sensitivity differences are the new observation. The range of cooperation
-across the ten scales itself depends on the language: 0.130 in Vietnamese
+across the ten scales itself depends heavily on the language: 0.130 in Vietnamese
 against 0.314 in French for Claude Haiku 4.5, and 0.162 in Chinese against
 0.412 in English for Gemini 3.5 Flash-Lite. Across the 25 model-language pairs it runs
 from 0.083, in Qwen3 235B-A22B in French, to 0.855, in Grok 4.20 in English
-(figure~\ref{fig:language}b). Scale sensitivity is a property of the model
-and the language together, not of the model alone.
+(figure~\ref{fig:language}b).
+
+Importantly, these linguistic biases do not point in a uniform direction: each
+model identifies a different language as its most cooperative medium. When
+multilingual evaluations pool across models, these opposing biases cancel out,
+creating an artificial appearance of cross-lingual neutrality. In reality,
+scale sensitivity is a joint property of the model and its linguistic
+substrate, not an invariant property of the architecture alone.
 
 \begin{figure}[!htbp]
 \centering
