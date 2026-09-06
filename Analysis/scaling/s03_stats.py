@@ -13,7 +13,7 @@ destroys the association between the payoff scale and behaviour while keeping
 everything else - model, language, persona, dyad structure - exactly as
 observed.
 
-Writes tables T02..T09 to tables/.
+Writes tables T00 and T02..T09 to tables/.
 """
 from __future__ import annotations
 
@@ -28,7 +28,8 @@ import statsmodels.formula.api as smf
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from figstyle import MODEL_ORDER  # noqa: E402  the five models the main text reports
+from figstyle import (MODEL_ORDER,        # noqa: E402  the five the main text reports
+                      MODEL_ORDER_ALL)   # noqa: E402  all six in the corpus
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE / "data"
@@ -39,6 +40,10 @@ N_BOOT = 1500
 N_PERM = 2000
 SEED = 20260905
 SUBUNIT = [0.01, 0.1]        # every payoff printed is at most 1 at these scales
+
+# The one model that carries the significant payoff-scale main effect; T06 is
+# refitted without it to show that the effect does not survive its removal.
+GROK = "Grok-4.20-Non-Reasoning"
 
 
 # --------------------------------------------------------------------------
@@ -134,6 +139,41 @@ def permutation_p(d, observed, strata, n_perm=N_PERM, seed=SEED):
         if float(m.max() - m.min()) >= observed:
             hits += 1
     return (hits + 1) / (n_perm + 1)
+
+
+# --------------------------------------------------------------------------
+# T00  what the corpus contains
+# --------------------------------------------------------------------------
+def t00_corpus(g, r):
+    """One row per model, plus a pooled row for the main five and for all six.
+
+    Nothing here is a result; it is the denominator behind every result. The
+    per-model cooperation rates were previously rendered straight into the
+    supplementary LaTeX with no CSV behind them, so there was no file against
+    which to check the manuscript. `dyads_per_cell` is -1 if the cells of that
+    panel do not all hold the same number of dyads, which the build refuses to
+    let happen.
+    """
+    def row(name, d):
+        rd = r[r.model.isin(d.model.unique())] if "model" in r.columns else r
+        per_cell = (d.groupby(["model", "language", "scale_nominal"])
+                    .game_uid.nunique().unique())
+        return {"model": name,
+                "n_models": int(d.model.nunique()),
+                "n_scales": int(d.scale_nominal.nunique()),
+                "n_languages": int(d.language.nunique()),
+                "n_cells": int(d.groupby(
+                    ["model", "language", "scale_nominal"]).ngroups),
+                "n_dyads": int(d.game_uid.nunique()),
+                "n_agent_games": int(len(d)),
+                "n_decisions": int(len(rd)),
+                "dyads_per_cell": int(per_cell[0]) if len(per_cell) == 1 else -1,
+                "coop_rate": float(d.coop_rate.mean())}
+
+    rows = [row(m, g[g.model == m]) for m in MODEL_ORDER_ALL]
+    rows.append(row("Main five", g[g.model.isin(MODEL_ORDER)]))
+    rows.append(row("All", g))
+    return pd.DataFrame(rows)
 
 
 # --------------------------------------------------------------------------
@@ -332,7 +372,12 @@ def main():
     r_main = r[r.model.isin(MODEL_ORDER)] if "model" in r.columns else r
     print(f"corpus {g.model.nunique()} models; main text {g_main.model.nunique()}")
 
-    print("T02 cooperation by scale x model")
+    print("T00 corpus")
+    t00 = t00_corpus(g, r)
+    t00.to_csv(TAB / "T00_corpus.csv", index=False)
+    print(t00.round(4).to_string(index=False))
+
+    print("\nT02 cooperation by scale x model")
     t02_scale_by_model(g).to_csv(TAB / "T02_scale_by_model.csv", index=False)
 
     print("T03 effect size + permutation test")
@@ -362,6 +407,23 @@ def main():
 
     print("T06 variance decomposition (all six, for the supplement)")
     t06_variance_decomposition(g).to_csv(TAB / "T06_variance_all.csv", index=False)
+
+    # The Discussion and contribution (ii) both rest on the claim that the
+    # significant payoff-scale main effect is carried by one model. The test of
+    # that claim is to refit the same decomposition with Grok 4.20 dropped, so
+    # it is written out rather than left inside a verification script: once on
+    # the four models the main text is then left with, and once on the five
+    # that remain when the supplementary model is kept as well.
+    print("T06 variance decomposition without Grok 4.20 (four main-text models)")
+    t06n = t06_variance_decomposition(
+        g[g.model.isin([m for m in MODEL_ORDER if m != GROK])])
+    t06n.to_csv(TAB / "T06_variance_noGrok.csv", index=False)
+    print(t06n.round(3).to_string(index=False))
+
+    print("T06 variance decomposition without Grok 4.20 (all six less Grok)")
+    t06na = t06_variance_decomposition(g[g.model != GROK])
+    t06na.to_csv(TAB / "T06_variance_noGrok_all.csv", index=False)
+    print(t06na.round(3).to_string(index=False))
 
     print("\nT07 persona")
     per, t07 = t07_persona(g)

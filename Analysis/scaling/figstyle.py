@@ -10,16 +10,32 @@ distinct marker so the figures survive greyscale printing.
 """
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 HERE = Path(__file__).resolve().parent
-# Figures are written straight into the manuscript directory so that
-# paper_scaling/ is self-contained and there is still no manual copy step.
-FIGDIR = HERE.parents[1] / "paper_scaling" / "figures"
-FIGDIR.mkdir(parents=True, exist_ok=True)
+# Figures are written straight into the manuscript directory so that the
+# manuscript directory is self-contained and there is still no manual copy
+# step.  The destination is configurable so that the same pipeline can feed a
+# second manuscript, but the default is unchanged: with neither variable set
+# this resolves to paper_scaling/figures exactly as before.
+DEFAULT_PAPER_DIR = HERE.parents[1] / "paper_scaling"
+PAPER_DIR = Path(os.environ.get("PD_PAPER_DIR", DEFAULT_PAPER_DIR))
+FIGDIR = Path(os.environ.get("PD_FIGDIR", PAPER_DIR / "figures"))
+
+# Deliberately NOT created here.  This module is imported by the table scripts
+# too, and creating the directory at import time left an empty `figures/` beside
+# every manuscript that only ever received tables.  `save()` creates it.
+
+# True only when the figures are going to their historical home.  The figure
+# files were renamed f1_..f8_ for the second manuscript, whose figure directory
+# already holds 29 legacy PDFs called fig01_, fig02_ and so on; writing the old
+# fig1_..fig6_ names alongside the new ones keeps paper_scaling building from
+# an unedited main.tex.  See LEGACY_ALIAS in s05_figures.py.
+IS_DEFAULT_FIGDIR = FIGDIR.resolve() == (DEFAULT_PAPER_DIR / "figures").resolve()
 
 MM = 1 / 25.4
 W1 = 89 * MM          # single column
@@ -126,6 +142,11 @@ def use_style() -> None:
         "axes.spines.top": False, "axes.spines.right": False,
         "legend.frameon": False, "axes.grid": False,
         "lines.linewidth": 1.1, "lines.markersize": 3.0,
+        # Royal Society production requires embedded, editable fonts: type 42
+        # embeds the TrueType outlines in the PDF and the EPS instead of
+        # writing type 3 bitmap-ish subsets, and "none" leaves SVG text as
+        # text rather than converting it to paths.
+        "pdf.fonttype": 42, "ps.fonttype": 42, "svg.fonttype": "none",
     })
 
 
@@ -175,8 +196,17 @@ def panel_tag(ax, tag, dx=-0.13, dy=1.06):
             fontweight="bold", va="top", ha="left")
 
 
-def save(fig, name):
-    for ext in ("pdf", "png"):
-        fig.savefig(FIGDIR / f"{name}.{ext}")
+def save(fig, name, aliases=()):
+    """Write one figure as PDF and PNG, plus any legacy filenames.
+
+    `aliases` exists so a renamed figure can keep its previous filename in the
+    manuscript directory that still refers to it, which is what stops the
+    rename from breaking a build.
+    """
+    FIGDIR.mkdir(parents=True, exist_ok=True)
+    for stem in (name, *aliases):
+        for ext in ("pdf", "png"):
+            fig.savefig(FIGDIR / f"{stem}.{ext}")
     plt.close(fig)
-    print(f"  wrote {FIGDIR / name}.pdf")
+    extra = ("  (also as %s.pdf)" % ", ".join(aliases)) if aliases else ""
+    print(f"  wrote {FIGDIR / name}.pdf{extra}")

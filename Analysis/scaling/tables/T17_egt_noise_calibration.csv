@@ -1,0 +1,9 @@
+model,in_main_text,rounds_per_game,mean_rounds_violating,implied_error_rate
+Claude-Haiku-4.5,True,10,2.07325,0.20732499999999998
+GPT-5.4-Nano,True,10,2.12025,0.212025
+Gemini-3.5-Flash-Lite,True,10,1.07725,0.107725
+Qwen3-235B-A22B,True,10,0.737,0.0737
+Grok-4.20-Non-Reasoning,True,10,0.725,0.0725
+Gemini-3.1-Flash-Lite-Preview,False,10,1.0295,0.10295000000000001
+Main five,,10,1.3465500000000001,0.134655
+All,,10,1.2937083333333332,0.12937083333333332

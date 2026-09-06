@@ -15,7 +15,7 @@ Trend tests use log10(scale) as a continuous predictor with standard errors
 clustered on the dyad, because a rescaling is multiplicative and the design
 samples it geometrically.
 
-Writes T10..T13 to tables/.
+Writes T10..T13, T16 and T17 to tables/.
 """
 from __future__ import annotations
 
@@ -30,7 +30,8 @@ import statsmodels.formula.api as smf
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from figstyle import MODEL_ORDER  # noqa: E402  the five models the main text reports
+from figstyle import (MODEL_ORDER,        # noqa: E402  the five the main text reports
+                      MODEL_ORDER_ALL)   # noqa: E402  all six in the corpus
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE / "data"
@@ -38,7 +39,9 @@ TAB = HERE / "tables"
 TAB.mkdir(exist_ok=True)
 
 LABELS = ["AllC", "TFT", "WSLS", "AllD"]
+PROVENANCE = ["deduced", "ambiguous", "unmatched"]
 SUBUNIT = [0.01, 0.1]
+N_ROUNDS = 10               # rounds per agent-game, fixed by the design
 
 
 def _cluster_logit(d, outcome, extra=""):
@@ -134,6 +137,58 @@ def t13_pooled(d):
     return out.reset_index()
 
 
+def t16_label_provenance(d_main, d_all):
+    """How each label was arrived at, as a percentage within the label.
+
+    This is the table behind the standing caveat on the compositional result:
+    AllC and AllD carry a substantial deduced share, whereas almost every TFT
+    and WSLS label is an attribution the LSTM makes on a trajectory that no
+    canonical rule fits. It was previously computed only inside the LaTeX
+    emitter and inside the verification script, so no CSV held it. Both panels
+    go to one file, told apart by the `panel` column.
+    """
+    rows = []
+    for panel, s in [("main_five", d_main), ("all_six", d_all)]:
+        pct = (pd.crosstab(s.label, s.provenance, normalize="index") * 100)
+        pct = pct.reindex(index=LABELS, columns=PROVENANCE).fillna(0.0)
+        n = s.label.value_counts()
+        for lab in LABELS:
+            rows.append({"panel": panel, "label": lab, "n": int(n.get(lab, 0)),
+                         **{c: float(pct.loc[lab, c]) for c in PROVENANCE}})
+    return pd.DataFrame(rows)
+
+
+def t17_egt_noise_calibration(t11):
+    """The bridge from the read-out to the execution noise of the EGT baseline.
+
+    A model's mean distance to the nearest canonical rule counts rounds out of
+    ten that violate that rule. Dividing by the ten rounds turns it into a
+    per-round rate, which is the quantity an evolutionary model calls execution
+    noise, so the appendix can quote a noise level the corpus implies rather
+    than one chosen for convenience. The two pooled rows average over models,
+    not over agent-games, so each model counts once.
+    """
+    t = t11.set_index("model")
+    rows = []
+    for m in MODEL_ORDER_ALL:
+        dist = float(t.loc[m, "mean_dist"])
+        rows.append({"model": m, "in_main_text": m in MODEL_ORDER,
+                     "rounds_per_game": N_ROUNDS,
+                     "mean_rounds_violating": dist,
+                     "implied_error_rate": dist / N_ROUNDS})
+    out = pd.DataFrame(rows)
+    # `in_main_text` is a property of a model, so the two pooled rows leave it
+    # empty rather than claiming a truth value the row does not have.
+    for name, sel in [("Main five", out.in_main_text),
+                      ("All", pd.Series(True, index=out.index))]:
+        d = out[sel]
+        rows.append({"model": name, "in_main_text": pd.NA,
+                     "rounds_per_game": N_ROUNDS,
+                     "mean_rounds_violating": float(d.mean_rounds_violating.mean()),
+                     "implied_error_rate": float(d.implied_error_rate.mean())})
+    return pd.DataFrame(rows)
+
+
 def main():
     d = pd.read_parquet(DATA / "readout.parquet")
 
@@ -166,6 +221,16 @@ def main():
 
     print("\nT13 pooled (all six, for the supplement)")
     t13_pooled(d).to_csv(TAB / "T13_pooled_strategy_all.csv", index=False)
+
+    print("\nT16 provenance of each label")
+    t16 = t16_label_provenance(d_main, d)
+    t16.to_csv(TAB / "T16_label_provenance.csv", index=False)
+    print(t16.round(3).to_string(index=False))
+
+    print("\nT17 execution noise implied by the rule distance")
+    t17 = t17_egt_noise_calibration(t11)
+    t17.to_csv(TAB / "T17_egt_noise_calibration.csv", index=False)
+    print(t17.round(4).to_string(index=False))
     print(f"\nwrote tables to {TAB}")
 
 

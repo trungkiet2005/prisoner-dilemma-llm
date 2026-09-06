@@ -4,6 +4,7 @@ Writes paper_scaling/tables_auto.tex, which main.tex \\input's.
 """
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -14,7 +15,12 @@ from figstyle import MODEL_LABEL, MODEL_ORDER      # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 TAB = HERE / "tables"
-OUT = HERE.parents[1] / "paper_scaling" / "tables_auto.tex"
+# The manuscript directory is configurable so the same pipeline can feed a
+# second manuscript, exactly as figstyle.PAPER_DIR is.  The default is
+# unchanged: with PD_PAPER_DIR unset this resolves to paper_scaling/ as before.
+PAPER_DIR = Path(os.environ.get("PD_PAPER_DIR", HERE.parents[1] / "paper_scaling"))
+PAPER_DIR.mkdir(parents=True, exist_ok=True)
+OUT = PAPER_DIR / "tables_auto.tex"
 
 
 def fmt_p(p):
@@ -34,17 +40,14 @@ def table_effect(t03, t09):
     body = "\n".join(rows)
     return f"""\\begin{{table}}[t]
 \\centering
-\\caption{{\\textbf{{Cooperation rate over the ten payoff scales, by model.}}
-Minimum, maximum and range of the cooperation rate over the ten scales, a
-95\\% confidence interval on the range from a bootstrap resampling whole dyads,
-and a permutation test shuffling the scale label within language and persona
-(2{{,}}000 draws, so $0.0005$ is the smallest attainable value). Ranges are
-computed before rounding and may differ by $0.001$ from the rounded minimum and
-maximum. The last two columns are a Wald test on the nine scale contrasts of a
-per-model logistic regression of the round-level decision, standard errors
-clustered on the dyad ($n=40{{,}}000$ decisions, $2{{,}}000$ clusters per
-model). Each entry pools 200 dyads per scale, the five languages by four persona
-pairings.}}
+\\caption{{\\textbf{{Cooperation over the ten payoff scales, by model.}}
+Minimum, maximum and range, with a 95\\% confidence interval on the range from a
+bootstrap over whole dyads and a permutation test on the payoff-scale label
+($0.0005$ is the floor of 2{{,}}000 draws). The last two columns test the nine
+scale contrasts jointly in a per-model logistic regression of the round-level
+decision, clustered on the dyad. Each entry pools 200 dyads per scale; ranges
+are computed before rounding. Full specification in the electronic
+supplementary material.}}
 \\label{{tab:effect}}
 \\small
 \\begin{{tabular}}{{lccccccc}}
@@ -76,14 +79,12 @@ def table_persona(t07):
     return f"""\\begin{{table}}[t]
 \\centering
 \\caption{{\\textbf{{Persona effect below and above the sub-unit boundary, by
-model.}} The persona effect is the cooperation rate of an agent told it is cooperative
-minus that of an agent told it is selfish, reported separately for the two
-scales at which every payoff printed is at most 1 ($\\lam \\leq 0.1$) and for the
-eight at which some payoff exceeds it. Intervals are 95\\% confidence intervals
-from the dyad bootstrap. A sign flip is recorded only where both regime
-intervals exclude zero and fall on opposite sides of it, so a model whose
-supra-unit interval straddles zero is one whose persona effect is abolished
-rather than reversed.}}
+model.}} Cooperation under a cooperative persona minus cooperation under a
+selfish one, at the two scales where every printed payoff is at most 1
+($\\lam \\leq 0.1$) and at the eight where some payoff exceeds it. Intervals are
+95\\% confidence intervals from the dyad bootstrap. A sign flip needs both
+regime intervals to exclude zero on opposite sides, so a supra-unit interval
+straddling zero means the effect is abolished rather than reversed.}}
 \\label{{tab:persona}}
 \\footnotesize
 \\setlength{{\\tabcolsep}}{{3pt}}
@@ -116,14 +117,13 @@ def table_strategy(t10, t11):
     return f"""\\begin{{table}}[t]
 \\centering
 \\caption{{\\textbf{{Rule agreement and rule distance against the payoff scale,
-by model.}} Both $\\beta$ columns are per decade of $\\lam$ and their sign differs between
-models. The left block gives the share of agent-games matched exactly by one of
-the four canonical rules, below and above the sub-unit boundary, with the
-coefficient of a logistic regression of that indicator on $\\log_{{10}}\\lam$; the
-right block the mean number of rounds violating the nearest canonical rule at
-the smallest and largest scale, with the same trend fitted by least squares.
-Both cluster standard errors on the dyad, and neither depends on the learned
-classifier.}}
+by model.}} Left, the share of agent-games matched exactly by one canonical
+rule, below and above the sub-unit boundary, with the coefficient of a logistic
+regression of that indicator on $\\log_{{10}}\\lam$; right, the mean number of
+rounds violating the nearest canonical rule at the smallest and largest scale,
+with the same trend by least squares. Both $\\beta$ are per decade of $\\lam$ and
+their signs differ between models. Both cluster on the dyad, and neither block
+uses the learned classifier.}}
 \\label{{tab:strategy}}
 \\small
 \\setlength{{\\tabcolsep}}{{4pt}}

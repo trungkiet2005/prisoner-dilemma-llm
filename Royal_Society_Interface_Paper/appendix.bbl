@@ -63,6 +63,7 @@
       \strng{authornamehash}{635cb4c809a1715021647a4d9ba1ad45}
       \strng{authorfullhash}{2025b04fff67d6479e8c2789b9705620}
       \strng{authorfullhashraw}{2025b04fff67d6479e8c2789b9705620}
+      \field{extraname}{1}
       \field{sortinit}{1}
       \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
@@ -78,97 +79,758 @@
       \verb 10.3233/FAIA251300
       \endverb
     \endentry
-    \entry{diStefanoIntention2023}{inproceedings}{}{}
-      \name{author}{4}{}{%
+    \entry{lstm}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=41b31e29fb2bdbf9f5c9c1b0d5b3e815}{%
+           family={Hochreiter},
+           familyi={H\bibinitperiod},
+           given={Sepp},
+           giveni={S\bibinitperiod}}}%
+        {{hash=288bdbcfe1b91ad7484d7a24f74f99ed}{%
+           family={Schmidhuber},
+           familyi={S\bibinitperiod},
+           given={Jürgen},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{4c2e1e2e1ac91e1df9d4f7b85ebe39b4}
+      \strng{fullhash}{4c2e1e2e1ac91e1df9d4f7b85ebe39b4}
+      \strng{fullhashraw}{4c2e1e2e1ac91e1df9d4f7b85ebe39b4}
+      \strng{bibnamehash}{4c2e1e2e1ac91e1df9d4f7b85ebe39b4}
+      \strng{authorbibnamehash}{4c2e1e2e1ac91e1df9d4f7b85ebe39b4}
+      \strng{authornamehash}{4c2e1e2e1ac91e1df9d4f7b85ebe39b4}
+      \strng{authorfullhash}{4c2e1e2e1ac91e1df9d4f7b85ebe39b4}
+      \strng{authorfullhashraw}{4c2e1e2e1ac91e1df9d4f7b85ebe39b4}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Learning to store information over extended time intervals by recurrent backpropagation takes a very long time, mostly because of insufficient, decaying error backflow. We briefly review Hochreiter's (1991) analysis of this problem, then address it by introducing a novel, efficient, gradient based method called long short-term memory (LSTM). Truncating the gradient where this does not do harm, LSTM can learn to bridge minimal time lags in excess of 1000 discrete-time steps by enforcing constant error flow through constant error carousels within special units. Multiplicative gate units learn to open and close access to the constant error flow. LSTM is local in space and time; its computational complexity per time step and weight is O. 1. Our experiments with artificial data involve local, distributed, real-valued, and noisy pattern representations. In comparisons with real-time recurrent learning, back propagation through time, recurrent cascade correlation, Elman nets, and neural sequence chunking, LSTM leads to many more successful runs, and learns much faster. LSTM also solves complex, artificial long-time-lag tasks that have never been solved by previous recurrent network algorithms.}
+      \field{issn}{0899-7667}
+      \field{journaltitle}{Neural Computation}
+      \field{month}{11}
+      \field{number}{8}
+      \field{title}{Long Short-Term Memory}
+      \field{volume}{9}
+      \field{year}{1997}
+      \field{pages}{1735\bibrangedash 1780}
+      \range{pages}{46}
+      \verb{doi}
+      \verb 10.1162/neco.1997.9.8.1735
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1162/neco.1997.9.8.1735
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1162/neco.1997.9.8.1735
+      \endverb
+    \endentry
+    \entry{efron1993introduction}{book}{}{}
+      \name{author}{2}{}{%
+        {{hash=5470455fc7dceb3ccf6db38cb22a113d}{%
+           family={Efron},
+           familyi={E\bibinitperiod},
+           given={Bradley},
+           giveni={B\bibinitperiod}}}%
+        {{hash=678c48302939b4b85d5ad2d85319617a}{%
+           family={Tibshirani},
+           familyi={T\bibinitperiod},
+           given={Robert\bibnamedelima J.},
+           giveni={R\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+      }
+      \list{location}{1}{%
+        {New York}%
+      }
+      \list{publisher}{2}{%
+        {Chapman}%
+        {Hall/CRC}%
+      }
+      \strng{namehash}{5c03685c9f7f37796bba48432d40df61}
+      \strng{fullhash}{5c03685c9f7f37796bba48432d40df61}
+      \strng{fullhashraw}{5c03685c9f7f37796bba48432d40df61}
+      \strng{bibnamehash}{5c03685c9f7f37796bba48432d40df61}
+      \strng{authorbibnamehash}{5c03685c9f7f37796bba48432d40df61}
+      \strng{authornamehash}{5c03685c9f7f37796bba48432d40df61}
+      \strng{authorfullhash}{5c03685c9f7f37796bba48432d40df61}
+      \strng{authorfullhashraw}{5c03685c9f7f37796bba48432d40df61}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{An Introduction to the Bootstrap}
+      \field{year}{1993}
+    \endentry
+    \entry{balabanova2025media}{article}{}{}
+      \name{author}{18}{}{%
+        {{hash=fe8f2a786511c6a094d290c4ad307059}{%
+           family={Balabanova},
+           familyi={B\bibinitperiod},
+           given={Nataliya},
+           giveni={N\bibinitperiod}}}%
+        {{hash=8ef4716c4191e57a4b77953b33ec0a4a}{%
+           family={Bashir},
+           familyi={B\bibinitperiod},
+           given={Adeela},
+           giveni={A\bibinitperiod}}}%
+        {{hash=feae117b719d103f1096406e64135ca5}{%
+           family={Bova},
+           familyi={B\bibinitperiod},
+           given={Paolo},
+           giveni={P\bibinitperiod}}}%
+        {{hash=60130a2257f0c387ce723817228e208b}{%
+           family={Buscemi},
+           familyi={B\bibinitperiod},
+           given={Alessio},
+           giveni={A\bibinitperiod}}}%
+        {{hash=79325887cb1e5515d5b2c1cf7dafa4b1}{%
+           family={Cimpeanu},
+           familyi={C\bibinitperiod},
+           given={Theodor},
+           giveni={T\bibinitperiod}}}%
+        {{hash=c2102596fd71142f6868bca344efe007}{%
+           family={Fonseca},
+           familyi={F\bibinitperiod},
+           given={Henrique\bibnamedelima Correia},
+           giveni={H\bibinitperiod\bibinitdelim C\bibinitperiod},
+           prefix={da},
+           prefixi={d\bibinitperiod}}}%
         {{hash=5478b7db5443f6eb7a11b38d85f179ce}{%
            family={Di\bibnamedelima Stefano},
            familyi={D\bibinitperiod\bibinitdelim S\bibinitperiod},
            given={Alessandro},
            giveni={A\bibinitperiod}}}%
-        {{hash=5be1d96df47e9680d491d156aaeaa1c5}{%
-           family={Jayne},
-           familyi={J\bibinitperiod},
-           given={Chrisina},
-           giveni={C\bibinitperiod}}}%
-        {{hash=f433d4b11aa9b33f7623d371f08c200c}{%
-           family={Angione},
-           familyi={A\bibinitperiod},
-           given={Claudio},
-           giveni={C\bibinitperiod}}}%
+        {{hash=13f2fe3b46e166be24502073f38db99f}{%
+           family={Duong},
+           familyi={D\bibinitperiod},
+           given={Manh\bibnamedelima Hong},
+           giveni={M\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=a6951a8d50ec34906b201ce64b9c5203}{%
+           family={Fernández\bibnamedelima Domingos},
+           familyi={F\bibinitperiod\bibinitdelim D\bibinitperiod},
+           given={Elias},
+           giveni={E\bibinitperiod}}}%
+        {{hash=b4afb10d8c7295a7a156ec74cc594756}{%
+           family={Fernandes},
+           familyi={F\bibinitperiod},
+           given={António\bibnamedelima M.},
+           giveni={A\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
         {{hash=244c872a1fec2b2ed6bccc1a7c1f9942}{%
            family={Han},
            familyi={H\bibinitperiod},
            given={The\bibnamedelima Anh},
            giveni={T\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=9cf5aeef31f77d2c69406418e496ee71}{%
+           family={Krellner},
+           familyi={K\bibinitperiod},
+           given={Marcus},
+           giveni={M\bibinitperiod}}}%
+        {{hash=baf78dce48d67071abe16e8ad383f6cb}{%
+           family={Ogbo},
+           familyi={O\bibinitperiod},
+           given={Ndidi\bibnamedelima Bianca},
+           giveni={N\bibinitperiod\bibinitdelim B\bibinitperiod}}}%
+        {{hash=0e7a403d1467103f35d5c775d0463986}{%
+           family={Powers},
+           familyi={P\bibinitperiod},
+           given={Simon\bibnamedelima T.},
+           giveni={S\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=7e1587ff0b2b9e9c48a8cfb6c53753a3}{%
+           family={Proverbio},
+           familyi={P\bibinitperiod},
+           given={Daniele},
+           giveni={D\bibinitperiod}}}%
+        {{hash=25ae3b07ce4e65f3d7ea80742d18229a}{%
+           family={Santos},
+           familyi={S\bibinitperiod},
+           given={Fernando\bibnamedelima P.},
+           giveni={F\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+        {{hash=24225e4c876461cec65689b9da9b839d}{%
+           family={Shamszaman},
+           familyi={S\bibinitperiod},
+           given={Zia\bibnamedelima Ush},
+           giveni={Z\bibinitperiod\bibinitdelim U\bibinitperiod}}}%
+        {{hash=04d07d54d268f89c0e192345e9b152ba}{%
+           family={Song},
+           familyi={S\bibinitperiod},
+           given={Zhao},
+           giveni={Z\bibinitperiod}}}%
       }
-      \list{organization}{1}{%
-        {MIT Press}%
-      }
-      \strng{namehash}{14d8659b100672aceee676e30dca1724}
-      \strng{fullhash}{59b158503fd90281697e0f5603821787}
-      \strng{fullhashraw}{59b158503fd90281697e0f5603821787}
-      \strng{bibnamehash}{59b158503fd90281697e0f5603821787}
-      \strng{authorbibnamehash}{59b158503fd90281697e0f5603821787}
-      \strng{authornamehash}{14d8659b100672aceee676e30dca1724}
-      \strng{authorfullhash}{59b158503fd90281697e0f5603821787}
-      \strng{authorfullhashraw}{59b158503fd90281697e0f5603821787}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \strng{namehash}{11835b1750fdff9f597a789b52db5175}
+      \strng{fullhash}{c7ca3a9f1b389487759f550c1250461d}
+      \strng{fullhashraw}{c7ca3a9f1b389487759f550c1250461d}
+      \strng{bibnamehash}{11835b1750fdff9f597a789b52db5175}
+      \strng{authorbibnamehash}{11835b1750fdff9f597a789b52db5175}
+      \strng{authornamehash}{11835b1750fdff9f597a789b52db5175}
+      \strng{authorfullhash}{c7ca3a9f1b389487759f550c1250461d}
+      \strng{authorfullhashraw}{c7ca3a9f1b389487759f550c1250461d}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{booktitle}{Artificial Life Conference Proceedings 35}
-      \field{title}{Recognition of behavioural intention in repeated games using machine learning}
-      \field{year}{2023}
-      \field{pages}{103}
-      \range{pages}{1}
+      \field{journaltitle}{Philosophical Transactions of the Royal Society A}
+      \field{note}{In press}
+      \field{title}{Media and responsible {AI} governance: a game-theoretic and {LLM} analysis}
+      \field{year}{2025}
     \endentry
-    \entry{Han2012ALIFEjournal}{article}{}{}
+    \entry{buscemi2025llms}{article}{}{}
+      \true{moreauthor}
+      \true{morelabelname}
+      \name{author}{6}{}{%
+        {{hash=60130a2257f0c387ce723817228e208b}{%
+           family={Buscemi},
+           familyi={B\bibinitperiod},
+           given={Alessio},
+           giveni={A\bibinitperiod}}}%
+        {{hash=7e1587ff0b2b9e9c48a8cfb6c53753a3}{%
+           family={Proverbio},
+           familyi={P\bibinitperiod},
+           given={Daniele},
+           giveni={D\bibinitperiod}}}%
+        {{hash=feae117b719d103f1096406e64135ca5}{%
+           family={Bova},
+           familyi={B\bibinitperiod},
+           given={Paolo},
+           giveni={P\bibinitperiod}}}%
+        {{hash=fe8f2a786511c6a094d290c4ad307059}{%
+           family={Balabanova},
+           familyi={B\bibinitperiod},
+           given={Nataliya},
+           giveni={N\bibinitperiod}}}%
+        {{hash=8ef4716c4191e57a4b77953b33ec0a4a}{%
+           family={Bashir},
+           familyi={B\bibinitperiod},
+           given={Adeela},
+           giveni={A\bibinitperiod}}}%
+        {{hash=79325887cb1e5515d5b2c1cf7dafa4b1}{%
+           family={Cimpeanu},
+           familyi={C\bibinitperiod},
+           given={Theodor},
+           giveni={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{635cb4c809a1715021647a4d9ba1ad45}
+      \strng{fullhash}{09ab98329814750f98d8eec3e659d80d}
+      \strng{fullhashraw}{09ab98329814750f98d8eec3e659d80d}
+      \strng{bibnamehash}{09ab98329814750f98d8eec3e659d80d}
+      \strng{authorbibnamehash}{09ab98329814750f98d8eec3e659d80d}
+      \strng{authornamehash}{635cb4c809a1715021647a4d9ba1ad45}
+      \strng{authorfullhash}{09ab98329814750f98d8eec3e659d80d}
+      \strng{authorfullhashraw}{09ab98329814750f98d8eec3e659d80d}
+      \field{extraname}{2}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv:2504.08640}
+      \field{title}{{Do LLMs trust AI regulation? Emerging behaviour of game-theoretic LLM agents}}
+      \field{year}{2025}
+    \endentry
+    \entry{sigmund:2010bo}{book}{}{}
+      \name{author}{1}{}{%
+        {{hash=d62d699a1bc4e2f54863aaba8c36ab0e}{%
+           family={Sigmund},
+           familyi={S\bibinitperiod},
+           given={K.},
+           giveni={K\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Princeton Univ. Press}%
+      }
+      \strng{namehash}{d62d699a1bc4e2f54863aaba8c36ab0e}
+      \strng{fullhash}{d62d699a1bc4e2f54863aaba8c36ab0e}
+      \strng{fullhashraw}{d62d699a1bc4e2f54863aaba8c36ab0e}
+      \strng{bibnamehash}{d62d699a1bc4e2f54863aaba8c36ab0e}
+      \strng{authorbibnamehash}{d62d699a1bc4e2f54863aaba8c36ab0e}
+      \strng{authornamehash}{d62d699a1bc4e2f54863aaba8c36ab0e}
+      \strng{authorfullhash}{d62d699a1bc4e2f54863aaba8c36ab0e}
+      \strng{authorfullhashraw}{d62d699a1bc4e2f54863aaba8c36ab0e}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{The calculus of selfishness}
+      \field{year}{2010}
+    \endentry
+    \entry{han_when_2021}{article}{}{}
       \name{author}{3}{}{%
         {{hash=244c872a1fec2b2ed6bccc1a7c1f9942}{%
            family={Han},
            familyi={H\bibinitperiod},
            given={The\bibnamedelima Anh},
            giveni={T\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
-        {{hash=bfefef4ad8ceb8e4eb4e752b4915141d}{%
-           family={Pereira},
+        {{hash=6f1712ff9406ea4d36046e3886ea4ded}{%
+           family={Perret},
            familyi={P\bibinitperiod},
-           given={Luís\bibnamedelima Moniz},
-           giveni={L\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+           given={Cedric},
+           giveni={C\bibinitperiod}}}%
+        {{hash=0e7a403d1467103f35d5c775d0463986}{%
+           family={Powers},
+           familyi={P\bibinitperiod},
+           given={Simon\bibnamedelima T.},
+           giveni={S\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+      }
+      \list{language}{1}{%
+        {en}%
+      }
+      \strng{namehash}{d13eaee7b35ce01163aa1403045bf274}
+      \strng{fullhash}{b0d68339664e3300d1d846f302b000ac}
+      \strng{fullhashraw}{b0d68339664e3300d1d846f302b000ac}
+      \strng{bibnamehash}{b0d68339664e3300d1d846f302b000ac}
+      \strng{authorbibnamehash}{b0d68339664e3300d1d846f302b000ac}
+      \strng{authornamehash}{d13eaee7b35ce01163aa1403045bf274}
+      \strng{authorfullhash}{b0d68339664e3300d1d846f302b000ac}
+      \strng{authorfullhashraw}{b0d68339664e3300d1d846f302b000ac}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{The actions of intelligent agents, such as chatbots, recommender systems, and virtual assistants are typically not fully transparent to the user. Consequently, users take the risk that such agents act in ways opposed to the users’ preferences or goals. It is often argued that people use trust as a cognitive shortcut to reduce the complexity of such interactions. Here we formalise this by using the methods of evolutionary game theory to study the viability of trust-based strategies in repeated games. These are reciprocal strategies that cooperate as long as the other player is observed to be cooperating. Unlike classic reciprocal strategies, once mutual cooperation has been observed for a threshold number of rounds they stop checking their co-player’s behaviour every round, and instead only check it with some probability. By doing so, they reduce the opportunity cost of verifying whether the action of their co-player was actually cooperative. We demonstrate that these trust-based strategies can outcompete strategies that are always conditional, such as Tit-for-Tat, when the opportunity cost is non-negligible. We argue that this cost is likely to be greater when the interaction is between people and intelligent agents, because of the reduced transparency of the agent. Consequently, we expect people to use trust-based strategies more frequently in interactions with intelligent agents. Our results provide new, important insights into the design of mechanisms for facilitating interactions between humans and intelligent agents, where trust is an essential factor.}
+      \field{issn}{1389-0417}
+      \field{journaltitle}{Cognitive Systems Research}
+      \field{month}{8}
+      \field{shorttitle}{When to (or not to) trust intelligent machines}
+      \field{title}{When to (or not to) trust intelligent machines: {Insights} from an evolutionary game theory analysis of trust in repeated games}
+      \field{urlday}{3}
+      \field{urlmonth}{5}
+      \field{urlyear}{2021}
+      \field{volume}{68}
+      \field{year}{2021}
+      \field{urldateera}{ce}
+      \field{pages}{111\bibrangedash 124}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1016/j.cogsys.2021.02.003
+      \endverb
+      \verb{file}
+      \verb Full Text:/Users/simonpowers/Zotero/storage/IHHRWRXN/Han et al. - 2021 - When to (or not to) trust intelligent machines In.pdf:application/pdf;ScienceDirect Snapshot:/Users/simonpowers/Zotero/storage/G3QJPE8B/S138904172100022X.html:text/html
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1016/j.cogsys.2021.02.003
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1016/j.cogsys.2021.02.003
+      \endverb
+      \keyw{Trust,Cooperation,Intelligent agents,Repeated games,Evolutionary game theory,Prisoner’s dilemma}
+    \endentry
+    \entry{nowak2004emergence}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=6b63180e77466ce81c34087d70a19cb9}{%
+           family={Nowak},
+           familyi={N\bibinitperiod},
+           given={Martin\bibnamedelima A},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=3f5ac378c2fa3069dbae20c433dcd8c9}{%
+           family={Sasaki},
+           familyi={S\bibinitperiod},
+           given={Akira},
+           giveni={A\bibinitperiod}}}%
+        {{hash=eb1fe1c5c2087d1c5d7a8bc234f10825}{%
+           family={Taylor},
+           familyi={T\bibinitperiod},
+           given={Christine},
+           giveni={C\bibinitperiod}}}%
+        {{hash=590edd5dea58f11155a2e574136ff683}{%
+           family={Fudenberg},
+           familyi={F\bibinitperiod},
+           given={Drew},
+           giveni={D\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Nature Publishing Group UK London}%
+      }
+      \strng{namehash}{45ea170db9722389e598df0cd8e6219d}
+      \strng{fullhash}{c4495dca9f03c2d4b9447b96de83f0d5}
+      \strng{fullhashraw}{c4495dca9f03c2d4b9447b96de83f0d5}
+      \strng{bibnamehash}{c4495dca9f03c2d4b9447b96de83f0d5}
+      \strng{authorbibnamehash}{c4495dca9f03c2d4b9447b96de83f0d5}
+      \strng{authornamehash}{45ea170db9722389e598df0cd8e6219d}
+      \strng{authorfullhash}{c4495dca9f03c2d4b9447b96de83f0d5}
+      \strng{authorfullhashraw}{c4495dca9f03c2d4b9447b96de83f0d5}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Nature}
+      \field{number}{6983}
+      \field{title}{Emergence of cooperation and evolutionary stability in finite populations}
+      \field{volume}{428}
+      \field{year}{2004}
+      \field{pages}{646\bibrangedash 650}
+      \range{pages}{5}
+    \endentry
+    \entry{liu2020evolutionary}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=5cc9ab641a8224658f5a7dcca0a7d034}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Linjie},
+           giveni={L\bibinitperiod}}}%
+        {{hash=7e39c9422749b3be1f81372923915e0d}{%
+           family={Chen},
+           familyi={C\bibinitperiod},
+           given={Xiaojie},
+           giveni={X\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{71147cd0604751d55ffb8322da56b06a}
+      \strng{fullhash}{71147cd0604751d55ffb8322da56b06a}
+      \strng{fullhashraw}{71147cd0604751d55ffb8322da56b06a}
+      \strng{bibnamehash}{71147cd0604751d55ffb8322da56b06a}
+      \strng{authorbibnamehash}{71147cd0604751d55ffb8322da56b06a}
+      \strng{authornamehash}{71147cd0604751d55ffb8322da56b06a}
+      \strng{authorfullhash}{71147cd0604751d55ffb8322da56b06a}
+      \strng{authorfullhashraw}{71147cd0604751d55ffb8322da56b06a}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Knowledge-Based Systems}
+      \field{title}{Evolutionary game dynamics in multiagent systems with prosocial and antisocial exclusion strategies}
+      \field{volume}{188}
+      \field{year}{2020}
+      \field{pages}{104835}
+      \range{pages}{1}
+    \endentry
+    \entry{rand2013evolution}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=187c24b68c32371cc8f611424ad4a73d}{%
+           family={Rand},
+           familyi={R\bibinitperiod},
+           given={David\bibnamedelima G},
+           giveni={D\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+        {{hash=59e4590cf1616aad0adf729725afaed6}{%
+           family={Tarnita},
+           familyi={T\bibinitperiod},
+           given={Corina\bibnamedelima E},
+           giveni={C\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{hash=9b0d27af1cdc3f0989b039b1934582e9}{%
+           family={Ohtsuki},
+           familyi={O\bibinitperiod},
+           given={Hisashi},
+           giveni={H\bibinitperiod}}}%
+        {{hash=6b63180e77466ce81c34087d70a19cb9}{%
+           family={Nowak},
+           familyi={N\bibinitperiod},
+           given={Martin\bibnamedelima A},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {National Academy of Sciences}%
+      }
+      \strng{namehash}{67e62655572130eadd90728ca5b34dbe}
+      \strng{fullhash}{e3634b4c4b6b0bd9d745ab8205aec17b}
+      \strng{fullhashraw}{e3634b4c4b6b0bd9d745ab8205aec17b}
+      \strng{bibnamehash}{e3634b4c4b6b0bd9d745ab8205aec17b}
+      \strng{authorbibnamehash}{e3634b4c4b6b0bd9d745ab8205aec17b}
+      \strng{authornamehash}{67e62655572130eadd90728ca5b34dbe}
+      \strng{authorfullhash}{e3634b4c4b6b0bd9d745ab8205aec17b}
+      \strng{authorfullhashraw}{e3634b4c4b6b0bd9d745ab8205aec17b}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the National Academy of Sciences}
+      \field{number}{7}
+      \field{title}{Evolution of fairness in the one-shot anonymous ultimatum game}
+      \field{volume}{110}
+      \field{year}{2013}
+      \field{pages}{2581\bibrangedash 2586}
+      \range{pages}{6}
+    \endentry
+    \entry{zisis2015generosity}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=e0012a279d9fc87ad07747cb8a9abddd}{%
+           family={Zisis},
+           familyi={Z\bibinitperiod},
+           given={Ioannis},
+           giveni={I\bibinitperiod}}}%
+        {{hash=44cbdbe486841cce6f9f1a6a5e7b8a41}{%
+           family={Di\bibnamedelima Guida},
+           familyi={D\bibinitperiod\bibinitdelim G\bibinitperiod},
+           given={Sibilla},
+           giveni={S\bibinitperiod}}}%
+        {{hash=244c872a1fec2b2ed6bccc1a7c1f9942}{%
+           family={Han},
+           familyi={H\bibinitperiod},
+           given={The\bibnamedelima Anh},
+           giveni={T\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=fdf6eb840ed68720fda63a108ee549f4}{%
+           family={Kirchsteiger},
+           familyi={K\bibinitperiod},
+           given={Georg},
+           giveni={G\bibinitperiod}}}%
+        {{hash=5a5a93f19ad5f02f3753cba0c8133f57}{%
+           family={Lenaerts},
+           familyi={L\bibinitperiod},
+           given={Tom},
+           giveni={T\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Nature Publishing Group UK London}%
+      }
+      \strng{namehash}{9877654c7ebbf2acdd7978bb03450229}
+      \strng{fullhash}{3e61322cf55dbe392526801f565b9d98}
+      \strng{fullhashraw}{3e61322cf55dbe392526801f565b9d98}
+      \strng{bibnamehash}{3e61322cf55dbe392526801f565b9d98}
+      \strng{authorbibnamehash}{3e61322cf55dbe392526801f565b9d98}
+      \strng{authornamehash}{9877654c7ebbf2acdd7978bb03450229}
+      \strng{authorfullhash}{3e61322cf55dbe392526801f565b9d98}
+      \strng{authorfullhashraw}{3e61322cf55dbe392526801f565b9d98}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Scientific reports}
+      \field{number}{1}
+      \field{title}{Generosity motivated by acceptance-evolutionary analysis of an anticipation game}
+      \field{volume}{5}
+      \field{year}{2015}
+      \field{pages}{18076}
+      \range{pages}{1}
+    \endentry
+    \entry{szabo1998evolutionary}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=a8462c4421c4b773d2d268d775c69ddf}{%
+           family={Szabó},
+           familyi={S\bibinitperiod},
+           given={György},
+           giveni={G\bibinitperiod}}}%
+        {{hash=73407581c7465c161ba078a68b285ad2}{%
+           family={Tőke},
+           familyi={T\bibinitperiod},
+           given={Csaba},
+           giveni={C\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {APS}%
+      }
+      \strng{namehash}{c35936644b1bb51cbb6a1f2a2b1f8764}
+      \strng{fullhash}{c35936644b1bb51cbb6a1f2a2b1f8764}
+      \strng{fullhashraw}{c35936644b1bb51cbb6a1f2a2b1f8764}
+      \strng{bibnamehash}{c35936644b1bb51cbb6a1f2a2b1f8764}
+      \strng{authorbibnamehash}{c35936644b1bb51cbb6a1f2a2b1f8764}
+      \strng{authornamehash}{c35936644b1bb51cbb6a1f2a2b1f8764}
+      \strng{authorfullhash}{c35936644b1bb51cbb6a1f2a2b1f8764}
+      \strng{authorfullhashraw}{c35936644b1bb51cbb6a1f2a2b1f8764}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Physical Review E}
+      \field{number}{1}
+      \field{title}{Evolutionary prisoner’s dilemma game on a square lattice}
+      \field{volume}{58}
+      \field{year}{1998}
+      \field{pages}{69}
+      \range{pages}{1}
+    \endentry
+    \entry{domingos2023egttools}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=bca8d3d9e51b00a8f7b32764cdea404a}{%
+           family={Domingos},
+           familyi={D\bibinitperiod},
+           given={Elias\bibnamedelima Fernández},
+           giveni={E\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
         {{hash=0a8a7ea583e200c4ee7ab0958f80275d}{%
            family={Santos},
            familyi={S\bibinitperiod},
-           given={Francisco\bibnamedelima C.},
+           given={Francisco\bibnamedelima C},
            giveni={F\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=5a5a93f19ad5f02f3753cba0c8133f57}{%
+           family={Lenaerts},
+           familyi={L\bibinitperiod},
+           given={Tom},
+           giveni={T\bibinitperiod}}}%
       }
-      \strng{namehash}{d13eaee7b35ce01163aa1403045bf274}
-      \strng{fullhash}{a951e8b194a02101b174267dc6f8fd4c}
-      \strng{fullhashraw}{a951e8b194a02101b174267dc6f8fd4c}
-      \strng{bibnamehash}{a951e8b194a02101b174267dc6f8fd4c}
-      \strng{authorbibnamehash}{a951e8b194a02101b174267dc6f8fd4c}
-      \strng{authornamehash}{d13eaee7b35ce01163aa1403045bf274}
-      \strng{authorfullhash}{a951e8b194a02101b174267dc6f8fd4c}
-      \strng{authorfullhashraw}{a951e8b194a02101b174267dc6f8fd4c}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{c9d9c9de5d60a249a49f8a63c0961425}
+      \strng{fullhash}{2026f3b87ba05002495447f6d9fcc304}
+      \strng{fullhashraw}{2026f3b87ba05002495447f6d9fcc304}
+      \strng{bibnamehash}{2026f3b87ba05002495447f6d9fcc304}
+      \strng{authorbibnamehash}{2026f3b87ba05002495447f6d9fcc304}
+      \strng{authornamehash}{c9d9c9de5d60a249a49f8a63c0961425}
+      \strng{authorfullhash}{2026f3b87ba05002495447f6d9fcc304}
+      \strng{authorfullhashraw}{2026f3b87ba05002495447f6d9fcc304}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
-      \field{issn}{1064-5462}
-      \field{journaltitle}{Artificial Life}
-      \field{month}{10}
+      \field{journaltitle}{Iscience}
       \field{number}{4}
-      \field{title}{Corpus-Based Intention Recognition in Cooperation Dilemmas}
-      \field{volume}{18}
-      \field{year}{2012}
-      \field{pages}{365\bibrangedash 383}
-      \range{pages}{19}
+      \field{title}{EGTtools: Evolutionary game dynamics in Python}
+      \field{volume}{26}
+      \field{year}{2023}
+    \endentry
+    \entry{kim2021win}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=16ea5883675fcaf080d3ab638de5cdb4}{%
+           family={Kim},
+           familyi={K\bibinitperiod},
+           given={Minjae},
+           giveni={M\bibinitperiod}}}%
+        {{hash=1b556b943cb791dc672d550df33c3de7}{%
+           family={Choi},
+           familyi={C\bibinitperiod},
+           given={Jung-Kyoo},
+           giveni={J\bibinithyphendelim K\bibinitperiod}}}%
+        {{hash=b7b3859eac6ef25961dada04834e9379}{%
+           family={Baek},
+           familyi={B\bibinitperiod},
+           given={Seung\bibnamedelima Ki},
+           giveni={S\bibinitperiod\bibinitdelim K\bibinitperiod}}}%
+      }
+      \strng{namehash}{98ef445f8dd49b6b49ebb2455505a6f9}
+      \strng{fullhash}{0783ae407781a7f71de667ac38eebdaa}
+      \strng{fullhashraw}{0783ae407781a7f71de667ac38eebdaa}
+      \strng{bibnamehash}{0783ae407781a7f71de667ac38eebdaa}
+      \strng{authorbibnamehash}{0783ae407781a7f71de667ac38eebdaa}
+      \strng{authornamehash}{98ef445f8dd49b6b49ebb2455505a6f9}
+      \strng{authorfullhash}{0783ae407781a7f71de667ac38eebdaa}
+      \strng{authorfullhashraw}{0783ae407781a7f71de667ac38eebdaa}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the Royal Society B: Biological Sciences}
+      \field{number}{1953}
+      \field{title}{Win-Stay-Lose-Shift as a self-confirming equilibrium in the iterated {P}risoner's {D}ilemma}
+      \field{volume}{288}
+      \field{year}{2021}
+      \field{pages}{20211021}
+      \range{pages}{1}
       \verb{doi}
-      \verb 10.1162/ARTL_a_00072
+      \verb 10.1098/rspb.2021.1021
+      \endverb
+    \endentry
+    \entry{hilbe2013memory}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=fb4e649f7801e8f6c1999e4c94a36dd6}{%
+           family={Hilbe},
+           familyi={H\bibinitperiod},
+           given={Christian},
+           giveni={C\bibinitperiod}}}%
+        {{hash=6b63180e77466ce81c34087d70a19cb9}{%
+           family={Nowak},
+           familyi={N\bibinitperiod},
+           given={Martin\bibnamedelima A.},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=90b4ffc5b4135ac54c04fd50af193d0f}{%
+           family={Sigmund},
+           familyi={S\bibinitperiod},
+           given={Karl},
+           giveni={K\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {National Academy of Sciences}%
+      }
+      \strng{namehash}{941abd749cb52f5216f80959c1691e31}
+      \strng{fullhash}{573f0c777bda908216780cfdbf96074f}
+      \strng{fullhashraw}{573f0c777bda908216780cfdbf96074f}
+      \strng{bibnamehash}{573f0c777bda908216780cfdbf96074f}
+      \strng{authorbibnamehash}{573f0c777bda908216780cfdbf96074f}
+      \strng{authornamehash}{941abd749cb52f5216f80959c1691e31}
+      \strng{authorfullhash}{573f0c777bda908216780cfdbf96074f}
+      \strng{authorfullhashraw}{573f0c777bda908216780cfdbf96074f}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the National Academy of Sciences}
+      \field{number}{17}
+      \field{title}{Evolution of extortion in {Iterated Prisoner's Dilemma} games}
+      \field{volume}{110}
+      \field{year}{2013}
+      \field{pages}{6913\bibrangedash 6918}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1073/pnas.1214834110
+      \endverb
+    \endentry
+    \entry{pressDyson2012}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=0eab1ccd4d6c57a2ff6794a4724ccafb}{%
+           family={Press},
+           familyi={P\bibinitperiod},
+           given={William\bibnamedelima H.},
+           giveni={W\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=107f18cea36e2f8b65ea374dfbd66723}{%
+           family={Dyson},
+           familyi={D\bibinitperiod},
+           given={Freeman\bibnamedelima J.},
+           giveni={F\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {National Academy of Sciences}%
+      }
+      \strng{namehash}{3b1671f5c14a1fa00379302af165b24a}
+      \strng{fullhash}{3b1671f5c14a1fa00379302af165b24a}
+      \strng{fullhashraw}{3b1671f5c14a1fa00379302af165b24a}
+      \strng{bibnamehash}{3b1671f5c14a1fa00379302af165b24a}
+      \strng{authorbibnamehash}{3b1671f5c14a1fa00379302af165b24a}
+      \strng{authornamehash}{3b1671f5c14a1fa00379302af165b24a}
+      \strng{authorfullhash}{3b1671f5c14a1fa00379302af165b24a}
+      \strng{authorfullhashraw}{3b1671f5c14a1fa00379302af165b24a}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Proceedings of the National Academy of Sciences}
+      \field{number}{26}
+      \field{title}{Iterated Prisoner's Dilemma contains strategies that dominate any evolutionary opponent}
+      \field{volume}{109}
+      \field{year}{2012}
+      \field{pages}{10409\bibrangedash 10413}
+      \range{pages}{5}
+      \verb{doi}
+      \verb 10.1073/pnas.1206569109
+      \endverb
+    \endentry
+    \entry{fontana2025nicer}{inproceedings}{}{}
+      \name{author}{3}{}{%
+        {{hash=f208fa55d5d3cb0c36435e72a6610374}{%
+           family={Fontana},
+           familyi={F\bibinitperiod},
+           given={Nicoló},
+           giveni={N\bibinitperiod}}}%
+        {{hash=208306a6c1a159d121c5a0448e0d1f93}{%
+           family={Pierri},
+           familyi={P\bibinitperiod},
+           given={Francesco},
+           giveni={F\bibinitperiod}}}%
+        {{hash=578dd0d02865626d9fe222b65cec8558}{%
+           family={Aiello},
+           familyi={A\bibinitperiod},
+           given={Luca\bibnamedelima Maria},
+           giveni={L\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \strng{namehash}{c261ca1dd854e028ff91c2d8872becd2}
+      \strng{fullhash}{f0d1661b5a66cd00196528464f4e6844}
+      \strng{fullhashraw}{f0d1661b5a66cd00196528464f4e6844}
+      \strng{bibnamehash}{f0d1661b5a66cd00196528464f4e6844}
+      \strng{authorbibnamehash}{f0d1661b5a66cd00196528464f4e6844}
+      \strng{authornamehash}{c261ca1dd854e028ff91c2d8872becd2}
+      \strng{authorfullhash}{f0d1661b5a66cd00196528464f4e6844}
+      \strng{authorfullhashraw}{f0d1661b5a66cd00196528464f4e6844}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the International AAAI Conference on Web and Social Media (ICWSM)}
+      \field{title}{Nicer than Humans: How Do Large Language Models Behave in the Prisoner's Dilemma?}
+      \field{volume}{19}
+      \field{year}{2025}
+      \field{pages}{522\bibrangedash 535}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1609/icwsm.v19i1.35829
       \endverb
       \verb{urlraw}
-      \verb https://doi.org/10.1162/ARTL_a_00072
+      \verb https://ojs.aaai.org/index.php/ICWSM/article/view/35829
       \endverb
       \verb{url}
-      \verb https://doi.org/10.1162/ARTL_a_00072
+      \verb https://ojs.aaai.org/index.php/ICWSM/article/view/35829
       \endverb
     \endentry
     \entry{inferenceStrategies}{article}{}{}
@@ -202,8 +864,8 @@
       \strng{authornamehash}{6336e1934ac4c81faa38eec27c6756b7}
       \strng{authorfullhash}{4855fefb331c35e64d0f7a85aed94c3f}
       \strng{authorfullhashraw}{4855fefb331c35e64d0f7a85aed94c3f}
-      \field{sortinit}{5}
-      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Scientific Reports}

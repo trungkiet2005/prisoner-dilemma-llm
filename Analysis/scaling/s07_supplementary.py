@@ -6,6 +6,7 @@ nothing in the supplement is retyped by hand either.
 """
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -24,7 +25,12 @@ from figstyle import (LANG_LABEL, LANG_ORDER, MODEL_LABEL,     # noqa: E402
 HERE = Path(__file__).resolve().parent
 DATA = HERE / "data"
 TAB = HERE / "tables"
-OUT = HERE.parents[1] / "paper_scaling" / "supp_tables_auto.tex"
+# The manuscript directory is configurable so the same pipeline can feed a
+# second manuscript, exactly as figstyle.PAPER_DIR is.  The default is
+# unchanged: with PD_PAPER_DIR unset this resolves to paper_scaling/ as before.
+PAPER_DIR = Path(os.environ.get("PD_PAPER_DIR", HERE.parents[1] / "paper_scaling"))
+PAPER_DIR.mkdir(parents=True, exist_ok=True)
+OUT = PAPER_DIR / "supp_tables_auto.tex"
 
 SC = [("%g" % s) for s in SCALES]
 
@@ -79,7 +85,10 @@ def s1_corpus(g, r):
                 "balanced with none missing, and the build refuses to write "
                 "its tables otherwise. The first five models are the ones the "
                 "main text reports; Gemini 3.1 Flash-Lite is reported here, "
-                "for the reason given in \\S S8.",
+                # Not "\\S S8": this file is \\input by two manuscripts whose
+                # section numbering differs, and a hard-coded number would be
+                # wrong in one of them without any LaTeX warning.
+                "for the reason given with the sixth model below.",
                 "tab:S-corpus", "llccrrrc",
                 "Model & Scales & Lang. & Dyads & Agent-games & Decisions & "
                 "Cell $n$ & Coop. \\\\")
@@ -299,6 +308,33 @@ def s8_shapes(corr, corrall):
     return a + "\n" + b
 
 
+def s9_firstmove(t08):
+    """Opening-move range against the range over rounds 2 to 10.
+
+    The two windows rest on 400 and 3,600 decisions per cell, so a range
+    computed on the first is upward-biased relative to the second and the
+    ratio is descriptive rather than a test.  The caption says so, because
+    the column invites exactly the reading it cannot support.
+    """
+    t = t08.set_index("model")
+    rows = []
+    for m in MODEL_ORDER_ALL:
+        d = t.loc[m]
+        rows.append(f"{MODEL_LABEL[m]} & {d.range_round1:.3f} & "
+                    f"{d.range_later:.3f} & {d.ratio:.2f} \\\\")
+    return wrap("\n".join(rows),
+                "\\textbf{Range of cooperation across the ten payoff scales, "
+                "on the opening move and afterwards.} At round 1 the agent has "
+                "seen only the payoff matrix and the instructions, so a "
+                "dependence on the payoff scale there cannot have come through "
+                "the history of play. The two windows rest on 400 and 3{,}600 "
+                "decisions per cell, so their ranges are not variance-matched "
+                "and the ratio is descriptive rather than a test; the bias runs "
+                "the same way in every model, while the ratio does not.",
+                "tab:S-firstmove", "lccc",
+                "Model & Round 1 & Rounds 2--10 & Ratio \\\\")
+
+
 def main():
     g = pd.read_parquet(DATA / "games.parquet")
     r = pd.read_parquet(DATA / "rounds.parquet")
@@ -306,6 +342,7 @@ def main():
     t02 = pd.read_csv(TAB / "T02_scale_by_model.csv")
     t06 = pd.read_csv(TAB / "T06_variance.csv")
     t06all = pd.read_csv(TAB / "T06_variance_all.csv")
+    t08 = pd.read_csv(TAB / "T08_first_move.csv")
     per = pd.read_csv(TAB / "T07_persona_by_scale.csv")
     t10p = pd.read_csv(TAB / "T10_provenance_by_scale.csv")
     t12p = pd.read_csv(TAB / "T12_label_mix.csv")
@@ -318,7 +355,8 @@ def main():
             + s1_corpus(g, r) + "\n" + s2_scale(t02) + "\n" + s3_language(g)
             + "\n" + s4_variance(t06, t06all) + "\n" + s5_persona(per) + "\n"
             + s6_strategy(t10p, t12p) + "\n" + s6c_label_provenance(d) + "\n"
-            + s7_classifier(t01) + "\n" + s8_shapes(corr, corrall))
+            + s7_classifier(t01) + "\n" + s8_shapes(corr, corrall)
+            + "\n" + s9_firstmove(t08))
     OUT.write_text(text, encoding="utf-8")
     print(f"wrote {OUT}")
 

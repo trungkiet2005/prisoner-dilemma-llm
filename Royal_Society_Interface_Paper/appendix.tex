@@ -1,7 +1,16 @@
-%% Royal Society Interface submission -- Supplementary Appendix (ESM)
-%% Converted from paper/els-cas-paper/appendix.tex (2026-07-17); body content
-%% is ported VERBATIM. Compiles STANDALONE (references to main-text
-%% section/figure/table numbers are hard-coded, exactly as in the source).
+%% Royal Society Interface Focus submission, RSFS-2026-0050.
+%% Electronic supplementary material for
+%%   "Payoff scale reshapes how language models play the prisoner's dilemma".
+%%
+%% MAJOR REVISION, 2026-09-06.  Rebuilt on the six-model by ten-payoff-scale
+%% corpus.  The tables of appendix B are machine-generated into
+%% supp_tables_auto.tex by Analysis/scaling/s07_supplementary.py and the
+%% evolutionary grid of appendix C into egt_tables_auto.tex by
+%% Analysis/scaling/s09_egt.py; neither is edited by hand.
+%%
+%% Compiles STANDALONE.  Build the appendix FIRST, then the main text, because
+%% main.tex pulls these labels in through xr:
+%%   pdflatex appendix && biber appendix && pdflatex appendix && pdflatex appendix
 
 %% Local-toolchain workaround (see main.tex): roll the kernel back so the
 %% installed biblatex loads. Guarded so it stays a no-op on Overleaf/TeX Live,
@@ -18,6 +27,13 @@
 \usepackage{placeins}
 \usepackage{chngcntr}   % section-based float numbering (Figure A.1, Table B.1, ...)
 
+%% Pull in the main text's labels so that \ref{} to its sections, figures and
+%% tables resolve.  The two documents therefore reference each other; build the
+%% appendix first, then main, then the appendix again if a main-text number it
+%% cites has moved.
+\usepackage{xr}
+\externaldocument{main}
+
 %% Bibliography database (style is fixed by the class: biblatex/biber, phys)
 \addbibresource{mybib.bib}
 
@@ -29,452 +45,854 @@
 %% See main.tex: avoid \flushbottom stretching around large floats.
 \raggedbottom
 
-\jname{rsif}
-\Journal{J R Soc Interface\ }
+%% Shorthands, matching main.tex.  The machine-generated tables use \lam.
+\newcommand{\lam}{\lambda}
+\newcommand{\ci}[2]{(95\% CI #1, #2)}
+
+\jname{rsfs}
+\Journal{Interface Focus\ }
 
 \begin{document}
 
 \begin{center}
-  {\LARGE\bfseries Supplementary Appendix}\\[6pt]
-  {\large\itshape Payoff scaling shapes cooperation in LLM agents across languages}
+  {\LARGE\bfseries Electronic supplementary material}\\[6pt]
+  {\large\itshape Payoff scale reshapes how language models play the
+   prisoner's dilemma}
 \end{center}
 \vspace{1.5em}
 
 \appendix
 
 % Number figures/tables as A.1, A.2, B.1, ... (reset per appendix section) so
-% that references from the main paper (e.g. "Figure B.1") cannot be confused
+% that references from the main paper (e.g. "Figure C.1") cannot be confused
 % with the main text's own Figure/Table numbers.
 \counterwithin{figure}{section}
 \counterwithin{table}{section}
 
-\section{Supplement to Methodology}\label{appendix:methodology}
 
-\subsection{LLM configuration}\label{appendix:llm_config}
+% ===========================================================================
+\section{Supplement to the methods}\label{appendix:methodology}
 
-Table~\ref{tab:llm_config} summarises the configuration of LLM backends used in our experiments. Following the FAIRGAME protocol~\cite{buscemi2025fairgame}, we adopt each provider's recommended default settings to reflect realistic deployment conditions.
+\subsection{Scope of the corpus and the completeness guard}\label{appendix:corpus}
 
-\begin{table}[!htbp]
+The corpus is a complete factorial crossing of six language models, ten payoff
+scales, five prompt languages, four ordered persona pairings and ten
+replicates. The unit of collection is the dyad, one ten-round game between two
+agents of the same model; it contributes two agent-games, an agent-game being
+the ten decisions one agent takes in one game. Each of the 300
+model-by-language-by-scale cells holds exactly 40 dyads, so the corpus is
+12{,}000 dyads, 24{,}000 agent-games and 240{,}000 decisions
+(table~\ref{tab:S-corpus}). The five models the main text reports carry 250 of
+those cells, 10{,}000 dyads, 20{,}000 agent-games and 200{,}000 decisions.
+
+Balance is enforced rather than assumed. The analysis build refuses to write
+any table unless two conditions hold. First, every model-by-language-by-scale
+cell contains exactly 40 dyads, with none missing and none duplicated. Second,
+the payoffs recorded in each game recover, to a relative tolerance of $10^{-6}$,
+the payoff scale that cell was run at, which catches a mislabelled or
+misfiled run rather than trusting the directory name. The guard exists because
+the corpus was collected in batches over several sessions and an incomplete
+batch is otherwise invisible in an aggregate.
+
+The polarity of the action mapping is load-bearing for every cooperation rate
+in this article, so it was checked twice and in two ways. In the prompt,
+Option~A pays less in both columns of a penalty matrix that the agent is told
+to minimise, and is therefore the dominant, defecting action, while mutual
+Option~B at $2\lam$ beats mutual Option~A at $6\lam$ and is the cooperative
+one. In the data, the realised penalties recorded for each pair of actions
+reproduce that matrix. Cooperation means Option~B throughout.
+
+\subsection{Endpoints, seeds, parsing and fallback}\label{appendix:endpoints}
+
+The six models were served through the Kaggle Benchmarks model proxy on an
+OpenAI-compatible chat-completions endpoint, at temperature 1.0, with the
+identifiers listed in table~\ref{tab:A-endpoints}. Four of the six identifiers
+carry a date and two do not, which is the distinction the main text draws on in
+\S\ref{sec:protocol}: an undated identifier can in principle be re-pointed by
+the provider, and one that is additionally marked as a preview is announced as
+provisional.
+
+\begin{table}[htbp]
 \centering
-\caption{LLM backend configurations. Temperature and sampling parameters follow each provider's recommended defaults. While this introduces potential variability confounds in cross-model comparisons, it reflects realistic deployment conditions where practitioners use models ``out of the box.''}
-\label{tab:llm_config}
 \footnotesize
-\begin{tabular}{lccc}
+\caption{\textbf{Endpoint identifiers.} As addressed through the Kaggle
+Benchmarks model proxy during collection. The last column records whether the
+identifier fixes a build. Gemini 3.1 Flash-Lite is reported in
+\S\ref{appendix:sixth_model} rather than in the main text because its
+identifier is both undated and marked as a preview.}
+\label{tab:A-endpoints}
+\begin{tabular}{@{}llc@{}}
 \toprule
-\textbf{Model} & \textbf{Provider} & \textbf{Temperature} & \textbf{Top\_p} \\
+Model as printed & Endpoint identifier & Dated \\
 \midrule
-GPT-4o            & OpenAI     & 1.0 & 1.0 \\
-Claude 3.5 Haiku  & Anthropic  & 1.0 & 1.0 \\
-Mistral Large     & Mistral AI & 0.3 & 1.0 \\
+Claude Haiku 4.5      & \texttt{claude-haiku-4-5-20251001}      & yes \\
+GPT-5.4 Nano          & \texttt{gpt-5.4-nano-2026-03-17}        & yes \\
+Gemini 3.5 Flash-Lite & \texttt{gemini-3.5-flash-lite}          & no  \\
+Qwen3 235B-A22B       & \texttt{qwen3-235b-a22b-instruct-2507}  & yes \\
+Grok 4.20             & \texttt{grok-4.20-0309-non-reasoning}   & yes \\
+Gemini 3.1 Flash-Lite & \texttt{gemini-3.1-flash-lite-preview}  & no, preview \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Payoff scaling examples}\label{appendix:payoff_scaling}
+%% >>> FILL IN <<<  State the calendar range over which the corpus was
+%% collected.  For a hosted model served from an undated identifier the
+%% collection date is the only thing that fixes what was actually run, and it
+%% is not recorded anywhere in the analysis repository.
 
-For illustration, the scaled payoff matrices under the three experimental conditions are shown below. When $\lambda = 0.1$ (attenuated stakes), the row player's payoff matrix becomes:
+Sampling runs under a common-random-numbers scheme: a given round of a given
+replicate is seeded identically at every payoff scale, so a difference between
+two scales is not a difference between two independent samples. This reduces
+the variance of a within-replicate comparison across scales; it does not
+affect the permutation test, which shuffles the scale label among whole dyads
+and therefore treats the seed as part of the design.
+
+Decisions are elicited as free text and parsed by the protocol's own matcher. A
+reply the matcher cannot resolve is regenerated, up to two further attempts,
+and if all three attempts fail the decision is recorded as Option~A, which
+under this framing is defection. The direction of the resulting bias is
+therefore known: the fallback can only push a measured cooperation rate down,
+never up, and it cannot manufacture the cooperative behaviour reported in the
+main text. Each collection run checks its own fallback rate against a tolerance
+of 0.02 once the sweep has finished, and records a failed assertion in its
+benchmark report if the rate exceeds it. That check flags a run rather than
+halting it, and the achieved rates are not carried in the released per-game
+tables, so we cannot report how they vary with the payoff scale. If the fallback rate were itself to rise with the printed magnitude of
+the payoffs, it would bias the smallest measured ranges downward rather than
+create them.
+
+\subsection{The scaled payoff matrix at all ten scales}\label{appendix:payoff_scaling}
+
+The manipulation multiplies the four cells of the penalty matrix by a positive
+constant $\lam$ and changes nothing else in the prompt. With base penalties
+$T = 0$, $R = 2$, $P = 6$, $S = 10$ the agent is shown the values in
+table~\ref{tab:A-lambdas}. Two features of the rendering matter for
+interpretation. The temptation payoff prints as 0 at every scale, so only three
+of the four numbers move. And the largest number shown is $10\lam$, so every
+payoff printed is at most 1 exactly when $\lam \leq 0.1$, which two of the ten
+scales satisfy; that is the sub-unit boundary the persona result in
+\S\ref{sec:persona} is organised around, and it is a fact about the rendering
+rather than a free parameter.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\caption{\textbf{The payoff matrix as printed at each of the ten scales.}
+Values are the penalties printed to the agent, which the prompt instructs it
+to minimise, in the temptation, reward,
+punishment and sucker notation. The horizontal rule marks the sub-unit
+boundary, above which some printed payoff exceeds 1.}
+\label{tab:A-lambdas}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+$\lam$ & $T = 0\lam$ & $R = 2\lam$ & $P = 6\lam$ & $S = 10\lam$ \\
+\midrule
+0.01   & 0 & 0.02 & 0.06 & 0.1 \\
+0.1    & 0 & 0.2  & 0.6  & 1 \\
+\midrule
+0.25   & 0 & 0.5  & 1.5  & 2.5 \\
+0.5    & 0 & 1    & 3    & 5 \\
+1      & 0 & 2    & 6    & 10 \\
+2      & 0 & 4    & 12   & 20 \\
+5      & 0 & 10   & 30   & 50 \\
+10     & 0 & 20   & 60   & 100 \\
+100    & 0 & 200  & 600  & 1000 \\
+1000   & 0 & 2000 & 6000 & 10000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Prompt templates and a framing artefact}\label{appendix:templates}
+
+The prompt templates are byte-identical to the resource files of the FAIRGAME
+protocol~\cite{buscemi2025fairgame} and were checked against them before every
+collection run, by a test that compares the rendered template with the resource
+file byte for byte. The check exists because the templates carry Arabic,
+Chinese and Vietnamese text inline, and a single save in a non-UTF-8 encoding
+silently corrupts the prompt actually sent to the model rather than only a
+comment.
+
+Artefacts of the published templates are reproduced rather than repaired, so
+that the corpus matches the protocol as published. The consequential one is
+that the Arabic and Chinese versions state the four cells as penalties while
+phrasing the goal sentence as maximising a reward. We therefore treat the five
+languages as five distinct stimuli rather than as five renderings of one, and
+we do not attribute a difference in the \emph{level} of cooperation between two
+languages to the language alone. The wording is fixed across the ten payoff
+scales, so it cannot generate a dependence on the scale, and every
+scale-sensitivity quantity reported in the main text is computed within a
+language.
+
+The persona line is a single sentence in the language of the prompt, naming
+the agent's own disposition and never the opponent's. In English the two forms
+are \emph{You are cooperative.} and \emph{You are selfish.} Because the
+opponent's persona is never disclosed, a persona pairing reaches a player only
+through realised behaviour, and not before round 2.
+
+\subsection{The rule base}\label{appendix:rule_based}
+
+Each agent-game is encoded as a sequence of ten two-letter tokens of the form
+$\langle$previous outcome$\rangle\langle$current action$\rangle$, over the
+outcome letters $E$ (no history yet), $R$ (both cooperated), $S$ (the player
+cooperated and was exploited), $T$ (the player exploited a cooperator) and $P$
+(both defected), and the actions $C$ and $D$. The vocabulary is therefore
+eleven symbols including padding, and it is shared exactly between the
+synthetic training corpus and the language-model transcripts, which is what
+makes a classifier trained on the former applicable to the latter.
+
+All four canonical strategies are memory-one, so each prescribes an action as a
+function of the previous outcome letter alone (table~\ref{tab:A-rules}).
+Deciding whether a trajectory is \emph{exactly} what a strategy would have
+played on the history that actually occurred is then a per-token lookup, with
+no learning and no tolerance parameter.
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\caption{\textbf{The four canonical memory-one rules.} The action each rule
+prescribes given the previous round's joint outcome. Tit-for-Tat and
+Win-Stay-Lose-Shift differ only in the two columns $T$ and $P$, which is why
+ten rounds of mutual cooperation are consistent with AllC, Tit-for-Tat and
+Win-Stay-Lose-Shift at once.}
+\label{tab:A-rules}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+& $E$ (first move) & $R$ & $S$ & $T$ & $P$ \\
+\midrule
+AllC & $C$ & $C$ & $C$ & $C$ & $C$ \\
+AllD & $D$ & $D$ & $D$ & $D$ & $D$ \\
+Tit-for-Tat & $C$ & $C$ & $D$ & $C$ & $D$ \\
+Win-Stay-Lose-Shift & $C$ & $C$ & $D$ & $D$ & $C$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Formally, writing $\mathbf{a} = (a_1, \ldots, a_N)$ for the agent's actions and
+$\mathbf{o} = (o_1, \ldots, o_N)$ for the opponent's, and $\pi_k(\cdot)$ for the
+action prescribed by rule $k$ in table~\ref{tab:A-rules}, the match is
 \[
-\begin{array}{c|cc}
- & \text{Option A} & \text{Option B} \\
-\hline
-\text{Option A} & (0.6, 0.6) & (0, 1.0) \\
-\text{Option B} & (1.0, 0)   & (0.2, 0.2)
-\end{array}
+  \text{consistent}(\mathbf{a}, \mathbf{o}, k)
+  \;\equiv\;
+  \bigwedge_{t=1}^{N} \bigl[\, a_t = \pi_k(e_t) \,\bigr],
+  \qquad
+  e_1 = E, \quad
+  e_t = \mathrm{outcome}(a_{t-1}, o_{t-1}) \ \ (t \geq 2),
 \]
-When $\lambda = 10.0$ (amplified stakes), it becomes:
-\[
-\begin{array}{c|cc}
- & \text{Option A} & \text{Option B} \\
-\hline
-\text{Option A} & (60, 60) & (0, 100) \\
-\text{Option B} & (100, 0) & (20, 20)
-\end{array}
-\]
-The ordering $T < R < P < S$ is preserved in all cases, ensuring the strategic structure of the Prisoner's Dilemma remains unchanged while only the magnitude of incentives varies.
+and the deviation count that the main text calls the rule distance is the same
+expression with the conjunction replaced by a sum of indicators,
+$d_k = \sum_{t=1}^{N} \mathbb{I}[a_t \neq \pi_k(e_t)]$, reported as
+$\min_k d_k$, the number of rounds violating the nearest canonical rule.
 
-\subsection{Rule-based strategy assignment}\label{appendix:rule_based}
+Because several rules routinely prescribe the same actions on the history that
+occurred, the matcher returns a \emph{set} rather than a label. A player who
+cooperated in every round against a cooperator is exactly consistent with AllC,
+Tit-for-Tat and Win-Stay-Lose-Shift simultaneously, and no method, learned or
+otherwise, can separate them from that evidence; reporting the set is the
+correct answer rather than a failure of the method. The three provenances are
+recorded separately and never merged:
 
-To complement the LSTM-based strategy predictions and address cases where behavioural patterns exhibit characteristics of multiple canonical strategies, we apply deterministic rule-based algorithms to identify all potential strategy labels consistent with observed action sequences. These rules encode the defining characteristics of each strategy as logical conditions on the agent's action trajectory $\mathbf{a} = (a_1, a_2, \ldots, a_T)$ and the opponent's history $\mathbf{o} = (o_1, o_2, \ldots, o_T)$.
-
-\textbf{Always Cooperate (ALLC).} The agent cooperates in all rounds regardless of opponent behaviour:
-\[
-\text{ALLC} \equiv \forall t \in \{1, \ldots, N\}: a_t = C
-\]
-
-\textbf{Always Defect (ALLD).} The agent defects in all rounds regardless of opponent behaviour:
-\[
-\text{ALLD} \equiv \forall t \in \{1, \ldots, N\}: a_t = D
-\]
-
-\textbf{Tit-for-Tat (TFT).} The agent cooperates in round 1, then copies the opponent's previous action. To accommodate execution errors, we tolerate up to $\epsilon_{\text{noise}}$ deviations from pure TFT logic:
-\[
-\text{TFT} \equiv (a_1 = C) \land \left(\sum_{t=2}^{N} \mathbb{I}[a_t \neq o_{t-1}] \leq \epsilon_{\text{noise}} \cdot (N-1)\right)
-\]
-where $\mathbb{I}[\cdot]$ is the indicator function and $\epsilon_{\text{noise}} = 0.1$ in our implementation.
-
-\textbf{Win-Stay-Lose-Shift (WSLS).} The agent repeats its previous action if the outcome was a Reward ($R$, mutual cooperation) or Temptation ($T$, successful defection), and switches otherwise. The initial action can be either $C$ or $D$. Similarly, we tolerate up to $\epsilon_{\text{noise}}$ deviations:
-\begin{equation*}
-\begin{split}
-& \text{Let } \hat{a}_t =
-    \begin{cases}
-        a_{t-1} & \text{if } (a_{t-1}, o_{t-1}) \in \{(C,C), (D,C)\} \\
-        \neg a_{t-1} & \text{if } (a_{t-1}, o_{t-1}) \in \{(C,D), (D,D)\}
-    \end{cases} \\
-& \text{WSLS} \equiv \sum_{t=2}^{N} \mathbb{I}\left[a_t \neq \hat{a}_t\right] \leq \epsilon_{\text{noise}} \cdot (N-1)
-\end{split}
-\end{equation*}
-
-These rules are applied sequentially to each trajectory. A trajectory may receive multiple labels if it satisfies conditions for overlapping strategies (e.g., a short sequence of all-cooperate satisfies both ALLC and TFT, and a short sequence of all-defect satisfies both ALLD and TFT). The hybrid pipeline combines these rule-based assignments with LSTM predictions: high-confidence LSTM outputs ($\tau \ge 0.9$) are retained, while ambiguous cases ($\tau < 0.9$) are supplemented with rule-based labels when applicable. Whenever the rule set fires on more than one canonical strategy, we retain all matched labels as a \emph{composite} label of the form ``ALLD$|$TFT'' or ``ALLC$|$TFT$|$WSLS'' rather than collapsing to a single ``priority'' strategy; in our corpus, approximately $24.4\%$ of high-confidence proprietary trajectories receive such a composite label (see Appendix~\ref{appendix:mixture_labels} for the per-pattern breakdown). For aggregate statistics, every composite label is then expanded into one row per matched strategy before normalising, so a trajectory whose rule set fires on ALLC, TFT and WSLS contributes equal mass to each of the three. This approach ensures both coverage (via rules for unambiguous patterns) and robustness (via LSTM for noisy, complex cases).
-
-\subsection{High-confidence filtering rationale}\label{appendix:filtering_rationale}
-
-We employed a selective filtering approach to ensure the reliability of our LLM behavioural strategy analysis. Specifically, we focused our analysis on game instances where the predicted strategy labels for both agents exhibited prediction probabilities exceeding $0.9$ (90\% confidence threshold). The decision to use high-confidence predictions is grounded in several key considerations:
 \begin{itemize}
-    \item \textbf{Pattern alignment with theoretical strategies:} Samples with prediction probabilities above $0.9$ indicate that the observed behavioural sequences of LLMs closely align with the canonical patterns defined by the four classical strategies (ALLD, ALLC, WSLS, and TFT).
-    \item \textbf{Signal-to-noise separation:} While the probabilities are not absolute (not reaching $1.0$), this is expected and attributable to inherent noise in LLM decision-making processes.
-    \item \textbf{Statistical reliability:} By focusing on high-confidence predictions, we minimise the risk of misclassification and ensure that our strategy distribution analysis reflects genuine behavioural patterns.
+\item \emph{deduced}, where exactly one rule fits, so the label is a deduction;
+\item \emph{ambiguous}, where several fit, so the rules fix a candidate set and
+      the classifier only ranks inside it;
+\item \emph{unmatched}, where no rule fits, so the label is an attribution the
+      classifier makes alone.
 \end{itemize}
 
-\subsection{Threshold sensitivity analysis}\label{appendix:threshold_sensitivity}
+There is no confidence threshold anywhere in this read-out, and no composite
+label is emitted: the multi-label answer is the set itself, and where a single
+label is needed for a table it is the classifier's ranking restricted to that
+set. The classifier can therefore never overturn a deduction.
 
-To validate our choice of confidence threshold $\tau = 0.9$, we conducted a systematic sensitivity analysis across $\tau \in [0.3, 0.95]$ for 3-, 4-, and 5-strategy classification models. Figure~\ref{fig:threshold_sensitivity} illustrates how retention rate, average confidence, number of predictions retained, and strategy diversity vary as a function of threshold value.
+\subsection{Classifier training and validation}\label{appendix:classifier}
 
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=\linewidth]{all_figures/fig05_threshold_combined_metrics.pdf}
-    \caption{Comprehensive threshold sensitivity analysis for payoff-scaled experiments. Top row: retention rate and average confidence vs.\ threshold. Bottom row: number of predictions retained and strategy diversity. The 4-strategy model at $\tau = 0.9$ provides optimal balance between coverage and reliability (avg.\ confidence $0.985$). Note that $68.3\%$ is the LSTM-only retention at this threshold; the full hybrid pipeline (Section~2.3) reaches ${\approx}81\%$ by supplementing low-confidence LSTM cases with rule-based labels.}
-    \label{fig:threshold_sensitivity}
-\end{figure}
+The learned branch is trained on a synthetic corpus that contains no
+language-model output at all. Trajectories of the four canonical strategies are
+generated against random opponents at four execution-noise levels, balanced at
+40{,}320 sequences per strategy per level, giving 161{,}280 sequences at each
+level. Training uses the zero-noise and 5\% levels pooled, 322{,}560 sequences
+split 80/20 at random, so the held-out split has 64{,}512 sequences; the 10\%
+and 20\% levels are never trained on and serve as out-of-distribution tests.
 
-Table~\ref{tab:threshold_comparison} summarises key metrics at $\tau = 0.9$.
+The network is a single-layer unidirectional LSTM~\cite{lstm}: an
+embedding of the eleven-symbol vocabulary into 24 dimensions, a recurrent
+layer of 96 hidden units, dropout 0.15 and a linear map to the four classes.
+It is optimised with AdamW at learning rate $3\times10^{-3}$ and weight decay
+$10^{-4}$ under a cosine schedule, for 12 epochs at batch size 512, with seed
+1234. Accuracy is 0.985 on the held-out split, 0.936 at 10\% execution noise
+and 0.811 at 20\%, with per-class recall on the held-out split of 0.985 for
+AllC, 0.995 for AllD, 0.974 for Tit-for-Tat and 0.983 for Win-Stay-Lose-Shift
+(figure~\ref{fig:classifier} and table~\ref{tab:S-classifier}). The two
+conditional rules are the harder pair,
+as expected: an execution error in either can be read as the signature of the
+other.
 
-\begin{table}[!htbp]
+The 20\% level bounds where the read-out is warranted, and
+\S\ref{appendix:robust_readout} states where the corpus sits relative to it.
+
+\begin{figure}[htbp]
 \centering
-\caption{Threshold sensitivity at $\tau = 0.9$ across strategy models.}
-\label{tab:threshold_comparison}
-\footnotesize
-\begin{tabular}{lccc}
-\toprule
-\textbf{Metric} & \textbf{3-Strat} & \textbf{4-Strat} & \textbf{5-Strat} \\
-\midrule
-Retention Rate & 78.3\% & 68.3\% & 58.5\% \\
-Avg. Confidence & 0.991 & 0.985 & 0.982 \\
-Diversity & 3 & 4 & 4 \\
-\bottomrule
-\end{tabular}
-\end{table}
+\includegraphics[width=\linewidth]{all_figures/fa4_classifier.pdf}
+\caption{\textbf{How well the learned branch recovers a rule that is known by
+construction.}
+(a) Accuracy on the held-out split of the training noise levels and on the two
+noise levels never trained on, against the chance level of a balanced four-way
+problem.
+(b) Per-class recall on the held-out split. The two conditional rules are the
+harder pair: an execution error in either can be read as the signature of the
+other.}
+\label{fig:classifier}
+\end{figure}
 
-Key findings: (1) Retention rate decreases as strategy space expands, reflecting greater behavioural complexity; (2) Average confidence remains $>0.97$ at $\tau = 0.9$ across all models; (3) Lowering to $\tau = 0.7$ would increase retention to $75$--$87\%$ but reduce average confidence to $0.94$--$0.97$. Our choice of $\tau = 0.9$ prioritises classification reliability while maintaining sufficient coverage for statistical analysis.
+\subsection{Resampling and testing}\label{appendix:stats}
 
-Table~\ref{tab:tau_sweep_distribution} reports the inferred strategy distribution on the proprietary corpus across $\tau \in \{0.7, 0.8, 0.9, 0.95\}$, computed under the same composite-label expansion as Table~1 so the two tables are directly comparable. The qualitative picture is essentially invariant: retention drops from $90.8\%$ to $75.5\%$ as the threshold rises, but the per-strategy frequencies move by less than one percentage point anywhere in the table, and the rank ordering of the four strategies is preserved at every threshold. This is direct evidence that the substantive conclusions of Section~3.2 are not artefacts of the specific confidence cutoff chosen.
+Three dependencies rule out treating agent-games as independent: the two agents
+of a dyad play each other, the ten rounds inside an agent-game are strongly
+autocorrelated, and the ten replicates of a cell share a payoff scale. Every
+interval reported in this article is therefore a nonparametric bootstrap that
+resamples \emph{whole dyads} with replacement, 1{,}500 draws, percentile
+method~\cite{efron1993introduction}, with a fixed seed so that draws are
+common-random-number paired across cells. Every regression clusters its
+standard errors on the dyad.
 
-\begin{table}[!htbp]
+The range of a model's cooperation over the ten scales is a maximum minus a
+minimum and so is positive by construction. Its bootstrap interval quantifies
+the precision of the range, not its distance from zero, and the test is
+supplied separately by a permutation. Because the null is a theorem rather than
+a nuisance hypothesis, the permutation destroys exactly the association under
+test and leaves the rest of the design as observed: the payoff-scale label is
+shuffled among whole dyads within language-by-pairing strata, the unit to which
+the scale was assigned, and the range of the ten scale means is recomputed.
+With 2{,}000 draws the smallest attainable $p$ value is $1/2001 = 0.0005$.
+Shuffling agent-games independently would be anti-conservative, because the two
+agent-games of a dyad would then be free to land in different scale groups
+although they were generated together.
+
+The variance decomposition is a type-II analysis of variance on cell means with
+terms for model, language and payoff scale and their three two-way
+interactions, and no three-way term, so the residual is the omitted three-way
+interaction: 144 degrees of freedom on the 250 cells of the five main-text
+models, and 180 on all 300 cells.
+
+
+% ===========================================================================
+\section{Supplement to the results}\label{appendix:results}
+
+\subsection{Cooperation by model and payoff scale}\label{appendix:by_scale}
+
+Table~\ref{tab:S-scale} gives the cooperation rate of every model at every
+payoff scale, with a bootstrap interval under each entry, for all six models.
+It is the numerical form of figure~\ref{fig:scaling}b.
+
+\subsection{Cooperation by model, prompt language and payoff scale}\label{appendix:by_language}
+
+Table~\ref{tab:S-language} gives the same quantity broken down by prompt
+language, 40 dyads per entry, with the across-scale range in the final column.
+Over all six models that range runs from 0.080, for Gemini 3.1 Flash-Lite in
+Arabic, to 0.855, for Grok 4.20 in English. It is the numerical form of
+figure~\ref{fig:language} and of figure~\ref{fig:heterogeneity}a.
+
+\subsection{Variance decomposition}\label{appendix:variance}
+
+Table~\ref{tab:S-variance} is the type-II analysis of variance on the 250 cell
+means of the five main-text models, and table~\ref{tab:S-variance-all} the same
+decomposition on all 300 cells. Every term significant in the first is
+significant in the second and in the same order, and the interaction of the
+payoff scale with the model again carries several times the variance the scale
+carries as a main effect.
+
+A third fit bears on how the main effect should be read. Refitting the
+five-model decomposition with Grok 4.20 removed leaves the payoff-scale main
+effect not significant, at $F_{9,108} = 1.15$, $p = 0.33$ and $0.9\%$ of the
+variance across the remaining 200 cells, while every one of those four models
+still departs from the invariance on its own (table~\ref{tab:effect}). The
+pooled main effect is
+therefore carried by a single member of the panel: it is a statement about that
+model surviving the averaging rather than a property of language models in
+general, which is why the main text reports it as such rather than as the
+headline.
+%% The no-Grok refit is written by Analysis/scaling/s03_stats.py to
+%% tables/T06_variance_noGrok.csv.  If that file changes, this paragraph and
+%% the corresponding sentences in main.tex must be re-checked against it.
+
+\subsection{Persona, in full}\label{appendix:persona_full}
+
+Table~\ref{tab:S-persona} gives the persona effect, the cooperation rate under
+a cooperative instruction minus that under a selfish one, at each payoff scale
+and for all six models. The two leftmost columns are the scales at which every
+printed payoff is at most 1.
+
+Two models invert the instruction at every scale rather than only below the
+sub-unit boundary. Pooled over the grid, Qwen3 235B-A22B cooperates 0.072 under
+the cooperative persona and 0.798 under the selfish one, and Grok 4.20 inverts
+less extremely but throughout. The most likely reading is that the story the
+prompt tells is ambiguous about whom one is cooperating with, one's partner in
+crime or the interrogating authority, and that these two models resolve that
+ambiguity opposite to the convention the payoff matrix encodes. The inversion
+is not the subject of this article and we make no claim about its cause; we
+report it because an analysis that quietly excluded the two models whose
+persona response runs backwards would flatter the persona result. Its
+magnitude, like everything else measured here, depends on the payoff scale, and
+the per-scale sequence is not monotone, so no trend is asserted.
+
+\subsection{The strategy read-out, in full}\label{appendix:readout_full}
+
+Table~\ref{tab:S-deduced} gives the share of agent-games matched exactly by one
+canonical rule, by model and payoff scale, computed by exact matching with no
+learned component. Table~\ref{tab:S-mix} gives the four-way label composition
+over the same grid.
+
+Table~\ref{tab:S-provenance} is the one that bounds how the composition may be
+read. For each label it gives the share of the agent-games carrying it that
+were deduced, ambiguous or unmatched. The asymmetry is severe: AllC and AllD
+carry a substantial deduced share, at $23.6\%$ and $35.6\%$ over the corpus,
+whereas $94.6\%$ of the Tit-for-Tat labels and $97.1\%$ of the
+Win-Stay-Lose-Shift labels are attributions made where no canonical rule fits
+at all. A movement in the Tit-for-Tat share is therefore a
+statement about which canonical rule the play most resembles, and not evidence
+that any model is running Tit-for-Tat. The two claims the main text makes about
+rule agreement, the falling deduced share and the rising rule distance, do not
+depend on the classifier at all.
+
+\subsection{Why the model curves cancel under pooling}\label{appendix:pooling}
+
+Tables~\ref{tab:S-shapes} and~\ref{tab:S-shapes-all} give the pairwise
+correlation between the ten-point cooperation-against-scale curves of each pair
+of models, for the five main-text models and for all six.
+
+The cancellation is arithmetic. Writing $c_m(\lam)$ for model $m$'s curve and
+$\bar{c}(\lam)$ for their average, the range of $\bar{c}$ is bounded above by
+the average of the individual ranges, with equality only if the curves attain
+their extremes at the same scales and move together in between. Here six of the
+ten pairs are anticorrelated and the mean correlation is $-0.10$, so the bound
+is far from tight: the pooled range is 0.154 against a mean within-model range
+of 0.249, an attenuation of 1.62. With the sixth model included the same
+quantities are 0.125, 0.219 and 1.76, with nine of the fifteen pairs negative,
+so the pooling argument is stronger over the whole corpus than over the five
+models the main text reports.
+
+This is not a power problem. Collecting more dyads tightens the interval around
+$\bar{c}$; it does not make $\bar{c}$ a better description of any $c_m$.
+
+\subsection{The sixth model, Gemini 3.1 Flash-Lite}\label{appendix:sixth_model}
+
+The sixth model was run on the identical grid, with the identical protocol, and
+every quantity the main text reports for the five is reported for it here and
+in the tables of this section, which cover all six models throughout.
+
+\paragraph{Why it is reported here rather than in the main text.} Its endpoint
+identifier, \texttt{gemini-3.1-flash-lite-preview}, is both undated and marked
+by the provider as provisional, so what was served under that name while the
+corpus was collected cannot be re-addressed afterwards and a reader cannot
+reproduce the run against the same object. We state the cost of drawing the
+line there rather than leaving it to be found. The identifier of Gemini 3.5
+Flash-Lite, which stays in the main text, is undated as well and could in
+principle be re-pointed to a later build, so it carries a weaker form of the
+same risk; the line drawn here is between an identifier marked provisional and
+one that is not, and not between pinned and unpinned. The decision was taken on
+the identifier and not on the results.
+
+\paragraph{What it does.} Its cooperation range across the ten scales is 0.072
+\ci{0.060}{0.133}, the smallest in the corpus, with a permutation $p = 0.0005$
+and a clustered Wald statistic of 83.1 on nine degrees of freedom, so it
+departs from the invariance on the same evidence as the other five. Its
+across-scale range by language runs from 0.080 in Arabic to 0.170 in
+Vietnamese. Its persona effect is $+0.577$ below the sub-unit boundary and
+$+0.680$ above it, a shift of 0.103 \ci{0.075}{0.131} with no sign reversal.
+Its opening-move range is 3.68 times its range over rounds 2 to 10, the largest
+ratio in the corpus, so the localisation of the effect at the first move is
+more pronounced in it than in any main-text model, not less.
+
+\paragraph{The one result it reverses.} It is the only model of the six whose
+share of agent-games matched exactly by one canonical rule \emph{rises} with
+the payoff scale, from $17.8\%$ below the sub-unit boundary to $26.3\%$ above
+it, with a significant positive trend of $\beta = +0.125$ per decade of $\lam$;
+its rule distance is flat ($\beta = -0.019$, $p = 0.26$);
+figure~\ref{fig:supp_model} draws it beside the five. The main text's
+statement that play becomes less rule-governed in four models of five therefore
+reads, over the whole corpus, as four models of six moving one way, one showing
+no trend and one moving the other. That is the form the evidence supports, and
+the main text says so at the point where the claim is made.
+
+\begin{figure}[htbp]
 \centering
-\caption{Threshold sweep for the proprietary corpus: retention rate and inferred strategy frequencies across $\tau \in \{0.7, 0.8, 0.9, 0.95\}$, computed with composite-label expansion (Appendix~\ref{appendix:mixture_labels}). The $\tau \geq 0.9$ row matches the overall row of Table~1. The distribution is essentially stationary in $\tau$, and the rank ordering of the four strategies is preserved.}
-\label{tab:tau_sweep_distribution}
-\footnotesize
-\begin{tabular}{lccccc}
-\toprule
-$\tau$ & Retention (\%) & ALLC (\%) & ALLD (\%) & TFT (\%) & WSLS (\%) \\
-\midrule
-0.70 & 90.83 & 28.25 & 25.93 & 21.53 & 24.28 \\
-0.80 & 86.22 & 28.67 & 26.18 & 21.23 & 23.92 \\
-0.90 & 80.94 & 29.05 & 25.86 & 21.06 & 24.03 \\
-0.95 & 75.50 & 28.83 & 25.22 & 21.48 & 24.48 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\subsection{Classifier robustness across noise and strategy space}\label{appendix:robustness_noise}
-
-This appendix benchmarks the LSTM intent recogniser used throughout the paper. Two complementary views are reported: (i) how the LSTM scales as the strategy space grows from 3 to 5 canonical strategies (Figure~\ref{fig:model_performance}), and (ii) how the LSTM compares against Logistic Regression and Random Forest baselines under execution noise (Figure~\ref{fig:model_robustness_appendix}).
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=\linewidth]{all_figures/fig01_lstm_model_performance.pdf}
-    \caption{\textbf{LSTM intent recogniser performance across strategy-space sizes.} Accuracy, precision, recall and F1-score on synthetic trajectories with $5\%$ execution noise. F1 ranges from $0.984$ (4-strategy task) to $0.83$ (5-strategy task); all main-text analyses use the 4-strategy classifier ($\text{F1} = 0.984$).}
-    \label{fig:model_performance}
+\includegraphics[width=\linewidth]{all_figures/fa3_supp_model.pdf}
+\caption{\textbf{The sixth model beside the five reported in the main text.}
+Gemini 3.1 Flash-Lite is drawn heavier and in front.
+(a) Cooperation against the payoff scale, where it sits inside the spread of
+the other five.
+(b) Share of agent-games matched exactly by one canonical rule, with each
+model's trend per decade of $\lam$. It is the only model of the six whose trend
+is positive.}
+\label{fig:supp_model}
 \end{figure}
 
-Figure~\ref{fig:model_performance} confirms the LSTM maintains robust performance even as the strategy space expands, successfully distinguishing between behaviourally similar conditional strategies (Tit-for-Tat and Win-Stay--Lose-Shift) within our analysed set of four canonical strategies. The recurrent architecture's ability to filter execution noise common in LLM outputs makes it particularly well-suited for this task~\cite{diStefanoIntention2023,Han2012ALIFEjournal}.
+\subsection{The opening move, in detail}\label{appendix:firstmove_detail}
+
+Table~\ref{tab:S-firstmove} gives, for all six models, the across-scale range
+of cooperation on the opening move and over rounds 2 to 10, and their ratio.
+The two windows rest on 400 and 3{,}600 decisions per cell respectively, so
+their ranges are not variance-matched: a range computed from fewer observations
+is upward-biased, and the ratios are therefore descriptive rather than tests.
+The comparison is still informative because the bias runs the same way in every
+model while the ratio does not, spanning 0.47 in Qwen3 235B-A22B to 3.68 in
+Gemini 3.1 Flash-Lite.
+
+\input{supp_tables_auto}
 
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=\linewidth]{all_figures/fig06_classifier_performance_comparison.pdf}
-    \caption{Model robustness to noise. Comparison of accuracy and F1-score between Logistic Regression, Random Forest, and LSTM on no-noise and noise $0.05$ datasets. The LSTM demonstrates superior resilience to execution noise.}
-    \label{fig:model_robustness_appendix}
-\end{figure}
-
-We also evaluated the robustness of different classifier architectures against execution noise, which simulates the stochasticity and potential ``hallucinations'' of LLMs. As shown in Figure~\ref{fig:model_robustness_appendix}, while Logistic Regression (LR) and Random Forest (RF) models achieved near-perfect accuracy (greater than $0.9$) on clean data, their performance degraded when introduced to $5\%$ execution noise. In contrast, the Long Short-Term Memory (LSTM) network maintained the highest accuracy ($\sim 94\%$). This superiority stems from the LSTM's recurrent architecture, which allows it to learn the sequential ``context'' of a strategy, effectively ``forgiving'' random deviations to identify the core behavioural pattern.
-
-\section{Supplement to Results}\label{appendix:results}
-
-\subsection{Payoff-scaled experiments: additional analyses}\label{appendix:payoff_scaled}
-
-This section provides supplementary analyses for the payoff-scaled Prisoner's Dilemma experiments (see main paper).
-
-\subsubsection{Per-stake behavioural metrics}\label{appendix:per_multiplier_metrics}
-
-To visualise the behavioural profiles of different LLM architectures across payoff scaling conditions, we present radar charts comparing normalised metrics for each stake/multiplier setting. Figure~\ref{fig:per_multiplier_radar} displays four key behavioural dimensions - internal variability (IV), cross-language inconsistency (CI), variability over round (VR), and sensitivity-to-payoff (SP) - normalised within each multiplier condition to enable direct cross-model comparison.
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=\linewidth]{all_figures/fig07_per_lambda_radar.pdf}
-    \caption{\textbf{Per-multiplier behavioural metrics.} We report four standardised metrics defined in the FAIRGAME framework~\cite{buscemi2025fairgame}: (1) \textbf{Internal Variability (IV)}, which quantifies the stochasticity of an agent's behaviour by measuring the variance of outcomes across identical experimental repetitions; (2) \textbf{Cross-Language Inconsistency (CI)}, which measures the standard deviation of agent performance across the five tested languages to indicate sensitivity to linguistic framing; (3) \textbf{Variability over Round (VR)}, which captures the volatility of decision-making and strategy changes throughout the 10-round game horizon; and (4) \textbf{Sensitivity-to-Payoff (SP)}, which reflects the magnitude of behavioural adaptation in response to varying incentive stakes. Radar charts compare Mistral Large (green), Claude 3.5 Haiku (orange), and GPT-4o (blue) across three payoff scales ($\lambda \in \{0.1, 1, 10\}$). Compared to the baseline payoff ($\lambda=1$), similar scores are observed for the higher stake payoff ($\lambda=10$). At low stakes ($\lambda=0.1$), models exhibit divergent scores. Overall, internal variability (IV) is most affected by varying the payoff stake.}
-    \label{fig:per_multiplier_radar}
-\end{figure}
-
-Key observations include: (1) at attenuated stakes ($\lambda=0.1$), the three models display maximally divergent behavioural signatures, with Claude~3.5~Haiku exhibiting elevated variation rate while GPT-4o shows stronger cooperation index; (2) at baseline stakes ($\lambda=1$), models begin to converge toward more balanced profiles; (3) at amplified stakes ($\lambda=10$), all models shift toward higher CI and SP values, suggesting that increased consequences promote both cooperative behaviour and strategic consistency. These radar visualisations complement the line plots in the main paper by providing a holistic view of multi-dimensional behavioural shifts.
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=\linewidth]{all_figures/ijcai_radar_chart_6multipliers_small_llm.pdf}
-    \caption{\textbf{Per-multiplier behavioural metrics for the open-weight small LLMs.} The four standardised FAIRGAME metrics (IV, CI, SP, VR) -- defined identically to Figure~\ref{fig:per_multiplier_radar} and computed directly from the round-by-round OptionA/OptionB decisions in \texttt{Dataset/data\_fairgame\_small\_llm/} -- are reported for Qwen3~8B (blue), Gemma-3~12B (orange), and Llama-3.1~8B (green) across all six payoff scales covered by the small-LLM corpus ($\lambda \in \{0.01, 0.1, 1, 10, 100, 1000\}$). Each panel is normalised within $\lambda$ (divide-by-max across the three models), matching the proprietary radar so that the two figures can be read side by side. Two regime patterns are visible across the full sweep: Gemma-3~12B exhibits the largest internal variability (IV) at every $\lambda$, indicating the most stochasticity across identical repetitions, while Llama-3.1~8B exhibits the largest within-trace volatility (VR), indicating frequent round-by-round switching. Cross-language inconsistency (CI) peaks at very high stakes ($\lambda \geq 100$) and, like the proprietary panel, the sensitivity-to-payoff proxy (SP) compresses toward the upper end as stakes grow.}
-    \label{fig:small_radar}
-\end{figure}
-
-\subsubsection{Multidimensional behavioural comparison}\label{appendix:multidimensional}
-
-The visualisation in Figure~\ref{fig:multidimensional_behaviour} provides a synoptic view of how the three cardinal dimensions of our study - payoff magnitude, linguistic context, and model architecture - interact to shape agent behaviour. By synthesising these factors, we observe that strategic behaviour is not driven by a single determinant but emerges from their complex interplay. Notably, the variance attributable to linguistic context (visualised across the language axes) often rivals or even exceeds the variance between distinct model architectures, challenging the notion of fixed, immutable ``model personalities.'' Furthermore, the impact of payoff scaling is shown to be non-uniform; while amplified stakes generally compress behavioural diversity towards cooperation, the specific trajectory of this shift is heavily modulated by the language in which the game is framed. This suggests that alignment interventions must account for this multidimensional sensitivity, as a model aligned for safety in English may exhibit divergent, risk-seeking behaviours when prompted in other languages or under different incentive structures.
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=\linewidth]{all_figures/fig16_behavioral_characteristics.pdf}
-    \caption{Multidimensional comparison of LLM behavioural strategies across payoff scales, languages, and model architectures. The figure synthesises incentive sensitivity, linguistic priming, and architectural bias, illustrating that language effects can rival or exceed model-level differences.}
-    \label{fig:multidimensional_behaviour}
-\end{figure}
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=\linewidth]{all_figures/ijcai_multidimensional_behavioral_comparison_small_llm.pdf}
-    \caption{\textbf{Multidimensional behavioural comparison of the open-weight small LLMs across payoff scales, languages, and model architectures.} The figure synthesises incentive sensitivity, linguistic priming, and architectural bias in the same way as Figure~\ref{fig:multidimensional_behaviour} for the proprietary models. Language effects again rival or exceed model-level differences, and the impact of payoff scaling is heavily modulated by the prompt language.}
-    \label{fig:small_multidim}
-\end{figure}
-
-\subsubsection{Unconditional vs.\ conditional strategy aggregation}\label{appendix:uncond_cond}
-
-To provide a higher-level view of strategic tendencies across linguistic contexts, we aggregate the four canonical strategies into two categories: \emph{unconditional} (ALLC + ALLD) and \emph{conditional} (TFT + WSLS). This aggregation reveals whether agents commit to fixed policies regardless of opponent behaviour, or adapt their strategies based on interaction history.
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=0.7\linewidth]{all_figures/fig09_uncond_vs_cond_by_lang.pdf}
-    \caption{Unconditional versus conditional strategy aggregation across languages (payoff-scaled experiments). Arabic and Chinese exhibit the highest unconditional rates, while English, French, and Vietnamese sit near a balanced split. This aggregated view complements the language strategy distribution table in the main paper.}
-    \label{fig:language_strategy_grouped}
-\end{figure}
-
-As shown in Figure~\ref{fig:language_strategy_grouped}, Arabic and Chinese prompts elicit predominantly unconditional behaviour, while English, French, and Vietnamese sit close to a balanced split between unconditional and conditional play. This pattern corroborates the fine-grained analysis in the main paper, suggesting that linguistic context systematically modulates the degree to which LLM agents engage in adaptive versus committed strategic behaviour.
-
-\subsubsection{Per-condition penalty breakdown (proprietary models)}\label{appendix:proprietary_per_condition}
-
-The compact cooperation-rate view in the main text (Figure~2) is summarised from a much richer underlying dataset that crosses three stake regimes, five languages, three personality pairings and three proprietary models. Figure~\ref{fig:total_penalties_appendix} reports the per-cell mean penalties at the three stake regimes shown in the main text. Two design choices are visible immediately: agents incur lower penalties at higher stakes when measured in normalised units (because the cooperative outcome is rewarded relatively more), and personality framing shifts behaviour systematically (cooperative--cooperative pairings consistently incur lower penalties than selfish--selfish ones). The Arabic prompts elicit elevated defection in cooperative pairings -- the ``Arabic anomaly'' that also appears in the open-weight corpus.
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=\linewidth]{all_figures/penalties_subplots.pdf}
-    \caption{Aggregated final penalties across repeated Prisoner's Dilemma games for the three proprietary LLMs (Claude~3.5~Haiku, GPT-4o, Mistral~Large) under three payoff scales $\lambda \in \{0.1, 1.0, 10.0\}$. Results are reported across five languages (columns) and three personality pairings (CC, CS, SS, where CS pools the asymmetric CS and SC ``mixed'' pairings). Lower bars indicate better outcomes; error bars are bootstrap intervals over the repetitions within each displayed cell. The $y$-axis is rescaled by an order of magnitude across rows, mirroring the $\lambda$ multiplier, so within-row comparison is the meaningful unit.}
-    \label{fig:total_penalties_appendix}
-\end{figure}
-
-\subsection{Mixed-strategy labels}\label{appendix:mixture_labels}
-
-The hybrid rule-based component of our classifier emits a \emph{composite} label whenever a trajectory simultaneously satisfies the deterministic rule definitions of more than one canonical strategy (Appendix~\ref{appendix:rule_based}). On the proprietary corpus at the $\tau \geq 0.9$ threshold, $75.6\%$ of high-confidence trajectories receive a single canonical label and $24.4\%$ receive a composite label. Table~\ref{tab:composite_labels} reports the distribution of composite labels.
-
-\begin{table}[!htbp]
-\centering
-\caption{Composite-label distribution among high-confidence ($\tau \geq 0.9$) proprietary trajectories that simultaneously satisfy more than one canonical rule. ``Share of composite'' is normalised within the composite subset; the composite subset itself accounts for $24.4\%$ of all high-confidence trajectories.}
-\label{tab:composite_labels}
-\footnotesize
-\begin{tabular}{lcc}
-\toprule
-\textbf{Composite label} & \textbf{Count} & \textbf{Share of composite (\%)} \\
-\midrule
-ALLD$|$TFT        & 291 & 40.9 \\
-ALLC$|$TFT$|$WSLS & 202 & 28.4 \\
-ALLD$|$WSLS       & 122 & 17.1 \\
-TFT$|$WSLS        &  97 & 13.6 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The composite labels cluster around four patterns. The most frequent ALLD$|$TFT pattern corresponds to mutual-defection trajectories where the opponent also defects throughout: the agent's all-defect history simultaneously satisfies ALLD and TFT, because TFT degenerates to ALLD when the opponent never cooperates. The next most frequent ALLC$|$TFT$|$WSLS triple is its mirror image: trajectories of nearly-all-cooperation that simultaneously satisfy ALLC, TFT and WSLS because the latter two strategies coincide with ALLC when no defection ever occurs. Both are structural ambiguities of short trajectories in absorbing mutual-cooperation or mutual-defection regimes rather than signs of genuine mixed play. ALLD$|$WSLS and TFT$|$WSLS reflect the well-known overlap between WSLS and other reactive strategies on short horizons under execution noise~\cite{diStefanoIntention2023,inferenceStrategies,Han2012ALIFEjournal}. Removing the composite trajectories entirely or, alternatively, re-distributing them across their constituent labels under a uniform-mass tie-breaking rule shifts the aggregate frequencies in Table~1 by only a couple of percentage points per strategy and leaves the high-stake reversal documented in Section~3.5 unchanged.
-
-\subsection{Hidden Markov segmentation as a robustness check}\label{appendix:hmm_segmentation}
-
-To complement the rule-based composite-label diagnostic in Appendix~\ref{appendix:mixture_labels}, we fit a four-state Hidden Markov Model on every proprietary trajectory. The four hidden states correspond to the four canonical strategies $\{$ALLC, ALLD, TFT, WSLS$\}$; the emission probability of state $k$ at round $t$ is the memory-one probability that strategy $k$ produces the observed action given the joint history of round $t{-}1$, with a symmetric execution-noise factor $\varepsilon{=}0.05$. The transition matrix is a uniform leak with switching probability $0.1$ at every step. Viterbi decoding then returns the most likely sequence of hidden states.
-
-\begin{table}[!htbp]
-\centering
-\caption{HMM Viterbi segmentation on the proprietary corpus ($n = 3{,}600$ trajectories): per-$\lambda$ strategy share computed by redistributing each trajectory's mass over the hidden states visited in its Viterbi path. The directional stake effect (ALLD share falling, ALLC share rising as $\lambda$ grows from $0.1$ to $1$) is preserved.}
-\label{tab:hmm_per_lambda}
-\footnotesize
-\begin{tabular}{lccccc}
-\toprule
-$\lambda$ & $n$ & ALLC (\%) & ALLD (\%) & TFT (\%) & WSLS (\%) \\
-\midrule
-0.1  & 1{,}200 & 35.16 & 47.98 & 8.33 & 8.53 \\
-1.0  & 1{,}200 & 50.12 & 28.34 & 8.40 & 13.13 \\
-10.0 & 1{,}200 & 51.38 & 29.82 & 9.09 & 9.71 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Two key numbers stand out. First, only $20.2\%$ of trajectories visit more than one hidden state, of the same order as the $24.4\%$ composite-label rate of the rule-based pipeline (Appendix~\ref{appendix:mixture_labels}); the small residual gap is consistent with the HMM's smoothed Viterbi path being slightly less likely to flip between strategies than the strict rule-matching test. The average Viterbi path contains just $0.21$ switches. Second, the redistributed per-$\lambda$ shares in Table~\ref{tab:hmm_per_lambda} reproduce the headline pattern of Section~3.2: ALLD share falls from $48\%$ at $\lambda = 0.1$ to $\approx 30\%$ at $\lambda \in \{1, 10\}$, and ALLC absorbs most of the freed mass. The high-stake cooperation effect is therefore not an artefact of single-label attribution.
-
-\subsection{EGT detailed view across stakes and noise levels}\label{appendix:egt_noise_sweep}
-
-Figures~\ref{fig:egt_full_lambda_by_noise} and~\ref{fig:egt_noise_by_lambda} unpack the two-panel summary in Figure~7 into the full per-strategy view. The first sweeps payoff scale $\lambda$ on a logarithmic grid for three execution-noise levels and reports the stationary frequency of all four canonical strategies; the second holds $\lambda$ fixed at three representative values and sweeps execution noise $\varepsilon$. Both are computed under identical settings ($Z = 100$, $\beta = 0.1$, $r = 10$ rounds, small-mutation limit).
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=\linewidth]{all_figures/fig10_egt_freq_vs_lambda_by_noise.pdf}
-    \caption{\textbf{Stationary strategy frequencies as a function of payoff scaling $\lambda$ for three execution-noise levels $\varepsilon \in \{0,\,0.05,\,0.1\}$ at $r = 10$ rounds.} Each panel reports the long-run frequency of the four canonical strategies (ALLC, ALLD, TFT, WSLS) in a finite well-mixed population ($Z=100$, $\beta=0.1$) under the small-mutation limit, using the FAIRGAME penalty matrix scaled by $\lambda$. ALLD becomes evolutionarily dominant as $\lambda$ grows; introducing implementation noise accelerates the decay of TFT (sharply so at $\lambda = 1$) while the WSLS share decays more gradually, consistent with WSLS's self-correcting advantage.}
-    \label{fig:egt_full_lambda_by_noise}
-\end{figure}
-
-At very low stakes ($\lambda \lesssim 0.1$) the conditional cooperators TFT and WSLS retain non-trivial mass because the payoff differential between mutual cooperation and mutual defection is too small for ALLD to invade efficiently. As $\lambda$ grows, the relative advantage of ALLD against any partial cooperator widens and the stationary distribution sharply concentrates on ALLD, recovering the classical risk-dominant outcome predicted in finite populations. Modest implementation noise accelerates this collapse, and the effect is sharpest on TFT: at $\lambda = 1$ the TFT share falls from $\approx 48\%$ at $\varepsilon = 0$ to $\approx 15\%$ at $\varepsilon = 0.05$ and $\approx 9\%$ at $\varepsilon = 0.1$, whereas the WSLS share decays more gradually over the same noise range, consistent with WSLS's self-correcting property of switching back to cooperation after mutual defection.
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=\linewidth]{all_figures/fig11_egt_freq_vs_noise_by_lambda.pdf}
-    \caption{\textbf{Stationary strategy frequencies as a function of execution noise $\varepsilon$ for three payoff scales $\lambda \in \{0.1,\,1,\,10\}$ at $r = 10$ rounds.} Population, selection intensity, and SML treatment are identical to those of Figure~\ref{fig:egt_full_lambda_by_noise}. At low stakes ($\lambda = 0.1$), execution noise erodes the conditional cooperators asymmetrically: TFT remains the modal conditional strategy across the whole noise range, but its share decays by $\approx 11$ percentage points as $\varepsilon$ goes from $0$ to $0.3$, while the WSLS share stays roughly flat ($\approx 22$--$26\%$); the freed mass migrates to ALLD. At higher stakes ($\lambda \in \{1,10\}$), the population is locked into ALLD irrespective of $\varepsilon$.}
-    \label{fig:egt_noise_by_lambda}
-\end{figure}
-
-Holding $\lambda$ fixed and sweeping $\varepsilon$ makes the noise-tolerance asymmetry directly visible: at $\lambda = 0.1$, where ALLD is least dominant, increasing $\varepsilon$ erodes the conditional cooperators with a steeper drop on TFT than on WSLS, and the freed mass migrates to ALLD; at $\lambda \in \{1, 10\}$ the population is locked into ALLD regardless of $\varepsilon$.
-
-\subsection{Baseline FAIRGAME analysis: detailed results}\label{appendix:baseline_fairgame}
-
-This appendix presents the complete analysis of LLM strategic behaviour from the baseline FAIRGAME dataset, complementing the payoff-scaled experiments in the main text. The dataset covers four LLM models - Claude~3.5~Sonnet, Llama~3.1~405B~Instruct, Mistral~Large, and GPT-4o - across five languages (Arabic, Chinese, English, French, and Vietnamese).
-
-\subsubsection{Hybrid classification approach}
-
-While our LSTM model demonstrates strong performance in strategy classification, it was originally designed as a single-label classifier. To address this limitation and ensure comprehensive coverage, we adopt a hybrid labelling approach that combines model predictions with rule-based strategy assignment (see Appendix~\ref{appendix:rule_based}).
-
-\subsubsection{Strategy distribution across models}
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=0.9\linewidth]{all_figures/fig_strategy_by_model_stacked.pdf}
-    \caption{Strategic behavioural composition of four LLMs in the iterated Prisoner's Dilemma. Each stacked column shows the absolute count of agent--game rows assigned to each strategy by the hybrid LSTM + rule-based classifier on the baseline FAIRGAME corpus (1{,}200 games per model $\times$ 2 agents per game = 2{,}400 base rows; composite labels such as ``ALLD$|$WSLS'' are expanded into one row per component, yielding the totals annotated on each bar).}
-    \label{fig:strategy_distribution_appendix}
-\end{figure}
-
-The strategic preference analysis from the \emph{baseline FAIRGAME dataset} ($4{,}800$ games pooled across four models, $12{,}702$ rows after composite expansion) reveals heterogeneity in decision-making across LLM architectures. Claude~3.5~Sonnet is mildly cooperative-leaning but otherwise balanced: ALLC ($30.4\%$) is the modal strategy, with ALLD ($24.6\%$), WSLS ($24.5\%$) and TFT ($20.4\%$) all within five percentage points of each other. Llama~3.1~405B~Instruct is the only defection-dominant model: ALLD ($45.1\%$) accounts for nearly half of its rows, while TFT ($9.9\%$) and WSLS ($17.8\%$) are correspondingly suppressed. Mistral~Large produces the flattest distribution of any model in our corpus, with the four strategies occupying $27.8\%$ (ALLC), $26.8\%$ (ALLD), $23.6\%$ (TFT) and $21.7\%$ (WSLS). Finally, GPT-4o is the most reciprocity-tilted: WSLS ($31.7\%$) and ALLC ($30.5\%$) jointly account for $62.2\%$ of its rows, with ALLD held to $17.8\%$.\footnote{GPT-4o exhibits a markedly higher ALLD share in the payoff-scaled experiments of the main paper, where stake magnitude rather than language is the manipulation of interest. The baseline corpus reported here fixes $\lambda$ at the FAIRGAME default and therefore captures a different operating point of the same model.}
-
-\subsubsection{Language effects on strategies}
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=0.75\linewidth]{all_figures/fig_strategy_by_language.pdf}
-    \caption{Strategy distribution across languages on the baseline FAIRGAME dataset, pooled across all four proprietary LLMs. Arabic and Vietnamese stand apart with markedly higher ALLD shares, while English, French and Chinese cluster together at much lower defection rates.}
-    \label{fig:language_effect_appendix}
-\end{figure}
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=\linewidth]{all_figures/fig_strategy_by_language_per_model.pdf}
-    \caption{Strategy distribution by language, faceted per LLM (Claude~3.5, GPT-4o, Mistral, Llama~3.1~405B). The Arabic/Vietnamese vs.\ English/French/Chinese cluster split observed in Figure~\ref{fig:language_effect_appendix} is reproduced inside every model, so it is not driven by any single LLM's idiosyncrasies.}
-    \label{fig:language_effect_per_model_appendix}
-\end{figure}
-
-The language of the interaction has a substantial and direction-consistent effect on the strategic mix. Pooling all four models, the five languages split into two clusters along the defection axis: Arabic ($40.5\%$ ALLD) and Vietnamese ($38.6\%$ ALLD) sit roughly twenty percentage points above English ($20.8\%$), French ($21.0\%$) and Chinese ($22.8\%$), which are statistically indistinguishable from each other on this metric. The same cluster boundary reappears, with mirror symmetry, in the conditional strategies: English ($27.3\%$ WSLS, $21.6\%$ TFT), French ($26.0\%$, $22.8\%$) and Chinese ($25.5\%$, $20.8\%$) all carry between forty and fifty percent of their probability mass on the two reciprocal strategies, whereas Arabic ($20.4\%$, $12.4\%$) and Vietnamese ($20.9\%$, $14.0\%$) carry only about a third. The unconditional cooperation share is far less language-sensitive, ranging only from $26.6\%$ (Vietnamese) to $30.9\%$ (Chinese). Figure~\ref{fig:language_effect_per_model_appendix} shows that this two-cluster pattern is reproduced inside every model, so it is not driven by any one LLM's idiosyncrasies.
-
-\subsubsection{The language effect: agent scores and strategy mix}\label{appendix:ml}
-
-\noindent\textbf{The language effect (baseline dataset).} \emph{The following analysis is restricted to the baseline FAIRGAME dataset (Claude~3.5~Sonnet, Llama~3.1~405B, GPT-4o, Mistral~Large) and is independent of the payoff-scaled experiments in the main paper; the language patterns reported here are baseline-corpus effects.}
-
-Figure~\ref{fig:language_effect} combines two complementary views of the language effect. Panel~(a) reports the per-agent total score (sum of per-round penalties) averaged across all games in each language. Two regularities stand out. First, Agent~2 outperforms Agent~1 in every language; the average gap is $9.0$ penalty points and is largest in Arabic ($12.0$) and English ($12.0$), suggesting a structural second-mover advantage in the FAIRGAME prompt template. Second, the language-by-language ordering of agent payoffs is itself informative: Arabic ($47.79$ / $59.82$) and Vietnamese ($49.99$ / $55.69$) yield the highest absolute scores -- consistent with the elevated ALLD rates documented in Figure~\ref{fig:language_effect_appendix} above, since defection is the higher-payoff strategy in a one-shot Prisoner's Dilemma -- while English ($41.41$ / $53.37$) and French ($41.90$ / $51.33$) yield the lowest, consistent with their higher conditional-cooperation rates.
-
-Panel~(b) shows the same strategy-by-language crosstab as the top sub-panel of Figure~\ref{fig:language_effect_appendix} and confirms two structural patterns. (i)~The languages cluster into a ``defection-leaning'' bloc (Arabic, Vietnamese: ALLD $\approx 40\%$) and a ``reciprocity-leaning'' bloc (English, French, Chinese: ALLD $\approx 21\%$); the gap on this single axis is approximately twenty percentage points. (ii)~Within the reciprocity-leaning bloc, the three languages are nearly interchangeable -- their WSLS shares lie in a narrow $25.5$--$27.3\%$ band and their TFT shares in $20.8$--$22.8\%$ -- so any individual claim of a uniquely ``Chinese TFT'' or ``French WSLS'' signature would be unsupported by these data. Unconditional cooperation (ALLC), by contrast, is essentially flat across languages ($26.6$--$30.9\%$), so the language effect operates mainly through the conditional/unconditional defection trade-off rather than through cooperative behaviour per se. These findings indicate that the prompt language modulates whether the model retrieves a contingent-reciprocity or a one-shot defection script, rather than uniformly tilting it toward cooperation or competition.
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=\linewidth]{all_figures/fig_language_effect_2panel.pdf}
-    \caption{\textbf{The language effect.} (a) Mean cumulative per-agent score by prompt language (sum of per-round penalties; higher = more total payoff). Agent~2 outperforms Agent~1 in every language, and absolute scores are highest in Arabic and Vietnamese -- the same languages that elicit the highest ALLD rates in panel~(b). (b) Strategy distribution by language pooled across all four LLMs: Arabic and Vietnamese cluster apart from English, French and Chinese on the ALLD axis, while ALLC is approximately language-invariant.}
-    \label{fig:language_effect}
-\end{figure}
-
-\subsection{Open-weight small LLMs: robustness checks}\label{appendix:small_llm_robustness}
-
-Four follow-up analyses substantiate the open-weight small-LLM results reported in Section~3.6. They are grouped here for clarity: the per-condition penalty breakdown provides the full cell-level view of mean penalties across languages and personality pairings; horizon robustness checks that the directional stake effect is detectable already in the first ten rounds; confidence-threshold robustness checks that the model-level heterogeneity is not driven by the $\tau = 0.9$ cutoff; and the chi-square test quantifies the stake effect on this corpus.
-
-\subsubsection{Per-condition penalty breakdown (open-weight small LLMs)}\label{appendix:small_per_condition_penalties}
-
-The companion of Figure~\ref{fig:total_penalties_appendix} for the open-weight small LLMs: Figure~\ref{fig:small_penalties} reports the per-cell mean penalties across the full six-multiplier sweep of the open-weight corpus ($\lambda \in \{0.01, 0.1, 1, 10, 100, 1000\}$); the middle rows ($\lambda \in \{0.1, 1, 10\}$, marked Low/Ord./High) match the three stake regimes of the proprietary analysis. The picture is qualitatively similar: cooperative pairings (CC) consistently incur lower penalties than selfish ones (SS); per-language differences are model-specific; and the Arabic prompts again elicit elevated defection in cooperative pairings.
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=\linewidth]{all_figures/fig_small_penalties_subplots.pdf}
-    \caption{Per-condition penalties for the three open-weight LLMs under the payoff-scaled Prisoner's Dilemma. Rows are the six stake multipliers of the open-weight sweep, from $\lambda{=}1000$ (top) down to $\lambda{=}0.01$ (bottom); the $\lambda{=}10$ (\textbf{High}), $\lambda{=}1$ (\textbf{Ord.}) and $\lambda{=}0.1$ (\textbf{Low}) rows match the three stake regimes of the proprietary analysis; columns correspond to the prompt language; within each panel the $x$-axis lists the personality pairing (CC, CS, SS, where CS pools the asymmetric CS and SC ``Mixed'' pairings) and the three bars give the per-agent mean penalty for Qwen3~8B (blue), Gemma-3~12B (orange) and Llama-3.1~8B (green). Lower bars indicate better outcomes; error bars are bootstrap intervals over the repetitions within each displayed cell. The $y$-axis is rescaled by an order of magnitude across rows, mirroring the $\lambda$ multiplier, so within-row comparison is the meaningful unit.}
-    \label{fig:small_penalties}
-\end{figure}
-
-\subsubsection{Horizon robustness}\label{appendix:horizon_robustness}
-
-The open-weight small-LLM runs reported in Section~3.6 use $N{=}30$ rounds, while the proprietary-model runs in Section~3.1 use $N{=}10$. To verify that the directional stake effect identified in the open-weight corpus is detectable already in the first ten rounds -- and thus that the proprietary-vs-small comparison reported in Section~3.6 is not driven by horizon length -- we apply the same strict rule-based classifier of Appendix~\ref{appendix:rule_based} to two parallel sequences for every open-weight agent: the truncated trajectory (rounds 1--10 only) and the full trajectory (rounds 1--30). Table~\ref{tab:horizon_robustness} reports the resulting per-$\lambda$ distributions, pooled across the three open-weight models and five languages.
-
-\begin{table}[!htbp]
-\centering
-\caption{Rule-based strategy distribution (\%) for the open-weight small LLMs computed on the first $10$ rounds (``$N{=}10$'') versus the full $30$ rounds (``$N{=}30$'') of every agent trajectory. ``NONE'' denotes trajectories that do not satisfy any canonical rule with tolerance $\epsilon_{\text{noise}}{=}0.1$. The truncated and full classifications agree on $85.7\%$ of trajectories overall, and the directional stake effect (ALLD share falling and ALLC share rising as $\lambda$ grows from $0.1$ to $10$) appears already at $N{=}10$.}
-\label{tab:horizon_robustness}
-\footnotesize
-\begin{tabular}{lccccccc}
-\toprule
-$\lambda$ & Horizon & ALLC & ALLD & TFT & WSLS & NONE & $n$ \\
-\midrule
-\multirow{2}{*}{$0.1$}  & $N{=}10$ & 32.15 & 47.81 & 2.16 & 0.79 & 17.09 & \multirow{2}{*}{1527} \\
-                        & $N{=}30$ & 33.79 & 37.66 & 1.77 & 0.85 & 25.93 & \\
-\midrule
-\multirow{2}{*}{$1.0$}  & $N{=}10$ & 53.06 & 25.63 & 1.62 & 0.72 & 18.97 & \multirow{2}{*}{1666} \\
-                        & $N{=}30$ & 56.72 & 22.51 & 0.48 & 0.18 & 20.11 & \\
-\midrule
-\multirow{2}{*}{$10.0$} & $N{=}10$ & 50.80 & 26.79 & 1.09 & 0.90 & 20.41 & \multirow{2}{*}{1553} \\
-                        & $N{=}30$ & 53.25 & 21.57 & 2.45 & 0.19 & 22.54 & \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-Two observations follow. First, the per-trajectory label assigned on the first $10$ rounds agrees with the label assigned on the full $30$ rounds in $85.7\%$ of cases, indicating that the rule-based classifier is largely horizon-stable on these data. Second, the qualitative pattern of the stake effect -- ALLD share dropping by approximately $20$ percentage points between $\lambda{=}0.1$ and $\lambda{=}1$, and remaining at a similar level at $\lambda{=}10$ -- is reproduced almost identically by the truncated and full classifications. The directional comparison with the proprietary-model corpus reported in Section~3.6 and Figure~13 is therefore not an artefact of horizon length. The slightly higher share of ``NONE'' (unclassifiable) trajectories at $N{=}30$ is consistent with longer sequences accumulating execution errors that push them outside the canonical rule envelopes, an effect that the LSTM-based hybrid pipeline used in the main text actively absorbs via its noise tolerance.
-
-\subsubsection{Confidence-threshold robustness}\label{appendix:small_unfit}
-
-For completeness, Figure~\ref{fig:small_unfit_threshold} reports the unfit-trajectory rate -- the fraction of trajectories left unclassified by the hybrid rule + LSTM pipeline -- as a function of the LSTM-output confidence threshold $\tau$, computed separately for Qwen3~8B, Gemma-3~12B and Llama-3.1~8B on the open-weight payoff-scaled corpus. At the $\tau = 0.9$ threshold used in the main analysis, the unfit rate is $1.2\%$ for Gemma-3~12B, $10.8\%$ for Qwen3~8B and $33.9\%$ for Llama-3.1~8B; the qualitative ordering of models by conditional-cooperation capacity reported in Section~3.6 is preserved across the entire $\tau \in [0.6, 0.95]$ range, confirming that the threshold choice is not the driver of the model-level heterogeneity.
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=0.8\linewidth]{all_figures/fig_unfit_vs_threshold_small_llm_by_model.pdf}
-    \caption{Unfit (non-classifiable) trajectory rate -- the fraction of agent trajectories left unclassified by the hybrid rule + LSTM pipeline -- as a function of the LSTM-output confidence threshold $\tau$ for the three open-weight small LLMs. The dashed vertical line at $\tau{=}0.9$ marks the threshold used in the main analysis, where the unfit rate is $1.2\%$ for Gemma-3~12B, $10.8\%$ for Qwen3~8B and $33.9\%$ for Llama-3.1~8B. Llama-3.1~8B has the largest unfit rate at all $\tau$, consistent with its noisier conditional play.}
-    \label{fig:small_unfit_threshold}
-\end{figure}
-
-\subsubsection{Chi-square stake-effect test}\label{appendix:small_llm_chi2}
-
-Table~\ref{tab:small_chi2} reports the chi-square test of independence between inferred strategy and stake $\lambda$ for the open-weight small LLMs, both pooled and per model. The test is run on $\tau > 0.9$ high-confidence trajectories at all six multipliers $\lambda \in \{0.01, 0.1, 1, 10, 100, 1000\}$, parallel in spirit to the proprietary-corpus test in Section~3.3. The pooled effect size (Cram\'er's $V \approx 0.10$) is larger than the value observed in the proprietary corpus restricted to three lambdas ($V \approx 0.065$), reflecting the wider stake sweep used here. Per-model, Gemma-3~12B is the least stake-sensitive, consistent with its early-commitment trajectory shape; Llama-3.1~8B is the most sensitive, reflecting its sharp moves between defection-leaning and Tit-for-Tat-dominated regimes; Qwen3~8B sits in between, with the U-shape stake response we noted in the main text.
-
-\begin{table}[!htbp]
-\centering
-\caption{Chi-square test of independence between inferred strategy and stake $\lambda$ for the open-weight small LLMs at $\tau \geq 0.9$, computed over the full six-multiplier sweep $\lambda \in \{0.01, 0.1, 1, 10, 100, 1000\}$ on the canonical cache (composite labels expanded into one row per matched strategy, identically to Tables~5 and 6). Effect sizes are reported as Cram\'er's $V$.}
-\label{tab:small_chi2}
-\footnotesize
-\begin{tabular}{lccccc}
-\toprule
-\textbf{Scope} & $n$ & $\chi^2$ & dof & $p$-value & Cram\'er's $V$ \\
-\midrule
-Gemma-3~12B  & 4{,}663 & 131.16 & 15 & $1.3 \times 10^{-20}$ & 0.097 \\
-Qwen3~8B     & 2{,}973 & 143.35 & 15 & $5.0 \times 10^{-23}$ & 0.127 \\
-Llama-3.1~8B & 1{,}621 & 227.65 & 15 & $4.9 \times 10^{-40}$ & 0.216 \\
-\midrule
-Pooled       & 9{,}257 & 274.90 & 15 & $9.0 \times 10^{-50}$ & 0.099 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-
-% Flush any still-floating table/figure (e.g. Table B.4) so it is placed with
-% its text and never drifts into the reference list below.
 \FloatBarrier
 
-% --- Appendix-local reference list (only works cited in this appendix). ---
+
+% ===========================================================================
+\section{The evolutionary baseline}\label{appendix:egt}
+
+The main text reports what six language models did. This appendix computes what
+the same payoff matrices imply for a population of adaptive agents restricted
+to the same four canonical rules, on the same ten payoff scales, and compares
+the two. The purpose is to size a gap rather than to test either object:
+the baseline says which strategy mixtures are evolutionarily stable when the
+only sources of variation are payoff magnitude and stochastic execution, and
+the difference between that and the corpus is a measurement of everything a
+language model brings that an evolutionary model does not. Combining
+evolutionary modelling with language-model simulation in this way has proved
+informative in recent work on governance
+dilemmas~\cite{balabanova2025media,buscemi2025llms}.
+
+\subsection{The model}\label{appendix:egt_model}
+
+We adopt the standard pairwise-comparison process under the small-mutation
+limit~\cite{sigmund:2010bo,han_when_2021,nowak2004emergence,liu2020evolutionary},
+in which a finite well-mixed population of size $Z = 100$ evolves through
+social imitation governed by the Fermi update rule. The small-mutation limit is
+the regime in which mutations are rare enough that the population spends almost
+all of its time in monomorphic states, every individual playing the same
+strategy, and only occasionally transitions between them; it has a clean
+analytical solution and is the standard reference baseline in finite-population
+evolutionary game theory, and it has proved able to reproduce features of human
+experimental data~\cite{rand2013evolution,zisis2015generosity}. Selection
+intensity is set to $\beta = 0.1$.
+
+To put the analysis on the same incentive structure as the experiments, the
+FAIRGAME penalty matrix is negated, so that lower-is-better penalties become
+higher-is-better utilities. The penalties $T_{\text{pen}} = 0$,
+$R_{\text{pen}} = 2$, $P_{\text{pen}} = 6$, $S_{\text{pen}} = 10$ map to
+utilities $T = 0$, $R = -2$, $P = -6$, $S = -10$, which satisfy the standard
+prisoner's dilemma ordering $T > R > P > S$; the transformation is a strict
+sign flip and preserves the strategic ordering. The whole matrix is then
+multiplied by $\lam$, exactly as in the experimental protocol, so that the two
+sides of the comparison are anchored to the same per-round magnitudes.
+
+For a resident strategy $i$ and a mutant $j$, the expected per-round payoff
+$\pi_{ij}$ is obtained analytically over the same horizon the experiments use,
+$r = 10$ rounds, by propagating the joint distribution over the two players'
+actions forward round by round and averaging; no simulation enters. The
+fixation probability of a single $j$-mutant in a resident $i$-population is
+\begin{equation}
+\rho_{ji} \;=\; \left(1 + \sum_{k=1}^{Z-1}\prod_{m=1}^{k}
+   \frac{T^{-}_{ji}(m)}{T^{+}_{ji}(m)}\right)^{-1},
+\label{eq:fixation}
+\end{equation}
+where $T^{\pm}_{ji}(m)$ are the Fermi-weighted transition rates at composition
+$m$~\cite{szabo1998evolutionary}. Assembling these probabilities gives an
+embedded Markov chain over the four monomorphic states whose unique stationary
+distribution $\sigma$ is the long-run frequency of each strategy in the
+rare-mutation regime~\cite{sigmund:2010bo}. The reference implementation is
+the open-source EGTtools library~\cite{domingos2023egttools}.
+
+\subsection{The strategies under execution noise}\label{appendix:egt_strategies}
+
+The four canonical rules enter as memory-one policies with a per-round
+implementation error $\varepsilon$, the probability of executing the opposite
+of the intended action. Writing $\mathrm{hi} = 1 - \varepsilon$ and
+$\mathrm{lo} = \varepsilon$, the probability of cooperating is $\mathrm{hi}$
+wherever table~\ref{tab:A-rules} prescribes $C$ and $\mathrm{lo}$ wherever it
+prescribes $D$, including on the opening move, so AllC, Tit-for-Tat and
+Win-Stay-Lose-Shift open at $\mathrm{hi}$ and AllD at $\mathrm{lo}$. The rules
+are therefore the same objects the empirical read-out matches against, which is
+what makes the two sides of the comparison commensurable.
+
+\subsection{Numerical method and precision audit}\label{appendix:egt_numerics}
+
+The computation is numerically delicate at the top of the payoff grid, and we
+report the audit rather than only the result. Equation~\eqref{eq:fixation}
+accumulates a product of $Z-1$ Fermi ratios whose exponents scale with
+$\beta \lam \Delta\pi$; at the largest scales that product overflows the range
+of double precision, every fixation probability rounds to exactly 0 or 1, the
+embedded chain acquires more than one absorbing state, and the eigenvector for
+eigenvalue 1 is no longer unique. A double-precision solver then returns an
+arbitrary member of a degenerate eigenspace, which is a wrong answer that
+carries no warning.
+
+The published grid is therefore computed twice: once in arbitrary precision
+with \texttt{mpmath} at 200 decimal digits, which is the primary solver, and
+once in double precision through EGTtools, which serves as a check. Each cell
+of the grid records the maximum absolute discrepancy between the two solvers
+and the number of absorbing states the double-precision chain possesses, so a
+reader can see exactly where double precision fails and by how much.
+
+\subsection{The grid}\label{appendix:egt_grid}
+
+Figure~\ref{fig:egt_grid} draws the stationary frequency of each canonical
+strategy against the payoff scale at every execution-noise level, and the
+tables below give the same grid in numbers, together with the precision audit.
+
+\input{egt_tables_auto}
+
+\subsection{Comparison with the corpus}\label{appendix:egt_vs_llm}
+
+Figure~\ref{fig:egt_vs_llm} places the stationary distribution beside the
+pooled label composition of the corpus at each payoff scale.
+
+Two features agree. Both put their greatest behavioural diversity at the
+smallest payoff scales, where the baseline is close to neutral drift because
+$\beta \lam \Delta\pi$ is small and the corpus shows its models at their most
+dissimilar. And in both, a change in $\lam$ moves mass between the conditional
+cooperators and unconditional defection rather than reshuffling the four
+strategies arbitrarily.
+
+The direction is the disagreement, and it is the whole point of the comparison.
+The baseline drives Always Defect upward as the payoff scale grows, because a
+larger $\lam$ multiplies the payoff differences that the Fermi rule responds to
+and so sharpens selection against any rule that can be exploited; at
+$\varepsilon = 0.05$ its share runs from 0.267 at $\lam = 0.01$ to 1.000 by
+$\lam = 100$, and the process ends with the population entirely on Always
+Defect (table~\ref{tab:C-egt-vs-llm}). The corpus does the opposite in
+aggregate: its pooled AllD share falls from $43.6\%$ at $\lam = 0.01$ to
+$28.3\%$ at $\lam = 10^{3}$, and its AllC share rises from $38.1\%$ to
+$45.8\%$. The two objects, given the same matrices and restricted to the same
+four rules, predict qualitatively different worlds depending on who is playing.
+
+One qualification belongs with the baseline rather than with the comparison.
+The rise of Always Defect in $\lam$ is monotone at every positive execution
+error, but not in the error-free corner $\varepsilon = 0$, where the share falls
+from 0.319 at $\lam = 0.1$ to 0.273 at $\lam = 2$, a dip of 0.046, before rising
+(table~\ref{tab:C-egt-alld}). The reason is
+specific and worth stating, because it is a property of the model and not of
+the arithmetic. With no execution error, AllC, Tit-for-Tat and
+Win-Stay-Lose-Shift earn exactly $-2\lam$ against each other and against
+themselves, so the three cooperative rules are neutral among themselves and the
+ordering is decided entirely by their exchanges with Always Defect. Over ten
+rounds Tit-for-Tat loses only its opening move to Always Defect, whereas
+Win-Stay-Lose-Shift keeps being re-exploited and AllC is exploited throughout,
+so raising $\lam$ first sharpens selection in Tit-for-Tat's favour before
+Always Defect's one-round advantage finally decides it. Any positive error rate
+removes the dip, because it lets Always Defect exploit the retaliation lag
+repeatedly rather than once. The empirically implied error rates are all
+positive and well above zero (\S\ref{appendix:egt_calibration}), so the
+qualification does not touch the comparison.
+
+A second disagreement is structural rather than directional. The baseline is
+language-blind by construction: there is nothing in equation~\eqref{eq:fixation}
+for a prompt language to enter. In the corpus, the interaction of the model
+with the prompt language carries $17.0\%$ of the variance across cells, more
+than the payoff scale carries as a main effect. Whatever the corpus is
+responding to, a payoff matrix is not a complete description of it.
+
+We read the gap as a measurement and not as a falsification. It sizes what
+these agents bring that an evolutionary model does not, from alignment training
+to the cooperative bias of a human text corpus and the connotations the prompt
+language carries. Treating the baseline as the null and the gap as the quantity
+to be explained is, we would suggest, a productive way to read studies of
+language models in strategic settings.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{all_figures/fa2_egt_vs_llm.pdf}
+\caption{\textbf{The evolutionary baseline against the corpus, at matched
+payoff scales.}
+(a) Stationary frequency of each canonical strategy under the small-mutation
+limit ($Z = 100$, $\beta = 0.1$, $r = 10$, $\varepsilon = 0.05$), beside the
+pooled label composition of the five main-text models at the same payoff scale.
+(b) The share playing Always Defect alone, the one series on which the two
+disagree in sign: across the ten scales the baseline rises from 0.27 to 1.00
+while the corpus falls from 0.44 to 0.28.}
+\label{fig:egt_vs_llm}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{all_figures/fa1_egt_grid.pdf}
+\caption{\textbf{The evolutionary baseline across the payoff grid and the
+execution-noise levels.} Stationary frequency of each of the four canonical
+strategies against the payoff scale, one panel per execution-error rate
+$\varepsilon$. Always Defect rises with $\lam$ at every noise level, and does
+so sooner the noisier execution is; the rise is monotone at every positive
+$\varepsilon$ and dips slightly before rising in the error-free corner
+$\varepsilon = 0$ (table~\ref{tab:C-egt-alld}).}
+\label{fig:egt_grid}
+\end{figure}
+
+\subsection{Execution noise is not a free parameter here}\label{appendix:egt_calibration}
+
+In a study with no empirical read-out, $\varepsilon$ would have to be chosen.
+Here it can be estimated, because the rule base already measures how far each
+model's play sits from the nearest canonical rule. Dividing a model's mean
+rule distance by the ten rounds of a game gives a per-round rate at which its
+realised play departs from the rule it most resembles, which is the empirical
+analogue of an implementation error (table~\ref{tab:A-egtcalib}).
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\caption{\textbf{Execution noise implied by the read-out.} The mean number of
+rounds, out of ten, by which an agent-game departs from the nearest canonical
+rule, and that quantity as a per-round rate. The two models whose play is least
+rule-governed imply a noise level at the very edge of the range the classifier
+was validated on, which is why \S\ref{appendix:robust_readout} treats their
+strategy labels as the weakest evidence in this article.}
+\label{tab:A-egtcalib}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Model & Mean rule distance (rounds of 10) & Implied $\varepsilon$ \\
+\midrule
+Claude Haiku 4.5      & 2.073 & 0.207 \\
+GPT-5.4 Nano          & 2.120 & 0.212 \\
+Gemini 3.5 Flash-Lite & 1.077 & 0.108 \\
+Qwen3 235B-A22B       & 0.737 & 0.074 \\
+Grok 4.20             & 0.725 & 0.073 \\
+Gemini 3.1 Flash-Lite & 1.030 & 0.103 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The implied rates span 0.073 to 0.212, so no single noise level matches the
+whole corpus, and the honest matched comparison for two of the five main-text
+models is at $\varepsilon = 0.2$ rather than at the 0.05 a study of this kind
+would ordinarily adopt. The grid in \S\ref{appendix:egt_grid} therefore carries
+that level, and the conclusion of \S\ref{appendix:egt_vs_llm} is unchanged
+across it: the direction of the baseline in $\lam$ does not depend on
+$\varepsilon$.
+
+This mapping should not be over-read. A symmetric per-action flip probability
+is a clean theoretical object and a coarse abstraction of what makes a language
+model's play depart from a rule, which includes prompt sensitivity, end-game
+reasoning and the heterogeneity documented throughout this article. The
+calibration bounds the comparison; it does not fit the model.
+
+
+% ===========================================================================
+\section{Robustness}\label{appendix:robustness}
+
+\subsection{What including the sixth model changes}\label{appendix:robust_sixth}
+
+Every pooled quantity in this article is reported twice, once on the five
+main-text models and once on all six, so that the effect of the split can be
+seen rather than assumed. Including Gemini 3.1 Flash-Lite moves the pooled
+range from 0.154 to 0.125, the mean within-model range from 0.249 to 0.219 and
+the attenuation from 1.62 to 1.76; the share of anticorrelated pairs rises from
+six of ten to nine of fifteen; and in the variance decomposition the payoff
+scale falls from $5.8\%$ to $4.3\%$ as a main effect while its interaction with
+the model rises from $17.9\%$ to $19.1\%$
+(tables~\ref{tab:S-variance},~\ref{tab:S-variance-all},~\ref{tab:S-shapes}
+and~\ref{tab:S-shapes-all}).
+
+Every sign, every significance and every ordering agrees between the two, and
+the pooling argument the main text makes is stronger over all six models than
+over the five it reports. The single count that the sixth model changes is the
+strategy-trend tally, and it changes it in the direction that weakens the
+paper, which is stated in the main text at the point where the claim is made
+rather than only here.
+
+\subsection{The read-out at the edge of its validated range}\label{appendix:robust_readout}
+
+The classifier was validated to $20\%$ execution noise, which is two rounds in
+ten. Table~\ref{tab:A-egtcalib} shows that Claude Haiku 4.5 and GPT-5.4 Nano
+sit at 2.07 and 2.12 rounds from the nearest canonical rule on average, so for
+those two models the read-out is operating at the very edge of the range it was
+validated on, and their label compositions are the weakest evidence in this
+article.
+
+The two claims that matter most are insulated from this. The falling share of
+agent-games matched exactly by one rule, and the rising number of rounds
+violating the nearest rule, are both computed by exact matching with no learned
+component at all, and it is precisely those two quantities that the main text
+uses to argue that play becomes less rule-governed. The compositional claim,
+which does use the classifier, is reported with its provenance beside it
+(table~\ref{tab:S-provenance}) and is described in the main text as the weaker
+of the two.
+
+There is a further and more general caveat. A strategy is a decision rule and
+not a decision, so it is never observed; separating the memory-one rules from
+observed play has been shown to require a long run of observations even where
+the resident rule is fixed by construction~\cite{kim2021win,hilbe2013memory}.
+Our trajectories are ten rounds long. This is why the read-out is reported
+throughout as a resemblance and never as an identification, and why richer
+strategy vocabularies, including zero-determinant and extortionate
+play~\cite{pressDyson2012}, and mixture estimators designed for longer
+horizons~\cite{fontana2025nicer,inferenceStrategies}, are named as the natural
+extension rather than attempted here.
+
+\subsection{Parsing, fallback and the direction of the bias}\label{appendix:robust_parsing}
+
+The parsing fallback records an unresolvable reply as Option~A, which is
+defection under this framing (\S\ref{appendix:endpoints}). Any contamination it
+introduces therefore lowers a measured cooperation rate. Two consequences
+follow. The cooperative behaviour reported in the main text cannot be an
+artefact of the fallback, because the fallback cannot produce cooperation. And
+if the fallback rate were correlated with the payoff scale, it would attenuate
+a measured range rather than create one, so the smallest ranges in
+table~\ref{tab:effect} are the ones such a correlation could most plausibly
+distort, and they are also the ones the article leans on least.
+
+\subsection{What this design does not measure}\label{appendix:robust_gaps}
+
+Two absences are worth naming so that they are not mistaken for findings.
+First, there is no measured test-retest floor: our reference for calling a
+departure large is the sampling variability of these data, through a bootstrap
+over dyads and a permutation null, and not an independent repeat of the whole
+protocol under identical conditions. Such a repeat is the obvious next
+measurement, and until it exists the ranges in table~\ref{tab:effect} should be
+read against the permutation null rather than against an unmeasured
+reproducibility baseline.
+
+Second, clustering on the dyad handles the dependence between the two agents of
+a game and between the rounds inside an agent-game, but it is not a
+mixed-effects model with random intercepts for replicate and game, which would
+be the fuller treatment of a nested design. Because the direction of every
+effect is consistent across conditions and the clustered intervals are wider
+than their unclustered counterparts, we regard the reported inference as
+conservative rather than optimistic, but we do not claim it is complete.
+
+
+% ===========================================================================
+\section{Reproduction}\label{appendix:repro}
+
+Every number, figure and table in this article and in this appendix is produced
+by an archived pipeline from the released transcript corpus, and no value is
+retyped by hand into the manuscript sources: the three main-text tables are
+generated into \texttt{tables\_auto.tex}, the supplementary tables of
+\S\ref{appendix:results} into \texttt{supp\_tables\_auto.tex}, and the
+evolutionary grid of \S\ref{appendix:egt} into \texttt{egt\_tables\_auto.tex}.
+
+The pipeline runs in the following order. \texttt{s00\_build} reads the
+transcript corpus, applies the completeness guard of
+\S\ref{appendix:corpus} and writes the tidy game, round and read-out tables.
+\texttt{s01\_train\_lstm} trains the classifier of \S\ref{appendix:classifier}
+on the synthetic corpus. \texttt{s02\_readout} applies the rule base and the
+classifier to the transcripts. \texttt{s03\_stats} and
+\texttt{s04\_strategy\_stats} compute every statistic reported here.
+\texttt{s05\_figures} and \texttt{s05b\_appendix\_figures} draw the figures
+directly into the manuscript directory. \texttt{s06\_tables} and
+\texttt{s07\_supplementary} render the tables. \texttt{s09\_egt} computes the
+evolutionary grid of \S\ref{appendix:egt}. Finally \texttt{s08\_verify\_paper}
+recomputes every quantity quoted in the manuscript prose from the data and
+fails if any of them disagrees, so that a stale number cannot survive an edit.
+
+Three seeds fix the stochastic parts: 12345 for the corpus build, 1234 for
+classifier training, and 20260905 for the bootstrap and permutation draws.
+
+The results reported here were produced under Python 3.12.3 with NumPy 1.26.4,
+pandas 2.2.2, PyArrow 16.1.0, SciPy 1.17.1, statsmodels 0.14.6,
+scikit-learn 1.5.1, PyTorch 2.11.0 on CPU, Matplotlib 3.9.2, mpmath 1.3.0 and
+EGTtools 0.1.14.2. The classifier is trained on CPU and its seed is fixed, so
+the read-out is reproducible without a GPU.
+
+%% >>> FILL IN <<<  Replace with the repository URL and DOI once deposited, and
+%% state the licence.  Royal Society policy requires data and code to be
+%% reachable by editors and reviewers at first submission.
+
+\FloatBarrier
+
 \printbibliography
 
 \end{document}

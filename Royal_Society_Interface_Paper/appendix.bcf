@@ -2382,13 +2382,24 @@
   </bcf:bibdata>
   <bcf:section number="0">
     <bcf:citekey order="1" intorder="1">buscemi2025fairgame</bcf:citekey>
-    <bcf:citekey order="2" intorder="1">diStefanoIntention2023</bcf:citekey>
-    <bcf:citekey order="2" intorder="2">Han2012ALIFEjournal</bcf:citekey>
-    <bcf:citekey order="3" intorder="1">buscemi2025fairgame</bcf:citekey>
-    <bcf:citekey order="4" intorder="1">buscemi2025fairgame</bcf:citekey>
-    <bcf:citekey order="5" intorder="1">diStefanoIntention2023</bcf:citekey>
-    <bcf:citekey order="5" intorder="2">inferenceStrategies</bcf:citekey>
-    <bcf:citekey order="5" intorder="3">Han2012ALIFEjournal</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">lstm</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">efron1993introduction</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">balabanova2025media</bcf:citekey>
+    <bcf:citekey order="4" intorder="2">buscemi2025llms</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">sigmund:2010bo</bcf:citekey>
+    <bcf:citekey order="5" intorder="2">han_when_2021</bcf:citekey>
+    <bcf:citekey order="5" intorder="3">nowak2004emergence</bcf:citekey>
+    <bcf:citekey order="5" intorder="4">liu2020evolutionary</bcf:citekey>
+    <bcf:citekey order="6" intorder="1">rand2013evolution</bcf:citekey>
+    <bcf:citekey order="6" intorder="2">zisis2015generosity</bcf:citekey>
+    <bcf:citekey order="7" intorder="1">szabo1998evolutionary</bcf:citekey>
+    <bcf:citekey order="8" intorder="1">sigmund:2010bo</bcf:citekey>
+    <bcf:citekey order="9" intorder="1">domingos2023egttools</bcf:citekey>
+    <bcf:citekey order="10" intorder="1">kim2021win</bcf:citekey>
+    <bcf:citekey order="10" intorder="2">hilbe2013memory</bcf:citekey>
+    <bcf:citekey order="11" intorder="1">pressDyson2012</bcf:citekey>
+    <bcf:citekey order="12" intorder="1">fontana2025nicer</bcf:citekey>
+    <bcf:citekey order="12" intorder="2">inferenceStrategies</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">

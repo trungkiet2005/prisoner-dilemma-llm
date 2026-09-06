@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2026.7.17)  20 JUL 2026 18:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2026.7.17)  6 SEP 2026 12:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2255,36 +2255,45 @@ Package: chngcntr 2018/04/09 v1.1a change counter resetting
 Package chngcntr Info: \counterwithout already defined.
 (chngcntr)             Quitting chngcntr on input line 21.
 )
+(D:\Application\MiKTeX\tex/latex/tools\xr.sty
+Rollback for package 'xr' requested -> date 2025-06-01.
+         Best approximation is the release introduced on 2024-12-22.
+Package: xr 2024-12-22 v6.00 eXternal References (DPC)
+)
+Package xr Info: IMPORTING LABELS FROM main.aux on input line 36.
 \@quotelevel=\count467
 \@quotereset=\count468
-LaTeX Font Info:    Trying to load font information for T1+ppl on input line 35
+LaTeX Font Info:    Trying to load font information for T1+ppl on input line 55
 .
 
 (D:\Application\MiKTeX\tex/latex/psnfss\t1ppl.fd
 File: t1ppl.fd 2001/06/04 font definitions for T1/ppl.
-) (appendix.aux)
+) (appendix.aux
+
+LaTeX Warning: Label `LastPage' multiply defined.
+
+)
 \openout1 = `appendix.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-
-(D:\Application\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+ (D:\Application\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count469
 \scratchdimen=\dimen258
@@ -2305,9 +2314,9 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 (D:\Application\MiKTeX\tex/latex/00miktex\epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
-Package crop Info: requested driver: `' on input line 35.
-Package crop Info: detected driver: `pdftex' on input line 35.
-Package crop Info: using `pdftex' graphics driver on input line 35.
+Package crop Info: requested driver: `' on input line 55.
+Package crop Info: detected driver: `pdftex' on input line 55.
+Package crop Info: using `pdftex' graphics driver on input line 55.
 
 (D:\Application\MiKTeX\tex/latex/tools\longtable.sty
 Rollback for package 'longtable' requested -> date 2025-06-01.
@@ -2330,7 +2339,7 @@ Package: longtable 2026-01-28 v4.27 Multi-page Table package (DPC)
 \c@LT@chunks=\count479
 \LT@p@ftn=\toks59
 )
-Package hyperref Info: Link coloring ON on input line 35.
+Package hyperref Info: Link coloring ON on input line 55.
  (appendix.out)
 (appendix.out)
 \@outlinefile=\write5
@@ -2350,37 +2359,42 @@ Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'appendix.bbl' found.
 
 (appendix.bbl
-LaTeX Font Info:    Trying to load font information for U+msa on input line 80.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 81.
 
  (D:\Application\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 80.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 81.
 
 
 (D:\Application\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for U+euex on input line 80
+LaTeX Font Info:    Trying to load font information for U+euex on input line 81
 .
 
 (D:\Application\MiKTeX\tex/latex/amsfonts\ueuex.fd
 File: ueuex.fd 2013/01/14 v3.01 Euler extra symbols
 ))
-Package biblatex Info: Reference section=0 on input line 35.
-Package biblatex Info: Reference segment=0 on input line 35.
+Package biblatex Info: Reference section=0 on input line 55.
+Package biblatex Info: Reference segment=0 on input line 55.
 LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 13.6001pt on input line 51.
+(Font)              scaled to size 13.6001pt on input line 74.
 LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 11.90009pt on input line 53.
+(Font)              scaled to size 11.90009pt on input line 76.
 LaTeX Font Info:    Font shape `T1/phv/b/n' will be
-(Font)              scaled to size 7.22505pt on input line 59.
+(Font)              scaled to size 7.22505pt on input line 122.
 LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 7.22505pt on input line 59.
+(Font)              scaled to size 7.22505pt on input line 122.
+LaTeX Font Info:    Trying to load font information for T1+pcr on input line 12
+8.
 
+(D:\Application\MiKTeX\tex/latex/psnfss\t1pcr.fd
+File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
+)
 
 LaTeX Font Info:    Font shape `T1/phv/b/n' will be
-(Font)              scaled to size 7.65005pt on input line 116.
+(Font)              scaled to size 7.65005pt on input line 164.
 
 Overfull \vbox (21.4162pt too high) has occurred while \output is active []
 
@@ -2394,58 +2408,34 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.A.1}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.116 \begin{equation*}
-                       ]
-LaTeX Font Info:    Trying to load font information for TS1+ppl on input line 1
-33.
- (D:\Application\MiKTeX\tex/latex/psnfss\ts1ppl.fd
-File: ts1ppl.fd 2001/06/04 font definitions for TS1/ppl.
-)
-<all_figures/fig05_threshold_combined_metrics.pdf, id=132, 518.89862pt x 394.79
-808pt>
-File: all_figures/fig05_threshold_combined_metrics.pdf Graphic file (type pdf)
-<use all_figures/fig05_threshold_combined_metrics.pdf>
-Package pdftex.def Info: all_figures/fig05_threshold_combined_metrics.pdf  used
- on input line 144.
-(pdftex.def)             Requested size: 483.69684pt x 368.02588pt.
-LaTeX Font Info:    Calculating math sizes for size <8.5> on input line 145.
+l.164 \subsection
+                 {The scaled payoff matrix at all ten scales}\label{appendix...
+]
+LaTeX Font Info:    Calculating math sizes for size <8.5> on input line 256.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <8.5> not available
-(Font)              size <8> substituted on input line 145.
+(Font)              size <8> substituted on input line 256.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <4.25> not available
-(Font)              size <5> substituted on input line 145.
+(Font)              size <5> substituted on input line 256.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <8.5> not available
-(Font)              size <8> substituted on input line 145.
+(Font)              size <8> substituted on input line 256.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <4.25> not available
-(Font)              size <5> substituted on input line 145.
+(Font)              size <5> substituted on input line 256.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <8.5> not available
-(Font)              size <8> substituted on input line 145.
+(Font)              size <8> substituted on input line 256.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <4.25> not available
-(Font)              size <5> substituted on input line 145.
-
-
-LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <8.5> not available
-(Font)              size <8> substituted on input line 145.
-
-
-LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <4.25> not available
-(Font)              size <5> substituted on input line 145.
-
-
-Underfull \hbox (badness 10000) detected at line 153
-[]
- []
+(Font)              size <5> substituted on input line 256.
 
 
 
@@ -2458,19 +2448,19 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.A.2}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.170 
-      ]
-<all_figures/fig01_lstm_model_performance.pdf, id=148, 518.89862pt x 232.7094pt
->
-File: all_figures/fig01_lstm_model_performance.pdf Graphic file (type pdf)
-<use all_figures/fig01_lstm_model_performance.pdf>
-Package pdftex.def Info: all_figures/fig01_lstm_model_performance.pdf  used on 
-input line 194.
-(pdftex.def)             Requested size: 483.69684pt x 216.92882pt.
-LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 5.0575pt on input line 195.
-LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 3.61252pt on input line 195.
+l.280 \]
+        ]
+LaTeX Font Info:    Trying to load font information for TS1+ppl on input line 2
+95.
+ (D:\Application\MiKTeX\tex/latex/psnfss\ts1ppl.fd
+File: ts1ppl.fd 2001/06/04 font definitions for TS1/ppl.
+)
+<all_figures/fa4_classifier.pdf, id=162, 512.63011pt x 158.84784pt>
+File: all_figures/fa4_classifier.pdf Graphic file (type pdf)
+<use all_figures/fa4_classifier.pdf>
+Package pdftex.def Info: all_figures/fa4_classifier.pdf  used on input line 335
+.
+(pdftex.def)             Requested size: 483.69684pt x 149.88173pt.
 
 
 
@@ -2478,287 +2468,209 @@ Overfull \vbox (21.51176pt too high) has occurred while \output is active []
 
 
 [3
-pdfTeX warning (ext4): destination with the same identifier (name{figure.A.1}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.197 \end{figure}
-                  
 pdfTeX warning (ext4): destination with the same identifier (name{table.A.3}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.197 \end{figure}
-                   <./all_figures/fig05_threshold_combined_metrics.pdf>]
-<all_figures/fig06_classifier_performance_comparison.pdf, id=184, 518.89862pt x
- 251.2971pt>
-File: all_figures/fig06_classifier_performance_comparison.pdf Graphic file (typ
-e pdf)
-<use all_figures/fig06_classifier_performance_comparison.pdf>
-Package pdftex.def Info: all_figures/fig06_classifier_performance_comparison.pd
-f  used on input line 203.
-(pdftex.def)             Requested size: 483.69684pt x 234.25604pt.
-LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 10.20007pt on input line 216.
-<all_figures/fig07_per_lambda_radar.pdf, id=187, 518.89862pt x 269.1021pt>
-File: all_figures/fig07_per_lambda_radar.pdf Graphic file (type pdf)
-<use all_figures/fig07_per_lambda_radar.pdf>
-Package pdftex.def Info: all_figures/fig07_per_lambda_radar.pdf  used on input 
-line 222.
-(pdftex.def)             Requested size: 483.69684pt x 250.85364pt.
-<all_figures/ijcai_radar_chart_6multipliers_small_llm.pdf, id=190, 505.15413pt 
-x 459.4802pt>
-File: all_figures/ijcai_radar_chart_6multipliers_small_llm.pdf Graphic file (ty
-pe pdf)
-<use all_figures/ijcai_radar_chart_6multipliers_small_llm.pdf>
-Package pdftex.def Info: all_figures/ijcai_radar_chart_6multipliers_small_llm.p
-df  used on input line 231.
-(pdftex.def)             Requested size: 483.69684pt x 439.9812pt.
-LaTeX Font Info:    Trying to load font information for T1+pcr on input line 23
-2.
-
-(D:\Application\MiKTeX\tex/latex/psnfss\t1pcr.fd
-File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
-)
+l.370 
+      ]
 
 
 Overfull \vbox (21.4162pt too high) has occurred while \output is active []
 
 
 [4
-pdfTeX warning (ext4): destination with the same identifier (name{figure.A.2}) 
+pdfTeX warning (ext4): destination with the same identifier (name{figure.A.1}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.236 ...{Multidimensional behavioural comparison}
-                                                  \label{appendix:multidimen...
- <./all_figures/fig01_lstm_model_performance.pdf>]
+l.437 
+       <./all_figures/fa4_classifier.pdf>]
+<all_figures/fa3_supp_model.pdf, id=216, 445.59189pt x 229.8037pt>
+File: all_figures/fa3_supp_model.pdf Graphic file (type pdf)
+<use all_figures/fa3_supp_model.pdf>
+Package pdftex.def Info: all_figures/fa3_supp_model.pdf  used on input line 519
+.
+(pdftex.def)             Requested size: 483.69684pt x 249.47118pt.
+
+
+LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <8.5> not available
+(Font)              size <8> substituted on input line 526.
+
+
+LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <4.25> not available
+(Font)              size <5> substituted on input line 526.
+
+
 
 
 Overfull \vbox (21.51176pt too high) has occurred while \output is active []
 
 
-[5
-pdfTeX warning (ext4): destination with the same identifier (name{figure.A.3}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.236 ...{Multidimensional behavioural comparison}
-                                                  \label{appendix:multidimen...
-
-pdfTeX warning (ext4): destination with the same identifier (name{figure.B.1}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.236 ...{Multidimensional behavioural comparison}
-                                                  \label{appendix:multidimen...
- <./all_figures/fig06_classifier_performance_comparison.pdf> <./all_figures/fig
-07_per_lambda_radar.pdf>]
+[5] (supp_tables_auto.tex)
 
 
 Overfull \vbox (21.51176pt too high) has occurred while \output is active []
 
 
 [6
-pdfTeX warning (ext4): destination with the same identifier (name{figure.B.2}) 
+pdfTeX warning (ext4): destination with the same identifier (name{figure.B.1}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.239 
-       <./all_figures/ijcai_radar_chart_6multipliers_small_llm.pdf>]
-<all_figures/fig16_behavioral_characteristics.pdf, id=315, 518.89862pt x 267.30
-263pt>
-File: all_figures/fig16_behavioral_characteristics.pdf Graphic file (type pdf)
-<use all_figures/fig16_behavioral_characteristics.pdf>
-Package pdftex.def Info: all_figures/fig16_behavioral_characteristics.pdf  used
- on input line 242.
-(pdftex.def)             Requested size: 483.69684pt x 249.1762pt.
-<all_figures/ijcai_multidimensional_behavioral_comparison_small_llm.pdf, id=316
-, 512.57718pt x 386.73528pt>
-File: all_figures/ijcai_multidimensional_behavioral_comparison_small_llm.pdf Gr
-aphic file (type pdf)
-<use all_figures/ijcai_multidimensional_behavioral_comparison_small_llm.pdf>
-Package pdftex.def Info: all_figures/ijcai_multidimensional_behavioral_comparis
-on_small_llm.pdf  used on input line 249.
-(pdftex.def)             Requested size: 483.69684pt x 364.95335pt.
-
-Underfull \hbox (badness 1281) in paragraph at lines 250--250
-[]\T1/phv/b/n/8.5 Figure B.4. []Multidimensional be-havioural com-par-i-son of 
-the open-weight small LLMs across pay-off scales, lan-guages, and model
- []
-
-<all_figures/fig09_uncond_vs_cond_by_lang.pdf, id=319, 377.24939pt x 218.2554pt
->
-File: all_figures/fig09_uncond_vs_cond_by_lang.pdf Graphic file (type pdf)
-<use all_figures/fig09_uncond_vs_cond_by_lang.pdf>
-Package pdftex.def Info: all_figures/fig09_uncond_vs_cond_by_lang.pdf  used on 
-input line 260.
-(pdftex.def)             Requested size: 338.5863pt x 195.90184pt.
-<all_figures/penalties_subplots.pdf, id=322, 503.10083pt x 435.66138pt>
-File: all_figures/penalties_subplots.pdf Graphic file (type pdf)
-<use all_figures/penalties_subplots.pdf>
-Package pdftex.def Info: all_figures/penalties_subplots.pdf  used on input line
- 273.
-(pdftex.def)             Requested size: 483.69684pt x 418.86168pt.
-
+l.543 \FloatBarrier
+                   
+pdfTeX warning (ext4): destination with the same identifier (name{table.B.1}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.543 \FloatBarrier
+                    <./all_figures/fa3_supp_model.pdf>]
 
 
 Overfull \vbox (21.4162pt too high) has occurred while \output is active []
 
 
 [7
-pdfTeX warning (ext4): destination with the same identifier (name{figure.B.3}) 
-has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{table.B.2}) h
+as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.300 
-       <./all_figures/fig16_behavioral_characteristics.pdf>]
+l.543 \FloatBarrier
+                   ]
 
 
 Overfull \vbox (21.51176pt too high) has occurred while \output is active []
 
 
 [8
-pdfTeX warning (ext4): destination with the same identifier (name{figure.B.4}) 
-has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{table.B.3}) h
+as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.300 
-      
-pdfTeX warning (ext4): destination with the same identifier (name{figure.B.5}) 
-has been already used, duplicate ignored
+l.543 \FloatBarrier
+                   
+pdfTeX warning (ext4): destination with the same identifier (name{table.B.4}) h
+as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.300 
-       <./all_figures/ijcai_multidimensional_behavioral_comparison_small_llm.pd
-f> <./all_figures/fig09_uncond_vs_cond_by_lang.pdf>]
+l.543 \FloatBarrier
+                   ]
 
 
 Overfull \vbox (21.51176pt too high) has occurred while \output is active []
 
 
 [9
-pdfTeX warning (ext4): destination with the same identifier (name{figure.B.6}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.300 
-      
-pdfTeX warning (ext4): destination with the same identifier (name{table.B.1}) h
+pdfTeX warning (ext4): destination with the same identifier (name{table.B.5}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.300 
-       <./all_figures/penalties_subplots.pdf>]
-<all_figures/fig10_egt_freq_vs_lambda_by_noise.pdf, id=423, 518.89862pt x 256.3
-176pt>
-File: all_figures/fig10_egt_freq_vs_lambda_by_noise.pdf Graphic file (type pdf)
-
-<use all_figures/fig10_egt_freq_vs_lambda_by_noise.pdf>
-Package pdftex.def Info: all_figures/fig10_egt_freq_vs_lambda_by_noise.pdf  use
-d on input line 329.
-(pdftex.def)             Requested size: 483.69684pt x 238.9361pt.
-<all_figures/fig11_egt_freq_vs_noise_by_lambda.pdf, id=424, 519.3804pt x 218.25
-54pt>
-File: all_figures/fig11_egt_freq_vs_noise_by_lambda.pdf Graphic file (type pdf)
-
-<use all_figures/fig11_egt_freq_vs_noise_by_lambda.pdf>
-Package pdftex.def Info: all_figures/fig11_egt_freq_vs_noise_by_lambda.pdf  use
-d on input line 338.
-(pdftex.def)             Requested size: 483.69684pt x 203.26181pt.
-
+l.543 \FloatBarrier
+                   
+pdfTeX warning (ext4): destination with the same identifier (name{table.B.6}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.543 \FloatBarrier
+                   
+pdfTeX warning (ext4): destination with the same identifier (name{table.B.7}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.543 \FloatBarrier
+                   ]
 
 
 Overfull \vbox (21.51176pt too high) has occurred while \output is active []
 
 
 [10
-pdfTeX warning (ext4): destination with the same identifier (name{table.B.2}) h
+pdfTeX warning (ext4): destination with the same identifier (name{table.B.8}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.349 \subsubsection
-                    {Hybrid classification approach}]
+l.543 \FloatBarrier
+                   
+pdfTeX warning (ext4): destination with the same identifier (name{table.B.9}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.543 \FloatBarrier
+                   ]
 
 
 Overfull \vbox (21.4162pt too high) has occurred while \output is active []
 
 
 [11
-pdfTeX warning (ext4): destination with the same identifier (name{figure.B.7}) 
+pdfTeX warning (ext4): destination with the same identifier (name{table.B.10}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.349 \subsubsection
-                    {Hybrid classification approach}
-pdfTeX warning (ext4): destination with the same identifier (name{figure.B.8}) 
+l.543 \FloatBarrier
+                   
+pdfTeX warning (ext4): destination with the same identifier (name{table.B.11}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.349 \subsubsection
-                    {Hybrid classification approach} <./all_figures/fig10_egt_f
-req_vs_lambda_by_noise.pdf> <./all_figures/fig11_egt_freq_vs_noise_by_lambda.pd
-f>]
-<all_figures/fig_strategy_by_model_stacked.pdf, id=509, 377.00801pt x 246.92203
-pt>
-File: all_figures/fig_strategy_by_model_stacked.pdf Graphic file (type pdf)
-<use all_figures/fig_strategy_by_model_stacked.pdf>
-Package pdftex.def Info: all_figures/fig_strategy_by_model_stacked.pdf  used on
- input line 357.
-(pdftex.def)             Requested size: 435.32419pt x 285.11858pt.
-<all_figures/fig_strategy_by_language.pdf, id=511, 377.00801pt x 232.46802pt>
-File: all_figures/fig_strategy_by_language.pdf Graphic file (type pdf)
-<use all_figures/fig_strategy_by_language.pdf>
-Package pdftex.def Info: all_figures/fig_strategy_by_language.pdf  used on inpu
-t line 368.
-(pdftex.def)             Requested size: 362.77263pt x 223.69173pt.
-<all_figures/fig_strategy_by_language_per_model.pdf, id=512, 518.65724pt x 189.
-70851pt>
-File: all_figures/fig_strategy_by_language_per_model.pdf Graphic file (type pdf
-)
-<use all_figures/fig_strategy_by_language_per_model.pdf>
-Package pdftex.def Info: all_figures/fig_strategy_by_language_per_model.pdf  us
-ed on input line 375.
-(pdftex.def)             Requested size: 483.69684pt x 176.93076pt.
-
+l.543 \FloatBarrier
+                   
+pdfTeX warning (ext4): destination with the same identifier (name{table.B.12}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.543 \FloatBarrier
+                   
+pdfTeX warning (ext4): destination with the same identifier (name{table.B.13}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.543 \FloatBarrier
+                   ] (egt_tables_auto.tex)
 
 
 Overfull \vbox (21.4162pt too high) has occurred while \output is active []
 
 
 [12
-pdfTeX warning (ext4): destination with the same identifier (name{figure.B.9}) 
-has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.381 
-       <./all_figures/fig_strategy_by_model_stacked.pdf>]
+
+]
 
 
 Overfull \vbox (21.51176pt too high) has occurred while \output is active []
 
 
 [13
-pdfTeX warning (ext4): destination with the same identifier (name{figure.B.10})
- has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{table.C.1}) h
+as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.387 
-      
-pdfTeX warning (ext4): destination with the same identifier (name{figure.B.11})
- has been already used, duplicate ignored
+l.641 \subsection{Comparison with the corpus}
+                                             \label{appendix:egt_vs_llm}
+pdfTeX warning (ext4): destination with the same identifier (name{table.C.2}) h
+as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.387 
-       <./all_figures/fig_strategy_by_language.pdf> <./all_figures/fig_strategy
-_by_language_per_model.pdf>]
-<all_figures/fig_language_effect_2panel.pdf, id=577, 518.65724pt x 246.92203pt>
-
-File: all_figures/fig_language_effect_2panel.pdf Graphic file (type pdf)
-<use all_figures/fig_language_effect_2panel.pdf>
-Package pdftex.def Info: all_figures/fig_language_effect_2panel.pdf  used on in
-put line 392.
-(pdftex.def)             Requested size: 483.69684pt x 230.29068pt.
+l.641 \subsection{Comparison with the corpus}
+                                             \label{appendix:egt_vs_llm}
+pdfTeX warning (ext4): destination with the same identifier (name{table.C.3}) h
+as been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.641 \subsection{Comparison with the corpus}
+                                             \label{appendix:egt_vs_llm}]
+<all_figures/fa2_egt_vs_llm.pdf, id=341, 434.92624pt x 225.48727pt>
+File: all_figures/fa2_egt_vs_llm.pdf Graphic file (type pdf)
+<use all_figures/fa2_egt_vs_llm.pdf>
+Package pdftex.def Info: all_figures/fa2_egt_vs_llm.pdf  used on input line 700
+.
+(pdftex.def)             Requested size: 483.69684pt x 250.7824pt.
+<all_figures/fa1_egt_grid.pdf, id=342, 447.15479pt x 199.35983pt>
+File: all_figures/fa1_egt_grid.pdf Graphic file (type pdf)
+<use all_figures/fa1_egt_grid.pdf>
+Package pdftex.def Info: all_figures/fa1_egt_grid.pdf  used on input line 714.
+(pdftex.def)             Requested size: 483.69684pt x 215.66435pt.
 
 
 
@@ -2766,72 +2678,42 @@ Overfull \vbox (21.4162pt too high) has occurred while \output is active []
 
 
 [14
-pdfTeX warning (ext4): destination with the same identifier (name{figure.B.12})
- has been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{table.C.4}) h
+as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.404 
-       <./all_figures/fig_language_effect_2panel.pdf>]
-<all_figures/fig_small_penalties_subplots.pdf, id=600, 505.20871pt x 546.23445p
-t>
-File: all_figures/fig_small_penalties_subplots.pdf Graphic file (type pdf)
-<use all_figures/fig_small_penalties_subplots.pdf>
-Package pdftex.def Info: all_figures/fig_small_penalties_subplots.pdf  used on 
-input line 407.
-(pdftex.def)             Requested size: 483.69684pt x 522.99553pt.
-<all_figures/fig_unfit_vs_threshold_small_llm_by_model.pdf, id=604, 282.3643pt 
-x 195.37968pt>
-File: all_figures/fig_unfit_vs_threshold_small_llm_by_model.pdf Graphic file (t
-ype pdf)
-<use all_figures/fig_unfit_vs_threshold_small_llm_by_model.pdf>
-Package pdftex.def Info: all_figures/fig_unfit_vs_threshold_small_llm_by_model.
-pdf  used on input line 445.
-(pdftex.def)             Requested size: 386.95894pt x 267.7699pt.
-
+l.771 
+      ]
 
 
 Overfull \vbox (21.51176pt too high) has occurred while \output is active []
 
 
 [15
-pdfTeX warning (ext4): destination with the same identifier (name{table.B.3}) h
-as been already used, duplicate ignored
+pdfTeX warning (ext4): destination with the same identifier (name{figure.C.1}) 
+has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.475 \FloatBarrier
-                   ]
+l.771 
+      
+pdfTeX warning (ext4): destination with the same identifier (name{figure.C.2}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.771 
+       <./all_figures/fa2_egt_vs_llm.pdf> <./all_figures/fa1_egt_grid.pdf>]
 
 
 Overfull \vbox (21.51176pt too high) has occurred while \output is active []
 
 
-[16
-pdfTeX warning (ext4): destination with the same identifier (name{figure.B.13})
- has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.475 \FloatBarrier
-                    <./all_figures/fig_small_penalties_subplots.pdf>]
-Setting LastPage
+[16] Setting LastPage
 
 
 Overfull \vbox (21.4162pt too high) has occurred while \output is active []
 
 
-[17
-pdfTeX warning (ext4): destination with the same identifier (name{figure.B.14})
- has been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.480 \end{document}
-                    
-pdfTeX warning (ext4): destination with the same identifier (name{table.B.4}) h
-as been already used, duplicate ignored
-<argument> ...shipout:D \box_use:N \l_shipout_box 
-                                                  \__shipout_drop_firstpage_...
-l.480 \end{document}
-                     <./all_figures/fig_unfit_vs_threshold_small_llm_by_model.p
-df>] (appendix.aux)
+[17] (appendix.aux)
  ***********
 LaTeX2e <2025-06-01>
 L3 programming layer <2026-04-28>
@@ -2841,20 +2723,23 @@ L3 programming layer <2026-04-28>
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 0.75pt have occurred.
 
+
+LaTeX Warning: There were multiply-defined labels.
+
 Package rerunfilecheck Info: File `appendix.out' has not changed.
-(rerunfilecheck)             Checksum: E792E8902B6BF3B228F87BF07816346D;7205.
+(rerunfilecheck)             Checksum: 93DD487FD870E42CA58BDF883BB59716;7282.
 Package logreq Info: Writing requests to 'appendix.run.xml'.
 \openout1 = `appendix.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 21630 strings out of 467830
- 390444 string characters out of 5438750
- 1227892 words of memory out of 5000000
- 50135 multiletter control sequences out of 15000+600000
- 675218 words of font info for 120 fonts, out of 8000000 for 9000
+ 21756 strings out of 467830
+ 389230 string characters out of 5438750
+ 1305316 words of memory out of 5000000
+ 50231 multiletter control sequences out of 15000+600000
+ 670392 words of font info for 117 fonts, out of 8000000 for 9000
  1151 hyphenation exceptions out of 8191
- 89i,24n,93p,1402b,1625s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 89i,12n,93p,1704b,1438s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <D:/Application/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><D:/Applicati
 on/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex9.pfb><D:/Application/MiKTeX/
 fonts/type1/public/amsfonts/cm/cmmi7.pfb><D:/Application/MiKTeX/fonts/type1/pub
@@ -2864,16 +2749,15 @@ pplication/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><D:/Application/MiKTe
 X/fonts/type1/public/amsfonts/cm/cmr9.pfb><D:/Application/MiKTeX/fonts/type1/pu
 blic/amsfonts/cm/cmsy7.pfb><D:/Application/MiKTeX/fonts/type1/public/amsfonts/c
 m/cmsy8.pfb><D:/Application/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy9.pfb><D:
-/Application/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb><D:/Applicat
-ion/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><D:/Application/MiKTe
-X/fonts/type1/urw/courier/ucrr8a.pfb><D:/Application/MiKTeX/fonts/type1/urw/hel
-vetic/uhvb8a.pfb><D:/Application/MiKTeX/fonts/type1/urw/helvetic/uhvr8a.pfb><D:
-/Application/MiKTeX/fonts/type1/urw/palatino/uplb8a.pfb><D:/Application/MiKTeX/
-fonts/type1/urw/palatino/uplr8a.pfb><D:/Application/MiKTeX/fonts/type1/urw/pala
-tino/uplri8a.pfb>
-Output written on appendix.pdf (17 pages, 765195 bytes).
+/Application/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb><D:/Applicat
+ion/MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><D:/Application/MiKTeX/fonts/type
+1/urw/helvetic/uhvb8a.pfb><D:/Application/MiKTeX/fonts/type1/urw/helvetic/uhvr8
+a.pfb><D:/Application/MiKTeX/fonts/type1/urw/palatino/uplb8a.pfb><D:/Applicatio
+n/MiKTeX/fonts/type1/urw/palatino/uplr8a.pfb><D:/Application/MiKTeX/fonts/type1
+/urw/palatino/uplri8a.pfb>
+Output written on appendix.pdf (17 pages, 533190 bytes).
 PDF statistics:
- 773 PDF objects out of 1000 (max. 8388607)
- 74 named destinations out of 1000 (max. 500000)
- 294 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 580 PDF objects out of 1000 (max. 8388607)
+ 95 named destinations out of 1000 (max. 500000)
+ 261 words of extra memory for PDF output out of 10000 (max. 10000000)
 

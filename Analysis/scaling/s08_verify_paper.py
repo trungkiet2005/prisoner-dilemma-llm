@@ -70,6 +70,11 @@ rng = (g.groupby(["model", "language", "scale_nominal"]).coop_rate.mean()
        .groupby(["model", "language"]).agg(lambda s: s.max() - s.min()))
 rng_main = rng.loc[MAIN]
 chk("Claude range en", 0.136, rng.loc[("Claude-Haiku-4.5", "en")])
+# The manuscripts quote the SMALLEST of Claude's five language ranges against
+# its largest.  The smallest is Vietnamese, not English; both drafts named
+# English until 2026-09-06, which understated the contrast and disagreed with
+# the annotation the figure prints.
+chk("Claude range vn", 0.130, rng.loc[("Claude-Haiku-4.5", "vn")])
 chk("Claude range fr", 0.314, rng.loc[("Claude-Haiku-4.5", "fr")])
 chk("Gemini3.5 range cn", 0.162, rng.loc[("Gemini-3.5-Flash-Lite", "cn")])
 chk("Gemini3.5 range en", 0.412, rng.loc[("Gemini-3.5-Flash-Lite", "en")])
