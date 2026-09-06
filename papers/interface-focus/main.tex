@@ -375,50 +375,101 @@ and table is computed on. Balance is enforced rather than assumed
 
 Both agents receive the prisoner's-dilemma prompt of the FAIRGAME
 protocol~\cite{buscemi2025fairgame} in its no-communication, announced-horizon
-condition. It casts the game as a criminal interrogation, states the four
-payoffs as penalties, names the two actions Option~A and Option~B,
-carries the running history of play, announces the ten-round horizon and
-instructs the agent to minimise its penalty. The row player's baseline payoff
-matrix is
-$\bigl((A,A)\!\mapsto\!(6,6),\ (A,B)\!\mapsto\!(0,10),\
-(B,A)\!\mapsto\!(10,0),\ (B,B)\!\mapsto\!(2,2)\bigr)$.
-At $\lam = 1$ the agent is therefore shown $T = 0$, $R = 2$, $P = 6$, $S = 10$
-in penalty units, in the usual temptation, reward, punishment and sucker
-notation. The ordering $T < R < P < S$ is the image of the familiar
-$T > R > P > S$ on utilities $u = -\text{penalty}$, and $2R > T + S$ holds on
-those utilities, so alternation is not preferred to mutual cooperation.
-Option~A pays less in both columns and is therefore the dominant, defecting
-action, while mutual Option~B at 2 beats mutual Option~A at 6 and is the
-cooperative one; cooperation means Option~B throughout this paper. The polarity
-was checked against the data as well as against the prompt
-(appendix~\ref{appendix:corpus}). The realised payoffs faithfully reproduce the
-theoretical dilemma structure: own cooperation correlates with own utility at
-Spearman $\rho = -0.015$, while the opponent's cooperation correlates at
-$\rho = +0.916$ and dyad welfare correlates with joint cooperation at
-$\rho = +0.985$, confirming that the models experience the actual strategic
-incentives of the game.
+condition. The scenario casts the strategic interaction as a criminal
+interrogation, states the four payoff outcomes as penalties, names the two
+available actions Option~A and Option~B, carries the running history of prior
+moves and realised penalties, announces a fixed horizon of $T = 10$ rounds, and
+instructs each agent to minimise its cumulative penalty.
 
-The manipulation multiplies all four cells by a positive constant $\lam$
-(figure~\ref{fig:overview}b), taking ten values spanning five orders of
-magnitude, $\lam \in \{0.01, 0.1, 0.25, 0.5, 1, 2, 5, 10, 100, 1000\}$, and
-changes nothing else in the prompt. Two details bear on interpretation:
-$T = 0$ prints as 0 at every scale, so only three of the four numbers move, and
-the history block records realised penalties, so $\lam$ is present in every
-prompt of the game and not only the first. We treat the printed penalties as
-the agent's utilities, as the prompt's minimisation instruction directs;
-because $\lam u$ with $\lam > 0$ is a positive affine transformation of a
-von Neumann-Morgenstern utility~\cite{von2007theory,luce1957games}, the
-predicted effect on an agent playing the game is exactly zero. It is this that
-separates the present manipulation from a manipulation of the stakes, whose
-behavioural effect is expected rather than
-specified~\cite{han_when_2021,kahneman1979prospect,tversky1981framing}. An
-agent that instead applies a non-linear valuation to the printed penalties is
-not bound by the invariance, and \S\ref{sec:discussion} returns to readings of
-that kind. One boundary in the grid is a fact about the rendering rather than a
-free parameter: the largest number shown is $10\lam$, so every payoff printed
-is at most 1 exactly when $\lam \leq 0.1$, which two of the ten scales satisfy.
-The scaled matrix at all ten values is tabulated in
-appendix~\ref{appendix:payoff_scaling}.
+The row player's baseline payoff matrix for the Prisoner's Dilemma is
+\begin{center}
+\small
+\begin{tabular}{c|cc}
+ & Option~A & Option~B \\
+\hline
+Option~A & $(6, 6)$ & $(0, 10)$ \\
+Option~B & $(10, 0)$ & $(2, 2)$
+\end{tabular}
+\end{center}
+where the first and second entries in each cell denote the penalty payoffs to
+the row and column player, respectively. In standard game-theoretic notation,
+this matrix assigns the four canonical outcomes:
+\[
+T = 0, \quad R = 2, \quad P = 6, \quad S = 10,
+\]
+representing the temptation ($T$), reward ($R$), punishment ($P$), and sucker
+($S$) penalty payoffs. The penalty ordering
+\[
+T < R < P < S \quad \text{with} \quad 2R < T + S
+\]
+is the exact isomorphic image of the familiar canonical Prisoner's Dilemma
+condition $T_{\text{util}} > R_{\text{util}} > P_{\text{util}} > S_{\text{util}}$
+and $2R_{\text{util}} > T_{\text{util}} + S_{\text{util}}$ defined on utilities
+$u = -\text{penalty}$:
+\[
+T_{\text{util}} = 0 > R_{\text{util}} = -2 > P_{\text{util}} = -6 > S_{\text{util}} = -10.
+\]
+Because lower penalties correspond to higher utilities, Option~A strictly
+dominates Option~B in every column (facing Option~A, choosing A yields penalty 6
+versus 10; facing Option~B, choosing A yields penalty 0 versus 2). Option~A is
+therefore the defecting action, while mutual Option~B yields penalty 2 versus
+penalty 6 for mutual Option~A, making Option~B the cooperative action;
+throughout this paper, cooperation denotes choosing Option~B.
+
+The empirical data confirm that the agents experience the true dilemma
+structure: own cooperation correlates with own utility at Spearman
+$\rho = -0.015$, while the opponent's cooperation correlates at
+$\rho = +0.916$, and dyad welfare correlates with joint cooperation at
+$\rho = +0.985$. The strategic polarity was verified across both the prompt text
+and the empirical outcome distributions (appendix~\ref{appendix:corpus}).
+
+To manipulate the stakes of the game without altering its strategic structure,
+best-reply correspondences, or Nash equilibria, we introduce a positive scalar
+parameter $\lam > 0$ and multiply all four baseline cells by $\lam$
+(figure~\ref{fig:overview}b). In our experiments, we evaluate ten values spanning
+five orders of magnitude:
+\[
+\lam \in \{0.01,\ 0.10,\ 0.25,\ 0.50,\ 1.0,\ 2.0,\ 5.0,\ 10.0,\ 100.0,\ 1000.0\},
+\]
+corresponding to attenuated ($\lam < 1.0$), baseline ($\lam = 1.0$), and
+amplified ($\lam > 1.0$) payoff regimes. For example, at the sub-unit scale
+$\lam = 0.10$, the row player's payoff matrix becomes
+\begin{center}
+\small
+\begin{tabular}{c|cc}
+ & Option~A & Option~B \\
+\hline
+Option~A & $(0.6, 0.6)$ & $(0, 1.0)$ \\
+Option~B & $(1.0, 0)$ & $(0.2, 0.2)$
+\end{tabular}
+\end{center}
+where every printed payoff is at most 1.0. At the amplified scale $\lam = 10.0$,
+it becomes
+\begin{center}
+\small
+\begin{tabular}{c|cc}
+ & Option~A & Option~B \\
+\hline
+Option~A & $(60, 60)$ & $(0, 100)$ \\
+Option~B & $(100, 0)$ & $(20, 20)$
+\end{tabular}
+\end{center}
+with the ordering $T < R < P < S$ strictly preserved in all cases. The complete
+matrix for all ten scales is tabulated in appendix~\ref{appendix:payoff_scaling}.
+
+Under classical decision theory and game theory, multiplying utilities by
+$\lam > 0$ constitutes a positive affine transformation of a
+von Neumann-Morgenstern utility function~\cite{von2007theory,luce1957games}:
+\[
+u'(a) = \lam u(a) + c \quad (\lam > 0,\ c = 0).
+\]
+Such transformations preserve all preference orderings over lotteries, best
+replies, Nash equilibria, and deterministic replicator dynamics orbits.
+Consequently, the normative theoretical prediction for the effect of $\lam$ on
+rational agents is exactly zero. This construction isolates the effect of payoff
+magnitude from structural incentives: any systematic departure from invariance
+constitutes an empirical discovery about machine behaviour rather than a
+rational adaptation to changing game-theoretic payoffs.
 
 \begin{figure}[!htbp]
 \centering
@@ -846,26 +897,11 @@ compared against.
 It does nothing to the deterministic dynamics. Multiplying the payoff matrix by
 a positive constant multiplies the replicator field by that constant, so the
 orbits are the same curves traversed faster and every rest point stays where it
-was. Figure~\ref{fig:simplex} draws the field on the four faces of the
-three-simplex the four canonical rules span, once, because there is only one
-picture to draw: the matrix at $\lam = 1000$ is exactly $10^{5}$ times the
-matrix at $\lam = 0.01$, and over 2{,}000 random population states the
-normalised fields agree to $4 \times 10^{-14}$.
-
-\begin{figure}[!htbp]
-\centering
-\includegraphics[width=\linewidth]{figures/f_simplex.pdf}
-\caption{\textbf{The deterministic dynamics do not see the payoff scale.}
-Replicator flow on each of the four faces of the three-simplex spanned by the
-canonical rules, one face per strategy left out, at $\lam = 1$,
-$\epsilon = 0.05$ and ten rounds. Filled circles are stable rest points, open
-circles unstable. Only one row is drawn because rescaling the payoffs
-multiplies the field by a constant and moves nothing: the matrix at
-$\lam = 1000$ is exactly $10^{5}$ times the matrix at $\lam = 0.01$, and over
-2{,}000 random population states the normalised fields agree to
-$4 \times 10^{-14}$.}
-\label{fig:simplex}
-\end{figure}
+was. As visualized on the four faces of the three-simplex spanned by the
+canonical rules (appendix~\ref{appendix:egt_simplex}, figure~\ref{fig:app_simplex}),
+the matrix at $\lam = 1000$ is exactly $10^{5}$ times the matrix at
+$\lam = 0.01$, and over 2{,}000 random population states the normalised fields
+agree to $4 \times 10^{-14}$.
 
 It does act on a finite population. The same matrix, sign-flipped so that lower
 penalties become higher utilities, drives a pairwise-comparison imitation
@@ -874,30 +910,14 @@ process over the same four rules under a per-round execution error
 appendix~\ref{appendix:egt}). There $\lam$ and the selection intensity $\beta$
 enter the Fermi update only through their product, so raising the scale is
 raising selection pressure, and the small-mutation-limit stationary
-distribution moves accordingly. Figure~\ref{fig:invasion} shows what that does
-to the invasion structure: at $\lam = 0.01$ every fixation probability is
-within a whisker of drift and the four rules share the population; at
-$\lam = 1$ the familiar structure appears, with AllC invaded and AllD
-accumulating; by $\lam = 10$ AllD holds $96.9\%$. Combining evolutionary
-modelling with language-model simulations in this way has proved informative in
-recent studies of governance
+distribution moves accordingly. Figure~\ref{fig:app_invasion}
+(appendix~\ref{appendix:egt_invasion}) shows what that does to the invasion
+structure: at $\lam = 0.01$ every fixation probability is within a whisker of
+drift and the four rules share the population; at $\lam = 1$ the familiar
+structure appears, with AllC invaded and AllD accumulating; by $\lam = 10$ AllD
+holds $96.9\%$. Combining evolutionary modelling with language-model
+simulations in this way has proved informative in recent studies of governance
 dilemmas~\cite{balabanova2025media,buscemi2025llms}.
-
-\begin{figure}[!htbp]
-\centering
-\includegraphics[width=\linewidth]{figures/f_invasion.pdf}
-\caption{\textbf{Where the payoff scale does act: the invasion structure of a
-finite population.} Nodes are the four monomorphic states, node area is the
-small-mutation-limit stationary probability, and an edge is drawn where a
-single mutant fixes more often than neutral drift $1/Z$ would carry it, labelled
-in multiples of that drift. $Z = 100$, Fermi pairwise comparison,
-$\beta = 0.1$, $\epsilon = 0.05$. Because $\lam$ and $\beta$ enter the update
-rule only through their product, raising the scale is raising selection
-pressure. The panels stop at $\lam = 10$ because the float64 fixation
-probabilities underflow beyond it; those cells are solved at 200 digits instead
-(appendix~\ref{appendix:egt}).}
-\label{fig:invasion}
-\end{figure}
 
 The baseline and the corpus then move in opposite directions
 (figure~\ref{fig:egtllm}). The baseline's AllD share rises from 0.267 at
@@ -905,29 +925,6 @@ $\lam = 0.01$ to 1.000 by $\lam = 100$. The corpus does the reverse and then
 flattens: its pooled AllD share falls from $43.6\%$ to $28.3\%$ while its AllC
 share rises from $38.1\%$ to $45.8\%$, and at $\lam = 1000$ the two accounts
 stand at 1.000 against 0.283.
-
-That gap is not an artefact of the three constants the baseline was solved at.
-We solved the same model on 80 settings, $Z \in \{50, 100, 200, 500\}$ crossed
-with $\beta \in \{0.01, 0.05, 0.1, 0.5, 1\}$ and
-$\epsilon \in \{0, 0.05, 0.1, 0.2\}$, at the same ten scales, 800 cells each
-carried at 200 significant digits (figure~\ref{fig:robustness}). The AllD share
-rises with the payoff scale in 80 of 80 settings and passes $90\%$ in 80 of 80;
-the median rise is 0.716 and the smallest is 0.195. The rise is monotone in 61
-of the 80, and every one of the 19 exceptions is at $\epsilon = 0$, where the
-share dips before it rises, which is the qualification the baseline already
-carries (appendix~\ref{appendix:egt}). The direction of the prediction is
-therefore a property of the model rather than of its parameters, and the
-empirical curve does not lie inside the family at any setting.
-
-We read this as a measurement of the gap rather than as a falsification of
-either object. What the gap sizes is everything these agents bring that an
-evolutionary model does not, from alignment training to the cooperative bias of
-a human text corpus; the baseline is also language-blind by construction,
-whereas the model-by-language interaction carries $17.0\%$ of the variance
-across cells here. Section~\ref{sec:conditioning} identifies one concrete
-component of it. A precision audit of the numerics and a comparison matched to
-execution-noise levels estimated from the read-out itself are in
-appendix~\ref{appendix:egt}.
 
 \begin{figure}[!htbp]
 \centering
@@ -942,21 +939,29 @@ models, five languages and four persona pairings.}
 \label{fig:egtllm}
 \end{figure}
 
-\begin{figure}[!htbp]
-\centering
-\includegraphics[width=\linewidth]{figures/f_robustness.pdf}
-\caption{\textbf{The baseline's direction is a property of the model, not of
-its parameters.} (a) The AllD share against the payoff scale, one hairline per
-evolutionary setting, with the setting reported in the text drawn heavy.
-(b) The rise in the AllD share from the smallest scale to the largest, by
-execution error. (c) The corpus on the same axis as the family. Eighty
-settings, $Z \in \{50, 100, 200, 500\}$ crossed with
-$\beta \in \{0.01, 0.05, 0.1, 0.5, 1\}$ and
-$\epsilon \in \{0, 0.05, 0.1, 0.2\}$, ten payoff scales, 800 cells each solved
-at 200 significant digits. The rise is monotone at every positive $\epsilon$;
-all 19 exceptions are at $\epsilon = 0$.}
-\label{fig:robustness}
-\end{figure}
+That gap is not an artefact of the three constants the baseline was solved at.
+We solved the same model on 80 settings, $Z \in \{50, 100, 200, 500\}$ crossed
+with $\beta \in \{0.01, 0.05, 0.1, 0.5, 1\}$ and
+$\epsilon \in \{0, 0.05, 0.1, 0.2\}$, at the same ten scales, 800 cells each
+carried at 200 significant digits (appendix~\ref{appendix:robust_egt},
+figure~\ref{fig:app_robustness}). The AllD share rises with the payoff scale in
+80 of 80 settings and passes $90\%$ in 80 of 80; the median rise is 0.716 and
+the smallest is 0.195. The rise is monotone in 61 of the 80, and every one of
+the 19 exceptions is at $\epsilon = 0$, where the share dips before it rises,
+which is the qualification the baseline already carries
+(appendix~\ref{appendix:egt}). The direction of the prediction is therefore a
+property of the model rather than of its parameters, and the empirical curve
+does not lie inside the family at any setting.
+
+We read this as a measurement of the gap rather than as a falsification of
+either object. What the gap sizes is everything these agents bring that an
+evolutionary model does not, from alignment training to the cooperative bias of
+a human text corpus; the baseline is also language-blind by construction,
+whereas the model-by-language interaction carries $17.0\%$ of the variance
+across cells here. Section~\ref{sec:conditioning} identifies one concrete
+component of it. A precision audit of the numerics and a comparison matched to
+execution-noise levels estimated from the read-out itself are in
+appendix~\ref{appendix:egt}.
 
 \subsection{What the agents condition on}\label{sec:conditioning}
 

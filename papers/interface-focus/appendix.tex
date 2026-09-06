@@ -668,6 +668,51 @@ distribution $\sigma$ is the long-run frequency of each strategy in the
 rare-mutation regime~\cite{sigmund:2010bo}. The reference implementation is
 the open-source EGTtools library~\cite{domingos2023egttools}.
 
+\subsection{Deterministic continuous dynamics and simplex orbits}\label{appendix:egt_simplex}
+
+In the infinite-population deterministic limit, evolutionary dynamics is
+described by the standard replicator equation~\cite{sigmund:2010bo,nowak2006five}:
+\begin{equation}
+\dot{x}_i \;=\; x_i \left[ (\mathbf{A}\mathbf{x})_i - \mathbf{x}^T \mathbf{A} \mathbf{x} \right],
+\label{eq:replicator}
+\end{equation}
+where $\mathbf{x} = (x_1, \dots, x_4)^T$ is the population state on the
+three-simplex $\Delta_3$ spanned by the four canonical rules (AllC, AllD, TFT,
+WSLS), and $\mathbf{A}$ is the $4 \times 4$ payoff matrix. Under a scalar payoff
+transformation $\mathbf{A}' = \lam \mathbf{A}$ with $\lam > 0$, the vector field
+scales uniformly:
+\begin{equation}
+\dot{x}_i' \;=\; \lam \, \dot{x}_i.
+\label{eq:replicator_scaled}
+\end{equation}
+Multiplying the payoff matrix by a positive constant multiplies the replicator
+vector field by that constant. This changes the velocity of state evolution along
+trajectories by a uniform time reparametrisation $d\tau = \lam \, dt$, but leaves
+every trajectory, orbit geometry, invariant manifold, and rest point strictly
+invariant.
+
+Figure~\ref{fig:app_simplex} illustrates this mathematical invariance across the
+four faces of the three-simplex spanned by the canonical rules, leaving one rule
+out per face. Across 2{,}000 randomly sampled population states, the normalised
+vector fields at $\lam = 0.01$ and $\lam = 1000$ agree to within
+$4 \times 10^{-14}$, confirming that continuous deterministic selection cannot
+account for any empirical dependence on payoff scale.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/f_simplex.pdf}
+\caption{\textbf{The deterministic dynamics do not see the payoff scale.}
+Replicator flow on each of the four faces of the three-simplex spanned by the
+canonical rules, one face per strategy left out, at $\lam = 1$,
+$\varepsilon = 0.05$ and ten rounds. Filled circles are stable rest points, open
+circles unstable. Only one row is drawn because rescaling the payoffs
+multiplies the field by a constant and moves nothing: the matrix at
+$\lam = 1000$ is exactly $10^{5}$ times the matrix at $\lam = 0.01$, and over
+2{,}000 random population states the normalised fields agree to
+$4 \times 10^{-14}$.}
+\label{fig:app_simplex}
+\end{figure}
+
 \subsection{The strategies under execution noise}\label{appendix:egt_strategies}
 
 The four canonical rules enter as memory-one policies with a per-round
@@ -704,6 +749,44 @@ reader can see exactly where double precision fails and by how much.
 Figure~\ref{fig:egt_grid} draws the stationary frequency of each canonical
 strategy against the payoff scale at every execution-noise level, and the
 tables below give the same grid in numbers, together with the precision audit.
+
+\subsection{Finite-population invasion structure across scales}\label{appendix:egt_invasion}
+
+In contrast to the continuous deterministic limit, the payoff scale $\lam$
+acts directly on finite populations governed by stochastic imitation. Under the
+Fermi update rule, the probability that an individual adopting strategy $i$
+switches to strategy $j$ upon pairwise comparison is:
+\begin{equation}
+P(i \to j) \;=\; \frac{1}{1 + \exp\left(-\beta (\pi_j - \pi_i)\right)}
+\;=\; \frac{1}{1 + \exp\left(-\beta \lam (\pi_j^{(0)} - \pi_i^{(0)})\right)},
+\label{eq:fermi_scaling}
+\end{equation}
+where $\pi_j^{(0)}$ denotes baseline unscaled payoffs. The payoff scale $\lam$
+and the selection intensity $\beta$ enter the update rule exclusively through
+their product $\beta \lam$. Consequently, scaling the payoffs by $\lam$ is
+formally equivalent to scaling the selection pressure.
+
+Figure~\ref{fig:app_invasion} shows the resulting invasion graphs across the
+four monomorphic states as $\lam$ varies. At $\lam = 0.01$, selection is
+negligible, and transition probabilities approach neutral drift ($1/Z = 0.01$).
+As $\lam$ increases to baseline ($\lam = 1.0$) and high stakes ($\lam = 10.0$),
+selection sharpens, making AllD an evolutionary sink that resists invasion from
+all three cooperative rules and fixes with high probability.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/f_invasion.pdf}
+\caption{\textbf{Where the payoff scale does act: the invasion structure of a
+finite population.} Nodes are the four monomorphic states, node area is the
+small-mutation-limit stationary probability, and an edge is drawn where a
+single mutant fixes more often than neutral drift $1/Z$ would carry it, labelled
+in multiples of that drift. $Z = 100$, Fermi pairwise comparison,
+$\beta = 0.1$, $\varepsilon = 0.05$. Because $\lam$ and $\beta$ enter the update
+rule only through their product, raising the scale is raising selection
+pressure. The panels stop at $\lam = 10$ because the float64 fixation
+probabilities underflow beyond it; those cells are solved at 200 digits instead.}
+\label{fig:app_invasion}
+\end{figure}
 
 \input{egt_tables_auto}
 
@@ -861,6 +944,42 @@ over the five it reports. The single count that the sixth model changes is the
 strategy-trend tally, and it changes it in the direction that weakens the
 paper, which is stated in the main text at the point where the claim is made
 rather than only here.
+
+\subsection{Robustness of the evolutionary baseline across 80 settings}\label{appendix:robust_egt}
+
+The finding that the evolutionary baseline predicts an increase in defection
+with payoff scale is not an artefact of the specific baseline parameters
+($Z = 100$, $\beta = 0.1$, $\varepsilon = 0.05$). To confirm this, we solved the
+stationary distribution across a comprehensive grid of 80 parameter combinations:
+four population sizes $Z \in \{50, 100, 200, 500\}$, five selection intensities
+$\beta \in \{0.01, 0.05, 0.1, 0.5, 1.0\}$, and four execution noise levels
+$\varepsilon \in \{0, 0.05, 0.1, 0.2\}$, across all ten payoff scales (800 cells
+in total, each computed at 200 decimal digits).
+
+Figure~\ref{fig:app_robustness} presents this parameter sweep. Across all 80
+settings, the stationary share of Always Defect increases with $\lam$, exceeding
+$90\%$ at large scales in every setting, with a median increase of 0.716 and a
+minimum increase of 0.195. In 61 of the 80 settings the rise is strictly
+monotone; the 19 non-monotone cases occur exclusively at $\varepsilon = 0$,
+where a transient dip occurs before selection drives AllD to fixation
+(\S\ref{appendix:egt_vs_llm}). Crucially, the empirical LLM corpus moves in the
+opposite direction to this theoretical prediction across all evaluated models.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/f_robustness.pdf}
+\caption{\textbf{The baseline's direction is a property of the model, not of
+its parameters.} (a) The AllD share against the payoff scale, one hairline per
+evolutionary setting, with the setting reported in the text drawn heavy.
+(b) The rise in the AllD share from the smallest scale to the largest, by
+execution error. (c) The corpus on the same axis as the family. Eighty
+settings, $Z \in \{50, 100, 200, 500\}$ crossed with
+$\beta \in \{0.01, 0.05, 0.1, 0.5, 1\}$ and
+$\varepsilon \in \{0, 0.05, 0.1, 0.2\}$, ten payoff scales, 800 cells each
+solved at 200 significant digits. The rise is monotone at every positive
+$\varepsilon$; all 19 exceptions are at $\varepsilon = 0$.}
+\label{fig:app_robustness}
+\end{figure}
 
 \subsection{The read-out at the edge of its validated range}\label{appendix:robust_readout}
 
