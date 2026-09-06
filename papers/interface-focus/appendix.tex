@@ -135,10 +135,10 @@ Gemini 3.1 Flash-Lite & \texttt{gemini-3.1-flash-lite-preview}  & no, preview \\
 \end{tabular}
 \end{table}
 
-%% >>> FILL IN <<<  State the calendar range over which the corpus was
-%% collected.  For a hosted model served from an undated identifier the
-%% collection date is the only thing that fixes what was actually run, and it
-%% is not recorded anywhere in the analysis repository.
+The corpus was collected from 2 to 5 September 2026. The dated collection
+record is especially important for the two undated endpoint identifiers, for
+which the provider-facing name alone does not fix what was served at a later
+date.
 
 Sampling runs under a common-random-numbers scheme: a given round of a given
 replicate is seeded identically at every payoff scale, so a difference between
@@ -871,8 +871,9 @@ transcript corpus, applies the completeness guard of
 on the synthetic corpus. \texttt{s02\_readout} applies the rule base and the
 classifier to the transcripts. \texttt{s03\_stats} and
 \texttt{s04\_strategy\_stats} compute every statistic reported here.
-\texttt{s05\_figures} and \texttt{s05b\_appendix\_figures} draw the figures
-directly into the manuscript directory. \texttt{s06\_tables} and
+The eleven main-text figures are drawn by the scripts in
+\texttt{Analysis/figures/}; \texttt{s05b\_appendix\_figures} draws the four
+appendix figures directly into the manuscript directory. \texttt{s06\_tables} and
 \texttt{s07\_supplementary} render the tables. \texttt{s09\_egt} computes the
 evolutionary grid of \S\ref{appendix:egt}. Finally \texttt{s08\_verify\_paper}
 recomputes every quantity quoted in the manuscript prose from the data and
@@ -887,9 +888,10 @@ scikit-learn 1.5.1, PyTorch 2.11.0 on CPU, Matplotlib 3.9.2, mpmath 1.3.0 and
 EGTtools 0.1.14.2. The classifier is trained on CPU and its seed is fixed, so
 the read-out is reproducible without a GPU.
 
-%% >>> FILL IN <<<  Replace with the repository URL and DOI once deposited, and
-%% state the licence.  Royal Society policy requires data and code to be
-%% reachable by editors and reviewers at first submission.
+The public analysis repository is available at
+\url{https://github.com/trungkiet2005/prisoner-dilemma-llm}. A permanent DOI
+will be added on archival deposit. The data and code licences must be stated
+explicitly before submission.
 
 \FloatBarrier
 
