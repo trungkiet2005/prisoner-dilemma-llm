@@ -47,3 +47,7 @@ private/
 # --- OS ----------------------------------------------------------------------
 .DS_Store
 Thumbs.db
+
+# --- machine-local skills links ---
+.agents/skills/*
+!.agents/skills/write-kaggle-benchmarks
