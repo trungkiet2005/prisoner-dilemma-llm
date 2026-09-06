@@ -93,23 +93,26 @@ William~H. Press and Freeman~J. Dyson.
 Elif Akata, Lion Schulz, Julian Coda-Forno, Seong~Joon Oh, Matthias Bethge, and
   Eric Schulz.
 \newblock Playing repeated games with large language models.
-\newblock \emph{Nature Human Behaviour}, 9:\penalty0 1380--1390, 2025.
+\newblock \emph{Nature Human Behaviour}, 9\penalty0 (7):\penalty0 1380--1390,
+  2025.
 \newblock \doi{10.1038/s41562-025-02172-y}.
 
 \bibitem[Fontana et~al.(2025)Fontana, Pierri, and Aiello]{fontana2024nicer}
-Nicol{\`o} Fontana, Francesco Pierri, and Luca~Maria Aiello.
+Nicol{\'o} Fontana, Francesco Pierri, and Luca~Maria Aiello.
 \newblock Nicer than humans: How do large language models behave in the
   prisoner's dilemma?
 \newblock In \emph{Proceedings of the International AAAI Conference on Web and
   Social Media (ICWSM)}, volume~19, pages 522--535, 2025.
 \newblock \doi{10.1609/icwsm.v19i1.35829}.
+\newblock URL \url{https://ojs.aaai.org/index.php/ICWSM/article/view/35829}.
 
 \bibitem[Lor{\`e} and Heydari(2024)]{lore2024strategic}
 Nunzio Lor{\`e} and Babak Heydari.
 \newblock Strategic behavior of large language models and the role of game
   structure versus contextual framing.
-\newblock \emph{Scientific Reports}, 14:\penalty0 18490, 2024.
+\newblock \emph{Scientific Reports}, 14\penalty0 (1):\penalty0 18490, 2024.
 \newblock \doi{10.1038/s41598-024-69032-z}.
+\newblock URL \url{https://www.nature.com/articles/s41598-024-69032-z}.
 
 \bibitem[Phelps and Russell(2025)]{phelps2023investigating}
 Steve Phelps and Yvan~I. Russell.
@@ -265,10 +268,11 @@ Ana Paiva, Fernando~P. Santos, and Francisco~C. Santos.
   and Li{\`o}]{fairgame2025}
 Alessio Buscemi, Daniele Proverbio, Alessandro Di~Stefano, The~Anh Han, German
   Castignani, and Pietro Li{\`o}.
-\newblock {FAIRGAME}: A framework for {AI} agents bias recognition using game
+\newblock {FAIRGAME}: a framework for {AI} agents bias recognition using game
   theory.
-\newblock In \emph{ECAI 2025 - Proceedings of the 28th European Conference on
-  Artificial Intelligence}, pages 4097--4104. IOS Press, 2025.
+\newblock In \emph{ECAI 2025 -- Proceedings of the 28th European Conference on
+  Artificial Intelligence}, volume 413 of \emph{Frontiers in Artificial
+  Intelligence and Applications}, pages 4097--4104. IOS Press, 2025.
 \newblock \doi{10.3233/FAIA251300}.
 
 \bibitem[One and Two(2026)]{selfpreprint2026scaling}
@@ -283,10 +287,13 @@ Bradley Efron and Robert~J. Tibshirani.
 \newblock Chapman and Hall/CRC, New York, 1993.
 
 \bibitem[Hochreiter and Schmidhuber(1997)]{hochreiter1997long}
-Sepp Hochreiter and J{\"u}rgen Schmidhuber.
+Sepp Hochreiter and Jürgen Schmidhuber.
 \newblock Long short-term memory.
-\newblock \emph{Neural Computation}, 9\penalty0 (8):\penalty0 1735--1780, 1997.
+\newblock \emph{Neural Computation}, 9\penalty0 (8):\penalty0 1735--1780, 11
+  1997.
+\newblock ISSN 0899-7667.
 \newblock \doi{10.1162/neco.1997.9.8.1735}.
+\newblock URL \url{https://doi.org/10.1162/neco.1997.9.8.1735}.
 
 \bibitem[Kim et~al.(2021)Kim, Choi, and Baek]{kim2021win}
 Minjae Kim, Jung-Kyoo Choi, and Seung~Ki Baek.

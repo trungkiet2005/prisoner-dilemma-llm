@@ -14,7 +14,12 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from figstyle import (LANG_LABEL, LANG_ORDER, MODEL_LABEL,     # noqa: E402
-                      MODEL_ORDER, SCALES)
+                      MODEL_ORDER, MODEL_ORDER_ALL, SCALES)
+
+# Every per-model table in this supplement carries all six models, including
+# the one the main text reports here rather than in its own figures.  The two
+# pooled quantities are printed both ways, five models and six, so a reader can
+# see for themselves that including the sixth changes no conclusion.
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE / "data"
@@ -53,7 +58,7 @@ def wrap(body, caption, label, spec, header, small="\\footnotesize",
 
 def s1_corpus(g, r):
     rows = []
-    for m in MODEL_ORDER:
+    for m in MODEL_ORDER_ALL:
         d = g[g.model == m]
         rd = r[r.model == m]
         cell = (d.groupby(["scale_nominal", "language"]).game_uid.nunique()
@@ -72,7 +77,9 @@ def s1_corpus(g, r):
                 "``Cell $n$'' is the number of dyads in each "
                 "model $\\times$ language $\\times$ scale cell; the design is "
                 "balanced with none missing, and the build refuses to write "
-                "its tables otherwise.",
+                "its tables otherwise. The first five models are the ones the "
+                "main text reports; Gemini 3.1 Flash-Lite is reported here, "
+                "for the reason given in \\S S8.",
                 "tab:S-corpus", "llccrrrc",
                 "Model & Scales & Lang. & Dyads & Agent-games & Decisions & "
                 "Cell $n$ & Coop. \\\\")
@@ -83,7 +90,7 @@ def s2_scale(t02):
     lo = t02.pivot(index="model", columns="scale", values="lo")
     hi = t02.pivot(index="model", columns="scale", values="hi")
     rows = []
-    for m in MODEL_ORDER:
+    for m in MODEL_ORDER_ALL:
         cells = " & ".join(f"{p.loc[m, s]:.3f}" for s in SCALES)
         rows.append(f"{MODEL_LABEL[m]} & {cells} \\\\")
         cells = " & ".join(f"\\tiny{{[{lo.loc[m, s]:.2f},{hi.loc[m, s]:.2f}]}}"
@@ -101,7 +108,7 @@ def s2_scale(t02):
 
 def s3_language(g):
     rows = []
-    for m in MODEL_ORDER:
+    for m in MODEL_ORDER_ALL:
         d = g[g.model == m]
         for lang in LANG_ORDER:
             s = d[d.language == lang].groupby("scale_nominal").coop_rate.mean()
@@ -114,42 +121,60 @@ def s3_language(g):
     return wrap("\n".join(rows),
                 "\\textbf{Cooperation by model, prompt language and payoff "
                 "scale.} 40 dyads per entry. The final column is the range "
-                "across the ten scales for that model and language; it runs "
-                "from 0.080 to 0.449, so the scale sensitivity of a model is "
-                "a property of the model and the language jointly.",
+                "across the ten scales for that model and language; over "
+                "all six models it runs from 0.080, for Gemini 3.1 Flash-Lite "
+                "in Arabic, to 0.855, for Grok 4.20 in English, so the scale "
+                "sensitivity of a model is a property of the model and the "
+                "language jointly.",
                 "tab:S-language", "ll" + "c" * len(SCALES) + "c",
                 "Model & Language & " + " & ".join(f"{s}" for s in SC)
                 + " & Range \\\\", small="\\scriptsize", colsep="2.5pt", fit=True)
 
 
-def s4_variance(t06):
+def s4_variance(t06, t06all):
     name = {"C(model)": "Model", "C(language)": "Language",
             "C(scale_nominal)": "Payoff scale",
             "C(model):C(language)": "Model $\\times$ language",
             "C(model):C(scale_nominal)": "Model $\\times$ scale",
             "C(language):C(scale_nominal)": "Language $\\times$ scale",
             "Residual": "Residual"}
-    rows = []
-    for _, r in t06.iterrows():
-        f = "" if np.isnan(r["F"]) else f"{r['F']:.2f}"
-        p = ("" if np.isnan(r["PR(>F)"]) else
-             ("$<0.001$" if r["PR(>F)"] < 0.001 else f"${r['PR(>F)']:.3f}$"))
-        rows.append(f"{name.get(r['term'], r['term'])} & {r['sum_sq']:.4f} & "
-                    f"{int(r['df'])} & {f} & {p} & {r['pct_variance']:.1f} \\\\")
-    return wrap("\n".join(rows),
-                "\\textbf{Variance decomposition of the cell means.} Type-II "
-                "analysis of variance on the 250 model $\\times$ language "
-                "$\\times$ scale cell means, where the design is exactly "
-                "balanced. The payoff scale has no significant main effect "
-                "while both of its interactions are significant.",
-                "tab:S-variance", "lrrrrr",
-                "Term & Sum sq. & df & $F$ & $p$ & \\% variance \\\\")
+    def body(t):
+        rows = []
+        for _, r in t.iterrows():
+            f = "" if np.isnan(r["F"]) else f"{r['F']:.2f}"
+            p = ("" if np.isnan(r["PR(>F)"]) else
+                 ("$<0.001$" if r["PR(>F)"] < 0.001
+                  else f"${r['PR(>F)']:.3f}$"))
+            rows.append(f"{name.get(r['term'], r['term'])} & "
+                        f"{r['sum_sq']:.4f} & {int(r['df'])} & {f} & {p} & "
+                        f"{r['pct_variance']:.1f} \\\\")
+        return "\n".join(rows)
+
+    head = "Term & Sum sq. & df & $F$ & $p$ & \\% variance \\\\"
+    a = wrap(body(t06),
+             "\\textbf{Variance decomposition of the cell means, five "
+             "models.} Type-II analysis of variance on the 250 "
+             "model $\\times$ language $\\times$ scale cell means of the five "
+             "models the main text reports, where the design is exactly "
+             "balanced. The payoff scale carries a significant main effect, "
+             "and its interaction with the model carries three times as much "
+             "of the variance.",
+             "tab:S-variance", "lrrrrr", head)
+    b = wrap(body(t06all),
+             "\\textbf{Variance decomposition of the cell means, all six "
+             "models.} The same type-II analysis on all 300 cell means, the "
+             "sixth model included. Every term significant in the five-model "
+             "table is significant here and in the same order: the "
+             "model $\\times$ scale interaction again carries several times "
+             "the variance of the payoff scale as a main effect.",
+             "tab:S-variance-all", "lrrrrr", head)
+    return a + "\n" + b
 
 
 def s5_persona(per):
     p = per.pivot(index="model", columns="scale", values="persona_effect")
     rows = []
-    for m in MODEL_ORDER:
+    for m in MODEL_ORDER_ALL:
         cells = " & ".join(f"${p.loc[m, s]:+.3f}$" for s in SCALES)
         rows.append(f"{MODEL_LABEL[m]} & {cells} \\\\")
     return wrap("\n".join(rows),
@@ -165,7 +190,7 @@ def s5_persona(per):
 
 def s6_strategy(t10per, t12per):
     rows = []
-    for m in MODEL_ORDER:
+    for m in MODEL_ORDER_ALL:
         d = t10per[t10per.model == m].set_index("scale")
         cells = " & ".join(f"{d.loc[s, 'deduced']:.1f}" for s in SCALES)
         rows.append(f"{MODEL_LABEL[m]} & {cells} \\\\")
@@ -178,7 +203,7 @@ def s6_strategy(t10per, t12per):
              + " \\\\", fit=True)
 
     rows = []
-    for m in MODEL_ORDER:
+    for m in MODEL_ORDER_ALL:
         d = t12per[t12per.model == m].set_index("scale")
         for lab in ["AllC", "TFT", "WSLS", "AllD"]:
             name = MODEL_LABEL[m] if lab == "AllC" else ""
@@ -241,24 +266,37 @@ def s7_classifier(t01):
                 "Split & $n$ & Accuracy \\\\")
 
 
-def s8_shapes(corr):
-    rows = []
-    for m in MODEL_ORDER:
-        # Diagonal left blank rather than filled with a dash: the project's
-        # style check treats a run of hyphens as an em dash.
-        cells = " & ".join(
-            "" if m == n else f"${corr.loc[m, n]:+.2f}$" for n in MODEL_ORDER)
-        rows.append(f"{MODEL_LABEL[m]} & {cells} \\\\")
-    return wrap("\n".join(rows),
-                "\\textbf{Pairwise correlation between the model curves.} "
-                "Correlation of the ten-point cooperation-against-scale curves "
-                "of each pair of models. Six of the ten pairs are negative and "
-                "the mean is $-0.10$, which is why averaging the curves "
-                "cancels most of the movement.",
-                "tab:S-shapes", "l" + "c" * len(MODEL_ORDER),
-                " & " + " & ".join(MODEL_LABEL[m].split()[0] + " "
-                                   + MODEL_LABEL[m].split()[1]
-                                   for m in MODEL_ORDER) + " \\\\")
+def s8_shapes(corr, corrall):
+    def table(c, order, caption, label):
+        rows = []
+        for m in order:
+            # Diagonal left blank rather than filled with a dash: the project's
+            # style check treats a run of hyphens as an em dash.
+            cells = " & ".join(
+                "" if m == k else f"${c.loc[m, k]:+.2f}$" for k in order)
+            rows.append(f"{MODEL_LABEL[m]} & {cells} \\\\")
+        return wrap("\n".join(rows), caption, label,
+                    "l" + "c" * len(order),
+                    " & " + " & ".join(MODEL_LABEL[m].split()[0] + " "
+                                       + MODEL_LABEL[m].split()[1]
+                                       for m in order) + " \\\\",
+                    fit=True)
+
+    a = table(corr, MODEL_ORDER,
+              "\\textbf{Pairwise correlation between the model curves, five "
+              "models.} Correlation of the ten-point "
+              "cooperation-against-scale curves of each pair of the five "
+              "models the main text reports. Six of the ten pairs are negative "
+              "and the mean is $-0.10$, which is why averaging the curves "
+              "cancels much of the movement.",
+              "tab:S-shapes")
+    b = table(corrall, MODEL_ORDER_ALL,
+              "\\textbf{Pairwise correlation between the model curves, all "
+              "six models.} The same correlations with the sixth model "
+              "included: nine of the fifteen pairs are negative and the mean "
+              "is $-0.08$.",
+              "tab:S-shapes-all")
+    return a + "\n" + b
 
 
 def main():
@@ -267,17 +305,20 @@ def main():
     t01 = pd.read_csv(TAB / "T01_classifier.csv")
     t02 = pd.read_csv(TAB / "T02_scale_by_model.csv")
     t06 = pd.read_csv(TAB / "T06_variance.csv")
+    t06all = pd.read_csv(TAB / "T06_variance_all.csv")
     per = pd.read_csv(TAB / "T07_persona_by_scale.csv")
     t10p = pd.read_csv(TAB / "T10_provenance_by_scale.csv")
     t12p = pd.read_csv(TAB / "T12_label_mix.csv")
     corr = pd.read_csv(TAB / "T04_shape_correlations.csv", index_col=0)
+    corrall = pd.read_csv(TAB / "T04_shape_correlations_all.csv",
+                          index_col=0)
     d = pd.read_parquet(DATA / "readout.parquet")
 
     text = ("% Generated by Analysis/scaling/s07_supplementary.py - do not edit.\n"
             + s1_corpus(g, r) + "\n" + s2_scale(t02) + "\n" + s3_language(g)
-            + "\n" + s4_variance(t06) + "\n" + s5_persona(per) + "\n"
+            + "\n" + s4_variance(t06, t06all) + "\n" + s5_persona(per) + "\n"
             + s6_strategy(t10p, t12p) + "\n" + s6c_label_provenance(d) + "\n"
-            + s7_classifier(t01) + "\n" + s8_shapes(corr))
+            + s7_classifier(t01) + "\n" + s8_shapes(corr, corrall))
     OUT.write_text(text, encoding="utf-8")
     print(f"wrote {OUT}")
 

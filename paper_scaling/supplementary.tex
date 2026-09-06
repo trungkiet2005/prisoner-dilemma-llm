@@ -28,8 +28,18 @@
 \renewcommand{\thetable}{S\arabic{table}}
 \renewcommand{\thefigure}{S\arabic{figure}}
 \renewcommand{\thesection}{S\arabic{section}}
+% The sections run S1 to S10, and a two-digit number is wider than the 2.3em
+% article.cls reserves for one in the table of contents; without this the
+% contents line for S10 overfills its box.
+\makeatletter
+\renewcommand*\l@section{\@dottedtocline{1}{1.5em}{3.0em}}
+\renewcommand*\l@subsection{\@dottedtocline{2}{4.5em}{3.4em}}
+\makeatother
 
 \newcommand{\lam}{\lambda}
+% Intervals are always labelled, as in the main text: a bare bracketed pair is
+% ambiguous between a confidence interval, a range and a support.
+\newcommand{\ci}[2]{(95\% CI #1, #2)}
 
 \date{}
 
@@ -53,14 +63,21 @@ The analysis in the main text uses one corpus of language-model transcripts,
 read-out and contains no language-model output at all. No other dataset in the
 repository enters any number reported in the paper.
 
-The transcript corpus is a complete crossing of ten payoff scales, five models,
+The transcript corpus is a complete crossing of ten payoff scales, six models,
 five prompt languages, four persona pairings and ten replicates, at ten rounds
 per game and two agents per dyad. Table~\ref{tab:S-corpus} gives its
-composition. Every one of the 250 model-by-language-by-scale cells holds
+composition. Every one of the 300 model-by-language-by-scale cells holds
 exactly 40 dyads, hence 80 agent-games and twenty decisions per dyad, or 200
 dyads and 400 agent-games per cell of the coarser model-by-scale grid, and the
 ingest raises an error rather than writing its tables if that is not what is on
-disk.
+disk. The corpus is therefore 12{,}000 dyads, 24{,}000 agent-games and
+240{,}000 decisions.
+
+The main text reports five of the six models and this supplement reports all
+six. The sixth, Gemini 3.1 Flash-Lite, is the subject of \S S8, which states why
+it sits here rather than in the main text and gives the all-six version of every
+pooled quantity the main text reports on five. The five carry 250 of the 300
+cells, 10{,}000 dyads, 20{,}000 agent-games and 200{,}000 decisions.
 
 The completeness guard summarized in the main text has five clauses, and the
 build refuses to write its tables if any of them fails: a payoff scale is
@@ -84,14 +101,16 @@ summarizes: how the models were served, how the prompt files were checked, what
 the agent was and was not told, and the seeds, parsing and resampling the
 analysis rests on.
 
-All five models were served through the Kaggle Benchmarks model proxy on an
+All six models were served through the Kaggle Benchmarks model proxy on an
 OpenAI-compatible chat-completions endpoint, software development kit version
 0.6.1. The endpoint identifiers were \path{claude-haiku-4-5-20251001} for Claude
 Haiku 4.5, \path{gpt-5.4-nano-2026-03-17} for GPT-5.4 Nano,
-\path{gemini-3.1-flash-lite-preview} for Gemini 3.1 Flash-Lite,
-\path{gemini-3.5-flash-lite} for Gemini 3.5 Flash-Lite and
-\path{qwen3-235b-a22b-instruct-2507} for Qwen3 235B-A22B; the two Gemini
-identifiers name endpoints that are not pinned to a release date.
+\path{gemini-3.5-flash-lite} for Gemini 3.5 Flash-Lite,
+\path{qwen3-235b-a22b-instruct-2507} for Qwen3 235B-A22B,
+\path{grok-4.20-0309-non-reasoning} for Grok 4.20 and
+\path{gemini-3.1-flash-lite-preview} for Gemini 3.1 Flash-Lite; the two Gemini
+identifiers name endpoints that are not pinned to a release date, which is why
+the second of them is reported here rather than in the main text (\S S8).
 
 The prompt templates are compared byte for byte against the FAIRGAME resource
 files before any collection run because one save in the wrong encoding corrupts
@@ -158,8 +177,10 @@ is the table behind figure~2.
 
 The final column of table~\ref{tab:S-language} is the quantity we draw
 attention to in the main text: the range of cooperation across the ten payoff
-scales, computed within one model and one language. It runs from 0.080
-(Gemini 3.1 Flash-Lite in Arabic) to 0.449 (GPT-5.4 Nano in English). The
+scales, computed within one model and one language. Over all six models it runs
+from 0.080 (Gemini 3.1 Flash-Lite in Arabic) to 0.855 (Grok 4.20 in English);
+over the five the main text reports, the smallest is 0.083 (Qwen3 235B-A22B in
+French) and the largest the same 0.855. The
 sensitivity of a model to a transformation that changes nothing about the game
 is therefore not a single number even for a fixed model; it depends on the
 language the game was posed in.
@@ -167,17 +188,32 @@ language the game was posed in.
 \section{Variance decomposition}
 
 Table~\ref{tab:S-variance} is the full analysis-of-variance table summarized in
-the main text. It is computed on the 250 cell means rather than on the 20{,}000
-agent-games, because the design is exactly balanced at the cell level, which
-makes the type-II decomposition order-independent.
+the main text, on the 250 cell means of the five models reported there.
+Table~\ref{tab:S-variance-all} is the same decomposition on all 300 cell means,
+the sixth model included. Both are computed on cell means rather than on
+individual agent-games, because the design is exactly balanced at the cell
+level, which makes the type-II decomposition order-independent.
 
-The reading that matters for benchmark practice is the contrast between rows.
-The payoff scale carries $0.7\%$ of the variance across cells as a main effect
-and is not significant ($p = 0.36$). Its interaction with the model carries
-$6.5\%$ and its interaction with the prompt language $3.8\%$, and both are
-significant. A design that estimates a main effect for the payoff scale,
-pooling over models and languages, is therefore built to return exactly the
-null result it would return if no model responded to the scale at all.
+The reading that matters for benchmark practice is the contrast between rows,
+and it is the same in both tables. On the five models the payoff scale carries
+$5.8\%$ of the variance across cells as a main effect and is significant
+($p < 0.001$), while its interaction with the model carries $17.9\%$, roughly
+three times as much, and its interaction with the prompt language $3.6\%$. On
+all six the corresponding figures are $4.3\%$, $19.1\%$ and $3.1\%$, every term
+again significant. Most of what the payoff scale does is therefore specific to
+the model rather than shared across models, and a design that estimates only a
+main effect, pooling over models and languages, reports a number that describes
+no model in the pool.
+
+The main effect is significant in these panels because one model, Grok 4.20,
+departs from the invariance far enough to survive being averaged with the
+others. The same decomposition run on the five models that remain when it is
+removed returns $F_{9,144} = 1.10$, $p = 0.36$ and $0.7\%$ of the variance for
+the payoff scale as a main effect, which is the null, while each of those five
+models is separately and significantly sensitive to the scale, by both the
+permutation test and the clustered Wald test (table~1 of the main text for four
+of them, \S S8 for Gemini 3.1 Flash-Lite). Whether a pooled design finds an
+average effect here is a fact about which models are in the panel.
 
 \section{Persona}
 
@@ -188,11 +224,12 @@ the largest number shown is $10\lam$.
 
 Two features are worth stating explicitly because they are easy to misread from
 the figure. First, the sign reversal is a reversal of the \emph{persona} effect,
-not of the cooperation rate: below the boundary the three reversing models
+not of the cooperation rate: below the boundary the two reversing models
 cooperate more when told they are selfish than when told they are cooperative.
-Second, Qwen3 235B-A22B is inverted at every scale rather than only below the
-boundary, cooperating 0.072 under the cooperative persona against 0.798 under
-the selfish one. We report it because excluding it would flatter the analysis,
+Second, two models are inverted at every scale rather than only below the
+boundary. Qwen3 235B-A22B is inverted by a wide margin, cooperating 0.072 under
+the cooperative persona against 0.798 under the selfish one, and Grok 4.20 by a
+narrower one. We report it because excluding it would flatter the analysis,
 but the paper draws no conclusion from the inversion itself beyond noting that
 its magnitude, like everything else measured here, depends on the payoff scale.
 
@@ -225,7 +262,7 @@ no canonical rule applies.
 \subsection{Provenance, and which claims depend on the classifier}
 
 Over the whole corpus, $23.0\%$ of agent-games are matched exactly by one
-canonical rule, $13.2\%$ by several at once, and $63.7\%$ by none. Those three
+canonical rule, $17.5\%$ by several at once, and $59.6\%$ by none. Those three
 provenances are reported separately throughout, and the claims in the main text
 are ordered by how much they depend on the learned component:
 
@@ -234,23 +271,24 @@ are ordered by how much they depend on the learned component:
       (table~\ref{tab:S-deduced}) and the number of rounds violating the
       nearest canonical rule are computed by exact matching. Neither depends on
       the LSTM in any way. These carry the main text's strategy claim.
-\item The compositional claim, that the mix moves from unconditional towards
-      reciprocal play (table~\ref{tab:S-mix}), uses the labels, and therefore
-      leans on the LSTM for the $76.9\%$ of agent-games that no single rule
-      matches exactly: it decides alone for the $63.7\%$ that match no rule at
-      all, and ranks within the matcher's own set for the remaining $13.2\%$.
+\item The compositional claim, that the mix of labels moves with the payoff
+      scale and moves differently in different models
+      (table~\ref{tab:S-mix}), uses the labels, and therefore
+      leans on the LSTM for the $77.0\%$ of agent-games that no single rule
+      matches exactly: it decides alone for the $59.6\%$ that match no rule at
+      all, and ranks within the matcher's own set for the remaining $17.5\%$.
       It is the weaker of the two and is presented as such.
 \end{itemize}
 
-Of the agent-games carrying the AllC label, $26.0\%$ were deduced from an exact
-rule match and a further $29.6\%$ came from a rule set the LSTM ranked within;
-for AllD the deduced share is $32.7\%$.
+Of the agent-games carrying the AllC label, $23.6\%$ were deduced from an exact
+rule match and a further $36.9\%$ came from a rule set the LSTM ranked within;
+for AllD the deduced share is $35.6\%$.
 
 Table~\ref{tab:S-provenance} shows that this dependence is very unevenly spread
 across the four labels, which bounds how the compositional result may be read.
-AllC and AllD carry deduced shares of $26.0\%$ and $32.7\%$, so a movement in
+AllC and AllD carry deduced shares of $23.6\%$ and $35.6\%$, so a movement in
 those two is anchored in part by exact matching. Tit-for-Tat and
-Win-Stay-Lose-Shift are $95.4\%$ and $97.3\%$ unmatched, meaning the label is an
+Win-Stay-Lose-Shift are $94.6\%$ and $97.1\%$ unmatched, meaning the label is an
 attribution the LSTM makes about which canonical rule the play most resembles,
 on trajectories that follow none of them exactly. A rise in the Tit-for-Tat
 share is therefore evidence that play is drifting towards the reciprocal region
@@ -280,11 +318,97 @@ distributions in table~\ref{tab:S-mix} should be pushed.
 \section{Why the model curves cancel under pooling}
 
 Table~\ref{tab:S-shapes} gives the pairwise correlations between the five
-models' cooperation-against-scale curves. Six of the ten pairs are negative,
-the mean is $-0.10$, and the extremes are $-0.72$ and $+0.73$. Averaging curves
-that disagree in shape this strongly reduces the range from a mean of 0.136
-within a model to 0.048 for the average, a factor of 2.8. The cancellation is
-arithmetic rather than statistical, and no increase in sample size affects it.
+main-text models' cooperation-against-scale curves. Six of the ten pairs are
+negative, the mean is $-0.10$, and the extremes are $-0.72$ and $+0.85$.
+Averaging curves that disagree in shape this strongly reduces the range from a
+mean of 0.249 within a model to 0.154 for the average, a factor of 1.62. The
+cancellation is arithmetic rather than statistical, and no increase in sample
+size affects it.
+
+Table~\ref{tab:S-shapes-all} repeats the calculation on all six models. Nine of
+the fifteen pairs are negative, the mean correlation is $-0.08$, and the
+extremes are unchanged at $-0.72$ and $+0.85$. The pooled range falls to 0.125
+against a mean within-model range of 0.219, an attenuation of 1.76: adding the
+sixth model makes the cancellation slightly worse, not better.
+
+Cancellation of this kind is partial rather than total here, and the main text
+says so. A significant main effect of the payoff scale survives the averaging
+in both panels, and both facts belong in the same sentence: the average is
+non-zero, and at 0.154 against a mean within-model range of 0.249 it matches the
+movement of no model in the average, understating the three that move most and
+overstating the two that move least.
+
+\section{The sixth model, Gemini 3.1 Flash-Lite}
+
+The corpus holds six models. The main text reports five of them and this
+supplement reports all six, and every table above already carries the sixth
+alongside the rest. This section states why it sits here and what including it
+changes.
+
+\subsection{Why it is reported here}
+
+The reason is a property of the endpoint and not of the results. Gemini 3.1
+Flash-Lite was served under the identifier
+\path{gemini-3.1-flash-lite-preview}, which names a preview endpoint that the
+provider does not pin to a fixed version. What was served under that name while
+the corpus was collected cannot be recovered afterwards, and a reader cannot
+re-run the same object. The other five identifiers name endpoints we can
+re-address, so they are stable objects of study in a way this one is not, and
+the main text is restricted to them.
+
+We state the consequence plainly, because the reader is otherwise asked to take
+the split on trust. On one measure this model is the only counter-example in the
+corpus. The share of its agent-games matched exactly by one canonical rule
+\emph{rises} with the payoff scale, from $17.8\%$ below the sub-unit boundary to
+$26.3\%$ above it ($\beta = +0.125$ per decade of $\lam$, $p < 0.001$), where
+the other five either fall or show no trend. Its play therefore becomes more
+rule-like as the payoffs grow, and the main text says so where that result is
+reported rather than leaving it to be found here. On the continuous version of
+the same measure, the number of rounds violating the nearest canonical rule, it
+has no significant trend at all ($\beta = -0.019$, $p = 0.26$), so the
+counter-example is confined to the label-based measure.
+
+\subsection{What including it changes}
+
+Nothing that this paper concludes. The comparison is set out term by term
+above and can be read directly off the tables:
+
+\begin{itemize}
+\item \textbf{Departure from the invariance.} Its range across the ten scales
+      is 0.072 \ci{0.060}{0.133}, the smallest in the corpus, with
+      $p = 0.0005$ from the same permutation test and
+      $\chi^2_9 = 83.1$, $p < 0.001$, from the same clustered Wald test on the
+      nine scale contrasts; its cooperation at each scale is in
+      table~\ref{tab:S-scale}. It departs from the invariance like every other
+      model, and departs by less than any of them.
+\item \textbf{Pooling.} With all six models the pooled range is 0.125 against a
+      mean within-model range of 0.219, an attenuation of 1.76, and nine of the
+      fifteen pairwise shape correlations are negative with a mean of $-0.08$
+      (\S S7). The five-model figures are 0.154, 0.249, 1.62 and six of ten
+      negative. The conclusion is the same and marginally stronger with the
+      sixth model in.
+\item \textbf{Variance decomposition.} On all 300 cell means the model carries
+      $44.8\%$ of the variance, the payoff scale $4.3\%$ as a main effect, the
+      model-by-scale interaction $19.1\%$, the model-by-language interaction
+      $18.0\%$ and the language-by-scale interaction $3.1\%$, every term
+      significant at $p < 0.05$ (table~\ref{tab:S-variance-all}). The ordering
+      is that of the five-model table.
+\item \textbf{Persona.} Its persona effect shifts by 0.103 \ci{0.075}{0.131}
+      across the sub-unit boundary, which excludes zero as in every other model,
+      and it does not change sign: it is positive in both regimes, $+0.577$
+      below the boundary and $+0.680$ above it. The count of sign reversals in
+      the main text, two models of five, becomes two of six.
+\item \textbf{Opening move.} Its range of opening-move cooperation across the
+      ten scales is 3.68 times its range over rounds 2 to 10, the largest ratio
+      in the corpus. The main text's four models of five with a ratio above one
+      becomes five of six.
+\end{itemize}
+
+The one count that changes qualitatively is the strategy trend, and it changes
+in the direction that weakens rather than strengthens the paper's claim: four
+models of five moving one way with no counter-example becomes four of six moving
+one way, one showing no trend and one moving the other. That is stated in the
+main text where the result is reported and again in its limitations.
 
 \section{Reproduction}
 
@@ -297,7 +421,7 @@ The pipeline runs in order and each stage writes its outputs under
       incomplete.
 \item \path{s01_train_lstm.py} trains the LSTM branch on the synthetic
       corpus and writes \path{models/strategy_lstm.pt}.
-\item \path{s02_readout.py} applies the hybrid read-out to all 20{,}000
+\item \path{s02_readout.py} applies the hybrid read-out to all 24{,}000
       agent-games and writes \texttt{readout.parquet}.
 \item \path{s03_stats.py} and \path{s04_strategy_stats.py} compute every
       statistic in the paper into \path{tables/}.

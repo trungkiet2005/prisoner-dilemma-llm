@@ -5,46 +5,44 @@ Reallocating 'name_of_file' (item size: 1) to 9 items.
 The style file: unsrtnat.bst
 Reallocating 'name_of_file' (item size: 1) to 11 items.
 Database file #1: references.bib
-Warning--can't use both volume and number fields in fontana2024nicer
 You've used 40 entries,
             2481 wiz_defined-function locations,
-            820 strings with 12741 characters,
-and the built_in function-call counts, 17438 in all, are:
-= -- 1471
+            830 strings with 13009 characters,
+and the built_in function-call counts, 17508 in all, are:
+= -- 1481
 > -- 990
-< -- 27
+< -- 28
 + -- 372
 - -- 292
-* -- 1441
-:= -- 2793
-add.period$ -- 152
+* -- 1459
+:= -- 2805
+add.period$ -- 156
 call.type$ -- 40
 change.case$ -- 76
 chr.to.int$ -- 40
-cite$ -- 41
-duplicate$ -- 824
-empty$ -- 1518
+cite$ -- 40
+duplicate$ -- 825
+empty$ -- 1521
 format.name$ -- 364
-if$ -- 3694
+if$ -- 3711
 int.to.chr$ -- 1
 int.to.str$ -- 41
 missing$ -- 42
-newline$ -- 239
+newline$ -- 243
 num.names$ -- 120
-pop$ -- 309
+pop$ -- 305
 preamble$ -- 1
 purify$ -- 40
 quote$ -- 0
-skip$ -- 507
+skip$ -- 506
 stack$ -- 0
-substring$ -- 860
-swap$ -- 142
-text.length$ -- 8
+substring$ -- 856
+swap$ -- 144
+text.length$ -- 9
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 268
-warning$ -- 1
-while$ -- 136
+warning$ -- 0
+while$ -- 135
 width$ -- 0
-write$ -- 588
-(There was 1 warning)
+write$ -- 597

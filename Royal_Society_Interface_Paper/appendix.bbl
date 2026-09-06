@@ -1,0 +1,221 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{buscemi2025fairgame}{inproceedings}{}{}
+      \name{author}{6}{}{%
+        {{hash=60130a2257f0c387ce723817228e208b}{%
+           family={Buscemi},
+           familyi={B\bibinitperiod},
+           given={Alessio},
+           giveni={A\bibinitperiod}}}%
+        {{hash=7e1587ff0b2b9e9c48a8cfb6c53753a3}{%
+           family={Proverbio},
+           familyi={P\bibinitperiod},
+           given={Daniele},
+           giveni={D\bibinitperiod}}}%
+        {{hash=5478b7db5443f6eb7a11b38d85f179ce}{%
+           family={Di\bibnamedelima Stefano},
+           familyi={D\bibinitperiod\bibinitdelim S\bibinitperiod},
+           given={Alessandro},
+           giveni={A\bibinitperiod}}}%
+        {{hash=244c872a1fec2b2ed6bccc1a7c1f9942}{%
+           family={Han},
+           familyi={H\bibinitperiod},
+           given={The\bibnamedelima Anh},
+           giveni={T\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=913fd7030427f43ab7f08182951b2741}{%
+           family={Castignani},
+           familyi={C\bibinitperiod},
+           given={German},
+           giveni={G\bibinitperiod}}}%
+        {{hash=b1dc447055a5e64105a2984bf8306851}{%
+           family={Liò},
+           familyi={L\bibinitperiod},
+           given={Pietro},
+           giveni={P\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {IOS Press}%
+      }
+      \strng{namehash}{635cb4c809a1715021647a4d9ba1ad45}
+      \strng{fullhash}{2025b04fff67d6479e8c2789b9705620}
+      \strng{fullhashraw}{2025b04fff67d6479e8c2789b9705620}
+      \strng{bibnamehash}{2025b04fff67d6479e8c2789b9705620}
+      \strng{authorbibnamehash}{2025b04fff67d6479e8c2789b9705620}
+      \strng{authornamehash}{635cb4c809a1715021647a4d9ba1ad45}
+      \strng{authorfullhash}{2025b04fff67d6479e8c2789b9705620}
+      \strng{authorfullhashraw}{2025b04fff67d6479e8c2789b9705620}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{ECAI 2025 -- Proceedings of the 28th European Conference on Artificial Intelligence}
+      \field{series}{Frontiers in Artificial Intelligence and Applications}
+      \field{title}{{FAIRGAME}: a framework for {AI} agents bias recognition using game theory}
+      \field{volume}{413}
+      \field{year}{2025}
+      \field{pages}{4097\bibrangedash 4104}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.3233/FAIA251300
+      \endverb
+    \endentry
+    \entry{diStefanoIntention2023}{inproceedings}{}{}
+      \name{author}{4}{}{%
+        {{hash=5478b7db5443f6eb7a11b38d85f179ce}{%
+           family={Di\bibnamedelima Stefano},
+           familyi={D\bibinitperiod\bibinitdelim S\bibinitperiod},
+           given={Alessandro},
+           giveni={A\bibinitperiod}}}%
+        {{hash=5be1d96df47e9680d491d156aaeaa1c5}{%
+           family={Jayne},
+           familyi={J\bibinitperiod},
+           given={Chrisina},
+           giveni={C\bibinitperiod}}}%
+        {{hash=f433d4b11aa9b33f7623d371f08c200c}{%
+           family={Angione},
+           familyi={A\bibinitperiod},
+           given={Claudio},
+           giveni={C\bibinitperiod}}}%
+        {{hash=244c872a1fec2b2ed6bccc1a7c1f9942}{%
+           family={Han},
+           familyi={H\bibinitperiod},
+           given={The\bibnamedelima Anh},
+           giveni={T\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \list{organization}{1}{%
+        {MIT Press}%
+      }
+      \strng{namehash}{14d8659b100672aceee676e30dca1724}
+      \strng{fullhash}{59b158503fd90281697e0f5603821787}
+      \strng{fullhashraw}{59b158503fd90281697e0f5603821787}
+      \strng{bibnamehash}{59b158503fd90281697e0f5603821787}
+      \strng{authorbibnamehash}{59b158503fd90281697e0f5603821787}
+      \strng{authornamehash}{14d8659b100672aceee676e30dca1724}
+      \strng{authorfullhash}{59b158503fd90281697e0f5603821787}
+      \strng{authorfullhashraw}{59b158503fd90281697e0f5603821787}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Artificial Life Conference Proceedings 35}
+      \field{title}{Recognition of behavioural intention in repeated games using machine learning}
+      \field{year}{2023}
+      \field{pages}{103}
+      \range{pages}{1}
+    \endentry
+    \entry{Han2012ALIFEjournal}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=244c872a1fec2b2ed6bccc1a7c1f9942}{%
+           family={Han},
+           familyi={H\bibinitperiod},
+           given={The\bibnamedelima Anh},
+           giveni={T\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=bfefef4ad8ceb8e4eb4e752b4915141d}{%
+           family={Pereira},
+           familyi={P\bibinitperiod},
+           given={Luís\bibnamedelima Moniz},
+           giveni={L\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=0a8a7ea583e200c4ee7ab0958f80275d}{%
+           family={Santos},
+           familyi={S\bibinitperiod},
+           given={Francisco\bibnamedelima C.},
+           giveni={F\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+      }
+      \strng{namehash}{d13eaee7b35ce01163aa1403045bf274}
+      \strng{fullhash}{a951e8b194a02101b174267dc6f8fd4c}
+      \strng{fullhashraw}{a951e8b194a02101b174267dc6f8fd4c}
+      \strng{bibnamehash}{a951e8b194a02101b174267dc6f8fd4c}
+      \strng{authorbibnamehash}{a951e8b194a02101b174267dc6f8fd4c}
+      \strng{authornamehash}{d13eaee7b35ce01163aa1403045bf274}
+      \strng{authorfullhash}{a951e8b194a02101b174267dc6f8fd4c}
+      \strng{authorfullhashraw}{a951e8b194a02101b174267dc6f8fd4c}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1064-5462}
+      \field{journaltitle}{Artificial Life}
+      \field{month}{10}
+      \field{number}{4}
+      \field{title}{Corpus-Based Intention Recognition in Cooperation Dilemmas}
+      \field{volume}{18}
+      \field{year}{2012}
+      \field{pages}{365\bibrangedash 383}
+      \range{pages}{19}
+      \verb{doi}
+      \verb 10.1162/ARTL_a_00072
+      \endverb
+      \verb{urlraw}
+      \verb https://doi.org/10.1162/ARTL_a_00072
+      \endverb
+      \verb{url}
+      \verb https://doi.org/10.1162/ARTL_a_00072
+      \endverb
+    \endentry
+    \entry{inferenceStrategies}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=6194c4a6510d3138b7018e5d5f5bd2d8}{%
+           family={Montero-Porras},
+           familyi={M\bibinithyphendelim P\bibinitperiod},
+           given={Eladio},
+           giveni={E\bibinitperiod}}}%
+        {{hash=e8783997c1e83d5c60ad38c95a9738aa}{%
+           family={Grujić},
+           familyi={G\bibinitperiod},
+           given={Jelena},
+           giveni={J\bibinitperiod}}}%
+        {{hash=a6951a8d50ec34906b201ce64b9c5203}{%
+           family={Fernández\bibnamedelima Domingos},
+           familyi={F\bibinitperiod\bibinitdelim D\bibinitperiod},
+           given={Elias},
+           giveni={E\bibinitperiod}}}%
+        {{hash=5a5a93f19ad5f02f3753cba0c8133f57}{%
+           family={Lenaerts},
+           familyi={L\bibinitperiod},
+           given={Tom},
+           giveni={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{6336e1934ac4c81faa38eec27c6756b7}
+      \strng{fullhash}{4855fefb331c35e64d0f7a85aed94c3f}
+      \strng{fullhashraw}{4855fefb331c35e64d0f7a85aed94c3f}
+      \strng{bibnamehash}{4855fefb331c35e64d0f7a85aed94c3f}
+      \strng{authorbibnamehash}{4855fefb331c35e64d0f7a85aed94c3f}
+      \strng{authornamehash}{6336e1934ac4c81faa38eec27c6756b7}
+      \strng{authorfullhash}{4855fefb331c35e64d0f7a85aed94c3f}
+      \strng{authorfullhashraw}{4855fefb331c35e64d0f7a85aed94c3f}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Scientific Reports}
+      \field{month}{05}
+      \field{title}{Inferring strategies from observations in long iterated Prisoner’s dilemma experiments}
+      \field{volume}{12}
+      \field{year}{2022}
+      \verb{doi}
+      \verb 10.1038/s41598-022-11654-2
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

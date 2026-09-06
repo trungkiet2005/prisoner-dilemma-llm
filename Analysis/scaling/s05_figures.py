@@ -240,7 +240,7 @@ def fig5_mix(d):
         # letter now that both are set in INK.
         ax.set_title(STRAT_TITLE[lab], fontsize=6.8, color=INK,
                      fontweight="bold")
-        ax.set_ylim(0, 80)
+        ax.set_ylim(0, 90)   # AllC reaches 82.0; 80 clipped it
         hgrid(ax)
         shade_subunit(ax, label=False)
     axes[0].set_ylabel("agent-games with the label (\\%)".replace("\\", ""))
@@ -269,7 +269,7 @@ def fig6(r, t08):
                 label=MODEL_LABEL[m])
     logscale_axis(ax)
     ax.set_ylabel("cooperation on the opening move")
-    ax.set_ylim(0.1, 1.0)
+    ax.set_ylim(0.0, 1.0)   # Grok reaches 0.065; a 0.1 floor hid the point
     hgrid(ax)
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.26), ncol=3,
               handlelength=1.6, columnspacing=1.0)

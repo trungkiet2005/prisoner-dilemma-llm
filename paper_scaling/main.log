@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2026.7.17)  6 SEP 2026 08:53
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2026.7.17)  6 SEP 2026 10:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -625,85 +625,79 @@ n/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc}{D:/Application/MiKTeX/fonts/enc/dvips/lm
 /lm-mathsy.enc}]
 
 [2]
-
-[3]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 333.
-
-Underfull \hbox (badness 1314) in paragraph at lines 367--382
-\T1/lmr/m/n/10.95 (+20) 4.5 ($\T1/lmtt/m/n/10.95 claude-[]haiku-[]4-[]5-[]20251
-001$\T1/lmr/m/n/10.95 (+20) ), GPT-5.4 Nano ($\T1/lmtt/m/n/10.95 gpt-[]5 . 4-[]
-nano-[]2026-[]03-[]17$\T1/lmr/m/n/10.95 (+20) ), Gem-
- []
+(Font)              <10.95> on input line 251.
 
 
+[3{D:/Application/MiKTeX/fonts/enc/dvips/lm/lm-rm.enc}{D:/Application/MiKTeX/fo
+nts/enc/dvips/lm/lm-mathit.enc}]
 
-[4{D:/Application/MiKTeX/fonts/enc/dvips/lm/lm-mathit.enc}{D:/Application/MiKTe
-X/fonts/enc/dvips/lm/lm-rm.enc}]
+[4]
 
 [5]
 
 [6]
-
-[7]
-<figures/fig1_scaling.pdf, id=257, 410.74266pt x 223.65298pt>
+<figures/fig1_scaling.pdf, id=207, 410.74266pt x 223.65298pt>
 File: figures/fig1_scaling.pdf Graphic file (type pdf)
 <use figures/fig1_scaling.pdf>
-Package pdftex.def Info: figures/fig1_scaling.pdf  used on input line 596.
+Package pdftex.def Info: figures/fig1_scaling.pdf  used on input line 535.
 (pdftex.def)             Requested size: 452.9679pt x 246.65721pt.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 609.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 609.
  (tables_auto.tex
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <9> on input line 47.
+(Font)              <10> on input line 14.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 14.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 46.
 )
 
-[8 <./figures/fig1_scaling.pdf>]
+[7 <./figures/fig1_scaling.pdf>]
 
-[9]
-<figures/fig2_language.pdf, id=389, 435.93787pt x 166.33324pt>
+[8]
+<figures/fig2_language.pdf, id=340, 435.93787pt x 166.33324pt>
 File: figures/fig2_language.pdf Graphic file (type pdf)
 <use figures/fig2_language.pdf>
-Package pdftex.def Info: figures/fig2_language.pdf  used on input line 661.
+Package pdftex.def Info: figures/fig2_language.pdf  used on input line 603.
 (pdftex.def)             Requested size: 452.9679pt x 172.84288pt.
 
 
-[10 <./figures/fig2_language.pdf>]
-<figures/fig3_persona.pdf, id=481, 448.60147pt x 199.20537pt>
+[9 <./figures/fig2_language.pdf>]
+<figures/fig3_persona.pdf, id=430, 448.60147pt x 199.20537pt>
 File: figures/fig3_persona.pdf Graphic file (type pdf)
 <use figures/fig3_persona.pdf>
-Package pdftex.def Info: figures/fig3_persona.pdf  used on input line 710.
+Package pdftex.def Info: figures/fig3_persona.pdf  used on input line 648.
 (pdftex.def)             Requested size: 452.9679pt x 201.14717pt.
 
 
-[11 <./figures/fig3_persona.pdf>]
-<figures/fig4_strategy.pdf, id=573, 442.58565pt x 237.91617pt>
+[10 <./figures/fig3_persona.pdf>]
+<figures/fig4_strategy.pdf, id=521, 433.81497pt x 237.91617pt>
 File: figures/fig4_strategy.pdf Graphic file (type pdf)
 <use figures/fig4_strategy.pdf>
-Package pdftex.def Info: figures/fig4_strategy.pdf  used on input line 773.
-(pdftex.def)             Requested size: 452.9679pt x 243.50623pt.
-<figures/fig5_strategy_mix.pdf, id=576, 434.24315pt x 193.11557pt>
+Package pdftex.def Info: figures/fig4_strategy.pdf  used on input line 720.
+(pdftex.def)             Requested size: 452.9679pt x 248.41803pt.
+<figures/fig5_strategy_mix.pdf, id=524, 434.24315pt x 193.11557pt>
 File: figures/fig5_strategy_mix.pdf Graphic file (type pdf)
 <use figures/fig5_strategy_mix.pdf>
-Package pdftex.def Info: figures/fig5_strategy_mix.pdf  used on input line 788.
+Package pdftex.def Info: figures/fig5_strategy_mix.pdf  used on input line 734.
 
 (pdftex.def)             Requested size: 452.9679pt x 201.4513pt.
-<figures/fig6_firstmove.pdf, id=578, 434.27638pt x 180.84155pt>
+
+
+[11]
+<figures/fig6_firstmove.pdf, id=533, 434.27638pt x 180.84155pt>
 File: figures/fig6_firstmove.pdf Graphic file (type pdf)
 <use figures/fig6_firstmove.pdf>
-Package pdftex.def Info: figures/fig6_firstmove.pdf  used on input line 828.
+Package pdftex.def Info: figures/fig6_firstmove.pdf  used on input line 770.
 (pdftex.def)             Requested size: 452.9679pt x 188.63368pt.
 
 
-[12]
+[12 <./figures/fig4_strategy.pdf>]
 
-[13 <./figures/fig4_strategy.pdf>]
+[13 <./figures/fig5_strategy_mix.pdf>]
 
-[14 <./figures/fig5_strategy_mix.pdf>]
+[14 <./figures/fig6_firstmove.pdf>]
 
-[15 <./figures/fig6_firstmove.pdf>]
+[15]
 
 [16] (main.bbl
 
@@ -711,26 +705,24 @@ Package pdftex.def Info: figures/fig6_firstmove.pdf  used on input line 828.
 
 [18]
 
-[19]
+[19])
 
-[20])
-
-[21] (main.aux)
+[20] (main.aux)
  ***********
 LaTeX2e <2026-06-01>
 L3 programming layer <2026-04-28>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: AC45DA5163577C91CB7508154EFC7357;6688.
+(rerunfilecheck)             Checksum: F7745289071B17FFEE973BAA307A60CB;4751.
  ) 
 Here is how much of TeX's memory you used:
- 15396 strings out of 467830
- 242587 string characters out of 5438750
- 707873 words of memory out of 5000000
- 43691 multiletter control sequences out of 15000+600000
- 721475 words of font info for 249 fonts, out of 8000000 for 9000
+ 15369 strings out of 467830
+ 242098 string characters out of 5438750
+ 705919 words of memory out of 5000000
+ 43680 multiletter control sequences out of 15000+600000
+ 721486 words of font info for 247 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 74i,12n,79p,1003b,644s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 74i,12n,79p,1003b,634s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <D:/Application/MiKTeX/fonts/type1/public/lm/lmbx10.pfb><D:/Application/MiKTe
 X/fonts/type1/public/lm/lmbx12.pfb><D:/Application/MiKTeX/fonts/type1/public/lm
 /lmmi10.pfb><D:/Application/MiKTeX/fonts/type1/public/lm/lmmi8.pfb><D:/Applicat
@@ -743,9 +735,9 @@ onts/type1/public/lm/lmsy10.pfb><D:/Application/MiKTeX/fonts/type1/public/lm/lm
 sy8.pfb><D:/Application/MiKTeX/fonts/type1/public/lm/lmsy9.pfb><D:/Application/
 MiKTeX/fonts/type1/public/lm/lmtt10.pfb><D:/Application/MiKTeX/fonts/type1/publ
 ic/lm/lmtt12.pfb>
-Output written on main.pdf (21 pages, 640705 bytes).
+Output written on main.pdf (20 pages, 636400 bytes).
 PDF statistics:
- 1004 PDF objects out of 1200 (max. 8388607)
- 111 named destinations out of 1000 (max. 500000)
- 50463 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 957 PDF objects out of 1000 (max. 8388607)
+ 99 named destinations out of 1000 (max. 500000)
+ 50375 words of extra memory for PDF output out of 51595 (max. 10000000)
 
