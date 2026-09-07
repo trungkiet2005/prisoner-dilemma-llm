@@ -30,14 +30,14 @@ reference/   the FAIRGAME paper
 
 Agents minimise a penalty, so `w1 = 6, w2 = 10, w3 = 0, w4 = 2` (the
 *conventional* config) is the payoff matrix `T = 10, R = 6, P = 2, S = 0` that
-`Analysis/` reads, with `OptionA` meaning cooperate. Every entry is then
+`Analysis/` reads, with `OptionA` meaning defection and `OptionB` meaning cooperation. Every entry is then
 multiplied by the payoff scale λ.
 
 ## The corpora
 
 | arm | models | payoff scales λ | rounds | horizon |
 |---|---|---|---|---|
-| frontier | 6 models, incl. Claude Haiku 4.5, GPT-5.4 Nano, Gemini 3.5 Flash-Lite, Qwen3-235B, Grok 4.20 | ten values, 0.01 to 1000 | 30 | announced |
+| frontier | 6 models, incl. Claude Haiku 4.5, GPT-5.4 Nano, Gemini 3.5 Flash-Lite, Qwen3-235B, Grok 4.20 | ten values, 0.01 to 1000 | 10 | hidden |
 | open-weight | Qwen2.5 7/32/72B, Gemma-2 9/27B, Llama-3.1-8B, Llama-3.3-70B | 0.01, 0.1, 1, 10, 100, 1000 | 30 | announced |
 | archived frontier | Claude-3.5-Haiku, GPT-4o, Mistral-Large | 0.1, 1, 10 | 10 | hidden |
 
@@ -62,7 +62,7 @@ to `R: 6.0`.
 
 | directory | manuscript | status |
 |---|---|---|
-| [`papers/interface-focus`](papers/interface-focus/README.md) | *Payoff scale reshapes how language models play the prisoner's dilemma* | **current**, Interface Focus RSFS-2026-0050 |
+| [`papers/interface-focus`](papers/interface-focus/README.md) | *Frontier language models violate payoff-scale invariance and rely more on persistence than reciprocity in the prisoner's dilemma across languages* | **current**, Interface Focus RSFS-2026-0050 |
 | [`papers/deduce-before-you-label`](papers/deduce-before-you-label/README.md) | *Deduce before you label: strategy attribution for LLM agents in the iterated prisoner's dilemma* | separate manuscript |
 | [`legacy/paper_scaling`](legacy/README.md) | the pre-restructure draft of the Interface Focus paper | superseded |
 
@@ -113,4 +113,6 @@ how a finished run is promoted into `Dataset/`.
 ## Licence
 
 `FAIRGAME/` keeps its upstream licence, see [`FAIRGAME/LICENSE`](FAIRGAME/LICENSE)
-and [`FAIRGAME/NOTICE.md`](FAIRGAME/NOTICE.md).
+and [`FAIRGAME/NOTICE.md`](FAIRGAME/NOTICE.md). The analysis code is MIT
+licensed in [`LICENSE`](LICENSE), and the released transcript and derived data
+use CC BY 4.0 as recorded in [`DATA_LICENSE.md`](DATA_LICENSE.md).

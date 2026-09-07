@@ -2,8 +2,9 @@
 
 Single-column manuscript for the *Interface Focus* theme issue "Machine behaviour in
 the age of large language models: social, cognitive and evolutionary perspectives",
-class `rsproca_new`. Title: *Payoff scale reshapes how language models play the
-prisoner's dilemma*.
+class `rsproca_new`. Title: *Frontier language models violate payoff-scale
+invariance and rely more on persistence than reciprocity in the prisoner's
+dilemma across languages*.
 
 ## What this directory now contains
 
@@ -95,11 +96,10 @@ the old ones.
 
 ## Before submitting
 
-Search both sources for `>>> FILL IN <<<`. The outstanding items are the ORCID of the
-submitting author, the data-accessibility review link and eventual DOI, the funding
-statement for the co-authors outside Teesside, the CRediT roles author by author, the
-name of the model-inference compute provider, and the calendar range over which the
-corpus was collected.
+Before submission, the submitting author must enter an ORCID in ScholarOne.
+The manuscript records the public repository, CC-BY-4.0 transcript licence,
+MIT code licence, no external funding, CRediT roles, and the repository-bounded
+collection window. The repository does not retain per-request provider timestamps.
 
 House style: **no em dashes or en dashes in prose**, plain hyphens only. En dashes are
 permitted in numeric ranges (`50--86`), paired proper names (`Neumann--Morgenstern`)

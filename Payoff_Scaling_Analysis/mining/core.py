@@ -139,6 +139,9 @@ def use_style():
         "savefig.facecolor": SURFACE, "savefig.dpi": 300, "figure.dpi": 120,
         "font.family": "sans-serif",
         "font.sans-serif": ["DejaVu Sans", "Arial", "Helvetica"],
+        # Use embedded TrueType fonts in PDF figures. Type 3 bitmap fonts are
+        # rejected by the Royal Society production checks.
+        "pdf.fonttype": 42, "ps.fonttype": 42,
         "font.size": 8.5, "axes.titlesize": 9.5, "axes.labelsize": 8.5,
         "axes.titleweight": "semibold", "axes.titlelocation": "left",
         "axes.titlepad": 7.0,

@@ -1,6 +1,7 @@
 %% Royal Society Interface Focus submission, RSFS-2026-0050.
 %% Electronic supplementary material for
-%%   "Payoff scale reshapes how language models play the prisoner's dilemma".
+%%   "Frontier language models violate payoff-scale invariance and rely more
+%%    on persistence than reciprocity in the prisoner's dilemma across languages".
 %%
 %% MAJOR REVISION, 2026-09-06.  Rebuilt on the six-model by ten-payoff-scale
 %% corpus.  The tables of appendix B are machine-generated into
@@ -36,6 +37,7 @@
 
 %% Bibliography database (style is fixed by the class: biblatex/biber, phys)
 \addbibresource{mybib.bib}
+\hypersetup{pdftitle={Supplement: frontier language models violate payoff-scale invariance}}
 
 %% Numeric subsection numbering (A.1, B.1.1, ...) instead of the class default
 %% "(a)"/"i": matches how the main text refers to appendix sections.
@@ -56,8 +58,9 @@
 
 \begin{center}
   {\LARGE\bfseries Electronic supplementary material}\\[6pt]
-  {\large\itshape Payoff scale reshapes how language models play the
-   prisoner's dilemma}
+  {\large\itshape Frontier language models violate payoff-scale invariance and
+   rely more on persistence than reciprocity in the prisoner's dilemma across
+   languages}
 \end{center}
 \vspace{1.0em}
 
@@ -148,17 +151,20 @@ Gemini 3.1 Flash-Lite & \texttt{gemini-3.1-flash-lite-preview}  & no, preview \\
 \end{tabular}
 \end{table}
 
-%% >>> FILL IN <<<  State the calendar range over which the corpus was
-%% collected.  For a hosted model served from an undated identifier the
-%% collection date is the only thing that fixes what was actually run, and it
-%% is not recorded anywhere in the analysis repository.
+The repository records corpus assembly between 2 August and 5 September 2026.
+Those commit dates bound the archived collection work, but the raw files do not
+retain per-request timestamps. Exact provider request dates therefore cannot be
+reconstructed from the release.
 
-Sampling runs under a common-random-numbers scheme: a given round of a given
-replicate is seeded identically at every payoff scale, so a difference between
-two scales is not a difference between two independent samples. This reduces
-the variance of a within-replicate comparison across scales; it does not
-affect the permutation test, which shuffles the scale label among whole dyads
-and therefore treats the seed as part of the design.
+The release records matching by game identifier across payoff scales. It does
+not retain the API seed values, so it supports a matched-block analysis but
+does not verify provider-specific seed semantics. The robustness analysis
+therefore permutes payoff-scale labels within recorded game-ID blocks.
+
+The matched-block randomization gives $p=0.00225$ for Claude Haiku 4.5 and
+$p\leq0.00025$ for each of the other five models (4,000 draws per model).
+The cooperation ranges are unchanged because the analysis only conditions the
+null on the recorded matching structure.
 
 Decisions are elicited as free text and parsed by the protocol's own matcher. A
 reply the matcher cannot resolve is regenerated, up to two further attempts,
@@ -364,9 +370,12 @@ of a dyad play each other, the ten rounds inside an agent-game are strongly
 autocorrelated, and the ten replicates of a cell share a payoff scale. Every
 interval reported in this article is therefore a nonparametric bootstrap that
 resamples \emph{whole dyads} with replacement, 1{,}500 draws, percentile
-method~\cite{efron1993introduction}, with a fixed seed so that draws are
-common-random-number paired across cells. Every regression clusters its
-standard errors on the dyad.
+method~\cite{efron1993introduction}, with a fixed random stream so that draws
+are paired across cells. Every regression clusters its
+standard errors on the dyad. As a robustness check, we also condition the
+randomization on the documented game-ID blocks, preserving each complete
+ten-scale ladder. This sensitivity does not establish common-random-number
+semantics, which are not retained in the released tables.
 
 The range of a model's cooperation over the ten scales is a maximum minus a
 minimum and so is positive by construction. Its bootstrap interval quantifies
@@ -580,22 +589,19 @@ The comparison is still informative because the bias runs the same way in every
 model while the ratio does not, spanning 0.47 in Qwen3 235B-A22B to 3.68 in
 Gemini 3.1 Flash-Lite.
 
-Figure~\ref{fig:mechanism} identifies the mechanism through which the payoff
-multiplier alters behaviour. The multiplier acts by re-weighting the
-probabilities of unconditional policies before play begins, rather than by
-reshaping within-game backward induction or adaptive learning. Across the
+Figure~\ref{fig:mechanism} describes how behaviour changes with the payoff
+multiplier. Across the
 ten-scale ladder, the share of agents committing to unconditional defection
 falls from $21.3\%$ at $\lam = 0.01$ to $8.9\%$ at $\lam = 1000$ (Spearman
 $\rho = -0.47$), with the sharpest transition occurring across the sub-unit
 boundary $\lam \leq 0.1$. Meanwhile, the unconditional cooperation share rises
 modestly from $24.2\%$ to $29.0\%$ (Spearman $\rho = +0.05$).
 
-In contrast, the within-game trajectories across rounds 1 to 10 remain
-near-parallel across five orders of magnitude: games run at $\lam = 0.01$,
-$\lam = 1.0$, and $\lam = 1000$ exhibit virtually identical dynamic decay
-profiles (figure~\ref{fig:mechanism}c). The payoff scale therefore acts as an
-ex-ante stance selector on the opening move, establishing the cooperative
-climate of the dyad before any interaction history has elapsed.
+In contrast, the within-game trajectories across rounds 1 to 10 are similar at
+the three anchor scales shown in figure~\ref{fig:mechanism}c. Together with
+the opening-move analysis, this pattern is consistent with an early effect of
+the printed matrix. It does not distinguish that account from other processes
+that persist through the game.
 
 \begin{figure}[htbp]
 \centering
@@ -603,7 +609,7 @@ climate of the dyad before any interaction history has elapsed.
 \caption{\textbf{The scaling mechanism: ex-ante policy re-weighting versus within-game dynamics.}
 (a) Share of agent-games playing never-cooperate ($c=0$), interior mixed strategies, and always-cooperate ($c=1$) across the ten payoff scales $\lam$. The never-cooperate share drops from $21.3\%$ at $\lam = 0.01$ to $8.9\%$ at $\lam = 1000$.
 (b) Opposing trajectories of the two boundary atoms against $\log_{10}\lam$: the always-cooperate share rises modestly (Spearman $\rho = +0.05$), while the never-cooperate share falls substantially (Spearman $\rho = -0.47$), showing that the scale effect is concentrated in the relief of unconditional defection at sub-unit stakes.
-(c) Round-by-round cooperation rate across rounds 1 to 10 for three anchor scales ($\lam = 0.01$, $\lam = 1.0$, and $\lam = 1000$). The three decay curves remain near-parallel throughout the game, establishing that payoff magnitude sets the initial stance at round 1 rather than modifying within-game dynamic adaptation.}
+(c) Round-by-round cooperation rate across rounds 1 to 10 for three anchor scales ($\lam = 0.01$, $\lam = 1.0$, and $\lam = 1000$). The similar decay curves are consistent with, but do not establish, an early effect of payoff magnitude.}
 \label{fig:mechanism}
 \end{figure}
 
@@ -646,10 +652,10 @@ welfare peaks alongside a return to perfect equality ($\text{fairness} \approx 1
 
 Crucially, this structural coordination mechanism explains why the payoff scale
 exerts zero influence on within-dyad fairness: the regression slopes of both the
-within-dyad utility gap and Gini coefficient against $\log_{10}\lam$ are flat at
-$0.0004$ ($p = 0.80$). Payoff scaling shifts the aggregate willingness to
-cooperate, but leaves the symmetric coordination balance between paired clones
-entirely untouched.
+within-dyad utility gap and Gini coefficient against $\log_{10}\lam$ have slope
+$0.0004$ ($p = 0.80$). We therefore detect no association between payoff scale
+and this outcome. This empirical null is distinct from the algebraic identity
+relating within-dyad inequality to unilateral exploitation.
 
 \begin{figure}[htbp]
 \centering
@@ -657,7 +663,7 @@ entirely untouched.
 \caption{\textbf{Outcome fairness, net exploitation and the V-shaped welfare frontier.}
 (a) Within-dyad fairness ($1 - \text{Gini}$) plotted against joint dyad welfare across all experimental conditions, revealing a characteristic V-shaped relationship where equality peaks at both mutual defection (low welfare) and mutual cooperation (high welfare), with inequality concentrated in the exploitative transition zone.
 (b) Per-model fairness trajectories showing how different models occupy distinct regimes along the welfare-fairness frontier.
-(c) Invariance of distributional equity across the ten payoff scales: within-dyad inequality remains constant across five orders of magnitude (slope $0.0004$, $p = 0.80$), confirming that scale alters overall cooperation rates without destabilising dyadic symmetry.}
+(c) Distributional equity across the ten payoff scales: the fitted association is small and imprecise (slope $0.0004$, $p = 0.80$).}
 \label{fig:fairness_welfare}
 \end{figure}
 
@@ -1016,8 +1022,9 @@ $90\%$ at large scales in every setting, with a median increase of 0.716 and a
 minimum increase of 0.195. In 61 of the 80 settings the rise is strictly
 monotone; the 19 non-monotone cases occur exclusively at $\varepsilon = 0$,
 where a transient dip occurs before selection drives AllD to fixation
-(\S\ref{appendix:egt_vs_llm}). Crucially, the empirical LLM corpus moves in the
-opposite direction to this theoretical prediction across all evaluated models.
+(\S\ref{appendix:egt_vs_llm}). The pooled empirical corpus moves in the
+opposite direction to this theoretical prediction. This pooled reversal is
+driven primarily by GPT and Grok; per-model label trajectories are heterogeneous.
 
 \begin{figure}[!htbp]
 \centering
@@ -1078,14 +1085,12 @@ distort, and they are also the ones the article leans on least.
 
 \subsection{What this design does not measure}\label{appendix:robust_gaps}
 
-Two absences are worth naming so that they are not mistaken for findings.
-First, there is no measured test-retest floor: our reference for calling a
-departure large is the sampling variability of these data, through a bootstrap
-over dyads and a permutation null, and not an independent repeat of the whole
-protocol under identical conditions. Such a repeat is the obvious next
-measurement, and until it exists the ranges in table~\ref{tab:effect} should be
-read against the permutation null rather than against an unmeasured
-reproducibility baseline.
+Two limits are worth naming so that they are not mistaken for findings.
+First, an independent repeat of the Gemini 3.5 arm at $\lam \in
+\{0.1,0.25,0.5,1\}$ provides a limited test-retest check. The absolute
+between-run differences in cooperation were 0.002, 0.014, 0.002 and 0.038,
+respectively. This result supports repeatability for those four conditions but
+does not provide a reproducibility floor for other models, languages or scales.
 
 Second, clustering on the dyad handles the dependence between the two agents of
 a game and between the rounds inside an agent-game, but it is not a
@@ -1094,6 +1099,16 @@ be the fuller treatment of a nested design. Because the direction of every
 effect is consistent across conditions and the clustered intervals are wider
 than their unclustered counterparts, we regard the reported inference as
 conservative rather than optimistic, but we do not claim it is complete.
+The matched-block randomization provides a complementary sensitivity analysis,
+not a replacement for a collection record that preserves provider seed metadata.
+
+The release also contains a targeted notation control for Gemini 3.5 Flash-Lite.
+At fixed payoff magnitude, changing two decimal places to three changed the
+cooperation rate by $0.0073$ at $\lambda=0.1$ ($p=0.84$) and by $0.011$ at
+$\lambda=1$ ($p=0.68$). The corresponding magnitude contrast from $0.1$ to $1$
+under three-decimal formatting was $0.096$ ($p=0.0018$). This small control
+does not prove that notation is irrelevant, but it weakens the claim that a
+single trailing-zero convention explains the main scale effect.
 
 
 % ===========================================================================
@@ -1129,12 +1144,77 @@ scikit-learn 1.5.1, PyTorch 2.11.0 on CPU, Matplotlib 3.9.2, mpmath 1.3.0 and
 EGTtools 0.1.14.2. The classifier is trained on CPU and its seed is fixed, so
 the read-out is reproducible without a GPU.
 
-%% >>> FILL IN <<<  Replace with the repository URL and DOI once deposited, and
-%% state the licence.  Royal Society policy requires data and code to be
-%% reachable by editors and reviewers at first submission.
 
 \FloatBarrier
 
 \printbibliography
+
+\subsection{Robustness to the matched scale ladders}\label{appendix:blocked_robustness}
+
+The scale labels can also be permuted within each complete game-ID ladder. This
+is a stricter null than the main analysis because it preserves the recorded
+matching across all ten scales. With 10,000 blocked permutations, the observed
+scale range remains significant for every model: $p=0.0019$ for Claude and
+$p=0.0001$ for each of GPT, Gemini 3.1, Gemini 3.5, Grok and Qwen. The ranges
+are unchanged because the test changes only the null assignment. The complete
+results are included in the released analysis tables.
+
+As a complementary influence check, removing each model in turn leaves a
+significant pooled scale effect. The scale-test $p$-values are below $0.01$ in
+all six leave-one-model-out fits, with pooled ranges from $0.048$ to $0.159$.
+Thus pooled cancellation is not caused by a single model, even though the
+magnitude of the pooled range changes. The complete results are included in the
+released analysis tables.
+
+\subsection{Uncertainty in the conditioning contrasts}\label{appendix:conditioning_ci}
+
+The main text compares the relative size of partner conditioning and own-action
+conditioning. To show the uncertainty directly, table~\ref{tab:conditioning-ci}
+reports percentile intervals from 4,000 resamples of whole dyads. The resampling
+unit keeps both agents and all ten rounds of a game together. Reciprocity is the
+partner main effect, persistence is the own-action main effect, and matching is
+their interaction. The intervals confirm that persistence is positive in every
+model, whereas reciprocity is positive in four models and negative in Gemini
+3.1 and Qwen. These are descriptive contrasts and do not identify a causal
+mechanism.
+
+The persistence comparison is stable to the context-count rule. Across minimum
+context thresholds of 10, 20, 30, 40 and 50 observations, the mean
+persistence-minus-reciprocity contrast remains positive for every model. A
+Jeffreys-smoothed estimate using all observed contexts gives the same result.
+The complete threshold grid is included in the released analysis tables. The result is strongest for
+Gemini 3.1, Gemini 3.5, Grok and Qwen; Claude's average difference is small and
+some individual cells are close, so we interpret the title's comparison as a
+relative corpus-level tendency rather than a universal cell-level rule.
+
+Finally, a round-level logistic model with scale, language, both persona terms
+and their scale-by-language interactions rejects the joint null of no
+scale-by-language interaction for every model (Holm-adjusted $p<10^{-64}$ for
+the smallest non-zero value). The interaction is therefore not only a visual
+range difference. Its interpretation remains conditional on the language
+templates used here, including the documented Arabic and Chinese wording
+difference. Full coefficients and adjusted tests are included in the released
+analysis tables.
+
+\begin{table}[!htbp]
+\centering
+\caption{\textbf{Whole-dyad bootstrap intervals for memory-one contrasts.}
+Entries are estimates with 95\% percentile intervals. Each model contributes
+2,000 dyads and each interval uses 4,000 bootstrap draws.}
+\label{tab:conditioning-ci}
+\small
+\begin{tabular}{lccc}
+\toprule
+Model & reciprocity & persistence & matching \\
+\midrule
+Claude & $0.243\,[0.227,\,0.258]$ & $0.288\,[0.273,\,0.303]$ & $0.172\,[0.159,\,0.186]$ \\
+GPT & $0.141\,[0.127,\,0.156]$ & $0.277\,[0.263,\,0.291]$ & $0.053\,[0.040,\,0.066]$ \\
+Gemini 3.1 & $-0.171\,[-0.185,\,-0.158]$ & $0.620\,[0.606,\,0.633]$ & $0.168\,[0.157,\,0.179]$ \\
+Gemini 3.5 & $0.169\,[0.153,\,0.185]$ & $0.573\,[0.555,\,0.590]$ & $0.020\,[0.006,\,0.035]$ \\
+Grok & $0.189\,[0.175,\,0.203]$ & $0.690\,[0.676,\,0.704]$ & $0.007\,[-0.006,\,0.019]$ \\
+Qwen & $-0.095\,[-0.107,\,-0.083]$ & $0.749\,[0.735,\,0.762]$ & $-0.085\,[-0.096,\,-0.074]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \end{document}

@@ -4,10 +4,10 @@ Scope is fixed by decision (2026-09-05): the frontier prisoner's-dilemma corpus
 `Dataset/data_fairgame_frontier_llm` and nothing else.  The design is a complete
 crossing of
 
-    10 payoff scales  x  5 models  x  5 prompt languages  x  4 persona pairings
+    10 payoff scales  x  6 models  x  5 prompt languages  x  4 persona pairings
     x 10 replicates  x  10 rounds  x  2 agents
 
-= 10,000 dyads, 20,000 agent-games, 200,000 decisions, with every
+= 12,000 dyads, 24,000 agent-games, 240,000 decisions, with every
 model-by-language-by-scale cell at exactly 40 dyads (DYADS_PER_CELL below) and
 every model-by-scale cell at exactly 200 once the five languages are pooled.  `assert_complete()` refuses to write anything if that is not
 what is on disk, because a silently truncated cell is the failure mode this
