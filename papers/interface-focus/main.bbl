@@ -1225,8 +1225,8 @@
       \strng{authornamehash}{a84bfa7d0cf2dc47f5badb1838eb199a}
       \strng{authorfullhash}{b01a5233f915532a32c645715d70f784}
       \strng{authorfullhashraw}{b01a5233f915532a32c645715d70f784}
-      \field{sortinit}{8}
-      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Nature Human Behaviour}
@@ -1266,8 +1266,8 @@
       \strng{authornamehash}{c261ca1dd854e028ff91c2d8872becd2}
       \strng{authorfullhash}{f0d1661b5a66cd00196528464f4e6844}
       \strng{authorfullhashraw}{f0d1661b5a66cd00196528464f4e6844}
-      \field{sortinit}{9}
-      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{Proceedings of the International AAAI Conference on Web and Social Media (ICWSM)}
@@ -1778,8 +1778,8 @@
       \strng{authorfullhash}{09ab98329814750f98d8eec3e659d80d}
       \strng{authorfullhashraw}{09ab98329814750f98d8eec3e659d80d}
       \field{extraname}{2}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{arXiv:2504.08640}
@@ -1831,8 +1831,8 @@
       \strng{authorfullhash}{2025b04fff67d6479e8c2789b9705620}
       \strng{authorfullhashraw}{2025b04fff67d6479e8c2789b9705620}
       \field{extraname}{3}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{International Conference on Multi-disciplinary Trends in Artificial Intelligence}
@@ -2323,8 +2323,8 @@
       \strng{authornamehash}{d3bcf557edbcd57c46dc3a22d1e8ff94}
       \strng{authorfullhash}{d3bcf557edbcd57c46dc3a22d1e8ff94}
       \strng{authorfullhashraw}{d3bcf557edbcd57c46dc3a22d1e8ff94}
-      \field{sortinit}{2}
-      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Econometrica}
