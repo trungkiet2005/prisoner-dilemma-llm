@@ -248,7 +248,9 @@ language. The second is that multiplying every payoff by a positive constant
 carries no task content in the strictest sense available, because the matrix it
 produces is not a second game but the same one. What is not known is whether
 the strategic behaviour of a language model respects that invariance. To our
-knowledge, no study has asked. Every manipulation in the sensitivity literature
+knowledge, no prior study has formulated positive payoff rescaling as a
+theorem-backed zero-effect invariance test across a broad multi-model,
+multilingual grid. Every manipulation in the sensitivity literature
 could legitimately change behaviour, so a measured change under any of them is
 at worst a nuisance and at best a finding, against an expected effect nobody
 had specified. A rescaling is the one manipulation whose expected effect is
@@ -557,8 +559,10 @@ analyses use the binary decision itself. Because the two agents of a dyad play
 each other and the ten rounds inside an agent-game are strongly autocorrelated,
 primary inferential intervals were computed by resampling whole dyads with
 replacement, 1{,}500 draws, percentile method~\cite{efron1993introduction},
-and every regression clustered its standard errors on the dyad. Descriptive
-figure intervals use the resampling unit stated in their captions. Because the range over the ten
+and primary per-model and trend regressions clustered their standard errors on
+the dyad. The supplementary scale-by-language robustness model instead clusters
+on the documented language-by-game-ID blocks to preserve the matched ten-scale
+ladders. Descriptive figure intervals use whole-dyad resampling. Because the range over the ten
 scales is a maximum minus a minimum, and so positive by construction, its
 bootstrap interval quantifies the precision of the range and not its distance
 from zero; the permutation test supplies the test. Because the null is a

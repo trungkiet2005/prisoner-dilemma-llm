@@ -32,7 +32,7 @@ Haiku 4.5 and Gemini 3.5 Flash-Lite, so the scale is acting on the instruction
 as well as on the matrix, and it is doing so before the first move.
 
 The sub-unit regime is the two scales at which every payoff printed is at most
-1.  Intervals are 95 per cent percentile bootstrap intervals over agent-games.
+1.  Intervals are 95 per cent percentile bootstrap intervals over whole dyads.
 This figure does not separate an effect on the prior from a further effect on
 how history is later weighed; it shows only that most of the effect is present
 before any history exists.
@@ -60,7 +60,8 @@ def curve(g, model):
 
 
 def ci(g, model, scale):
-    x = g[(g.model == model) & (g.scale_nominal == scale)].first_move_coop
+    x = (g[(g.model == model) & (g.scale_nominal == scale)]
+         .groupby("game_uid", observed=True).first_move_coop.mean())
     return D.bootstrap_ci(x)
 
 
@@ -217,8 +218,8 @@ def main():
     S.panel(axC, "c", "told cooperative opens C less")
 
     S.caption(fig,
-              "20,000 opening moves, 400 per model and payoff scale; bands and "
-              "intervals are 95% percentile bootstraps over agent-games;\n"
+              "20,000 opening moves, 400 agent-games per model and payoff scale; bands and "
+              "intervals are 95% percentile bootstraps over whole dyads;\n"
               "shading on a and open markers on c are the sub-unit regime, "
               "the two scales at which every payoff printed is at most 1",
               y=0.01)

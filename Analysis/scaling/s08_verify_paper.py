@@ -5,7 +5,7 @@ figures by hand, and a wrong one there is the failure mode this project has
 actually suffered. Each check below names the claim, recomputes it from the
 parquet or the tables, and compares against what the paper says.
 
-Scope. The corpus holds six models. `paper_scaling/main.tex` reports five of
+Scope. The corpus holds six models. The Interface Focus manuscript reports five of
 them and `paper_scaling/supplementary.tex` reports all six, so the ledger
 covers both documents: a check whose value is printed only in the electronic
 supplementary material is named with a leading "ESM ", and a check whose value
@@ -21,6 +21,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from scipy.stats import spearmanr
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -58,6 +59,21 @@ chk("main-text agent-games", 20000, len(g[g.model.isin(MAIN)]), 0)
 chk("main-text cells", 250,
     g[g.model.isin(MAIN)].groupby(
         ["model", "language", "scale_nominal"]).ngroups, 0)
+
+# ---- strategic polarity quoted in the methods and introduction -------------
+# Utility is represented by the normalised payoff-efficiency field in the
+# game-level table. The third check aggregates both agents to the dyad before
+# comparing total welfare with joint cooperation.
+chk("own cooperation vs own utility rho", -0.015,
+    spearmanr(g.coop_rate, g.efficiency).statistic, 0.002)
+chk("opponent cooperation vs own utility rho", 0.916,
+    spearmanr(g.opp_coop_rate, g.efficiency).statistic, 0.002)
+dyad_polarity = (g.groupby("game_uid", observed=True)
+                   .agg(total_welfare=("efficiency", "sum"),
+                        joint_cooperation=("coop_rate", "mean")))
+chk("total welfare vs joint cooperation rho", 0.985,
+    spearmanr(dyad_polarity.total_welfare,
+              dyad_polarity.joint_cooperation).statistic, 0.001)
 
 # ---- language levels and sensitivities quoted in 3.2 -------------------------
 lang = g.pivot_table(index="model", columns="language", values="coop_rate")

@@ -64,13 +64,32 @@ def regime_shift(d):
     return float(hi.mean()) - float(lo.mean())
 
 
-def shift_ci(d, *, n=2000, seed=20260906):
+def shift_ci(d, *, n=1500, seed=20260906):
+    """Bootstrap the pooled regime contrast by whole dyads.
+
+    The two agent-game rows belonging to a dyad are averaged first inside
+    each model-by-scale cell. Resampling those dyad means preserves the unit
+    used by the primary inferential analysis.
+    """
     rng = np.random.default_rng(seed)
-    lo = d[d.scale_nominal.isin(SUBUNIT)].coop_rate.to_numpy(float)
-    hi = d[~d.scale_nominal.isin(SUBUNIT)].coop_rate.to_numpy(float)
-    a = rng.choice(lo, size=(n, len(lo)), replace=True).mean(axis=1)
-    b = rng.choice(hi, size=(n, len(hi)), replace=True).mean(axis=1)
-    d_ = b - a
+    dyad = (d.groupby(["model", "scale_nominal", "game_uid"], observed=True)
+              .coop_rate.mean().reset_index())
+    cells = {(m, s): x.coop_rate.to_numpy(float)
+             for (m, s), x in dyad.groupby(["model", "scale_nominal"], observed=True)}
+    lo_draw = np.zeros(n)
+    hi_draw = np.zeros(n)
+    lo_scales = [s for s in S.SCALES if s in SUBUNIT]
+    hi_scales = [s for s in S.SCALES if s not in SUBUNIT]
+    for m in S.MODEL_ORDER:
+        for s in lo_scales:
+            x = cells[(m, s)]
+            lo_draw += rng.choice(x, size=(n, len(x)), replace=True).mean(axis=1)
+        for s in hi_scales:
+            x = cells[(m, s)]
+            hi_draw += rng.choice(x, size=(n, len(x)), replace=True).mean(axis=1)
+    lo_draw /= len(S.MODEL_ORDER) * len(lo_scales)
+    hi_draw /= len(S.MODEL_ORDER) * len(hi_scales)
+    d_ = hi_draw - lo_draw
     return float(np.quantile(d_, 0.025)), float(np.quantile(d_, 0.975))
 
 
@@ -188,9 +207,9 @@ def main():
     fig.legend(handles=handles, loc="lower center", ncol=6,
                bbox_to_anchor=(0.5, -0.055), fontsize=S.FS_NOTE)
     S.caption(fig,
-              f"{len(g):,} agent-games from five models, 400 per language and payoff "
+              f"{len(g):,} agent-games from five models, 400 agent-games per language and payoff "
               "scale; the interval on each pooled estimate is a 95% percentile "
-              "bootstrap over agent-games, and the small markers are the five models "
+              "whole-dyad bootstrap, and the small markers are the five models "
               "separately",
               y=-0.095)
 

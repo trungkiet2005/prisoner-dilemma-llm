@@ -373,9 +373,11 @@ autocorrelated, and the ten replicates of a cell share a payoff scale. Primary
 inferential intervals therefore use a nonparametric bootstrap that resamples
 \emph{whole dyads} with replacement, 1{,}500 draws, percentile
 method~\cite{efron1993introduction}, with a fixed random stream so that draws
-are paired across cells. Descriptive figure intervals use the resampling unit
-stated in their captions. Every regression clusters its
-standard errors on the dyad. As a robustness check, we also condition the
+are paired across cells. Descriptive figure intervals use whole-dyad resampling.
+Primary per-model and trend regressions cluster standard errors on the dyad.
+The supplementary scale-by-language robustness model instead clusters on the
+documented language-by-game-ID blocks to preserve the matched ten-scale ladders.
+As a robustness check, we also condition the
 randomisation on the documented game-ID blocks, preserving each complete
 ten-scale ladder. This sensitivity does not establish common-random-number
 semantics, which are not retained in the released tables.
@@ -407,14 +409,15 @@ models, and 180 on all 300 cells.
 
 Table~\ref{tab:S-scale} gives the cooperation rate of every model at every
 payoff scale, with a bootstrap interval under each entry, for all six models.
-It is the numerical form of figure~\ref{fig:landscape}b.
+It provides the model-by-scale estimates underlying figure~\ref{fig:landscape}b.
 
 \subsection{Cooperation by model, prompt language and payoff scale}\label{appendix:by_language}
 
 Table~\ref{tab:S-language} gives the same quantity broken down by prompt
 language, 40 dyads per entry, with the across-scale range in the final column.
 Over all six models that range runs from 0.080, for Gemini 3.1 Flash-Lite in
-Arabic, to 0.855, for Grok 4.20 in English. It is the numerical form of
+Arabic, to 0.855, for Grok 4.20 in English. Table~\ref{tab:S-language}
+provides the underlying model-by-language-by-scale estimates used in
 figure~\ref{fig:language}.
 
 \subsection{Variance decomposition}\label{appendix:variance}
@@ -1132,39 +1135,6 @@ Thus pooled cancellation is not caused by a single model, even though the
 magnitude of the pooled range changes. The complete results are included in the
 released analysis tables.
 
-\section{Reproduction}\label{appendix:repro}
-
-Every number, figure and table in this article and in this appendix is produced
-by an archived pipeline from the released transcript corpus, and no value is
-retyped by hand into the manuscript sources: the three main-text tables are
-generated into \texttt{tables\_auto.tex}, the supplementary tables of
-\S\ref{appendix:results} into \texttt{supp\_tables\_auto.tex}, and the
-evolutionary grid of \S\ref{appendix:egt} into \texttt{egt\_tables\_auto.tex}.
-
-The pipeline runs in the following order. \texttt{s00\_build} reads the
-transcript corpus, applies the completeness guard of
-\S\ref{appendix:corpus} and writes the tidy game, round and read-out tables.
-\texttt{s01\_train\_lstm} trains the classifier of \S\ref{appendix:classifier}
-on the synthetic corpus. \texttt{s02\_readout} applies the rule base and the
-classifier to the transcripts. \texttt{s03\_stats} and
-\texttt{s04\_strategy\_stats} compute every statistic reported here.
-\texttt{s05\_figures} and \texttt{s05b\_appendix\_figures} draw the figures
-directly into the manuscript directory. \texttt{s06\_tables} and
-\texttt{s07\_supplementary} render the tables. \texttt{s09\_egt} computes the
-evolutionary grid of \S\ref{appendix:egt}. Finally \texttt{s08\_verify\_paper}
-recomputes every quantity quoted in the manuscript prose from the data and
-fails if any of them disagrees, so that a stale number cannot survive an edit.
-
-Three seeds fix the stochastic parts: 12345 for the corpus build, 1234 for
-classifier training, and 20260905 for the bootstrap and permutation draws.
-
-The results reported here were produced under Python 3.12.3 with NumPy 1.26.4,
-pandas 2.2.2, PyArrow 16.1.0, SciPy 1.17.1, statsmodels 0.14.6,
-scikit-learn 1.5.1, PyTorch 2.11.0 on CPU, Matplotlib 3.9.2, mpmath 1.3.0 and
-EGTtools 0.1.14.2. The classifier is trained on CPU and its seed is fixed, so
-the read-out is reproducible without a GPU.
-
-
 \subsection{Uncertainty in the conditioning contrasts}\label{appendix:conditioning_ci}
 
 The main text compares the relative size of partner conditioning and own-action
@@ -1215,6 +1185,41 @@ Qwen & $-0.095\,[-0.107,\,-0.083]$ & $0.749\,[0.735,\,0.762]$ & $-0.085\,[-0.096
 \bottomrule
 \end{tabular}
 \end{table}
+
+\section{Reproduction}\label{appendix:repro}
+
+Every number, figure and table in this article and in this appendix is produced
+by an archived pipeline from the released transcript corpus. Tables and figures
+are generated directly; numerical values quoted manually in prose are checked
+against the data by the verification ledger. The three main-text tables are
+generated into \texttt{tables\_auto.tex}, the supplementary tables of
+\S\ref{appendix:results} into \texttt{supp\_tables\_auto.tex}, and the
+evolutionary grid of \S\ref{appendix:egt} into \texttt{egt\_tables\_auto.tex}.
+
+The pipeline runs in the following order. \texttt{s00\_build} reads the
+transcript corpus, applies the completeness guard of
+\S\ref{appendix:corpus} and writes the tidy game, round and read-out tables.
+\texttt{s01\_train\_lstm} trains the classifier of \S\ref{appendix:classifier}
+on the synthetic corpus. \texttt{s02\_readout} applies the rule base and the
+classifier to the transcripts. \texttt{s03\_stats} and
+\texttt{s04\_strategy\_stats} compute every statistic reported here.
+\texttt{s05\_figures} and \texttt{s05b\_appendix\_figures} draw the figures
+directly into the manuscript directory. \texttt{s06\_tables} and
+\texttt{s07\_supplementary} render the tables. \texttt{s09\_egt} computes the
+evolutionary grid of \S\ref{appendix:egt}. Finally \texttt{s08\_verify\_paper}
+recomputes the ledger of headline quantities quoted in the manuscript prose
+from the data and fails if any of them disagrees, so that a stale number cannot
+survive an edit.
+
+Three seeds fix the stochastic parts: 12345 for the corpus build, 1234 for
+classifier training, and 20260905 for the bootstrap and permutation draws.
+
+The results reported here were produced under Python 3.12.3 with NumPy 1.26.4,
+pandas 2.2.2, PyArrow 16.1.0, SciPy 1.17.1, statsmodels 0.14.6,
+scikit-learn 1.5.1, PyTorch 2.11.0 on CPU, Matplotlib 3.9.2, mpmath 1.3.0 and
+EGTtools 0.1.14.2. The classifier is trained on CPU and its seed is fixed, so
+the read-out is reproducible without a GPU.
+
 
 \printbibliography
 
