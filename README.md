@@ -79,9 +79,11 @@ pip install -r requirements.txt
 cd Analysis/scaling
 python s00_build.py && python s01_train_lstm.py && python s02_readout.py
 python s03_stats.py && python s04_strategy_stats.py
+python s03_matched_block_robustness.py && python s12_conditioning_ci.py
+python s13_review_robustness.py
 python s05_figures.py && python s05b_appendix_figures.py
 python s06_tables.py && python s07_supplementary.py && python s09_egt.py
-python s08_verify_paper.py     # recomputes every quoted number, fails on disagreement
+python s08_verify_paper.py     # checks the headline numerical ledger
 
 # the older three-scale study
 python Analysis/run_all.py

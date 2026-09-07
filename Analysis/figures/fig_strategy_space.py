@@ -54,6 +54,7 @@ def main():
 
     canon = D.canonical_frame().set_index("rule")
     cc = D.contrasts(canon)
+    t20 = D.table("T20_conditioning_ci.csv").set_index(["model", "contrast"])
 
     fig = plt.figure(figsize=(S.FULL, 5.7))
     gs = fig.add_gridspec(2, 2, height_ratios=[1.15, 0.85], hspace=0.45,
@@ -100,8 +101,9 @@ def main():
     w = 0.15
     for i, m in enumerate(S.MODEL_ORDER):
         sel = (c.model == m).to_numpy()
-        vals = [c[k][sel].mean() for k in keys]
-        los, his = zip(*(D.bootstrap_ci(c[k][sel]) for k in keys))
+        vals = [t20.loc[(m, k), "estimate"] for k in keys]
+        los = [t20.loc[(m, k), "lo"] for k in keys]
+        his = [t20.loc[(m, k), "hi"] for k in keys]
         off = (i - (len(S.MODEL_ORDER) - 1) / 2) * w
         axB.bar(xs + off, vals, width=w * 0.86, color=S.MODEL_C[m], lw=0,
                 zorder=3)
@@ -147,7 +149,8 @@ def main():
                bbox_to_anchor=(0.5, 0.04), fontsize=S.FS_NOTE)
     S.caption(fig,
               f"{len(c)} cells, one per model, payoff scale and language; "
-              "bars are means over cells with a 95% bootstrap interval",
+              "panel b uses model-level estimates with 95% whole-dyad "
+              "bootstrap intervals from the conditioning table",
               y=0.005)
 
     S.save(fig, "f_strategy_space")

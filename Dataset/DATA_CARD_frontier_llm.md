@@ -292,15 +292,12 @@ lambda. So on this corpus `scale_nominal == scale_eff` and you may trust the fol
 
 ## 8. Common random numbers across lambda
 
-`pd_task.py` seeds each game from a cell index
-`(lang_index * 4 + pairing_index) * 10 + repetition`, which **deliberately does not depend
-on lambda**. The same `(model, language, game_id)` therefore starts from the same sampling
-seed at every scale.
-
-Practical consequence: games are **matched across lambda**. Comparisons along the scale
-axis can and should be paired on `(model, language, game_id)` rather than treated as
-independent samples. This is the design's main source of statistical power, since LLM
-sampling variance across cells is large relative to the lambda effect.
+`pd_task.py` requests a seed from a cell index
+`(lang_index * 4 + pairing_index) * 10 + repetition`, which does not depend on
+lambda. The same `(model, language, game_id)` is therefore intended to be matched
+across scales where the serving interface honours the request. Provider-specific seed
+semantics are not verified in the released tables, so the robustness analysis uses the
+recorded game-ID ladders rather than assuming common-random-number guarantees.
 
 ---
 
@@ -310,8 +307,9 @@ All of these were checked over the full 300 files on 2026-09-06:
 
 1. 300 CSV files, 40 data rows each, 12,000 rows total.
 2. Every `agent{1,2}_strategies` and `agent{1,2}_scores` list has length exactly 10.
-3. Action tokens are only `OptionA` (98,510) and `OptionB` (141,490); no parse fallbacks,
-   no `None`, no truncated strings such as `'Option'`.
+3. The released CSVs contain no unresolved or invalid action tokens. Because collection
+   fallback is stored as `OptionA`, fallback events cannot be reconstructed from the
+   transcript tables alone.
 4. `agent1_llm == agent2_llm == <parent directory name>` in every row.
 5. `n_rounds_is_known=True`, `max_rounds=10`, `played_rounds=10`,
    `agents_communicate=False`, both `knows_opponent_with_prob=0`, both `messages=[]`
@@ -558,7 +556,8 @@ cell on 48,000.
 * **Collection order:** Gemini-3.5-Flash-Lite first, then
   Gemini-3.1-Flash-Lite-Preview (2026-09-02), GPT-5.4-Nano (2026-09-03),
   Claude-Haiku-4.5 and Qwen3-235B-A22B (2026-09-05), Grok-4.20-Non-Reasoning (2026-09-05).
-* **Sampling:** decoding parameters are the provider defaults exposed through the Kaggle
-  Model Proxy; the only output constraint is a tight `max_tokens` cap, and the corpus
-  contains zero parse fallbacks (invariant 3), so no round is a silent default.
+* **Sampling:** requests set temperature to 1.0, pass the requested per-call seed where
+  supported, and apply a tight `max_tokens` cap. Provider-specific seed semantics are
+  not assumed. The released action tables cannot distinguish a genuine `OptionA` from
+  an OptionA fallback.
 * **This card:** written 2026-09-06 from a full scan of all 300 files.

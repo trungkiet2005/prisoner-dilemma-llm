@@ -108,15 +108,16 @@ Option~B at $2\lam$ beats mutual Option~A at $6\lam$ and is the cooperative
 one. In the data, the realised penalties recorded for each pair of actions
 reproduce that matrix. Cooperation means Option~B throughout.
 
-The empirical logs confirm that the models experience the actual strategic
-tension of the prisoner's dilemma rather than an artefact of prompt confusion.
+The realised score-action relationships reproduce the intended dilemma
+structure in the logs.
 Own cooperation correlates with own utility at Spearman $\rho = -0.015$,
 confirming that unilateral cooperation is privately unrewarding. Conversely, the
 opponent's cooperation correlates with own utility at Spearman $\rho = +0.916$,
 confirming that the partner's move governs individual payoff. At the dyad level,
 total welfare correlates with joint cooperation at Spearman $\rho = +0.985$,
-demonstrating that mutual cooperation maximises collective surplus. The empirical
-incentive structure thus faithfully reproduces the theoretical dilemma.
+demonstrating that mutual cooperation maximises collective surplus. These checks
+validate the payoff mapping and action polarity, not model comprehension of the
+dilemma.
 
 \subsection{Endpoints, seeds, parsing and fallback}\label{appendix:endpoints}
 
@@ -1131,8 +1132,8 @@ results are included in the released analysis tables.
 As a complementary influence check, removing each model in turn leaves a
 significant pooled scale effect. The scale-test $p$-values are below $0.01$ in
 all six leave-one-model-out fits, with pooled ranges from $0.048$ to $0.159$.
-Thus pooled cancellation is not caused by a single model, even though the
-magnitude of the pooled range changes. The complete results are included in the
+Thus the dyad-level pooled association is not removed by any single model,
+even though the magnitude of the pooled range changes. The complete results are included in the
 released analysis tables.
 
 \subsection{Uncertainty in the conditioning contrasts}\label{appendix:conditioning_ci}
@@ -1165,26 +1166,7 @@ templates used here, including the documented Arabic and Chinese wording
 difference. Full coefficients and adjusted tests are included in the released
 analysis tables.
 
-\begin{table}[!htbp]
-\centering
-\caption{\textbf{Whole-dyad bootstrap intervals for memory-one contrasts.}
-Entries are estimates with 95\% percentile intervals. Each model contributes
-2,000 dyads and each interval uses 4,000 bootstrap draws.}
-\label{tab:conditioning-ci}
-\small
-\begin{tabular}{lccc}
-\toprule
-Model & reciprocity & persistence & matching \\
-\midrule
-Claude & $0.243\,[0.227,\,0.258]$ & $0.288\,[0.273,\,0.303]$ & $0.172\,[0.159,\,0.186]$ \\
-GPT & $0.141\,[0.127,\,0.156]$ & $0.277\,[0.263,\,0.291]$ & $0.053\,[0.040,\,0.066]$ \\
-Gemini 3.1 & $-0.171\,[-0.185,\,-0.158]$ & $0.620\,[0.606,\,0.633]$ & $0.168\,[0.157,\,0.179]$ \\
-Gemini 3.5 & $0.169\,[0.153,\,0.185]$ & $0.573\,[0.555,\,0.590]$ & $0.020\,[0.006,\,0.035]$ \\
-Grok & $0.189\,[0.175,\,0.203]$ & $0.690\,[0.676,\,0.704]$ & $0.007\,[-0.006,\,0.019]$ \\
-Qwen & $-0.095\,[-0.107,\,-0.083]$ & $0.749\,[0.735,\,0.762]$ & $-0.085\,[-0.096,\,-0.074]$ \\
-\bottomrule
-\end{tabular}
-\end{table}
+\input{conditioning_ci_auto}
 
 \section{Reproduction}\label{appendix:repro}
 
@@ -1205,14 +1187,20 @@ classifier to the transcripts. \texttt{s03\_stats} and
 \texttt{s04\_strategy\_stats} compute every statistic reported here.
 \texttt{s05\_figures} and \texttt{s05b\_appendix\_figures} draw the figures
 directly into the manuscript directory. \texttt{s06\_tables} and
-\texttt{s07\_supplementary} render the tables. \texttt{s09\_egt} computes the
-evolutionary grid of \S\ref{appendix:egt}. Finally \texttt{s08\_verify\_paper}
+\texttt{s07\_supplementary} render the tables. The matched-ladder, conditioning
+and review robustness scripts \texttt{s03\_matched\_block\_robustness},
+\texttt{s12\_conditioning\_ci} and \texttt{s13\_review\_robustness} produce
+the additional robustness ledgers before verification. \texttt{s09\_egt}
+computes the evolutionary grid of \S\ref{appendix:egt}. Finally \texttt{s08\_verify\_paper}
 recomputes the ledger of headline quantities quoted in the manuscript prose
 from the data and fails if any of them disagrees, so that a stale number cannot
 survive an edit.
 
-Three seeds fix the stochastic parts: 12345 for the corpus build, 1234 for
-classifier training, and 20260905 for the bootstrap and permutation draws.
+The collection uses base sampling seed 12345 where supported by the serving
+interface. Classifier training uses seed 1234. Primary bootstrap and permutation
+analyses use 20260905, descriptive figure resampling uses 20260906, and the
+matched-block and conditioning robustness analyses use 20260907. Provider-specific
+seed semantics are not assumed.
 
 The results reported here were produced under Python 3.12.3 with NumPy 1.26.4,
 pandas 2.2.2, PyArrow 16.1.0, SciPy 1.17.1, statsmodels 0.14.6,

@@ -39,7 +39,9 @@ is identified as future work.
 
 ### Decoding settings
 
-The decoding configuration is now recorded in the data card and methods. A
+The decoding configuration is now recorded in the data card and methods: the
+requests set temperature to 1.0 and pass a requested seed where supported, but
+provider-specific seed semantics are not assumed. A
 temperature or top-p ablation would change the collection protocol and is not
 needed to test the stated invariance null in the frozen corpus. We have made
 this scope boundary explicit and identify decoding sensitivity as future work.
@@ -133,7 +135,8 @@ future analysis.
 ### Repository and verification
 
 The public README and data card now match the 20-page main manuscript and
-23-page supplement. Generated tables and figures remain pipeline outputs.
+23-page supplement, including the fallback, decoding and matched-seed caveats.
+Generated tables and figures remain pipeline outputs.
 The verification script checks 197 headline quantities, including the three
 strategic-polarity correlations and the matched-block robustness results; the
 final run reports that all values match the data.

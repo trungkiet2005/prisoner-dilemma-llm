@@ -30,7 +30,8 @@ lives in the appendix, with a short pointer in main-text §3.8.
 | `main.tex` / `main.pdf` | Main manuscript, 20 pp., 8 figures, 3 tables |
 | `appendix.tex` / `appendix.pdf` | Standalone electronic supplementary material, 23 pp. |
 | `tables_auto.tex` | The three main-text tables, **generated**, do not edit |
-| `supp_tables_auto.tex` | The thirteen supplementary tables, **generated**, do not edit |
+| `supp_tables_auto.tex` | The supplementary tables, **generated**, do not edit |
+| `conditioning_ci_auto.tex` | The D.1 conditioning robustness table, **generated**, do not edit |
 | `egt_tables_auto.tex` | The three evolutionary-baseline tables, **generated**, do not edit |
 | `mybib.bib` | Bibliography (biblatex/biber, style fixed by the class), 155 entries |
 | `rsproca_new.cls` | Journal class |
@@ -53,7 +54,10 @@ cd ../../Analysis/scaling
 python s05_figures.py            # f1..f8, the main-text figures
 python s05b_appendix_figures.py  # fa1..fa4, the appendix figures
 python s06_tables.py             # tables_auto.tex
-python s07_supplementary.py      # supp_tables_auto.tex
+python s03_matched_block_robustness.py
+python s12_conditioning_ci.py
+python s13_review_robustness.py
+python s07_supplementary.py      # supp_tables_auto.tex and conditioning_ci_auto.tex
 python s09_egt.py                # the evolutionary grid + egt_tables_auto.tex
 ```
 

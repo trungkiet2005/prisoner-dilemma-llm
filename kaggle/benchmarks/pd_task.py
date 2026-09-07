@@ -12,8 +12,10 @@ NHỮNG THỨ GIỮ Y HỆT NHÁNH OPEN-SOURCE (điều kiện để so sánh c�
     → w1=6 w2=10 w3=0 w4=2 (T=10 R=6 P=2 S=0) — ĐÚNG bản nhánh frontier dùng.
     ⚠️ Lần chạy open-source TRƯỚC lỡ dùng `..._mild.json` (w1=8) nên không so sánh
     được; notebook + task này là bản sửa.
-  · Payoff scaling: λ ∈ {0.01, 0.1, 1, 10, 100, 1000} — 6 mức (frontier chỉ 3).
-  · 30 vòng, agent BIẾT tổng số vòng, KHÔNG giao tiếp, không dừng sớm.
+  · Payoff scaling: λ ∈ {0.01, 0.1, 1, 10, 100, 1000} in the legacy task;
+    the current frontier collection uses ten scales from 0.01 to 1000.
+  · 10 rounds in the current frontier task, with the horizon disclosed to agents,
+    no communication and no early stopping.
   · 5 ngôn ngữ (en, fr, ar, cn, vn) × 4 tổ hợp tính cách × 10 rep = 200 game/λ.
   · Prompt: COPY NGUYÊN VĂN `FAIRGAME/resources/game_templates/prisoner_dilemma_*`
     (bản .rtf cn/vn đã qua `rtf_to_text`), dựng lại đúng logic `PromptCreator`:
@@ -34,7 +36,7 @@ chênh lệch giữa các λ là do payoff, không phải do nhiễu sampling.
 QUY MÔ & CHI PHÍ — ĐỌC TRƯỚC KHI CHẠY FULL
 ─────────────────────────────────────────────────────────────────────
   6 λ × 5 lang × 4 tổ hợp × 10 rep = 1200 game
-  1200 game × 30 vòng × 2 agent    = 72.000 lượt gọi model
+  1200 games × 10 rounds × 2 agents = 24,000 model calls in the current task
 Prompt ~400–700 token, output ~5–20 token. Với gemini-flash-lite ≈ vài chục USD
 và nhiều giờ. LUÔN chạy smoke test trước:
 
@@ -769,7 +771,7 @@ def decide(prompt, base_seed):
 
 # %% =====================  MỘT GAME (2 agent, quyết định đồng thời)  =============
 def play_game(lam, language, perm_idx, rep, model_tag, turns_sink):
-    """Chạy trọn 1 game 30 vòng. Trả (row_csv, stats)."""
+    """Run one ten-round game. Return the CSV row and summary statistics."""
     weights = scaled_weights(lam)
     perm = PERSONALITY_PERMS[perm_idx]
     personalities = [PERSONALITIES[language][perm[0]], PERSONALITIES[language][perm[1]]]
