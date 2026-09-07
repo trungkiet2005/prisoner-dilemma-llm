@@ -196,9 +196,9 @@ def main():
              va="bottom", fontsize=S.FS_CLAIM, color=S.INK_2)
 
     fig.text(0.5, -0.055,
-             f"{len(g):,} games, {n_per_cell} per model and payoff scale; "
+             f"{len(g):,} agent-games from 10,000 dyads, {n_per_cell} per model and payoff scale; "
              "shading in b marks the sub-unit regime, intervals in c are 95% "
-             "percentile bootstrap over games",
+             "percentile bootstrap over agent-games",
              ha="center", va="top", fontsize=S.FS_NOTE, color=S.MUTED)
 
     S.save(fig, "f_landscape")

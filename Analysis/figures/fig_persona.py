@@ -100,7 +100,7 @@ def main():
     axA.legend(handles=handles, loc="upper right", ncol=2, frameon=True,
                framealpha=0.92, edgecolor=S.GRID, fontsize=5.8, handletextpad=0.3,
                columnspacing=0.8)
-    S.panel(axA, "a", "the instruction is obeyed only above the unit", pad=7)
+    S.panel(axA, "a", "Claude and Gemini 3.5 switch sign above the unit", pad=7)
 
     # --- b: regime shift dumbbell / forest plot ----------------------------
     order = S.MODEL_ORDER[::-1]  # display top-to-bottom
@@ -156,7 +156,7 @@ def main():
     S.panel(axB, "b", "regime shift: sub-unit vs supra-unit", pad=7)
 
     S.caption(fig,
-              "20,000 games across five models and ten payoff scales; "
+              "20,000 agent-games from 10,000 dyads across five models and ten payoff scales; "
               "shading on a and open markers on b denote the sub-unit regime (lambda <= 0.1);\n"
               "thick bars on b are 95% bootstrap intervals; values right of markers are the supra minus sub-unit shift",
               y=-0.01)

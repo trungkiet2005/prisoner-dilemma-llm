@@ -238,16 +238,18 @@ try:
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
 
-    cell = (g[g.model != "Grok-4.20-Non-Reasoning"]
+    # The manuscript's variance claim is for the five-model main-text panel,
+    # not the six-model supplementary corpus.
+    cell = (g[g.model.isin(MAIN) & (g.model != "Grok-4.20-Non-Reasoning")]
             .groupby(["model", "language", "scale_nominal"], as_index=False)
             .coop_rate.mean())
     fit = smf.ols("coop_rate ~ C(model)*C(language) + C(model)*C(scale_nominal)"
                   " + C(language)*C(scale_nominal)", data=cell).fit()
     av = sm.stats.anova_lm(fit, typ=2)
     av["pct"] = av.sum_sq / av.sum_sq.sum() * 100
-    chk("ESM no-Grok scale main F", 1.10, av.loc["C(scale_nominal)", "F"], 0.006)
-    chk("ESM no-Grok scale main p", 0.36, av.loc["C(scale_nominal)", "PR(>F)"], 0.006)
-    chk("ESM no-Grok scale main %", 0.7, av.loc["C(scale_nominal)", "pct"], 0.06)
+    chk("ESM no-Grok scale main F", 1.15, av.loc["C(scale_nominal)", "F"], 0.006)
+    chk("ESM no-Grok scale main p", 0.33, av.loc["C(scale_nominal)", "PR(>F)"], 0.006)
+    chk("ESM no-Grok scale main %", 0.9, av.loc["C(scale_nominal)", "pct"], 0.06)
 except ImportError:                                    # pragma: no cover
     print("statsmodels missing: the no-Grok panel check was skipped")
 

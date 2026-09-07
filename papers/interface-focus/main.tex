@@ -298,15 +298,17 @@ cooperation rates shifting substantially across stakes. \textbf{(ii)} a
 per-model analysis revealing that scale departures diverge sharply across
 architectures to the point of anticorrelation, so that pooled analyses produce
 an artificial average that describes no real model: variance is dominated by
-model individuality and model-by-scale interactions, with pooled significance
-driven by a single outlier model. \textbf{(iii)} cross-lingual and structural
+model individuality and model-by-scale interactions. In the five-model
+cell-mean decomposition, the shared scale main effect is largely carried by
+Grok, whereas the dyad-level pooled association persists in leave-one-model-out
+fits. \textbf{(iii)} cross-lingual and structural
 evidence showing that scale sensitivity depends heavily on the prompt language,
 gates persona compliance by inverting instructions at sub-unit stakes, erodes
 textbook strategy conformity, and emerges on the opening move before interaction
 begins. \textbf{(iv)} an analytical evolutionary baseline that moves in the
 opposite direction to the pooled empirical corpus. The transition analysis
 shows stronger persistence than reciprocity, without identifying a causal
-mechanism for cooperation (\S\ref{sec:egt_pointer}, appendix~\ref{appendix:egt}).
+mechanism for cooperation (\S\ref{sec:conditioning}, appendix~\ref{appendix:conditioning_ci}).
 
 An earlier and smaller collection on this project has been reported separately
 by the present authors~\cite{selfpreprint2026scaling}: three models at three
@@ -553,7 +555,7 @@ The cooperation rate of an agent-game is the share of its ten decisions that
 are Option~B; a cell mean averages the agent-games of a cell, and round-level
 analyses use the binary decision itself. Because the two agents of a dyad play
 each other and the ten rounds inside an agent-game are strongly autocorrelated,
-Primary inferential intervals were computed by resampling whole dyads with
+primary inferential intervals were computed by resampling whole dyads with
 replacement, 1{,}500 draws, percentile method~\cite{efron1993introduction},
 and every regression clustered its standard errors on the dyad. Descriptive
 figure intervals use the resampling unit stated in their captions. Because the range over the ten
@@ -690,9 +692,7 @@ than an architectural invariant. It does not identify a cultural mechanism.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/f_language.pdf}
-\caption{\textbf{Cross-lingual cooperation against the payoff scale.}
-(a) Cooperation against the payoff scale $\lam$, one panel per model, one curve per prompt language (English, French, Vietnamese, Chinese, Arabic). The shaded band marks the sub-unit regime ($\lam \leq 0.1$). Annotations report the smallest and largest across-scale range among each model's five languages.
-(b) Across-scale range of cooperation for each model-by-language pair, showing that scale sensitivity varies by an order of magnitude across languages (from 0.083 in Qwen3 French to 0.855 in Grok English).}
+\caption{\textbf{Cross-lingual scale sensitivity.} (a) Cooperation pooled across the five main-text models for each prompt language and payoff scale; the dashed boundary separates the sub-unit and supra-unit regimes. (b) Language-specific difference in cooperation between supra-unit and sub-unit regimes; intervals show the pooled estimate and small markers the five models separately. (c) Cooperation curves after subtracting each language's mean, showing that differences in scale-response shape remain after level differences are removed.}
 \label{fig:language}
 \end{figure}
 
@@ -827,7 +827,7 @@ whose overall statistical contours happen to lean in that direction.
 \caption{\textbf{Strategy attribution across payoff scales, composition shift, and provenance breakdown.}
 (a) Stacked area share of canonical memory-one strategy attributions (AllC, AllD, TFT, WSLS) across the ten payoff scales for each of the five models.
 (b) Net strategy share changes between extreme scales ($\lam = 10^{3}$ minus $\lam = 0.01$) across the four canonical rules with total variation distance $D_{\mathrm{TV}}$ in parentheses.
-(c) Strategy read-out provenance: exactly deduced (single canonical match), ambiguous (multiple matching rules), and unmatched (LSTM attribution on trajectories consistent with no textbook rule). Over the corpus, $94.2\%$ of Tit-for-Tat and $96.8\%$ of Win-Stay-Lose-Shift labels are attributions on unmatched play, establishing that labels indicate resemblance rather than faithful execution.}
+(c) Strategy read-out provenance: exactly deduced (single canonical match), ambiguous (multiple matching rules), and unmatched (LSTM attribution on trajectories consistent with no textbook rule). Over the corpus, $94.6\%$ of Tit-for-Tat and $97.1\%$ of Win-Stay-Lose-Shift labels are attributions on unmatched play, establishing that labels indicate resemblance rather than faithful execution.}
 \label{fig:mix}
 \end{figure}
 
@@ -859,10 +859,7 @@ condition and therefore does not identify backward induction as its mechanism.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/f_firstmove.pdf}
-\caption{\textbf{Opening move cooperation against the payoff scale.}
-At round 1 the agent has observed only the matrix and instructions, with zero interaction history.
-(a) Round 1 cooperation rate across payoff scales $\lam$ for each model.
-(b) Across-scale cooperation range on the opening move (solid bars) compared to rounds 2 to 10 (hatched bars), demonstrating that scale sensitivity is established before any history exists.}
+\caption{\textbf{Opening-move sensitivity to payoff scale and persona.} At round 1 the agent has observed only the matrix and instructions, with zero interaction history. (a) Opening-move cooperation across payoff scales for each model. (b) Opening-move cooperation against cooperation over all ten rounds across the 50 model-by-scale cells, with within-model correlations annotated. (c) Opening-move persona effect in the sub-unit and supra-unit regimes.}
 \label{fig:firstmove}
 \end{figure}
 
@@ -896,8 +893,10 @@ cooperative, whereas the evolutionary reference becomes more dominated by
 defection (figure~\ref{fig:egtllm}b,c).
 
 This direction is stable across the eighty evolutionary parameter settings
-reported in the appendix: the stationary AllD share rises with $\lam$ in every
-setting, so none reproduces the direction of the pooled empirical trajectory.
+reported in the appendix: the stationary AllD share is higher at the largest
+than at the smallest scale in every setting, and the rise is strictly monotone
+in 61 of 80 settings. None reproduces the direction of the pooled empirical
+trajectory.
 We therefore treat the comparison as a descriptive reference gap rather than as
 evidence for a particular mechanism. Evolutionary dynamics describe selection
 among rules, whereas the corpus describes fixed language-model agents.
@@ -1016,9 +1015,11 @@ the payoff scale does survive the averaging, and it is significant, but it
 carries a third of the variance its interaction with the model carries, and the
 pooled range understates the typical model by a factor of 1.62: a statement
 about an average model that nobody deploys. A conclusion that changes when one
-model joins or leaves a panel is not a conclusion about language models. Our
-own pooled estimate would have been a null had one model been absent from the
-panel, and it is not a quantity we would defend for its own sake.
+model joins or leaves a panel is not a conclusion about language models. In the
+cell-mean shared-main-effect test, removing Grok makes the scale term
+non-significant; the complementary dyad-level leave-one-model-out association
+remains detectable. We therefore do not defend the pooled average as a single
+model-level quantity.
 
 The pooled estimate is therefore not a weaker version of the per-model result
 but a different quantity, and it is not a question of power either: more dyads

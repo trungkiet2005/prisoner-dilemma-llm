@@ -21,7 +21,7 @@ is now cited as prior work by the same authors, under `selfpreprint2026scaling`.
 
 The evolutionary game theory baseline has been **recomputed** on the new ten-value
 payoff grid rather than carried across, and the whole EGT-versus-corpus comparison now
-lives in the appendix, with a short pointer in main-text §3.7.
+lives in the appendix, with a short pointer in main-text §3.8.
 
 ## Files
 

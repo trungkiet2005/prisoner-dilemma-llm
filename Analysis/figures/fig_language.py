@@ -194,9 +194,9 @@ def main():
     fig.legend(handles=handles, loc="lower center", ncol=6,
                bbox_to_anchor=(0.5, -0.055), fontsize=S.FS_NOTE)
     S.caption(fig,
-              f"{len(g):,} games from five models, 400 per language and payoff "
+              f"{len(g):,} agent-games from five models, 400 per language and payoff "
               "scale; the interval on each pooled estimate is a 95% percentile "
-              "bootstrap over games, and the small markers are the five models "
+              "bootstrap over agent-games, and the small markers are the five models "
               "separately",
               y=-0.095)
 
