@@ -629,8 +629,12 @@ Because both agents face identical payoff matrices, whenever both choose the
 same action (mutual defection Option~A or mutual cooperation Option~B), their
 per-round payoffs are identical by construction ($\pi_1 = \pi_2$). A payoff
 disparity can only arise in asymmetric rounds where one agent cooperates while
-the other defects. Across a ten-round repeated interaction, the relationship is
-exact:
+the other defects. For this analysis only, utility is expressed on the
+scale-normalised $[0,1]$ support,
+$\tilde u=(10\lambda-\mathrm{penalty})/(10\lambda)$, so that an asymmetric
+round has unit utility disparity. All utility-gap, Gini and welfare quantities
+below are therefore scale-normalised measures rather than raw penalty
+differences. Across a ten-round repeated interaction, the relationship is exact:
 \begin{equation}
 \text{signed\_gap} \;=\; p_{DC} - p_{CD}, \qquad
 \text{utility\_gap} \;=\; |p_{DC} - p_{CD}| \;=\; p_{\text{exploit}} - 2 \min(p_{CD}, p_{DC}),
@@ -639,24 +643,20 @@ exact:
 where $p_{DC}$ and $p_{CD}$ denote the proportion of rounds in which the focal
 agent exploits or is exploited by its partner, respectively. Across all
 12{,}000 dyads in the corpus, the maximum residual from this identity is zero.
-Over $72.8\%$ of dyads end with zero payoff gap, and the observed gap correlates
-with total one-directional exploitation at $r = 0.941$. Within-dyad inequality
+Some $31.9\%$ of dyads have zero utility gap, and the observed gap correlates
+with total one-directional exploitation at $r = 0.901$. Within-dyad inequality
 therefore measures coordination failure rather than a distributional preference.
 
 Figure~\ref{fig:fairness_welfare} illustrates the resulting relationship between
 fairness and joint welfare. Rather than a monotonic trade-off between equality
-and efficiency, the empirical frontier traces a distinct V-shaped curve. In the
-poorest welfare tercile, dyads are locked in mutual defection ($DD$), yielding
-near-perfect equality ($\text{fairness} = 1 - \text{Gini} \approx 0.98$) at
-minimal social surplus. As dyads begin to explore cooperation without mutual
-coordination, unilateral exploitation spikes, causing fairness to reach its
-minimum ($0.62$). Finally, as dyads achieve mutual cooperation ($CC$), joint
-welfare peaks alongside a return to perfect equality ($\text{fairness} \approx 1.0$).
+and efficiency, the empirical frontier is V-shaped: equality is high among
+low-welfare mutual-defection dyads, falls in the intermediate exploitation
+region, and returns towards one among high-welfare mutual-cooperation dyads.
 
 Crucially, this structural coordination mechanism explains why the payoff scale
 exerts zero influence on within-dyad fairness: the regression slopes of both the
 within-dyad utility gap and Gini coefficient against $\log_{10}\lam$ have slope
-$0.0004$ ($p = 0.80$). We therefore detect no association between payoff scale
+$0.0004$ ($p = 0.85$). We therefore detect no association between payoff scale
 and this outcome. This empirical null is distinct from the algebraic identity
 relating within-dyad inequality to unilateral exploitation.
 
@@ -666,7 +666,7 @@ relating within-dyad inequality to unilateral exploitation.
 \caption{\textbf{Outcome fairness, net exploitation and the V-shaped welfare frontier.}
 (a) Within-dyad fairness ($1 - \text{Gini}$) plotted against joint dyad welfare across all experimental conditions, revealing a characteristic V-shaped relationship where equality peaks at both mutual defection (low welfare) and mutual cooperation (high welfare), with inequality concentrated in the exploitative transition zone.
 (b) Per-model fairness trajectories showing how different models occupy distinct regimes along the welfare-fairness frontier.
-(c) Distributional equity across the ten payoff scales: the fitted association is small and imprecise (slope $0.0004$, $p = 0.80$).}
+(c) Distributional equity across the ten payoff scales: the fitted association is small and imprecise (slope $0.0004$, $p = 0.85$).}
 \label{fig:fairness_welfare}
 \end{figure}
 

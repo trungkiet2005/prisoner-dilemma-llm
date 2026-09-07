@@ -36,9 +36,9 @@ lives in the appendix, with a short pointer in main-text §3.8.
 | `mybib.bib` | Bibliography (biblatex/biber, style fixed by the class), 155 entries |
 | `rsproca_new.cls` | Journal class |
 | `TemplateFigs/` | Journal logos **required by the class** (`\maketitle` first page), do not delete |
-| `figures/` | The twelve figures, `f1`-`f8` main text and `fa1`-`fa4` appendix, **generated** |
+| `figures/` | The eighteen manuscript figures, eight main-text and ten appendix figures, **generated** |
 
-Nothing in `figures/` and none of the three `*_auto.tex` files is written by hand.
+Nothing in `figures/` and none of the four `*_auto.tex` files is written by hand.
 They are produced by the analysis pipeline described below, so a number cannot drift
 between the data and the manuscript.
 

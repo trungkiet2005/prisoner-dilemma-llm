@@ -24,6 +24,7 @@ import pandas as pd
 from scipy.stats import spearmanr
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from fairness_metrics import compute as compute_fairness, headline_metrics  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE / "data"
@@ -74,6 +75,14 @@ dyad_polarity = (g.groupby("game_uid", observed=True)
 chk("total welfare vs joint cooperation rho", 0.985,
     spearmanr(dyad_polarity.total_welfare,
               dyad_polarity.joint_cooperation).statistic, 0.001)
+
+# ---- scale-normalised fairness and welfare in supplementary B.9 ------------
+fair = compute_fairness(g)
+fh = headline_metrics(fair)
+chk("fairness zero-gap share", 0.3186, fh["zero_gap"], 0.0006)
+chk("fairness gap vs exploitation r", 0.9008, fh["gap_exploit_r"], 0.001)
+chk("fairness scale slope", 0.0004, fh["slope"], 0.0001)
+chk("fairness scale p", 0.85, fh["p_slope"], 0.01)
 
 # ---- language levels and sensitivities quoted in 3.2 -------------------------
 lang = g.pivot_table(index="model", columns="language", values="coop_rate")
