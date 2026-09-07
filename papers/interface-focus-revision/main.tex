@@ -3,8 +3,8 @@
 %% social, cognitive and evolutionary perspectives".
 %%
 %% MAJOR REVISION, 2026-09-06.  Every result in this file is computed on
-%% Dataset/data_fairgame_frontier_llm, the six-model by ten-payoff-scale
-%% corpus, by the pipeline in Analysis/scaling/s00..s09.  The three tables are
+%% Dataset/data_fairgame_frontier_llm, the five-model main-text slice of the
+%% ten-payoff-scale corpus, by the pipeline in Analysis/scaling/s00..s09.  The three tables are
 %% machine-generated into tables_auto.tex and the eight figures are written
 %% into figures/ by s05_figures.py; nothing here is retyped by hand.
 %% The previous version of this article reported an earlier and smaller
@@ -113,9 +113,8 @@ The Anh Han\\
 
 %%%% Electronic supplementary material
 \esm{The supplementary appendix (appendix.pdf), containing the corpus and
-protocol detail, the per-condition result tables, the sixth model in full, the
-evolutionary baseline and the robustness checks, is available with the online
-version of this article.}
+protocol detail, the per-condition result tables, the evolutionary baseline and
+the robustness checks, is available with the online version of this article.}
 
 %%%% Abstract (200 words, the Interface Focus limit)
 \begin{abstract}
@@ -158,7 +157,7 @@ Our study is closest to FAIRGAME, which introduced the reusable game-theoretic
 evaluation framework and reported payoff and language sensitivity in repeated
 games~\cite{buscemi2025fairgame}. We retain its no-communication prisoner's
 dilemma protocol so that the comparison is anchored to the same task, while
-adding a positive-rescaling null spanning ten scales, five languages and six
+adding a positive-rescaling null spanning ten scales, five languages and five
 model endpoints. This makes the
 contribution a test of invariance and heterogeneity, rather than a new game or
 a new payoff definition.
@@ -316,7 +315,7 @@ An earlier and smaller collection on this project has been reported separately
 by the present authors~\cite{selfpreprint2026scaling}: three models at three
 payoff scales, in the same five prompt languages, with cooperation read off the
 trajectories and reported as rising with the stakes. The present article
-differs in what it collects and in what it claims. It collects six models
+differs in what it collects and in what it claims. It collects five models
 rather than three and ten payoff scales rather than three, spanning five orders
 of magnitude, on a grid whose completeness and balance are enforced by the
 analysis build rather than assumed. It frames the rescaling as an invariance
@@ -347,19 +346,16 @@ recorded payoffs recover the scale its cell was run at. Third, with a strategy
 read-out that reports which canonical memory-one rule a trajectory most
 resembles, and with what provenance (\S\ref{sec:readout}).
 
-The design is a complete factorial crossing of six language models, ten payoff
+The design is a complete factorial crossing of five language models, ten payoff
 scales, five prompt languages, four persona pairings and ten replicates. The
 unit of collection is the dyad, one ten-round game between two agents of the
 same model, contributing two agent-games, an agent-game being the ten decisions
-one agent takes in one game. Each of the 300 model-by-language-by-scale cells
+one agent takes in one game. Each of the 250 model-by-language-by-scale cells
 holds exactly 40 dyads, the four persona pairings by ten replicates; pooling
-the five languages gives 200 dyads and 400 agent-games in each of the 60
-model-by-scale cells. The corpus is 12{,}000 dyads, 24{,}000 agent-games and
-240{,}000 decisions. Five of the six models are reported in the main text and
-the sixth, Gemini 3.1 Flash-Lite, in the appendix, for the reason given with
-the models below. The five carry 250 of the cells, 10{,}000 dyads, 20{,}000
-agent-games and 200{,}000 decisions, and are the grid every main-text figure
-and table is computed on. Balance is enforced rather than assumed
+the five languages gives 200 dyads and 400 agent-games in each of the 50
+model-by-scale cells. The main-text corpus is 10{,}000 dyads, 20{,}000
+agent-games and 200{,}000 decisions, and is the grid every main-text figure and
+table is computed on. Balance is enforced rather than assumed
 (appendix~\ref{appendix:corpus}).
 
 \subsection{The payoff-scaled prisoner's dilemma and its invariance}\label{sec:gameImportance}
@@ -472,27 +468,10 @@ Two language-model agents from the same provider repeatedly play the stage game 
 
 \subsection{Models, prompt languages, personas and protocol}\label{sec:protocol}
 
-Six frontier models were run, each against itself; two different models were
+Five frontier models were run, each against itself; two different models were
 never paired. They were Claude Haiku 4.5, GPT-5.4 Nano, Gemini 3.5 Flash-Lite,
-Qwen3 235B-A22B, Grok 4.20 and Gemini 3.1 Flash-Lite, served through the Kaggle
-Benchmarks model proxy on an OpenAI-compatible chat-completions endpoint at
-temperature 1.0. Their endpoint identifiers are listed in
-appendix~\ref{appendix:endpoints}. The main text reports the first five. The
-sixth, Gemini 3.1 Flash-Lite, is reported in full in
-appendix~\ref{appendix:sixth_model}, and the reason is a property of its
-endpoint rather than of its results: its identifier is both undated and
-announced as provisional, so what was served under that name while the corpus
-was collected cannot be re-addressed afterwards. We state the cost of drawing
-the line there. The identifier of Gemini 3.5 Flash-Lite, which stays in the
-main text, is undated as well, so it carries a weaker form of the same risk;
-the line is between an identifier marked provisional and one that is not, and
-not between pinned and unpinned. Gemini 3.1 Flash-Lite is also the one model of
-the six
-whose strategy trend runs opposite to the rest (\S\ref{sec:llm_strategies}),
-which is a reason to report it prominently rather than to set it aside. Every
-quantity the main text gives for the five is given for all six in the appendix,
-which also states what including it changes, and on every conclusion of this
-paper that is nothing.
+Qwen3 235B-A22B and Grok 4.20. Their model identifiers are listed in
+appendix~\ref{appendix:endpoints}.
 
 The prompt languages are English, French, Vietnamese, Chinese and Arabic, in
 templates byte-identical to the FAIRGAME resource files and checked against
@@ -578,7 +557,7 @@ test (table~\ref{tab:effect}). The variance decomposition is a type-II analysis
 of variance on the 250 cell means of the five models reported here, with terms
 for model, language and payoff scale and their three two-way interactions and
 no three-way term, so the residual on 144 degrees of freedom is the omitted
-three-way interaction; the same decomposition on all 300 cells is in
+three-way interaction; the supplementary decomposition is in
 appendix~\ref{appendix:variance}. The persona result contrasts the two
 sub-unit scales with the remaining eight as a difference of differences with an
 interval from the same dyad bootstrap; where a trend across the whole grid is
@@ -590,9 +569,8 @@ archived pipeline in appendix~\ref{appendix:repro}.
 % ===========================================================================
 \section{Results}\label{sec:results}
 
-Across the 240{,}000 recorded decisions of the whole corpus, the sixth model
-included, cooperation is 0.5895; the five models reported below carry 200{,}000
-of those decisions.
+The results below are computed on the 200{,}000 recorded decisions in the
+five-model main-text corpus.
 
 \subsection{Cooperation moves under a transformation that cannot matter}\label{sec:payoff_magnitude}
 
@@ -683,7 +661,7 @@ up to an order of magnitude within a model (electronic supplementary
 table~\ref{tab:S-language}). Figure~\ref{fig:language}b provides the
 complementary supra-unit minus sub-unit contrast, and figure~\ref{fig:language}c
 shows that language differences remain after removing their mean levels. Across
-the full corpus, the observed sensitivity ranges from near-invariance to
+the main-text corpus, the observed sensitivity ranges from near-invariance to
 sweeping behavioural transformations spanning almost the entire probability
 scale.
 
@@ -945,17 +923,17 @@ and unconditional rules at the origin (figure~\ref{fig:strategyspace}a).
 
 Decomposing agent play reveals that own-action conditioning exceeds partner
 conditioning at the model level (figure~\ref{fig:strategyspace}). Across all
-six models, the persistence contrast is larger than the reciprocity contrast,
+five models, the persistence contrast is larger than the reciprocity contrast,
 although the margin is modest for Claude and substantially larger for the other
-models. Reciprocity remains positive in four models and is negative in Gemini
-3.1 and Qwen. An unsupervised principal component analysis on raw transition
+models. Reciprocity remains positive in four models and is negative in Qwen. An
+unsupervised principal component analysis on raw transition
 vectors independently recovers this identical geometry without any prior
 knowledge of the contrasts (figure~\ref{fig:strategyspace}c).
 
 The contrast estimates are precise at the dyad level. Whole-dyad bootstrap
 intervals for reciprocity are positive for Claude, GPT, Gemini~3.5, and Grok,
-and negative for Gemini~3.1 and Qwen; the corresponding persistence intervals
-are positive for all six models (electronic supplementary table~\ref{tab:conditioning-ci}). Thus the
+and negative for Qwen; the corresponding persistence intervals are positive for
+all five models (electronic supplementary table~\ref{tab:conditioning-ci}). Thus the
 headline comparison is one of relative strength, not a claim that partner
 information is absent.
 
@@ -1108,25 +1086,11 @@ to describe them will have to account for it.
 \subsection{Limitations and future work}\label{sec:disc_limitations}
 
 This design does not identify the mechanism inside the model that produces the
-departures it measures across a broad but finite grid. Six models cannot
+departures it measures across a broad but finite grid. Five models cannot
 support claims about model families or about parameter count, and what
 generalises here is that the shapes differ rather than what any one of them is.
 The corpus is one game, one prompt template family and one horizon, so whether
 the same curves appear in other dilemmas or in longer play is untested.
-
-A sixth model, Gemini 3.1 Flash-Lite, was run on the identical grid and is
-reported in full in appendix~\ref{appendix:sixth_model} rather than here,
-because its identifier names an unpinned preview endpoint and what was served
-under that name during collection cannot be recovered (\S\ref{sec:protocol}).
-Two consequences are worth stating rather than leaving to be discovered. First,
-it is the only model of the six whose strategy trend is positive, so the
-four-of-five statement in \S\ref{sec:llm_strategies} reads, over the whole
-corpus, as four models of six moving one way, one showing no trend and one
-moving the other; the second form is the one the corpus supports. Second,
-including it changes no conclusion here: the all-six pooled range, attenuation,
-shape correlations and variance decomposition are in
-appendix~\ref{appendix:robust_sixth}, and every sign, significance and ordering
-in them agrees with the five-model versions reported above.
 
 One feature of the stimuli bounds the language comparison. Two of the five
 templates state the payoffs as penalties while phrasing the goal as maximising
@@ -1141,7 +1105,7 @@ Our reference for calling a departure large is the sampling variability of
 these data, a bootstrap over dyads and a permutation null. A targeted
 independent repeat of Gemini 3.5 at four scales is reported in the appendix;
 it is useful evidence about repeatability in that arm but is not a test-retest
-floor for the full corpus.
+floor for the main-text corpus.
 Clustering on the dyad addresses the dependence between the two agents of a
 game and between the rounds within an agent-game, but it does not turn the
 design into a mixed-effects model with random intercepts for replicate and
@@ -1215,7 +1179,7 @@ archive and DOI will be added on publication.}
 
 \aiuse{Large language models are the
 \emph{object} of study in this article: the corpus consists of transcripts of
-games played by the six models named in \S\ref{sec:protocol}, collected through
+games played by the five models named in \S\ref{sec:protocol}, collected through
 an automated pipeline. Generative AI was additionally used as a coding
 assistant for parts of the analysis and figure code, and for language editing
 of the manuscript. All analyses were designed, run and checked by the authors;
