@@ -42,7 +42,7 @@ def main() -> None:
     figure_names = ("fig_overview.py", "fig_landscape.py", "fig_language.py",
                  "fig_persona.py", "fig_strategy_mix.py", "fig_firstmove.py",
                  "fig_egt_vs_llm.py", "fig_strategy_space.py",
-                 "fig_robustness.py")
+                 "fig_robustness.py", "fig_fairness_welfare.py")
     if not args.skip_egt:
         figure_names += ("fig_invasion.py", "fig_simplex.py")
     for name in figure_names:
