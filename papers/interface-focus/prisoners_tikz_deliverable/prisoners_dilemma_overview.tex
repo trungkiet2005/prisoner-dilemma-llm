@@ -1,0 +1,165 @@
+\documentclass[tikz,border=0pt]{standalone}
+\usepackage{graphicx}
+\usepackage{fontspec}
+\usepackage{amsmath}
+\usetikzlibrary{arrows.meta,calc,positioning}
+\setsansfont{Latin Modern Sans}
+\renewcommand{\familydefault}{\sfdefault}
+
+\definecolor{navy}{HTML}{122B8A}
+\definecolor{deepblue}{HTML}{123B78}
+\definecolor{blue}{HTML}{2F77C5}
+\definecolor{sky}{HTML}{DDEFFF}
+\definecolor{paleblue}{HTML}{F3FAFF}
+\definecolor{panelblue}{HTML}{EAF5FF}
+\definecolor{blush}{HTML}{FFE8E7}
+\definecolor{mint}{HTML}{E8F8E8}
+\definecolor{redpay}{HTML}{D82418}
+\definecolor{orange}{HTML}{F6A400}
+\definecolor{yellowbg}{HTML}{FFF8D9}
+\definecolor{lineblue}{HTML}{6AB8F4}
+\definecolor{softgray}{HTML}{E9F2F8}
+\definecolor{textblue}{HTML}{142A85}
+
+\newcommand{\asset}[2]{\includegraphics[#1]{C:/Users/huynh/Downloads/prisoners_tikz_bundle/prisoners_tikz_deliverable/assets/#2}}
+\newcommand{\smalltxt}[1]{{\fontsize{6.8}{7.8}\selectfont #1}}
+\newcommand{\bodytxt}[1]{{\fontsize{7.5}{8.6}\selectfont #1}}
+\newcommand{\headtxt}[1]{{\bfseries\fontsize{9.2}{10.4}\selectfont #1}}
+
+\begin{document}
+\begin{tikzpicture}[x=1cm,y=1cm, line cap=round, line join=round]
+  \path[use as bounding box] (0,0) rectangle (18,12.65);
+
+  % ===== Main panels =====
+  \draw[rounded corners=0.18cm, line width=0.7pt, draw=lineblue, fill=paleblue]
+      (0.20,3.05) rectangle (8.90,12.45);
+  \draw[rounded corners=0.18cm, line width=0.7pt, draw=lineblue, fill=paleblue]
+      (9.08,3.05) rectangle (17.80,12.45);
+
+  % ===== Left panel header =====
+  \node[text=navy,align=center] at (4.55,12.02)
+      {{\bfseries\fontsize{9.2}{10.4}\selectfont Two LLM agents from the same provider}\\[-1pt]{\fontsize{7.5}{8.6}\selectfont repeatedly play the prisoner's dilemma.}};
+
+  % ===== Left visual region =====
+  \draw[rounded corners=0.16cm, draw=none, fill=softgray] (0.38,5.62) rectangle (8.70,11.60);
+  \shade[left color=white,right color=sky,opacity=0.52] (0.38,5.62) rectangle (4.18,11.60);
+  \shade[left color=sky,right color=white,opacity=0.52] (4.82,5.62) rectangle (8.70,11.60);
+
+  % Agent title cards
+  \draw[rounded corners=0.12cm,draw=none,fill=blush] (0.72,10.54) rectangle (3.25,11.38);
+  \draw[rounded corners=0.12cm,draw=none,fill=blush] (5.82,10.54) rectangle (8.35,11.38);
+  \node[text=navy,font=\bfseries\fontsize{12}{13}\selectfont] at (1.985,10.96) {LLM A};
+  \node[text=navy,font=\bfseries\fontsize{12}{13}\selectfont] at (7.085,10.96) {LLM B};
+
+  % Agent figures
+  \node at (1.98,8.17) {\asset{height=3.45cm}{robot_caged.png}};
+  \node at (7.08,8.17) {\asset{height=3.45cm}{robot_caged.png}};
+
+  % Self-play cycle
+  \draw[-{Stealth[length=3.5mm,width=2.4mm]},line width=1.8pt,blue]
+      (3.72,8.60) .. controls (4.05,9.14) and (5.00,9.14) .. (5.34,8.60);
+  \draw[-{Stealth[length=3.5mm,width=2.4mm]},line width=1.8pt,blue]
+      (5.34,7.66) .. controls (5.00,7.14) and (4.05,7.14) .. (3.72,7.66);
+  \node[text=navy,font=\bfseries\fontsize{9.2}{10}\selectfont,fill=softgray,inner sep=1.5pt]
+      at (4.54,8.13) {$T=10$ rounds};
+
+  % ===== Model strip =====
+  \node[text=navy,font=\bfseries\fontsize{9.0}{10}\selectfont] at (4.55,5.28) {Frontier LLMs studied};
+  \foreach \x in {0.44,2.08,3.72,5.36,7.00}{
+    \draw[rounded corners=0.10cm,draw=none,fill=white] (\x,3.28) rectangle ++(1.48,1.76);
+  }
+  \node at (1.18,4.46) {\asset{height=0.87cm}{logo_claude.png}};
+  \node[text=navy,align=center,font=\bfseries\fontsize{7.5}{8.6}\selectfont] at (1.18,3.70) {Claude\\Haiku 4.5};
+  \node at (2.82,4.46) {\asset{height=0.87cm}{logo_openai.png}};
+  \node[text=navy,align=center,font=\bfseries\fontsize{7.5}{8.6}\selectfont] at (2.82,3.70) {GPT-5.4\\Nano};
+  \node at (4.46,4.46) {\asset{height=0.90cm}{logo_gemini.png}};
+  \node[text=navy,align=center,font=\bfseries\fontsize{7.5}{8.6}\selectfont] at (4.46,3.70) {Gemini 3.5\\Flash-Lite};
+  \node at (6.10,4.46) {\asset{height=0.87cm}{logo_qwen.png}};
+  \node[text=navy,align=center,font=\bfseries\fontsize{7.5}{8.6}\selectfont] at (6.10,3.70) {Qwen3\\235B-A22B};
+  \node at (7.74,4.46) {\asset{height=0.87cm}{logo_xai.png}};
+  \node[text=navy,align=center,font=\bfseries\fontsize{7.5}{8.6}\selectfont] at (7.74,3.70) {Grok 4.20};
+
+  % ===== Right panel: title =====
+  \node[anchor=west,text=navy,font=\bfseries\fontsize{10.8}{12.0}\selectfont] at (9.34,12.12)
+      {Stage-game payoff matrix};
+  \node[anchor=west,text=navy,font=\fontsize{7.8}{8.8}\selectfont] at (14.35,12.12)
+      {(penalties to minimize)};
+
+  % Matrix geometry
+  \def\mxL{11.50}
+  \def\mxR{17.60}
+  \def\mxM{14.55}
+  \def\myB{3.92}
+  \def\myM{6.82}
+  \def\myT{9.72}
+
+  % Column player band
+  \draw[rounded corners=0.12cm,draw=none,fill=sky] (11.50,10.48) rectangle (17.60,11.48);
+  \node[text=navy] at (14.55,10.98) {{\bfseries\fontsize{9.2}{10.4}\selectfont LLM B} {\fontsize{7.5}{8.6}\selectfont (column player)}};
+  \draw[rounded corners=0.10cm,draw=none,fill=blush] (11.50,9.72) rectangle (14.55,10.48);
+  \draw[rounded corners=0.10cm,draw=none,fill=mint] (14.55,9.72) rectangle (17.60,10.48);
+  \node[text=navy,align=center,font=\fontsize{7.4}{8.3}\selectfont] at (13.025,10.09) {\bfseries B: defect\\[-1pt]\normalfont\fontsize{6.8}{7.8}\selectfont (confess)};
+  \node[text=navy,align=center,font=\fontsize{7.4}{8.3}\selectfont] at (16.075,10.09) {\bfseries B: cooperate\\[-1pt]\normalfont\fontsize{6.8}{7.8}\selectfont (remain silent)};
+
+  % Row player band and row labels
+  \draw[rounded corners=0.12cm,draw=none,fill=sky] (9.28,3.92) rectangle (10.20,9.72);
+  \node[text=navy,rotate=90,font=\fontsize{7.0}{8.0}\selectfont] at (9.74,6.82) {\bfseries LLM A \normalfont(row player)};
+  \draw[rounded corners=0.10cm,draw=none,fill=blush] (10.20,6.82) rectangle (11.50,9.72);
+  \draw[rounded corners=0.10cm,draw=none,fill=mint] (10.20,3.92) rectangle (11.50,6.82);
+  \node[text=navy,align=center,font=\fontsize{5.8}{6.7}\selectfont] at (10.85,8.27) {\bfseries A: defect\\[-1pt]\normalfont (confess)};
+  \node[text=navy,align=center,font=\fontsize{5.6}{6.5}\selectfont] at (10.85,5.37) {\bfseries A: cooperate\\[-1pt]\normalfont (remain silent)};
+
+  % Matrix cells
+  \draw[fill=white,draw=lineblue,line width=0.65pt] (11.50,6.82) rectangle (14.55,9.72);
+  \draw[fill=white,draw=lineblue,line width=0.65pt] (14.55,6.82) rectangle (17.60,9.72);
+  \draw[fill=white,draw=lineblue,line width=0.65pt] (11.50,3.92) rectangle (14.55,6.82);
+  \draw[fill=white,draw=lineblue,line width=0.65pt] (14.55,3.92) rectangle (17.60,6.82);
+
+  % DD
+  \node at (12.34,8.41) {\asset{height=1.65cm}{robot_caged.png}};
+  \node at (13.71,8.41) {\asset{height=1.65cm}{robot_caged.png}};
+  \node[text=redpay,font=\bfseries\fontsize{9.2}{10}\selectfont] at (13.025,7.13) {$(6\lambda,\,6\lambda)$};
+  % D/C
+  \node at (15.39,8.38) {\asset{height=1.43cm}{robot_free.png}};
+  \node at (16.76,8.41) {\asset{height=1.65cm}{robot_caged.png}};
+  \node[text=redpay,font=\bfseries\fontsize{9.2}{10}\selectfont] at (16.075,7.13) {$(0,\,10\lambda)$};
+  % C/D
+  \node at (12.34,5.40) {\asset{height=1.65cm}{robot_caged.png}};
+  \node at (13.71,5.36) {\asset{height=1.43cm}{robot_free.png}};
+  \node[text=redpay,font=\bfseries\fontsize{9.2}{10}\selectfont] at (13.025,4.21) {$(10\lambda,\,0)$};
+  % C/C
+  \node at (15.39,5.40) {\asset{height=1.65cm}{robot_caged.png}};
+  \node at (16.76,5.40) {\asset{height=1.65cm}{robot_caged.png}};
+  \node[text=redpay,font=\bfseries\fontsize{9.2}{10}\selectfont] at (16.075,4.21) {$(2\lambda,\,2\lambda)$};
+
+  % ===== Bottom configuration panel =====
+  \draw[rounded corners=0.16cm,line width=0.7pt,draw=lineblue,fill=paleblue] (0.20,0.18) rectangle (17.80,2.84);
+  \node[anchor=west,text=navy] at (0.44,2.57)
+      {{\bfseries\fontsize{9.2}{10.4}\selectfont Experimental configuration}};
+
+  % Card backgrounds (Theory card removed; remaining cards enlarged)
+  \draw[rounded corners=0.10cm,draw=none,fill=white] (0.42,0.40) rectangle (4.60,2.30);
+  \draw[rounded corners=0.10cm,draw=none,fill=white] (4.70,0.40) rectangle (8.98,2.30);
+  \draw[rounded corners=0.10cm,draw=none,fill=white] (9.08,0.40) rectangle (13.34,2.30);
+  \draw[rounded corners=0.10cm,draw=none,fill=white] (13.44,0.40) rectangle (17.58,2.30);
+
+  % Bottom icons & text
+  \node at (2.51,1.63) {\asset{height=1.35cm}{icon_languages.png}};
+  \node[text=navy,align=center,font=\bfseries\fontsize{7.2}{8.1}\selectfont] at (2.51,0.68) {5 languages};
+
+  \node at (6.84,1.63) {\asset{height=1.35cm}{icon_personas.png}};
+  \node[text=navy,align=center,font=\bfseries\fontsize{7.2}{8.1}\selectfont] at (6.84,0.68) {4 persona pairings};
+
+  \node at (11.21,1.72) {\asset{height=0.94cm}{icon_payoff_scales.png}};
+  \node[text=navy,align=center,font=\fontsize{6.4}{7.2}\selectfont] at (11.21,0.82) {\bfseries 10 payoff scales\\[-1pt]
+      \normalfont $\lambda\in\{0.01,0.1,0.25,$\\[-1pt]
+      $0.5,1,2,5,10,100,1000\}$};
+
+  \node at (15.51,1.72) {\asset{height=0.94cm}{icon_corpus.png}};
+  \node[text=navy,align=center,font=\fontsize{6.5}{7.3}\selectfont] at (15.51,0.80) {\bfseries Corpus\\[-1pt]
+      \normalfont 10,000 dyads\\[-1pt]
+      20,000 agent-games\\[-1pt]
+      200,000 decisions};
+
+\end{tikzpicture}
+\end{document}
