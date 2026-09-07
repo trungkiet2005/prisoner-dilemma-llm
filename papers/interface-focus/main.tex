@@ -296,7 +296,7 @@ effect is exactly zero, demonstrating that five frontier language models
 systematically violate scale invariance (\S\ref{sec:gameImportance}), with
 cooperation rates shifting substantially across stakes. \textbf{(ii)} a
 per-model analysis revealing that scale departures diverge sharply across
-architectures to the point of anticorrelation, so that pooled analyses produce
+models to the point of anticorrelation, so that pooled analyses produce
 an artificial average that describes no real model: variance is dominated by
 model individuality and model-by-scale interactions. In the five-model
 cell-mean decomposition, the shared scale main effect is largely carried by
@@ -663,13 +663,16 @@ pooled language profiles, while the model-by-language levels and ranges appear
 in electronic supplementary table~\ref{tab:S-language}.
 
 One caveat attaches to the level comparison rather than to the scale result.
-The Arabic and Chinese templates state the four cells as penalties while
-phrasing the goal sentence as maximising a reward (\S\ref{sec:protocol}), so a
-level difference between two languages reflects differing prompt stimuli rather
-than differing translations of a single prompt. This textual feature cannot,
-however, account for the dependence on payoff scale, because the wording is
-held strictly identical at every scale, and all scale sensitivity ranges are
-computed within each language.
+The Arabic and Chinese templates differ from the other prompt stimuli in their
+objective wording. They state the four cells as penalties while phrasing the
+goal sentence as maximising a reward (\S\ref{sec:protocol}). Because that
+wording is fixed within each language, the within-language comparisons still
+establish sensitivity to payoff rescaling for the prompt as actually presented.
+However, differences in the magnitude or shape of scale sensitivity across
+languages cannot be attributed to language alone, because language is partially
+confounded with template wording. We therefore interpret the scale-by-language
+interaction as a prompt-stimulus interaction, not as evidence for a linguistic
+or cultural mechanism.
 
 The central discovery is that scale sensitivity itself depends on the prompt
 language. The model-specific max-minus-min ranges over the ten scales vary by
@@ -688,7 +691,7 @@ pool across models, these opposing model-specific effects are attenuated and
 can obscure substantial model-by-language heterogeneity. In reality, machine
 behaviour depends on the linguistic stimulus used in the prompt. Within this design,
 scale sensitivity is a joint property of the model and prompt language rather
-than an architectural invariant. It does not identify a cultural mechanism.
+than a model-independent invariant. It does not identify a cultural mechanism.
 
 \begin{figure}[!htbp]
 \centering
@@ -712,7 +715,7 @@ cooperation in these models is not a single Gaussian distribution, but a mixture
 over distinct policy regimes (appendix~\ref{appendix:pooling}). Across the corpus,
 unconditional boundary play is strongly overrepresented, with extreme atoms
 carrying far more weight than expected under uniform play. Crucially, the commitment to boundary
-play varies dramatically across architectures: Claude operates as an interior,
+play varies dramatically across models: Claude operates as an interior,
 mixed-policy player that rarely locks into extreme postures, whereas Qwen and
 Grok function as pure-policy switchers, oscillating between unconditional
 defection and unconditional cooperation. Pooling across models conflates how
@@ -724,7 +727,7 @@ identity and the model-by-language interaction account for the majority of the
 variance across cells. While the main effect of payoff scale is statistically
 detectable, its interaction with model identity carries three times as much
 variance, demonstrating that the behavioural impact of stakes is model-specific
-rather than shared universally across architectures.
+rather than shared universally across model endpoints.
 
 In the five-model cell-mean variance decomposition, the shared payoff-scale
 main effect is largely carried by Grok. Removing Grok renders that particular
@@ -1125,10 +1128,11 @@ in them agrees with the five-model versions reported above.
 One feature of the stimuli bounds the language comparison. Two of the five
 templates state the payoffs as penalties while phrasing the goal as maximising
 a reward, and we reproduced rather than repaired them so that the corpus
-matches the published protocol. Because that wording is fixed across the ten
-scales it cannot generate a scale effect, and the within-language sensitivities
-stand; it does mean that a difference in level between two languages is not
-attributable to the language alone.
+matches the published protocol. The wording is fixed within each language
+across the ten scales, so it does not invalidate the within-language rescaling
+comparison. It may nevertheless interact with numerical magnitude; consequently,
+cross-language differences in scale sensitivity cannot be attributed to language
+alone.
 
 Our reference for calling a departure large is the sampling variability of
 these data, a bootstrap over dyads and a permutation null. A targeted

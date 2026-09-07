@@ -27,8 +27,8 @@ lives in the appendix, with a short pointer in main-text §3.8.
 
 | File | Role |
 |---|---|
-| `main.tex` / `main.pdf` | Main manuscript, 17 pp., 8 figures, 3 tables |
-| `appendix.tex` / `appendix.pdf` | Standalone electronic supplementary material, 17 pp. |
+| `main.tex` / `main.pdf` | Main manuscript, 20 pp., 8 figures, 3 tables |
+| `appendix.tex` / `appendix.pdf` | Standalone electronic supplementary material, 23 pp. |
 | `tables_auto.tex` | The three main-text tables, **generated**, do not edit |
 | `supp_tables_auto.tex` | The thirteen supplementary tables, **generated**, do not edit |
 | `egt_tables_auto.tex` | The three evolutionary-baseline tables, **generated**, do not edit |

@@ -412,8 +412,9 @@ treat rounds as independent.
 
 * `wilson(p, n)` for proportion error bars.
 * `cluster_bootstrap_ci(df, value, cluster="game_uid")` resamples whole games. Rounds
-  inside a game are strongly autocorrelated, so a round-level interval is far too narrow;
-  every interval in the manuscripts uses the clustered version.
+  inside a game are strongly autocorrelated, so a round-level interval is far too narrow.
+  Primary inferential intervals use whole-dyad resampling; descriptive figure intervals
+  use the resampling unit stated in each caption.
 
 ---
 
@@ -498,7 +499,9 @@ cell on 48,000.
 
 1. **Action coding.** Section 7. Everything else is secondary to this.
 2. **Not independent observations.** 240,000 rounds are only 12,000 games and 24,000
-   agent-games. Cluster on `game_uid` (or on the dyad) for every interval and test.
+   agent-games. Cluster on `game_uid` (or on the dyad) for inferential tests; the
+   manuscript's primary intervals resample whole dyads, while descriptive figure
+   intervals use the unit stated in each caption.
    Both agents of a dyad appear as focal, so the two rows of a game are the same
    interaction seen twice.
 3. **Self-play only.** Every result is about a model playing itself. Nothing here

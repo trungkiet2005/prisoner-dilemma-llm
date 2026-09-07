@@ -62,7 +62,7 @@ to `R: 6.0`.
 
 | directory | manuscript | status |
 |---|---|---|
-| [`papers/interface-focus`](papers/interface-focus/README.md) | *Frontier language models violate payoff-scale invariance and rely more on persistence than reciprocity in the prisoner's dilemma across languages* | **current**, Interface Focus RSFS-2026-0050 |
+| [`papers/interface-focus`](papers/interface-focus/README.md) | *Frontier language models violate payoff-scale invariance and show stronger persistence than reciprocity in the prisoner's dilemma across languages* | **current**, Interface Focus RSFS-2026-0050 |
 | [`papers/deduce-before-you-label`](papers/deduce-before-you-label/README.md) | *Deduce before you label: strategy attribution for LLM agents in the iterated prisoner's dilemma* | separate manuscript |
 | [`legacy/paper_scaling`](legacy/README.md) | the pre-restructure draft of the Interface Focus paper | superseded |
 
