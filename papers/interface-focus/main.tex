@@ -48,7 +48,7 @@
 
 %% Bibliography database (style is fixed by the class: biblatex/biber, phys)
 \addbibresource{mybib.bib}
-\hypersetup{pdftitle={Frontier language models violate payoff-scale invariance and show stronger persistence than reciprocity in the prisoner's dilemma across languages}}
+\hypersetup{pdftitle={Frontier language models violate payoff-scale invariance and show stronger persistence than reciprocity in the prisoner's dilemma across languages},pdfauthor={The Anh Han, Trung-Kiet Huynh, Dao-Sy Duy-Minh, Thanh-Bang Cao, Phong-Hao Le, Hong-Dan Nguyen, Phu-Quy Nguyen-Lam, Minh-Luan Nguyen-Vo, Hong-Phat Pham, Phu-Hoa Pham, Thien-Kim Than, Chi-Nguyen Tran, Huy Tran, Gia-Thoai Tran-Le, Alessio Buscemi, Le Hong Trang},pdfsubject={Payoff-scale invariance and cooperation in language-model agents},pdfkeywords={machine behaviour, large language models, iterated prisoner's dilemma, payoff scaling, cross-lingual evaluation}}
 
 %% Numeric subsection numbering (2.1, 3.2, ...) instead of the class default
 %% "(a)", "(b)": cross-references such as "Section 3.2" would otherwise print
@@ -85,7 +85,7 @@
 
 %%%% Article title
 \title{Frontier language models violate payoff-scale invariance and show stronger
-on persistence than reciprocity in the prisoner's dilemma across languages}
+persistence than reciprocity in the prisoner's dilemma across languages}
 
 %%%% Authors ($\dagger$: equal contribution, $\star$: corresponding authors)
 \author{The Anh Han$^{1,\dagger,\star}$, Trung-Kiet Huynh$^{2,4,\dagger}$, Dao-Sy Duy-Minh$^{2,4,\dagger}$, Thanh-Bang Cao$^{3,4}$, Phong-Hao Le$^{3,4}$, Hong-Dan Nguyen$^{3,4}$, Phu-Quy Nguyen-Lam$^{2,4}$, Minh-Luan Nguyen-Vo$^{3,4}$, Hong-Phat Pham$^{3,4}$, Phu-Hoa Pham$^{2,4}$, Thien-Kim Than$^{3,4}$, Chi-Nguyen Tran$^{3,4}$, Huy Tran$^{3,4}$, Gia-Thoai Tran-Le$^{3,4}$, Alessio Buscemi$^{5}$ and Le Hong Trang$^{3,4,\star}$}
@@ -638,8 +638,9 @@ shows no detected association with payoff scale (table~\ref{tab:effect}). As dem
 appendix~\ref{appendix:fairness_welfare} and figure~\ref{fig:fairness_welfare},
 within-dyad inequality in symmetric interactions is an algebraic signature of
 coordination failure rather than an ethical preference. Scaling the stakes shifts
-the overall willingness of agents to cooperate, but leaves the symmetric
-coordination balance between paired clones entirely untouched.
+the overall willingness of agents to cooperate, but we detect no corresponding
+association with the symmetric coordination-balance measure between paired
+clones.
 
 \begin{figure}[!htbp]
 \centering
@@ -683,9 +684,9 @@ scale.
 Crucially, these linguistic biases do not point in a uniform direction across
 models: each model identifies a different language as its most cooperative
 medium and another as its most scale-sensitive. When multilingual evaluations
-pool across models, these opposing biases cancel out, manufacturing an
-artificial appearance of cross-lingual neutrality. In reality, machine behaviour
-depends on the linguistic stimulus used in the prompt. Within this design,
+pool across models, these opposing model-specific effects are attenuated and
+can obscure substantial model-by-language heterogeneity. In reality, machine
+behaviour depends on the linguistic stimulus used in the prompt. Within this design,
 scale sensitivity is a joint property of the model and prompt language rather
 than an architectural invariant. It does not identify a cultural mechanism.
 

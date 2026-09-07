@@ -1,16 +1,10 @@
 """The language the game is written in sets the size of the payoff-scale effect.
 
-The manuscript's central result is that shrinking every printed payoff below one
-unit suppresses cooperation.  That result was established on English prompts.
-This figure asks whether it survives translation, and the answer is that it
-survives in four languages out of five and dies in the fifth.  What changes
-across languages is not the level of cooperation, which moves by only about
-eight points from the least to the most cooperative language, but the size of
-the scale effect itself, which moves from eighteen points in English to nothing
-at all in French.  That is a language-by-scale interaction rather than a main
-effect of language, and it matters because a main effect of language would be a
-nuisance to control for whereas an interaction means the scale effect is not a
-property of the payoff numbers alone.
+The language condition changes both the level of cooperation and the size of the
+payoff-scale effect. This figure shows the pooled language profiles, the
+supra-unit minus sub-unit contrast, and the centred response shapes. The
+model-specific ranges and levels remain in the supplementary table, because the
+pooled panel is not a substitute for model-by-language estimates.
 
 The scale effect is measured the way the rest of the paper measures it, as the
 difference between the sub-unit regime, the two scales 0.01 and 0.1 at which

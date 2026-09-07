@@ -42,50 +42,12 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from scipy.stats import spearmanr
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import style as S      # noqa: E402
 import data as D       # noqa: E402
-
-REPS = 2000
-SEED = 20260906
-
-
-def _cube(g):
-    """Dyad means as (model, scale, dyad), preserving paired agents."""
-    rows = []
-    for m in S.MODEL_ORDER:
-        row = [g.loc[(g.model == m) & (g.scale_nominal == s)]
-               .groupby("game_id", sort=False).coop_rate.mean().to_numpy(float)
-               for s in S.SCALES]
-        rows.append(row)
-    n = min(len(x) for row in rows for x in row)
-    return np.array([[x[:n] for x in row] for row in rows]), n
-
-
-def _range_cis(cube):
-    """Percentile bootstrap of each within-model range and of the pooled range.
-
-    Whole dyads are resampled inside their own model-by-scale cell, preserving
-    the paired agents in each game and the sampling noise of the cell means.
-    """
-    rng = np.random.default_rng(SEED)
-    nm, ns, ng = cube.shape
-    per = np.empty((REPS, nm))
-    pooled = np.empty(REPS)
-    done = 0
-    while done < REPS:
-        b = min(200, REPS - done)
-        idx = rng.integers(0, ng, size=(b, nm, ns, ng))
-        means = np.take_along_axis(cube[None], idx, axis=3).mean(axis=3)
-        per[done:done + b] = means.max(axis=2) - means.min(axis=2)
-        p = means.mean(axis=1)
-        pooled[done:done + b] = p.max(axis=1) - p.min(axis=1)
-        done += b
-    q = lambda a: (np.quantile(a, 0.025, axis=0), np.quantile(a, 0.975, axis=0))
-    return q(per), q(pooled)
-
 
 def main():
     g = D.games()
@@ -96,12 +58,15 @@ def main():
     loglam = np.log10(lam)
     pooled = arr.mean(axis=0)
 
-    cube, n_per_cell = _cube(g)
-    (lo, hi), (plo, phi) = _range_cis(cube)
-    rng_by_model = arr.max(axis=1) - arr.min(axis=1)
+    t03 = (pd.read_csv(S.REPO / "Analysis" / "scaling" / "tables" /
+                       "T03_effect_size.csv")
+           .set_index("model").reindex(S.MODEL_ORDER))
+    rng_by_model = t03["range"].to_numpy(float)
+    lo = t03["lo"].to_numpy(float)
+    hi = t03["hi"].to_numpy(float)
     pooled_range = pooled.max() - pooled.min()
 
-    print(f"  {len(g):,} agent-games, {n_per_cell} dyads per model and payoff scale")
+    print(f"  {len(g):,} agent-games, 200 dyads per model and payoff scale")
     for i, m in enumerate(S.MODEL_ORDER):
         rho = spearmanr(loglam, arr[i]).statistic
         r_pool = np.corrcoef(arr[i], pooled)[0, 1]
@@ -109,7 +74,7 @@ def main():
               f"range {rng_by_model[i]:.3f} [{lo[i]:.3f}, {hi[i]:.3f}]  "
               f"rho(log lambda) {rho:+.2f}  r(pooled) {r_pool:+.2f}")
     print(f"  {'pooled':<11} coop {pooled.min():.3f}-{pooled.max():.3f}  "
-          f"range {pooled_range:.3f} [{plo:.3f}, {phi:.3f}]  "
+          f"range {pooled_range:.3f}  "
           f"rho(log lambda) {spearmanr(loglam, pooled).statistic:+.2f}")
     n_wider = int((rng_by_model > pooled_range).sum())
     print(f"  pooled range is narrower than {n_wider} of {len(S.MODEL_ORDER)} "
@@ -138,7 +103,6 @@ def main():
 
     # --- c: within-model range against the pooled range --------------------
     ys = np.arange(len(S.MODEL_ORDER))[::-1]
-    axC.axvspan(plo, phi, color=S.BAND, lw=0, zorder=0)
     axC.axvline(pooled_range, color=S.INK_2, lw=0.9, linestyle=(0, (3, 2)),
                 zorder=2)
     axC.text(pooled_range + 0.018, -0.72,
@@ -197,9 +161,9 @@ def main():
 
     S.caption(
         fig,
-        f"{len(g):,} agent-games from 10,000 dyads, {n_per_cell} dyads per model and payoff scale; "
-        "shading in b marks the sub-unit regime; intervals in c are 95% percentile "
-        "bootstrap intervals over whole dyads.",
+        f"{len(g):,} agent-games from 10,000 dyads, 200 dyads (400 agent-games) per model and payoff scale; "
+        "shading in b marks the sub-unit regime; intervals in c are the 95% percentile "
+        "whole-dyad intervals from the main statistical table.",
         y=-0.07,
     )
 
