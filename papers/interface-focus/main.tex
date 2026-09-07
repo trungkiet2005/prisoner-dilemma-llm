@@ -464,11 +464,9 @@ rational adaptation to changing game-theoretic payoffs.
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=\linewidth]{figures/f_overview.pdf}
-\caption{\textbf{Overview of experimental design, payoff-scaling protocol and analysis lanes.}
-(a) The empirical collection: six frontier language models played against themselves across ten payoff scales $\lam \in [0.01, 1000]$, five prompt languages, four persona pairings and ten replicates (12{,}000 dyads, 240{,}000 decisions).
-(b) The payoff-rescaling manipulation: multiplying the prisoner's dilemma penalty matrix by $\lam$. Under classical decision theory and deterministic replicator dynamics, multiplying payoffs by a positive constant leaves preferences, best replies and equilibria invariant.
-(c) The analytical evolutionary lane: solving finite-population imitation dynamics ($Z = 100$, Fermi selection $\beta = 0.1$, execution noise $\epsilon = 0.05$) at 200 significant digits across the same ten payoff scales, yielding the theoretical baseline against which the empirical corpus is compared.}
+\includegraphics[width=\linewidth]{figures/prisoners_dilemma_overview.pdf}
+\caption{\textbf{Overview of the repeated prisoner's-dilemma experiment.}
+Two language-model agents from the same provider repeatedly play the stage game across ten payoff scales, with penalties to minimise. The main-text corpus covers five frontier models, five prompt languages, four persona pairings and 10{,}000 dyads (20{,}000 agent-games and 200{,}000 decisions).}
 \label{fig:overview}
 \end{figure}
 
