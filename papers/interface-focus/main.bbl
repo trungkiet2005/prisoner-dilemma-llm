@@ -2854,11 +2854,6 @@
     \endentry
     \entry{selfpreprint2026scaling}{misc}{}{}
       \name{author}{16}{}{%
-        {{hash=244c872a1fec2b2ed6bccc1a7c1f9942}{%
-           family={Han},
-           familyi={H\bibinitperiod},
-           given={The\bibnamedelima Anh},
-           giveni={T\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
         {{hash=f2679861a35888a0daa6fb627e9475ba}{%
            family={Huynh},
            familyi={H\bibinitperiod},
@@ -2934,25 +2929,32 @@
            familyi={T\bibinitperiod},
            given={Le\bibnamedelima Hong},
            giveni={L\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=244c872a1fec2b2ed6bccc1a7c1f9942}{%
+           family={Han},
+           familyi={H\bibinitperiod},
+           given={The\bibnamedelima Anh},
+           giveni={T\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
       }
-      \strng{namehash}{d13eaee7b35ce01163aa1403045bf274}
-      \strng{fullhash}{4d27ad4b57496fdf0eded419279f7855}
-      \strng{fullhashraw}{4d27ad4b57496fdf0eded419279f7855}
-      \strng{bibnamehash}{d13eaee7b35ce01163aa1403045bf274}
-      \strng{authorbibnamehash}{d13eaee7b35ce01163aa1403045bf274}
-      \strng{authornamehash}{d13eaee7b35ce01163aa1403045bf274}
-      \strng{authorfullhash}{4d27ad4b57496fdf0eded419279f7855}
-      \strng{authorfullhashraw}{4d27ad4b57496fdf0eded419279f7855}
-      \field{extraname}{5}
+      \strng{namehash}{2e1cb2a3ce3ec69b63dc9dbffbf00e43}
+      \strng{fullhash}{170ce651685ddf015cdec059b2dfde00}
+      \strng{fullhashraw}{170ce651685ddf015cdec059b2dfde00}
+      \strng{bibnamehash}{2e1cb2a3ce3ec69b63dc9dbffbf00e43}
+      \strng{authorbibnamehash}{2e1cb2a3ce3ec69b63dc9dbffbf00e43}
+      \strng{authornamehash}{2e1cb2a3ce3ec69b63dc9dbffbf00e43}
+      \strng{authorfullhash}{170ce651685ddf015cdec059b2dfde00}
+      \strng{authorfullhashraw}{170ce651685ddf015cdec059b2dfde00}
       \field{sortinit}{3}
       \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{eprintclass}{cs.AI}
       \field{eprinttype}{arXiv}
-      \field{note}{Preprint by the present authors}
+      \field{note}{arXiv preprint}
       \field{title}{Payoff scaling shapes cooperation in {LLM} agents across languages}
       \field{year}{2026}
+      \verb{doi}
+      \verb 10.48550/arXiv.2601.19082
+      \endverb
       \verb{eprint}
       \verb 2601.19082
       \endverb
@@ -3145,11 +3147,11 @@
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Philosophical Transactions of the Royal Society A}
-      \field{note}{In press}
+      \field{note}{Accepted/In press}
       \field{title}{Media and responsible {AI} governance: a game-theoretic and {LLM} analysis}
-      \field{year}{2025}
+      \field{year}{2026}
     \endentry
-    \entry{tewolde2026coopeval}{misc}{}{}
+    \entry{tewolde2026coopeval}{inproceedings}{}{}
       \name{author}{5}{}{%
         {{hash=26f662278bf87f26efca6710f4aa2e90}{%
            family={Tewolde},
@@ -3189,9 +3191,9 @@
       \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
+      \field{booktitle}{International Conference on Machine Learning (ICML)}
       \field{eprintclass}{cs.AI}
       \field{eprinttype}{arXiv}
-      \field{note}{Preprint}
       \field{title}{{CoopEval}: Benchmarking Cooperation-Sustaining Mechanisms and {LLM} Agents in Social Dilemmas}
       \field{year}{2026}
       \verb{eprint}

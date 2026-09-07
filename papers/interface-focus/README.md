@@ -3,7 +3,7 @@
 Single-column manuscript for the *Interface Focus* theme issue "Machine behaviour in
 the age of large language models: social, cognitive and evolutionary perspectives",
 class `rsproca_new`. Title: *Frontier language models violate payoff-scale
-invariance and rely more on persistence than reciprocity in the prisoner's
+invariance and show stronger persistence than reciprocity in the prisoner's
 dilemma across languages*.
 
 ## What this directory now contains

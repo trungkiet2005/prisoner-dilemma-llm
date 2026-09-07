@@ -53,11 +53,12 @@ SEED = 20260906
 
 
 def _cube(g):
-    """Cooperation rates as (model, scale, game), the shape the bootstrap wants."""
+    """Dyad means as (model, scale, dyad), preserving paired agents."""
     rows = []
     for m in S.MODEL_ORDER:
-        row = [g.loc[(g.model == m) & (g.scale_nominal == s), "coop_rate"]
-               .to_numpy(float) for s in S.SCALES]
+        row = [g.loc[(g.model == m) & (g.scale_nominal == s)]
+               .groupby("game_id", sort=False).coop_rate.mean().to_numpy(float)
+               for s in S.SCALES]
         rows.append(row)
     n = min(len(x) for row in rows for x in row)
     return np.array([[x[:n] for x in row] for row in rows]), n
@@ -66,9 +67,8 @@ def _cube(g):
 def _range_cis(cube):
     """Percentile bootstrap of each within-model range and of the pooled range.
 
-    Games are resampled inside their own model-by-scale cell, which is the unit
-    the design actually replicates, so the interval carries the sampling noise
-    of the cell means and nothing else.
+    Whole dyads are resampled inside their own model-by-scale cell, preserving
+    the paired agents in each game and the sampling noise of the cell means.
     """
     rng = np.random.default_rng(SEED)
     nm, ns, ng = cube.shape
@@ -101,7 +101,7 @@ def main():
     rng_by_model = arr.max(axis=1) - arr.min(axis=1)
     pooled_range = pooled.max() - pooled.min()
 
-    print(f"  {len(g):,} games, {n_per_cell} per model and payoff scale")
+    print(f"  {len(g):,} agent-games, {n_per_cell} dyads per model and payoff scale")
     for i, m in enumerate(S.MODEL_ORDER):
         rho = spearmanr(loglam, arr[i]).statistic
         r_pool = np.corrcoef(arr[i], pooled)[0, 1]
@@ -195,11 +195,13 @@ def main():
     fig.text(box.x0 + 0.017, box.y1 + 0.052, "no two models agree", ha="left",
              va="bottom", fontsize=S.FS_CLAIM, color=S.INK_2)
 
-    fig.text(0.5, -0.055,
-             f"{len(g):,} agent-games from 10,000 dyads, {n_per_cell} per model and payoff scale; "
-             "shading in b marks the sub-unit regime, intervals in c are 95% "
-             "percentile bootstrap over agent-games",
-             ha="center", va="top", fontsize=S.FS_NOTE, color=S.MUTED)
+    S.caption(
+        fig,
+        f"{len(g):,} agent-games from 10,000 dyads, {n_per_cell} dyads per model and payoff scale; "
+        "shading in b marks the sub-unit regime; intervals in c are 95% percentile "
+        "bootstrap intervals over whole dyads.",
+        y=-0.07,
+    )
 
     S.save(fig, "f_landscape")
 

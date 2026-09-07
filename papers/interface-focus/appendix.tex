@@ -1,6 +1,6 @@
 %% Royal Society Interface Focus submission, RSFS-2026-0050.
 %% Electronic supplementary material for
-%%   "Frontier language models violate payoff-scale invariance and rely more
+%%   "Frontier language models violate payoff-scale invariance and show stronger
 %%    on persistence than reciprocity in the prisoner's dilemma across languages".
 %%
 %% MAJOR REVISION, 2026-09-06.  Rebuilt on the six-model by ten-payoff-scale
@@ -59,7 +59,7 @@
 \begin{center}
   {\LARGE\bfseries Electronic supplementary material}\\[6pt]
   {\large\itshape Frontier language models violate payoff-scale invariance and
-   rely more on persistence than reciprocity in the prisoner's dilemma across
+   show stronger persistence than reciprocity in the prisoner's dilemma across
    languages}
 \end{center}
 \vspace{1.0em}
@@ -109,7 +109,7 @@ one. In the data, the realised penalties recorded for each pair of actions
 reproduce that matrix. Cooperation means Option~B throughout.
 
 The empirical logs confirm that the models experience the actual strategic
-tension of the prisoner's dilemma rather than an artifact of prompt confusion.
+tension of the prisoner's dilemma rather than an artefact of prompt confusion.
 Own cooperation correlates with own utility at Spearman $\rho = -0.015$,
 confirming that unilateral cooperation is privately unrewarding. Conversely, the
 opponent's cooperation correlates with own utility at Spearman $\rho = +0.916$,
@@ -367,13 +367,14 @@ other.}
 
 Three dependencies rule out treating agent-games as independent: the two agents
 of a dyad play each other, the ten rounds inside an agent-game are strongly
-autocorrelated, and the ten replicates of a cell share a payoff scale. Every
-interval reported in this article is therefore a nonparametric bootstrap that
-resamples \emph{whole dyads} with replacement, 1{,}500 draws, percentile
+autocorrelated, and the ten replicates of a cell share a payoff scale. Primary
+inferential intervals therefore use a nonparametric bootstrap that resamples
+\emph{whole dyads} with replacement, 1{,}500 draws, percentile
 method~\cite{efron1993introduction}, with a fixed random stream so that draws
-are paired across cells. Every regression clusters its
+are paired across cells. Descriptive figure intervals use the resampling unit
+stated in their captions. Every regression clusters its
 standard errors on the dyad. As a robustness check, we also condition the
-randomization on the documented game-ID blocks, preserving each complete
+randomisation on the documented game-ID blocks, preserving each complete
 ten-scale ladder. This sensitivity does not establish common-random-number
 semantics, which are not retained in the released tables.
 
@@ -1099,7 +1100,7 @@ be the fuller treatment of a nested design. Because the direction of every
 effect is consistent across conditions and the clustered intervals are wider
 than their unclustered counterparts, we regard the reported inference as
 conservative rather than optimistic, but we do not claim it is complete.
-The matched-block randomization provides a complementary sensitivity analysis,
+The matched-block randomisation provides a complementary sensitivity analysis,
 not a replacement for a collection record that preserves provider seed metadata.
 
 The release also contains a targeted notation control for Gemini 3.5 Flash-Lite.
