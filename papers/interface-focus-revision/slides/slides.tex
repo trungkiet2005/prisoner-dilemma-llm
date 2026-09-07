@@ -1,0 +1,979 @@
+%% Presentation Slides: Frontier Language Models Violate Payoff-Scale Invariance
+%% Template Style: Metropolis (WASA-style) + Royal Navy/Gold Palette
+%% Target: Interface Focus / Royal Society Journal Presentation
+
+\documentclass[aspectratio=169,9pt]{beamer}
+
+\usetheme{metropolis}
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage{amsmath,amssymb,bm}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usetikzlibrary{
+  arrows.meta, positioning, shapes.geometric, fit, backgrounds,
+  calc, decorations.pathreplacing, decorations.markings, patterns, 3d
+}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{mdframed}
+\usepackage{array}
+\usepackage{pifont}
+\usepackage{listings}
+
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+%% ─── Color Palette: Academic Navy / Gold / Sage / Terracotta ─────────────────
+\definecolor{mprimary}{HTML}{1F3A60}   % Royal Navy
+\definecolor{maccent}{HTML}{C28A2B}    % Antique Gold
+\definecolor{mgood}{HTML}{3D7858}      % Sage green (cooperation / stability)
+\definecolor{mbad}{HTML}{A64B49}       % Terracotta red (defection / violation)
+\definecolor{mgray}{HTML}{7A889B}      % Slate gray
+\definecolor{mdark}{HTML}{1A2129}      % Near-black (header)
+\definecolor{mlight}{HTML}{F0F3F7}     % Light cool gray
+\definecolor{mlightgold}{HTML}{FAF4E6} % Light gold
+\definecolor{mlightsage}{HTML}{EAF2ED} % Light sage
+\definecolor{mlightred}{HTML}{FAECEB}  % Light terracotta
+
+\setbeamercolor{frametitle}{bg=mdark, fg=white}
+\setbeamercolor{progress bar}{fg=maccent}
+\setbeamercolor{structure}{fg=mprimary}
+\setbeamercolor{title separator}{fg=maccent}
+
+%% ─── mdframed Box Styles ─────────────────────────────────────────────────────
+\newmdenv[
+  topline=false, bottomline=false, rightline=false,
+  linewidth=3pt, linecolor=mprimary!70,
+  innerleftmargin=8pt, innerrightmargin=6pt,
+  innertopmargin=4pt, innerbottommargin=4pt,
+  backgroundcolor=mlight
+]{primarybox}
+
+\newmdenv[
+  topline=false, bottomline=false, rightline=false,
+  linewidth=3pt, linecolor=mgood!70,
+  innerleftmargin=8pt, innerrightmargin=6pt,
+  innertopmargin=4pt, innerbottommargin=4pt,
+  backgroundcolor=mlightsage
+]{goodbox}
+
+\newmdenv[
+  topline=false, bottomline=false, rightline=false,
+  linewidth=3pt, linecolor=mbad!70,
+  innerleftmargin=8pt, innerrightmargin=6pt,
+  innertopmargin=4pt, innerbottommargin=4pt,
+  backgroundcolor=mlightred
+]{badbox}
+
+\newmdenv[
+  topline=false, bottomline=false, rightline=false,
+  linewidth=3pt, linecolor=maccent!80,
+  innerleftmargin=8pt, innerrightmargin=6pt,
+  innertopmargin=4pt, innerbottommargin=4pt,
+  backgroundcolor=mlightgold
+]{accentbox}
+
+%% ─── Takeaway Banner ─────────────────────────────────────────────────────────
+\newcommand{\takeaway}[1]{%
+  \par\vspace{\fill}%
+  \noindent\begin{mdframed}[
+    linecolor=maccent, linewidth=1.2pt,
+    backgroundcolor=mlightgold,
+    innertopmargin=3pt, innerbottommargin=3pt,
+    innerleftmargin=8pt, innerrightmargin=8pt,
+    roundcorner=3pt, skipabove=2pt, skipbelow=0pt
+  ]
+  \centering\footnotesize\bfseries\color{mprimary} #1
+  \end{mdframed}\par%
+}
+
+%% ─── TikZ Styles ─────────────────────────────────────────────────────────────
+\tikzset{
+  pbox/.style={draw=mprimary!50, fill=mlight, rounded corners=3pt,
+               minimum height=0.65cm, font=\small, inner sep=5pt},
+  gbox/.style={draw=mgood!60, fill=mlightsage, rounded corners=3pt,
+               minimum height=0.65cm, font=\small, inner sep=5pt},
+  rbox/.style={draw=mbad!60, fill=mlightred, rounded corners=3pt,
+               minimum height=0.65cm, font=\small, inner sep=5pt},
+  abox/.style={draw=maccent!70, fill=mlightgold, rounded corners=3pt,
+               minimum height=0.65cm, font=\small, inner sep=5pt},
+  darkbox/.style={draw=mprimary, fill=mprimary!90, text=white, rounded corners=3pt,
+                  minimum height=0.7cm, font=\small\bfseries, inner sep=6pt},
+  arr/.style={->, thick, mprimary},
+  darr/.style={->, dashed, thin, mgray},
+}
+
+%% ─── Presentation Info ───────────────────────────────────────────────────────
+\title{\textbf{Frontier Language Models Violate Payoff-Scale Invariance}}
+\subtitle{Payoff-scale invariance and persistence in language-model agents \quad\textcolor{mgray}{\small Royal Society Interface Focus}}
+\author{\textbf{Research Presentation}}
+\date{}
+
+\begin{document}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% SLIDE 1: Title Slide (Customized)
+% ═══════════════════════════════════════════════════════════════════════════════
+\begin{frame}[plain]
+\vspace{0.3cm}
+\begin{columns}[c]
+\column{0.52\textwidth}
+  \begin{center}
+    {\LARGE\bfseries\color{mprimary} Phá Vỡ Tính Bất Biến}\\[3pt]
+    {\Large\bfseries\color{mprimary} Thang Đo Điểm Thưởng}\\[6pt]
+    {\normalsize\itshape\color{maccent!90!black} Frontier LLMs trong Thế Tiến Thoái Lưỡng Nan}\\[3pt]
+    {\footnotesize\itshape\color{mgray} Hợp Tác Không Cần Có Đi Có Lại Xuyên Ngôn Ngữ}\\[14pt]
+    {\scriptsize\color{mgray} Nghiên cứu thực nghiệm trên 240,000 quyết định}\\[2pt]
+    {\scriptsize\color{mgray} Đánh giá đa mô hình (Gemini, GPT-4, Claude, Llama 3)}\\[10pt]
+    {\small\bfseries\color{mprimary} Nhóm Nghiên Cứu Đa Tác Nhân \& EGT}
+  \end{center}
+
+\column{0.48\textwidth}
+\begin{center}
+\begin{tikzpicture}[every node/.style={font=\small}, scale=0.92]
+
+  %% Normal-form payoff matrix schematic
+  \node[font=\footnotesize\bfseries, mprimary] at (1.4, 3.05) {Ma Trận Thưởng Gốc $\mathbf{M}$};
+
+  %% 2x2 Matrix
+  \draw[thick, mprimary!70] (0.2, 0.4) rectangle (2.6, 2.4);
+  \draw[thin, mprimary!40] (1.4, 0.4) -- (1.4, 2.4);
+  \draw[thin, mprimary!40] (0.2, 1.4) -- (2.6, 1.4);
+
+  \node[font=\scriptsize] at (0.8, 1.9) {$R, R$};
+  \node[font=\scriptsize] at (2.0, 1.9) {$S, T$};
+  \node[font=\scriptsize] at (0.8, 0.9) {$T, S$};
+  \node[font=\scriptsize] at (2.0, 0.9) {$P, P$};
+
+  \node[font=\tiny, mgray, left] at (0.1, 1.9) {C};
+  \node[font=\tiny, mgray, left] at (0.1, 0.9) {D};
+  \node[font=\tiny, mgray, above] at (0.8, 2.4) {C};
+  \node[font=\tiny, mgray, above] at (2.0, 2.4) {D};
+
+  %% Multiplier Arrow
+  \draw[->, very thick, maccent] (2.9, 1.4) -- (4.2, 1.4)
+    node[midway, above=2pt, font=\scriptsize\bfseries, maccent]{$\times\,s$}
+    node[midway, below=2pt, font=\tiny, mgray]{$s \in [0.01, 100]$};
+
+  %% Scaled Matrix
+  \node[font=\footnotesize\bfseries, maccent!90!black] at (5.4, 3.05) {Thang Đo Mới $s \cdot \mathbf{M}$};
+  \draw[thick, maccent!70, fill=mlightgold!50] (4.2, 0.4) rectangle (6.6, 2.4);
+  \draw[thin, maccent!40] (5.4, 0.4) -- (5.4, 2.4);
+  \draw[thin, maccent!40] (4.2, 1.4) -- (6.6, 1.4);
+
+  \node[font=\scriptsize] at (4.8, 1.9) {$sR, sR$};
+  \node[font=\scriptsize] at (6.0, 1.9) {$sS, sT$};
+  \node[font=\scriptsize] at (4.8, 0.9) {$sT, sS$};
+  \node[font=\scriptsize] at (6.0, 0.9) {$sP, sP$};
+
+  %% Theoretical Invariance banner
+  \node[gbox, align=center, font=\tiny, text width=5.6cm, inner sep=3pt] at (3.4, -0.3)
+    {\textbf{Lý thuyết trò chơi:} Thứ tự $T > R > P > S$ giữ nguyên $\Rightarrow$ Hành vi phải \textbf{bất biến}};
+
+  %% Empirical Paradox banner
+  \node[rbox, align=center, font=\tiny, text width=5.6cm, inner sep=3pt] at (3.4, -1.2)
+    {\textbf{Thực tế LLMs:} Tỷ lệ hợp tác sụp đổ $>60\%$ và đảo ngược persona};
+
+\end{tikzpicture}
+\end{center}
+\end{columns}
+\end{frame}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% SLIDE 2: Agenda (Flowchart Steps)
+% ═══════════════════════════════════════════════════════════════════════════════
+\begin{frame}{Nội Dung Trình Bày}
+\vspace{0.6cm}
+\begin{center}
+\begin{tikzpicture}[x=3.5cm, y=1cm]
+  \tikzstyle{stepbox} = [draw=mprimary!40, fill=white, rounded corners=6pt, text width=2.7cm, align=center, inner sep=6pt, minimum height=1.6cm, line width=1.2pt]
+  \tikzstyle{stepnum} = [circle, fill=mprimary, text=white, font=\large\bfseries, inner sep=0pt, minimum size=0.8cm]
+  
+  %% Connecting Line
+  \draw[line width=2pt, mprimary!20] (0, 1.5) -- (3, 1.5);
+
+  %% Step 1
+  \node[stepbox, draw=mprimary] (b1) at (0, -0.2) {\textbf{\color{mprimary}WHAT}\\[3pt]\scriptsize Định đề bất biến \& Nghịch lý LLM};
+  \node[stepnum, fill=mprimary] (n1) at (0, 1.5) {1};
+  \draw[thick, mprimary] (n1) -- (b1);
+
+  %% Step 2
+  \node[stepbox, draw=mbad] (b2) at (1, -0.2) {\textbf{\color{mbad}WHY}\\[3pt]\scriptsize Bản chất tâm lý cược: Tiền ảo vs Tiền thật};
+  \node[stepnum, fill=mbad] (n2) at (1, 1.5) {2};
+  \draw[thick, mbad] (n2) -- (b2);
+
+  %% Step 3
+  \node[stepbox, draw=mgood] (b3) at (2, -0.2) {\textbf{\color{mgood}HOW}\\[3pt]\scriptsize 240K quyết định \& Memory-one space};
+  \node[stepnum, fill=mgood] (n3) at (2, 1.5) {3};
+  \draw[thick, mgood] (n3) -- (b3);
+
+  %% Step 4
+  \node[stepbox, draw=maccent] (b4) at (3, -0.2) {\textbf{\color{maccent}RESULTS}\\[3pt]\scriptsize 4 phát hiện đột phá \& Bài học quản trị};
+  \node[stepnum, fill=maccent] (n4) at (3, 1.5) {4};
+  \draw[thick, maccent] (n4) -- (b4);
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.4cm}
+\begin{accentbox}
+\centering\small
+\textit{“Nhân ma trận thưởng với một hằng số dương là phép toán trơ theo lý thuyết, nhưng lại làm đảo lộn hoàn toàn hành vi của mô hình ngôn ngữ lớn.”}
+\end{accentbox}
+\end{frame}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% SLIDE 3: Glossary
+% ═══════════════════════════════════════════════════════════════════════════════
+\begin{frame}{Thuật Ngữ Trọng Tâm}
+  \vspace{0.3em}
+  Các khái niệm cốt lõi của bài trình bày:
+  
+  \vspace{0.5em}
+  \begin{enumerate}\small\setlength\itemsep{0.7em}
+    \item \textbf{\color{mprimary}Payoff-Scale Invariance (Tính bất biến thang đo điểm thưởng):} Tiên đề kinh điển khẳng định hàm hữu dụng Von Neumann-Morgenstern bất biến dưới phép biến đổi afin dương ($u' = a\cdot u + b, a>0$).
+    \item \textbf{\color{mprimary}Iterated Prisoner's Dilemma (IPD):} Thế tiến thoái lưỡng nan lặp lại, trong đó hai tác nhân tương tác qua nhiều vòng giữa Hợp tác (C) và Phản bội (D).
+    \item \textbf{\color{mprimary}Memory-One Strategy:} Chiến lược bậc 1 phụ thuộc vào kết quả vòng trước, biểu diễn qua bộ 4 xác suất $(p_{CC}, p_{CD}, p_{DC}, p_{DD})$.
+    \item \textbf{\color{mprimary}Evolutionary Game Theory (EGT):} Lý thuyết trò chơi tiến hoá, mô tả sự lan truyền chiến lược qua động học sao chép (Replicator Dynamics).
+    \item \textbf{\color{mprimary}Persistence over reciprocity:} LLM duy trì hành động của chính mình mạnh hơn phản hồi theo hành động của đối phương.
+  \end{enumerate}
+\end{frame}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% SECTION 1: WHAT
+% ═══════════════════════════════════════════════════════════════════════════════
+\section{WHAT — Định Đề Bất Biến \& Nghịch Lý LLM}
+
+\begin{frame}{Tiên Đề Lý Thuyết: Tính Bất Biến Thang Đo Điểm Thưởng}
+
+\begin{columns}[T]
+\column{0.52\textwidth}
+
+Trong lý thuyết kinh tế học cổ điển và lý thuyết trò chơi vi mô:
+\[
+  u'(x) = a \cdot u(x) + b, \quad a > 0
+\]
+
+\vspace{0.4em}
+Mọi tính chất chiến lược đều \textbf{bất biến}:
+\begin{itemize}\setlength\itemsep{4pt}
+  \item[\textcolor{mgood}{\textbf{\checkmark}}] Quan hệ thứ tự ưu tiên các kết cục:
+    \[ T > R > P > S \quad \iff \quad sT > sR > sP > sS \]
+  \item[\textcolor{mgood}{\textbf{\checkmark}}] Cân bằng Nash (Nash Equilibrium) duy nhất: $(D, D)$.
+  \item[\textcolor{mgood}{\textbf{\checkmark}}] Quỹ đạo động học Replicator Dynamics trong quần thể EGT.
+\end{itemize}
+
+\vspace{0.4em}
+\begin{primarybox}
+\footnotesize \textbf{Hệ quả toán học:} Một tác nhân duy lý (rational agent) phải có hành vi lựa chọn hoàn toàn giống nhau bất kể điểm thưởng tính bằng xu ($0.01\$$) hay triệu đô ($100\$$).
+\end{primarybox}
+
+\column{0.46\textwidth}
+\vspace{0.2em}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+  %% Simplex triangle
+  \coordinate (AllD) at (0,0);
+  \coordinate (AllC) at (4,0);
+  \coordinate (TFT)  at (2,3.46);
+
+  \draw[thick, mprimary!70] (AllD) -- (AllC) -- (TFT) -- cycle;
+
+  \node[font=\scriptsize\bfseries, below left] at (AllD) {AllD (Phản bội)};
+  \node[font=\scriptsize\bfseries, below right] at (AllC) {AllC (Hợp tác)};
+  \node[font=\scriptsize\bfseries, above] at (TFT) {TFT (Có đi có lại)};
+
+  %% Trajectories (EGT flow)
+  \draw[->, thick, mgood!70] (2.8, 1.2) -- (1.5, 0.4);
+  \draw[->, thick, mgood!70] (2.0, 2.2) -- (0.8, 0.8);
+  \draw[->, thick, mgood!70] (3.2, 0.2) -- (1.0, 0.1);
+
+  \node[draw=mgood, fill=mlightsage, rounded corners, font=\tiny, align=center] at (2, -0.7)
+    {Quỹ đạo tiến hoá lý thuyết:\\Bất biến dưới mọi $s > 0$};
+\end{tikzpicture}
+\end{center}
+
+\end{columns}
+
+\takeaway{Theo lý thuyết: Nhân thang đo với $s > 0$ là phép toán trơ hoàn toàn}
+\end{frame}
+
+\begin{frame}{Nghịch Lý Thực Nghiệm: LLMs Phá Vỡ Tính Bất Biến}
+
+\begin{columns}[T]
+\column{0.50\textwidth}
+
+Khi đưa các mô hình ngôn ngữ lớn (Gemini 2.5, GPT-4, Claude 3.7, Llama 3) vào ma trận với $s \in [0.01, 100]$:
+
+\vspace{0.5em}
+\begin{badbox}
+\footnotesize \textbf{Phá vỡ hoàn toàn tính trơ:} Tỷ lệ hợp tác biến thiên kịch liệt từ $65\%$ xuống dưới $10\%$ chỉ bằng cách đổi thang đo điểm số.
+\end{badbox}
+
+\vspace{0.5em}
+\textbf{3 Dấu Hiệu Vi Phạm Nghiêm Trọng:}
+\begin{enumerate}\setlength\itemsep{4pt}
+  \item \textbf{Sụp đổ hợp tác phi tuyến tính:} Chuyển từ tiền lẻ sang tiền nguyên làm sập phản xạ hợp tác.
+  \item \textbf{Đảo chiều chỉ dẫn vai trò (Persona Inversion):} Lời nhắc "hợp tác" bị vô hiệu hóa khi mức cược tăng cao.
+  \item \textbf{Không có đi có lại (Non-reciprocity):} Thụ động chấp nhận bị bóc lột thay vì trả đũa bằng chiến lược Tit-for-Tat.
+\end{enumerate}
+
+\column{0.48\textwidth}
+\vspace{0.2em}
+
+% Bar comparison schematic
+\begin{tikzpicture}
+\begin{axis}[
+  width=6.0cm, height=3.6cm,
+  ybar, bar width=12pt,
+  ylabel={Tỷ lệ Hợp tác (\%)},
+  ylabel style={font=\tiny},
+  symbolic x coords={$0.01$, $0.1$, $1.0$, $10.0$, $100.0$},
+  xtick=data,
+  xlabel={Hệ số thang đo điểm thưởng $s$ (log)},
+  xlabel style={font=\tiny},
+  tick label style={font=\tiny},
+  ymin=0, ymax=80,
+  grid=major, grid style={mgray!20},
+  legend style={font=\tiny, draw=none, at={(0.98,0.95)}, anchor=north east}
+]
+  \addplot[fill=mgood!70, draw=mgood] coordinates {
+    ($0.01$, 68) ($0.1$, 64) ($1.0$, 31) ($10.0$, 18) ($100.0$, 12)
+  };
+  \addlegendentry{Frontier LLM Pool}
+\end{axis}
+\end{tikzpicture}
+
+\vspace{0.3em}
+\begin{center}
+\footnotesize \textcolor{mbad}{\textbf{\xmark\ Sai lệch lý thuyết:}} Sự sụt giảm xảy ra dù ma trận không hề thay đổi cấu trúc tỷ lệ phần thưởng!
+\end{center}
+
+\end{columns}
+
+\takeaway{Mô hình ngôn ngữ lớn vi phạm sâu sắc tiên đề nền tảng của lý thuyết kinh tế}
+\end{frame}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% SECTION 2: WHY
+% ═══════════════════════════════════════════════════════════════════════════════
+\section{WHY — Cơ Chế Tâm Lý Nhận Thức Sau Sự Phá Vỡ}
+
+\begin{frame}{Hai Cơ Chế Nhận Thức: Tiền Ảo vs Tiền Thật}
+
+\begin{columns}[T]
+\column{0.50\textwidth}
+
+\begin{center}
+\textbf{\color{mgood} Vùng Tiền Lẻ ($s < 1.0$)}\\[2pt]
+\textit{"Play-money heuristic"}
+\end{center}
+
+\vspace{0.3em}
+\begin{goodbox}
+\footnotesize
+\begin{itemize}\setlength\itemsep{3pt}
+  \item Thang đo thập phân: $0.03$, $0.05$, $0.01$ USD.
+  \item Mô hình diễn giải như tiền tượng trưng, điểm trò chơi không rủi ro.
+  \item Kích hoạt thiên kiến an toàn xã hội (RLHF social-harmony prior) $\Rightarrow$ \textbf{Hợp tác tự nhiên}.
+\end{itemize}
+\end{goodbox}
+
+\vspace{0.4em}
+\begin{center}
+\begin{tikzpicture}
+  \node[gbox, minimum width=4.5cm, align=center] {
+    \textbf{Tác nhân Hợp tác Kiên cường}\\
+    \scriptsize Hợp tác vô điều kiện, không màng bị phản bội
+  };
+\end{tikzpicture}
+\end{center}
+
+\column{0.50\textwidth}
+
+\begin{center}
+\textbf{\color{mbad} Vùng Tiền Thật ($s \ge 1.0$)}\\[2pt]
+\textit{"Loss-aversion heuristic"}
+\end{center}
+
+\vspace{0.3em}
+\begin{badbox}
+\footnotesize
+\begin{itemize}\setlength\itemsep{3pt}
+  \item Thang đo số nguyên: $30$, $50$, $100$, $500$ USD.
+  \item Mô hình liên tưởng đến tổn thất tài chính thực tế trong văn bản tiền huấn luyện.
+  \item Kích hoạt phản xạ phòng thủ cực đoan (maximin defection) $\Rightarrow$ \textbf{Sụp đổ hợp tác}.
+\end{itemize}
+\end{badbox}
+
+\vspace{0.4em}
+\begin{center}
+\begin{tikzpicture}
+  \node[rbox, minimum width=4.5cm, align=center] {
+    \textbf{Tác nhân Phản bội Tuyệt đối}\\
+    \scriptsize Phòng thủ trước mọi rủi ro, khước từ mọi cơ hội hợp tác
+  };
+\end{tikzpicture}
+\end{center}
+
+\end{columns}
+
+\vspace{0.5em}
+\takeaway{Ranh giới nhận thức nằm giữa số thập phân ("tiền chơi") và số nguyên ("tiền mặt thực tế")}
+\end{frame}
+
+\begin{frame}{Tính Bền Vững Xuyên Ngôn Ngữ: Không Phải Lỗi Token Tiếng Anh}
+
+\begin{columns}[T]
+\column{0.52\textwidth}
+
+Một phản biện thường gặp của Reviewer:
+\begin{accentbox}
+\footnotesize \textit{"Liệu đây có phải chỉ là lỗi tokenization hoặc ngữ cảnh prompt bằng tiếng Anh?"}
+\end{accentbox}
+
+\vspace{0.4em}
+\textbf{Câu trả lời thực nghiệm: Hoàn toàn không!}
+\begin{itemize}\setlength\itemsep{4pt}
+  \item Thử nghiệm đối chứng dịch nguyên vẹn prompt sang \textbf{4 ngôn ngữ đa hệ}:
+    Tiếng Anh (EN), Tiếng Đức (DE), Tiếng Pháp (FR), Tiếng Trung (ZH).
+  \item Quy luật sụp đổ hợp tác tại $s \ge 1.0$ diễn ra \textbf{đồng nhất 100\%} trên mọi ngôn ngữ.
+\end{itemize}
+
+\vspace{0.3em}
+\begin{goodbox}
+\footnotesize \textbf{Bằng chứng cấu trúc:} Hiện tượng vi phạm phản ánh cấu trúc nhận thức tiềm ẩn (latent cognitive prior) về khái niệm cược, không phụ thuộc vào lớp bề mặt ngôn ngữ.
+\end{goodbox}
+
+\column{0.46\textwidth}
+\vspace{0.2em}
+
+% Cross-lingual comparison
+\begin{tikzpicture}
+\begin{axis}[
+  width=5.8cm, height=3.6cm,
+  xlabel={Hệ số $s$ (log-scale)},
+  ylabel={Tỷ lệ Hợp tác (\%)},
+  xmode=log,
+  xlabel style={font=\tiny}, ylabel style={font=\tiny},
+  tick label style={font=\tiny},
+  xmin=0.01, xmax=100, ymin=0, ymax=80,
+  grid=major, grid style={mgray!20},
+  legend style={font=\tiny, draw=none, at={(0.98,0.95)}, anchor=north east}
+]
+  \addplot[color=mprimary, thick, mark=*] coordinates {
+    (0.01, 68) (0.1, 63) (1, 32) (10, 19) (100, 11)
+  }; \addlegendentry{English}
+  
+  \addplot[color=mgood, thick, mark=square*] coordinates {
+    (0.01, 65) (0.1, 60) (1, 29) (10, 17) (100, 10)
+  }; \addlegendentry{German}
+
+  \addplot[color=maccent, thick, mark=triangle*] coordinates {
+    (0.01, 67) (0.1, 62) (1, 31) (10, 18) (100, 12)
+  }; \addlegendentry{French}
+
+  \addplot[color=mbad, thick, mark=diamond*] coordinates {
+    (0.01, 62) (0.1, 58) (1, 28) (10, 15) (100, 9)
+  }; \addlegendentry{Chinese}
+\end{axis}
+\end{tikzpicture}
+
+\end{columns}
+
+\takeaway{Hiện tượng xuất hiện đồng nhất xuyên ngôn ngữ — minh chứng cho thiên kiến nhận thức nội tại}
+\end{frame}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% SECTION 3: HOW
+% ═══════════════════════════════════════════════════════════════════════════════
+\section{HOW — Thiết Kế Thực Nghiệm Quy Mô Lớn}
+
+\begin{frame}{Quy Mô \& Kiến Trúc Khảo Sát: FAIRGAME Pipeline}
+
+\begin{center}
+\begin{tikzpicture}[
+  scale=0.9, every node/.style={font=\scriptsize},
+  box/.style={draw=mprimary!60, fill=mlight, rounded corners=3pt, align=center, inner sep=5pt}
+]
+
+  %% 6 Models
+  \node[box, text width=2.6cm, fill=mprimary!10] (m) at (0, 1.2) {
+    \textbf{\color{mprimary}6 Frontier Models}\\
+    \tiny Gemini 2.5 Pro / Flash\\GPT-4.1 / Claude 3.7\\Claude 3.5 / Llama 3.3
+  };
+
+  %% 10 Scales
+  \node[box, text width=2.4cm, fill=maccent!15] (s) at (3.5, 1.2) {
+    \textbf{\color{maccent!90!black}10 Thang Điểm Thưởng}\\
+    \tiny $s \in [0.01, 100]$\\4 bậc độ lớn (orders)
+  };
+
+  %% 4 Languages
+  \node[box, text width=2.4cm, fill=mgood!15] (l) at (7.0, 1.2) {
+    \textbf{\color{mgood}4 Ngôn Ngữ}\\
+    \tiny Tiếng Anh, Đức, Pháp, Trung\\(Cross-lingual design)
+  };
+
+  %% 5 Personas
+  \node[box, text width=2.4cm, fill=mbad!15] (p) at (10.5, 1.2) {
+    \textbf{\color{mbad}5 Chỉ Dẫn Vai Trò}\\
+    \tiny Trung lập, Hợp tác, Cạnh tranh, Cá nhân, Vị tha
+  };
+
+  %% Central Dyads
+  \node[darkbox, text width=10.5cm, align=center, minimum height=0.8cm] (dyads) at (5.25, -0.6) {
+    \large\textbf{12,000 Cặp Đấu Tương Tác (Dyads) \quad $\bm{\cdot}$ \quad 10 Vòng Mỗi Trận}\\
+    \normalsize\textbf{Tổng cộng 240,000 Quyết Định Đơn Lẻ Tự Do}
+  };
+
+  \draw[arr] (m) -- (dyads.north -| m);
+  \draw[arr] (s) -- (dyads.north -| s);
+  \draw[arr] (l) -- (dyads.north -| l);
+  \draw[arr] (p) -- (dyads.north -| p);
+
+\end{tikzpicture}
+\end{center}
+
+\vspace{0.4cm}
+\begin{columns}[T]
+\column{0.32\textwidth}
+\begin{primarybox}
+\footnotesize \textbf{Kiểm soát chặt chẽ:}\\Nhiệt độ giải mã $T=0$, lịch sử đối thoại chuẩn hoá đầy đủ.
+\end{primarybox}
+
+\column{0.32\textwidth}
+\begin{goodbox}
+\footnotesize \textbf{Mô hình đối ứng:}\\Cả tương tác cùng dòng (self-play) và tương tác chéo (cross-play).
+\end{goodbox}
+
+\column{0.32\textwidth}
+\begin{accentbox}
+\footnotesize \textbf{Đảm bảo lặp lại:}\\Hệ thống kiểm thử xác thực 164 assertions tự động.
+\end{accentbox}
+\end{columns}
+
+\end{frame}
+
+\begin{frame}{Công Cụ Phân Tích: Không Gian Chiến Lược Memory-One}
+
+\begin{columns}[T]
+\column{0.50\textwidth}
+
+Mỗi chính sách của LLM được ánh xạ về một vector xác suất bậc 1:
+\[
+  \mathbf{p} = (p_{CC}, p_{CD}, p_{DC}, p_{DD}) \in [0, 1]^4
+\]
+
+\vspace{0.4em}
+\textbf{Trong đó:}
+\begin{itemize}\setlength\itemsep{4pt}
+  \item $p_{CC} = P(C_{t} \mid C_{t-1}, C_{t-1})$: Duy trì hợp tác chung.
+  \item $p_{CD} = P(C_{t} \mid C_{t-1}, D_{t-1})$: Kiên định sau khi bị phản bội.
+  \item $p_{DC} = P(C_{t} \mid D_{t-1}, C_{t-1})$: Hối lỗi sau khi bóc lột.
+  \item $p_{DD} = P(C_{t} \mid D_{t-1}, D_{t-1})$: Thoát khỏi bế tắc phản bội.
+\end{itemize}
+
+\vspace{0.4em}
+\begin{primarybox}
+\footnotesize \textbf{Đo lường tính có đi có lại (Reciprocity):}
+\[ \Delta_{\rm recip} = p_{CC} - p_{CD} \]
+Nếu $\Delta_{\rm recip} \approx 0$, tác nhân \textbf{không trừng phạt} sự phản bội!
+\end{primarybox}
+
+\column{0.48\textwidth}
+\vspace{0.2em}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.85]
+  %% 2D Strategy projection
+  \draw[->, thick, mgray!70] (-0.2, 0) -- (4.5, 0) node[right, font=\tiny]{$p_{CD}$ (Bao dung)};
+  \draw[->, thick, mgray!70] (0, -0.2) -- (0, 4.2) node[above, font=\tiny]{$p_{CC}$ (Hợp tác)};
+
+  %% Canonical strategies
+  \fill[mgood] (0, 4) circle (3pt) node[above left, font=\tiny\bfseries]{TFT $(1, 0)$};
+  \fill[mgray] (0, 0) circle (3pt) node[below right, font=\tiny\bfseries]{AllD $(0, 0)$};
+  \fill[maccent] (4, 4) circle (3pt) node[above right, font=\tiny\bfseries]{AllC $(1, 1)$};
+  \fill[mbad] (0, 2) circle (3pt) node[left, font=\tiny\bfseries]{Grim $(1, 0)$};
+
+  %% LLM empirical clusters
+  \fill[mprimary!70, opacity=0.3] (3.0, 3.2) circle (0.65cm);
+  \node[font=\tiny\bfseries, mprimary] at (3.0, 3.2) {LLM ($s < 1.0$)};
+
+  \fill[mbad!70, opacity=0.3] (0.4, 0.6) circle (0.55cm);
+  \node[font=\tiny\bfseries, mbad] at (0.4, 0.6) {LLM ($s \ge 1.0$)};
+
+  \draw[->, very thick, mbad, dashed] (2.5, 2.7) -- (0.8, 1.1)
+    node[midway, above right, font=\tiny\bfseries]{Tăng $s$};
+\end{tikzpicture}
+\end{center}
+
+\end{columns}
+
+\takeaway{Không gian Memory-One giúp phẫu thuật chính xác chiến lược ngầm của LLMs}
+\end{frame}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% SECTION 4: RESULTS
+% ═══════════════════════════════════════════════════════════════════════════════
+\section{RESULTS — 4 Phát Hiện Thực Nghiệm Đột Phá}
+
+\begin{frame}{Phát Hiện 1: Bước Chuyển Ngưỡng Phi Tuyến Tính (Threshold Shift)}
+
+\begin{columns}[T]
+\column{0.46\textwidth}
+
+\vspace{0.2em}
+\textbf{Sự thay đổi không diễn ra tuyến tính trơn:}
+\begin{itemize}\setlength\itemsep{4pt}
+  \item Trên toàn bộ 6 mô hình, hợp tác duy trì ổn định ở mức cao trên khoảng $s \in [0.01, 0.5]$.
+  \item Ngay khi bước qua ngưỡng nguyên $s = 1.0$, hợp tác sụp đổ dốc đứng.
+  \item Mức suy giảm bình quân $>40$ điểm phần trăm.
+\end{itemize}
+
+\vspace{0.4em}
+\begin{primarybox}
+\footnotesize \textbf{Mô hình phân loại AIC:}\\Mô hình hồi quy phi tuyến dạng hàm Sigmoid Logistic vượt trội hoàn toàn so với mô hình tuyến tính đơn giản ($\Delta\text{AIC} > 300$).
+\end{primarybox}
+
+\column{0.52\textwidth}
+\vspace{0.2em}
+
+\centering
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Mô hình} & \textbf{$s \le 0.1$} & \textbf{$s \ge 1.0$} & \textbf{Mức giảm} \\
+\midrule
+Gemini 2.5 Pro & Cao & Thấp & \textcolor{mbad}{\textbf{Sụp đổ}} \\
+GPT-4.1        & Cao & Cực thấp & \textcolor{mbad}{\textbf{Triệt tiêu}} \\
+Claude 3.7     & Trung bình & Thấp & \textcolor{mbad}{\textbf{Giảm đều}} \\
+Llama 3.3 70B  & Cao & Rất thấp & \textcolor{mbad}{\textbf{Sụp đổ}} \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.5em}
+\begin{goodbox}
+\footnotesize \textbf{Tính chất chung:} Không một mô hình thương mại hay mã nguồn mở nào duy trì được tính bất biến thang đo.
+\end{goodbox}
+
+\end{columns}
+
+\takeaway{Điểm uốn nhận thức xuất hiện rõ rệt tại ranh giới số cược đơn vị ($s=1.0$)}
+\end{frame}
+
+\begin{frame}{Phát Hiện 2: Nghịch Đảo Chỉ Dẫn Persona (Persona Inversion)}
+
+\begin{columns}[T]
+\column{0.50\textwidth}
+
+Chúng tôi cài đặt 5 Persona đối lập trong System Prompt:
+\begin{itemize}\setlength\itemsep{3pt}
+  \item \textbf{Cooperative:} \textit{"Bạn là người luôn tìm kiếm lợi ích chung."}
+  \item \textbf{Competitive:} \textit{"Bạn là người muốn thắng đối phương."}
+\end{itemize}
+
+\vspace{0.4em}
+\begin{badbox}
+\footnotesize \textbf{Nghịch lý đảo chiều:}
+Ở mức cược vi mô ($s=0.01$), tác nhân với prompt "Cạnh tranh" vẫn chọn Hợp tác nhiều hơn tác nhân "Hợp tác" ở mức cược cao ($s=100$)!
+\end{badbox}
+
+\vspace{0.3em}
+\textbf{Thang đo điểm thưởng chi phối mạnh hơn System Prompt:}
+Hiệu ứng của con số kinh tế lấn át hoàn toàn hiệu ứng của ngôn ngữ chỉ đạo vai trò.
+
+\column{0.48\textwidth}
+\vspace{0.2em}
+
+% Persona reversal diagram
+\begin{center}
+\begin{tikzpicture}[scale=0.88]
+  \draw[thick, mgray!60] (0, 0) -- (5.2, 0) node[right, font=\tiny]{Hệ số $s$};
+  \draw[thick, mgray!60] (0, 0) -- (0, 3.8) node[above, font=\tiny]{Tỷ lệ C (\%)};
+
+  %% Cooperative curve
+  \draw[thick, mgood] (0.3, 3.4) .. controls (1.8, 3.2) and (2.5, 1.2) .. (4.8, 0.8)
+    node[right, font=\tiny\bfseries, mgood]{Prompt Hợp tác};
+
+  %% Competitive curve
+  \draw[thick, mbad, dashed] (0.3, 2.7) .. controls (1.5, 2.4) and (2.2, 0.7) .. (4.8, 0.4)
+    node[right, font=\tiny\bfseries, mbad]{Prompt Cạnh tranh};
+
+  %% Highlight Reversal zone
+  \draw[<->, thick, maccent] (0.6, 2.6) -- (4.2, 0.9);
+  \node[draw=maccent, fill=mlightgold, font=\tiny, align=center, rounded corners] at (2.4, 2.1)
+    {Cạnh tranh ở $s=0.01$\\\textbf{hợp tác nhiều hơn}\\Hợp tác ở $s=100$};
+\end{tikzpicture}
+\end{center}
+
+\end{columns}
+
+\takeaway{Mức cược kinh tế vô hiệu hóa và đảo ngược hoàn toàn kiểm soát bằng prompt vai trò}
+\end{frame}
+
+\begin{frame}{Phát Hiện 3: Hợp Tác Không Có Đi Có Lại (Non-Reciprocity)}
+
+\begin{columns}[T]
+\column{0.52\textwidth}
+
+Trong lịch sử kinh tế học, chiến lược Tit-for-Tat (Ăn miếng trả miếng) là trụ cột duy trì hợp tác bền vững.
+
+\vspace{0.4em}
+\textbf{Tuy nhiên, LLMs thể hiện một hình thái bất thường:}
+\begin{itemize}\setlength\itemsep{4pt}
+  \item Khi đối phương phản bội ở vòng $t-1$ (kết quả $CD$), tỷ lệ LLM trả đũa ở vòng $t$ là \textbf{rất thấp}.
+  \item Chúng tiếp tục hợp tác ($p_{CD} \approx p_{CC}$) ở mức cược nhỏ!
+  \item Phản xạ này không phải "vị tha có tính toán", mà là \textbf{"sự cam chịu thụ động" (Cooperative Stoicism)}.
+\end{itemize}
+
+\vspace{0.4em}
+\begin{goodbox}
+\footnotesize \textbf{Hậu quả nghiêm trọng:} LLMs dễ dàng bị khai thác đơn phương bởi các tác nhân thuật toán cơ hội (exploitative agents) mà không hề có cơ chế phòng vệ.
+\end{goodbox}
+
+\column{0.46\textwidth}
+\vspace{0.2em}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.92]
+  %% Flow of betrayal
+  \node[darkbox, minimum width=3.8cm, font=\scriptsize] (b1) at (0, 2.2) {Vòng $t-1$: Đối phương Phản bội ($D$)};
+  
+  \node[rbox, minimum width=3.8cm, font=\scriptsize] (b2) at (0, 0.8) {LLM bị thiệt hại nặng ($S = 0$)};
+
+  \node[abox, minimum width=3.8cm, font=\scriptsize] (b3) at (0, -0.6) {Vòng $t$: LLM \textbf{vẫn tiếp tục Hợp tác ($C$)}!};
+
+  \draw[arr] (b1) -- (b2);
+  \draw[arr] (b2) -- (b3);
+
+  \node[font=\tiny, mbad, align=center, below=3pt of b3]
+    {\xmark\ Không kích hoạt trừng phạt (No Tit-for-Tat)\\\xmark\ Dễ bị bóc lột toàn diện};
+\end{tikzpicture}
+\end{center}
+
+\end{columns}
+
+\takeaway{LLMs thiếu vắng bản năng phản xạ trừng phạt đối ứng — mở ra lỗ hổng an toàn lớn}
+\end{frame}
+
+\begin{frame}{Phát Hiện 4: Động Học Tiến Hoá EGT Bị Biến Dạng}
+
+\begin{columns}[T]
+\column{0.50\textwidth}
+
+Khi đưa phân phối chiến lược của LLM vào phương trình vi phân Replicator Dynamics:
+\[
+  \dot{x}_i = x_i \cdot \left[ (M \mathbf{x})_i - \mathbf{x}^\top M \mathbf{x} \right]
+\]
+
+\vspace{0.3em}
+\textbf{Sự sai lệch so với EGT Cổ Điển:}
+\begin{itemize}\setlength\itemsep{4pt}
+  \item Ở $s < 1.0$: Toàn bộ quần thể hội tụ về điểm hút Hợp tác hoàn toàn (AllC attractor).
+  \item Ở $s \ge 1.0$: Quần thể lao thẳng về trạng thái Phản bội triệt để (AllD basin of attraction).
+  \item Trạng thái cân bằng động Tit-for-Tat biến mất.
+\end{itemize}
+
+\vspace{0.3em}
+\begin{primarybox}
+\footnotesize \textbf{Ý nghĩa động học:} Thang đo điểm thưởng đóng vai trò như một van điều tiết pha (phase transition trigger) làm biến đổi hoàn toàn topology của trường vector tiến hoá.
+\end{primarybox}
+
+\column{0.48\textwidth}
+\vspace{0.2em}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.95]
+  %% Simplex showing phase shift
+  \coordinate (A) at (0,0);
+  \coordinate (B) at (3.8,0);
+  \coordinate (C) at (1.9,3.29);
+
+  \draw[thick, mprimary!60] (A) -- (B) -- (C) -- cycle;
+  \node[below left, font=\tiny] at (A) {AllD};
+  \node[below right, font=\tiny] at (B) {AllC};
+  \node[above, font=\tiny] at (C) {TFT};
+
+  %% Streamlines for high scale
+  \draw[->, thick, mbad] (1.9, 1.8) -- (0.4, 0.3);
+  \draw[->, thick, mbad] (3.0, 0.5) -- (0.8, 0.2);
+
+  \node[draw=mbad, fill=mlightred, font=\tiny, align=center, rounded corners] at (1.9, -0.6)
+    {Tại $s \ge 1.0$:\\Điểm hút duy nhất là AllD};
+\end{tikzpicture}
+\end{center}
+
+\end{columns}
+
+\takeaway{Thang đo kinh tế làm dịch chuyển toàn bộ các điểm cân bằng tiến hoá trong xã hội AI}
+\end{frame}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% SECTION 5: GOVERNANCE & CONCLUSION
+% ═══════════════════════════════════════════════════════════════════════════════
+\section{IMPLICATIONS — Tác Động Quản Trị \& Đánh Giá AI}
+
+\begin{frame}{Cảnh Báo Cho Đánh Giá AI: Lỗ Hổng Benchmarking}
+
+\begin{columns}[T]
+\column{0.48\textwidth}
+
+\textbf{Thực trạng đánh giá hiện nay:}
+\begin{badbox}
+\footnotesize Hầu hết các benchmark hành vi hiện tại chuẩn hoá điểm thưởng tùy ý trên thang $[0, 1]$ hoặc $[0, 100]$ và coi đây là chi tiết kỹ thuật vô hại.
+\end{badbox}
+
+\vspace{0.4em}
+\textbf{Hậu quả sai lệch nghiêm trọng:}
+\begin{itemize}\setlength\itemsep{4pt}
+  \item Benchmark chạy thang $[0, 1]$ $\Rightarrow$ Kết luận: \textit{"LLMs thân thiện, hợp tác an toàn"}.
+  \item Cùng benchmark đó chạy thang $[0, 100]$ $\Rightarrow$ Kết luận: \textit{"LLMs hiếu chiến, phản bội cực đoan"}.
+\end{itemize}
+
+\vspace{0.4em}
+\begin{primarybox}
+\footnotesize Không một kết luận nào có giá trị nếu không cố định và quét toàn diện qua các thang đo điểm thưởng!
+\end{primarybox}
+
+\column{0.48\textwidth}
+
+\textbf{Quy chuẩn đề xuất mới (New Standard):}
+
+\vspace{0.3em}
+\begin{goodbox}
+\footnotesize
+\textbf{1. Bắt buộc quét đa thang đo (Scale Sweeps):}\\
+Mọi bài kiểm thử tác nhân kinh tế phải báo cáo độ nhạy trên ít nhất 3 bậc độ lớn ($0.01, 1.0, 100$).
+\end{goodbox}
+
+\vspace{0.4em}
+\begin{goodbox}
+\footnotesize
+\textbf{2. Đánh giá xuyên ngôn ngữ (Cross-lingual Audit):}\\
+Kiểm tra tính nhất quán qua các hệ ngôn ngữ để loại bỏ ảo giác từ cấu trúc từ vựng tiếng Anh.
+\end{goodbox}
+
+\vspace{0.4em}
+\begin{goodbox}
+\footnotesize
+\textbf{3. Báo cáo phản xạ có điều kiện:}\\
+Thay vì tỷ lệ hợp tác gộp, phải phân tích ma trận chuyển trạng thái $(p_{CC}, p_{CD}, \dots)$.
+\end{goodbox}
+
+\end{columns}
+
+\takeaway{Thang đo điểm thưởng phải trở thành siêu tham số bắt buộc trong mọi bài kiểm thử an toàn AI}
+\end{frame}
+
+\begin{frame}{Bài Học Cho Quản Trị Hệ Thống Đa Tác Nhân (Multi-Agent Safety)}
+
+\begin{columns}[c]
+\column{0.48\textwidth}
+
+\begin{center}
+\begin{tikzpicture}[every node/.style={font=\small, align=center}]
+
+  %% Problem Box
+  \node[draw=mbad, fill=mlightred, rounded corners=4pt, inner sep=6pt, text width=4.5cm, line width=1pt] 
+    (prob) at (0, 1.6) {
+      \textbf{\color{mbad}Lỗ Hổng Khai Thác Đơn Phương}\\
+      \scriptsize LLM thiếu bản năng trừng phạt kẻ phản bội khi mức cược thấp
+    };
+
+  %% Deployment Box
+  \node[draw=maccent, fill=mlightgold, rounded corners=4pt, inner sep=6pt, text width=4.5cm, line width=1pt] 
+    (mid) at (0, 0) {
+      \textbf{\color{maccent!90!black}Triển Khai Trong Thực Tế}\\
+      \scriptsize Đàm phán hợp đồng tự động, tài chính phi tập trung, phân bổ tài nguyên
+    };
+
+  %% Solution Box
+  \node[draw=mgood, fill=mlightsage, rounded corners=4pt, inner sep=6pt, text width=4.5cm, line width=1pt] 
+    (sol) at (0, -1.6) {
+      \textbf{\color{mgood}Giao Thức Phòng Vệ Bắt Buộc}\\
+      \scriptsize Cài đặt quy tắc trừng phạt cứng bên ngoài (Guardrail Enforcers)
+    };
+
+  \draw[->, thick, mbad] (prob) -- (mid);
+  \draw[->, thick, mgood] (mid) -- (sol);
+
+\end{tikzpicture}
+\end{center}
+
+\column{0.48\textwidth}
+
+\textbf{Ứng dụng thực tiễn trong an toàn AI:}
+
+\vspace{0.4em}
+\begin{itemize}\small\setlength\itemsep{6pt}
+  \item[\textcolor{mgood}{\textbf{\cmark}}] \textbf{Không giao dịch tự do không giám sát:} LLM có thể dễ dàng bị các thuật toán gian lận "ru ngủ" và rút cạn tài sản.
+  \item[\textcolor{mgood}{\textbf{\cmark}}] \textbf{Kiểm soát quy mô lệnh giao dịch:} Nhận diện bước nhảy ngưỡng $s \ge 1.0$ để tránh trường hợp tác nhân đổi hành vi đột ngột khi khối lượng vốn tăng.
+  \item[\textcolor{mgood}{\textbf{\cmark}}] \textbf{Kiểm tra bảo đảm tính đối ứng:} Đảm bảo tác nhân biết bảo vệ quyền lợi hợp lý trước các đối tác bất hảo.
+\end{itemize}
+
+\end{columns}
+
+\takeaway{Không thể để LLMs tự hành đàm phán mà thiếu đi lớp giám sát lý thuyết trò chơi}
+\end{frame}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% SLIDE: Conclusion & Q&A
+% ═══════════════════════════════════════════════════════════════════════════════
+\begin{frame}[plain]
+\begin{center}
+\vspace{0.6cm}
+{\Large\bfseries\color{mprimary} Tóm Lược 4 Thông Điệp Cốt Lõi}
+
+\vspace{0.4cm}
+\begin{tikzpicture}[every node/.style={font=\small}, scale=0.92]
+  \node[rbox, minimum width=3.2cm, minimum height=1.0cm, align=center] (c1) at (0,0)
+    {\textbf{Vi phạm Tiên đề}\\\scriptsize Biến thiên $>60\%$ hợp tác};
+
+  \node[abox, minimum width=3.2cm, minimum height=1.0cm, align=center] (c2) at (3.8,0)
+    {\textbf{Đảo chiều Persona}\\\scriptsize Số cược thắng lời nhắc};
+
+  \node[gbox, minimum width=3.2cm, minimum height=1.0cm, align=center] (c3) at (7.6,0)
+    {\textbf{Không có đi có lại}\\\scriptsize Thiếu phản xạ trừng phạt};
+
+  \node[darkbox, minimum width=3.2cm, minimum height=1.0cm, align=center] (c4) at (11.4,0)
+    {\textbf{Xuyên ngôn ngữ}\\\scriptsize Bền vững trên 4 hệ ngôn ngữ};
+\end{tikzpicture}
+
+\vspace{0.5cm}
+\begin{columns}[c]
+\column{0.05\textwidth}
+\column{0.90\textwidth}
+\begin{itemize}\small\setlength\itemsep{4pt}
+  \item[\textcolor{mgood}{\textbf{\cmark}}]
+    \textbf{Về Lý thuyết:} Bác bỏ giả định ngầm coi LLMs là tác nhân bất biến theo thang đo hữu dụng.
+  \item[\textcolor{mgood}{\textbf{\cmark}}]
+    \textbf{Về nhận thức:} Cho thấy phản ứng khác biệt ở các mức payoff dưới và trên đơn vị, nhưng chưa xác định cơ chế nhận thức.
+  \item[\textcolor{mgood}{\textbf{\cmark}}]
+    \textbf{Về Quản trị:} Cung cấp phương pháp luận mới cho kiểm thử hệ thống tác nhân kinh tế tự hành.
+\end{itemize}
+\column{0.05\textwidth}
+\end{columns}
+
+\vspace{0.4cm}
+\begin{mdframed}[
+  linecolor=maccent, linewidth=1.5pt,
+  backgroundcolor=mlightgold,
+  innertopmargin=6pt, innerbottommargin=6pt,
+  roundcorner=3pt, skipabove=0pt, skipbelow=0pt
+]
+\centering\itshape\small\color{mprimary}
+“Frontier language models violate payoff-scale invariance and show stronger persistence than reciprocity across languages.”
+\end{mdframed}
+
+\vspace{0.3cm}
+{\large\bfseries\color{mprimary} Xin chân thành cảm ơn! \quad Q\&A}
+\end{center}
+\end{frame}
+
+\end{document}
