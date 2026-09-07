@@ -161,10 +161,10 @@ not retain the API seed values, so it supports a matched-block analysis but
 does not verify provider-specific seed semantics. The robustness analysis
 therefore permutes payoff-scale labels within recorded game-ID blocks.
 
-The matched-block randomization gives $p=0.00225$ for Claude Haiku 4.5 and
-$p\leq0.00025$ for each of the other five models (4,000 draws per model).
-The cooperation ranges are unchanged because the analysis only conditions the
-null on the recorded matching structure.
+With 10,000 blocked permutations, the scale range remains significant for all
+six models: $p=0.0023$ for Claude Haiku 4.5 and $p=0.0001$ for each of the
+other five models, the permutation floor. The ranges are unchanged because the
+analysis only conditions the null on the recorded matching structure.
 
 Decisions are elicited as free text and parsed by the protocol's own matcher. A
 reply the matcher cannot resolve is regenerated, up to two further attempts,
@@ -1112,6 +1112,23 @@ single trailing-zero convention explains the main scale effect.
 
 
 % ===========================================================================
+\subsection{Matched scale ladders and influence checks}\label{appendix:robust_ladders}
+
+The scale labels can also be permuted within each complete game-ID ladder. This
+is a stricter null than the main analysis because it preserves the recorded
+matching across all ten scales. With 10,000 blocked permutations, the observed
+scale range remains significant for every model: $p=0.0023$ for Claude and
+$p=0.0001$ for each of GPT, Gemini 3.1, Gemini 3.5, Grok and Qwen. The ranges
+are unchanged because the test changes only the null assignment. The complete
+results are included in the released analysis tables.
+
+As a complementary influence check, removing each model in turn leaves a
+significant pooled scale effect. The scale-test $p$-values are below $0.01$ in
+all six leave-one-model-out fits, with pooled ranges from $0.048$ to $0.159$.
+Thus pooled cancellation is not caused by a single model, even though the
+magnitude of the pooled range changes. The complete results are included in the
+released analysis tables.
+
 \section{Reproduction}\label{appendix:repro}
 
 Every number, figure and table in this article and in this appendix is produced
@@ -1145,27 +1162,6 @@ EGTtools 0.1.14.2. The classifier is trained on CPU and its seed is fixed, so
 the read-out is reproducible without a GPU.
 
 
-\FloatBarrier
-
-\printbibliography
-
-\subsection{Robustness to the matched scale ladders}\label{appendix:blocked_robustness}
-
-The scale labels can also be permuted within each complete game-ID ladder. This
-is a stricter null than the main analysis because it preserves the recorded
-matching across all ten scales. With 10,000 blocked permutations, the observed
-scale range remains significant for every model: $p=0.0019$ for Claude and
-$p=0.0001$ for each of GPT, Gemini 3.1, Gemini 3.5, Grok and Qwen. The ranges
-are unchanged because the test changes only the null assignment. The complete
-results are included in the released analysis tables.
-
-As a complementary influence check, removing each model in turn leaves a
-significant pooled scale effect. The scale-test $p$-values are below $0.01$ in
-all six leave-one-model-out fits, with pooled ranges from $0.048$ to $0.159$.
-Thus pooled cancellation is not caused by a single model, even though the
-magnitude of the pooled range changes. The complete results are included in the
-released analysis tables.
-
 \subsection{Uncertainty in the conditioning contrasts}\label{appendix:conditioning_ci}
 
 The main text compares the relative size of partner conditioning and own-action
@@ -1189,8 +1185,8 @@ relative corpus-level tendency rather than a universal cell-level rule.
 
 Finally, a round-level logistic model with scale, language, both persona terms
 and their scale-by-language interactions rejects the joint null of no
-scale-by-language interaction for every model (Holm-adjusted $p<10^{-64}$ for
-the smallest non-zero value). The interaction is therefore not only a visual
+scale-by-language interaction for every model. The largest Holm-adjusted
+$p$-value is $1.4\times10^{-48}$, so the interaction is not only a visual
 range difference. Its interpretation remains conditional on the language
 templates used here, including the documented Arabic and Chinese wording
 difference. Full coefficients and adjusted tests are included in the released
@@ -1216,5 +1212,7 @@ Qwen & $-0.095\,[-0.107,\,-0.083]$ & $0.749\,[0.735,\,0.762]$ & $-0.085\,[-0.096
 \bottomrule
 \end{tabular}
 \end{table}
+
+\printbibliography
 
 \end{document}

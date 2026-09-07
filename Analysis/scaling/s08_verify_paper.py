@@ -289,6 +289,46 @@ chk("GPT beta p", 0.44, t10.loc["GPT-5.4-Nano", "p"], 0.006)
 chk("ESM G3.1 deduced sub-unit", 17.8, t10.loc[SUPP, "deduced_subunit"], 0.06)
 chk("ESM G3.1 deduced supra-unit", 26.3, t10.loc[SUPP, "deduced_suprunit"], 0.06)
 
+# ---- reviewer-requested robustness outputs ----------------------------------
+# These tables are part of the manuscript's evidence ledger, rather than
+# optional diagnostics. Checking their draw counts and headline extrema keeps
+# a rerun from silently restoring an older 4,000-draw result.
+t18 = pd.read_csv(TAB / "T18_matched_block_sensitivity.csv").set_index("model")
+for mod in t18.index:
+    chk(f"blocked draws {mod}", 10000, t18.loc[mod, "n_permutations"], 0)
+chk("blocked Claude p", 0.0023, t18.loc["Claude-Haiku-4.5", "p_block_permutation"], 0.00011)
+for mod in t18.index:
+    if mod != "Claude-Haiku-4.5":
+        chk(f"blocked floor {mod}", 0.0001, t18.loc[mod, "p_block_permutation"], 0.00001)
+
+t20 = pd.read_csv(TAB / "T20_conditioning_ci.csv")
+for mod, con, val in [
+    ("Claude-Haiku-4.5", "reciprocity", 0.2425),
+    ("Claude-Haiku-4.5", "persistence", 0.2881),
+    ("GPT-5.4-Nano", "persistence", 0.2768),
+    ("Gemini-3.1-Flash-Lite-Preview", "persistence", 0.6197),
+    ("Gemini-3.5-Flash-Lite", "persistence", 0.5733),
+    ("Grok-4.20-Non-Reasoning", "persistence", 0.6902),
+    ("Qwen3-235B-A22B", "persistence", 0.7489)]:
+    row = t20[(t20.model == mod) & (t20.contrast == con)].iloc[0]
+    chk(f"conditioning {mod} {con}", val, row.estimate, 0.0006)
+
+t21 = pd.read_csv(TAB / "T21_conditioning_threshold_sensitivity.csv")
+for mod, x in t21.groupby("model"):
+    chk(f"positive conditioning gap {mod}", 1.0,
+        float((x.mean_difference > 0).all()), 0)
+
+t22 = pd.read_csv(TAB / "T22_scale_language_interaction.csv")
+chk("largest Holm-adjusted language interaction p", 1.40585e-48,
+    t22.p_holm.max(), 1e-52)
+chk("all language interactions significant", 1.0,
+    float((t22.p_holm < 0.05).all()), 0)
+
+t23 = pd.read_csv(TAB / "T23_leave_one_model_out.csv")
+chk("LOO minimum pooled range", 0.0479, t23.pooled_range.min(), 0.0006)
+chk("LOO maximum pooled range", 0.15925, t23.pooled_range.max(), 0.0006)
+chk("LOO maximum scale p", 0.00781, t23.scale_p.max(), 0.00006)
+
 
 def main():
     bad = []

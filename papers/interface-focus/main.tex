@@ -553,9 +553,10 @@ The cooperation rate of an agent-game is the share of its ten decisions that
 are Option~B; a cell mean averages the agent-games of a cell, and round-level
 analyses use the binary decision itself. Because the two agents of a dyad play
 each other and the ten rounds inside an agent-game are strongly autocorrelated,
-every interval was computed by resampling whole dyads with replacement, 1{,}500
-draws, percentile method~\cite{efron1993introduction}, and every regression
-clustered its standard errors on the dyad. Because the range over the ten
+Primary inferential intervals were computed by resampling whole dyads with
+replacement, 1{,}500 draws, percentile method~\cite{efron1993introduction},
+and every regression clustered its standard errors on the dyad. Descriptive
+figure intervals use the resampling unit stated in their captions. Because the range over the ten
 scales is a maximum minus a minimum, and so positive by construction, its
 bootstrap interval quantifies the precision of the range and not its distance
 from zero; the permutation test supplies the test. Because the null is a
@@ -724,14 +725,16 @@ detectable, its interaction with model identity carries three times as much
 variance, demonstrating that the behavioral impact of stakes is model-specific
 rather than shared universally across architectures.
 
-Indeed, the apparent significance of the pooled scale effect is an artefact of
-a single extreme model. The pooled effect is carried almost entirely by Grok,
-whose massive swing survives being averaged with others; removing that single
-model from the panel eliminates the pooled main effect entirely, even though
-every remaining model continues to move (appendix~\ref{appendix:variance}). A
-pooled evaluation therefore reports a quantity whose significance hinges on
-accidental panel composition, masking the rich heterogeneity that is the true
-scientific finding.
+In the five-model cell-mean variance decomposition, the shared payoff-scale
+main effect is largely carried by Grok. Removing Grok renders that particular
+main-effect test non-significant, even though every remaining model continues
+to move (appendix~\ref{appendix:variance}). A complementary dyad-level
+leave-one-model-out test asks a different question, whether any pooled scale
+association remains. Every five-model subset retains a detectable association,
+including the subset without Grok (appendix~\ref{appendix:robustness}). The two
+analyses are therefore complementary: one tests a shared main effect after
+accounting for heterogeneity, whereas the other tests any residual pooled
+association.
 
 \subsection{The payoff scale gates the persona instruction}\label{sec:persona}
 
@@ -935,20 +938,19 @@ Textbook strategies occupy precise locations in this geometric space: Tit-for-Ta
 lies entirely on the reciprocity axis, Win-Stay-Lose-Shift on the matching axis,
 and unconditional rules at the origin (figure~\ref{fig:strategyspace}a).
 
-Decomposing agent play reveals that frontier language models barely use
-reciprocity (figure~\ref{fig:strategyspace}). In every single model evaluated,
-the own-action effect (persistence) substantially dominates the partner effect
-(reciprocity). In multiple models, the persistence contrast exceeds the
-reciprocity contrast by factors of two to nearly four; in Qwen, reciprocity is
-actually negative, meaning the model defects more often after its partner has
-cooperated. An unsupervised principal component analysis on raw transition
+Decomposing agent play reveals that own-action conditioning exceeds partner
+conditioning at the model level (figure~\ref{fig:strategyspace}). Across all
+six models, the persistence contrast is larger than the reciprocity contrast,
+although the margin is modest for Claude and substantially larger for the other
+models. Reciprocity remains positive in four models and is negative in Gemini
+3.1 and Qwen. An unsupervised principal component analysis on raw transition
 vectors independently recovers this identical geometry without any prior
 knowledge of the contrasts (figure~\ref{fig:strategyspace}c).
 
 The contrast estimates are precise at the dyad level. Whole-dyad bootstrap
 intervals for reciprocity are positive for Claude, GPT, Gemini~3.5, and Grok,
 and negative for Gemini~3.1 and Qwen; the corresponding persistence intervals
-are positive for all six models (electronic supplementary table~S20). Thus the
+are positive for all six models (electronic supplementary table~E.1). Thus the
 headline comparison is one of relative strength, not a claim that partner
 information is absent.
 
@@ -967,7 +969,7 @@ anti-reciprocal behavior where the true partner effect is positive.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/f_strategy_space.pdf}
-\caption{\textbf{The agents condition on themselves, not on their partner.}
+\caption{\textbf{Own-action conditioning exceeds partner-action conditioning at the model level.}
 (a) Cells in the reciprocity by persistence plane, with the canonical rules at
 their exact coordinates; AllC, AllD and win-stay lose-shift all have both main
 effects zero and so coincide at the origin. (b) The three contrasts per model,
@@ -1176,9 +1178,9 @@ model and its size by prompt language, so most of it disappears from any
 analysis that averages models, and what survives the averaging depends on which
 models happen to be in the average. That is how a departure of this size can
 sit inside a literature that has not reported it. Read against an evolutionary
-baseline computed on the same matrices, the corpus moves the other way as the
-payoffs grow, which measures rather than explains the distance between what the
-game rewards and what these agents do.
+baseline computed on the same matrices, the pooled corpus's AllD share moves in
+the opposite direction as the payoffs grow. This measures rather than explains
+the distance between what the game rewards and what these agents do.
 
 What follows is a question about design rather than a verdict on any model. A
 cooperation rate measured on a language model is reported as though the matrix
@@ -1189,8 +1191,6 @@ an equally cheap test of whether an agent is playing the game it was shown.
 
 
 %%%%%%%%%% End matter (Royal Society statements) %%%%%%%%%%
-
-\ack{}
 
 \ethics{This work did not involve human participants, animal subjects or
 fieldwork, and did not require ethical approval from a human subject or animal
