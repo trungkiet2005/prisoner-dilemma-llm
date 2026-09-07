@@ -30,13 +30,14 @@ SEED / CRN
 ─────────────────────────────────────────────────────────────────────
 seed = ((BASE + cell) * 100000 + round*100 + agent) mod 2^31-1, với
 cell = (lang_idx*4 + perm_idx)*REPS + rep — CỐ Ý không phụ thuộc λ, nên mọi mức
-payoff scaling dùng chung đúng một dãy số ngẫu nhiên (common random numbers):
-chênh lệch giữa các λ là do payoff, không phải do nhiễu sampling.
+payoff scaling requests the same seed schedule across λ where the serving
+interface supports it. Provider-specific seed semantics are not assumed, so
+the matched-ladder analysis is the reproducible robustness check.
 
 QUY MÔ & CHI PHÍ — ĐỌC TRƯỚC KHI CHẠY FULL
 ─────────────────────────────────────────────────────────────────────
-  6 λ × 5 lang × 4 tổ hợp × 10 rep = 1200 game
-  1200 games × 10 rounds × 2 agents = 24,000 model calls in the current task
+  10 λ × 5 lang × 4 tổ hợp × 10 rep = 2000 dyads per model
+  2000 dyads × 10 rounds × 2 agents = 40,000 model calls per model
 Prompt ~400–700 token, output ~5–20 token. Với gemini-flash-lite ≈ vài chục USD
 và nhiều giờ. LUÔN chạy smoke test trước:
 
@@ -237,8 +238,8 @@ def _env_list(name, default, cast=str):
 # (BẪY 9), và cũng là đốt tiền cho dữ liệu đã nắm.
 #
 # BASE_SEED giữ nguyên 12345 - đúng giá trị của đợt gốc. Seed KHÔNG phụ thuộc λ, nên
-# mọi mức dùng chung một dãy số ngẫu nhiên (CRN) và chênh lệch giữa các λ là do payoff
-# chứ không do nhiễu sampling. Chỉ đổi seed khi cố ý làm replicate.
+# các mức yêu cầu cùng lịch seed khi serving interface hỗ trợ. Không giả định semantics
+# seed của provider; matched-ladder robustness là kiểm tra tái lập được.
 LAMBDAS = _env_list("PD_LAMBDAS", [0.01, 0.1, 0.25, 0.5, 1, 2, 5, 10, 100, 1000], float)
 LANGS = _env_list("PD_LANGS", LANG_ORDER, str)
 REPS = int(os.environ.get("PD_REPS", "10"))

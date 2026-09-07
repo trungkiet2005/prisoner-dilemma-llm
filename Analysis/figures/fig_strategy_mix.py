@@ -55,14 +55,16 @@ SEED = 20260906
 
 def mix_matrix(t, model):
     s = t[t.model == model].set_index("scale")
-    return {k: s.loc[S.SCALES, COLS[k]].to_numpy() / 100.0 for k in S.STRAT_ORDER}
+    return {k: s.loc[S.SCALES, COLS[k]].to_numpy(dtype=float) / 100.0
+            for k in S.STRAT_ORDER}
 
 
 def movement(t, model, *, n=6000):
     """Total variation distance between the extreme scales, and its noise floor."""
     s = t[t.model == model].set_index("scale")
-    p = s.loc[LO, [COLS[k] for k in S.STRAT_ORDER]].to_numpy() / 100.0
-    q = s.loc[HI, [COLS[k] for k in S.STRAT_ORDER]].to_numpy() / 100.0
+    cols = [COLS[k] for k in S.STRAT_ORDER]
+    p = s.loc[LO, cols].to_numpy(dtype=float) / 100.0
+    q = s.loc[HI, cols].to_numpy(dtype=float) / 100.0
     obs = 0.5 * np.abs(p - q).sum()
     rng = np.random.default_rng(SEED)
     a = rng.multinomial(N_CELL, p, size=n) / N_CELL

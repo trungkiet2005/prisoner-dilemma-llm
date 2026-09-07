@@ -159,7 +159,7 @@ does not verify provider-specific seed semantics. The robustness analysis
 therefore permutes payoff-scale labels within recorded game-ID blocks.
 
 With 10,000 blocked permutations, the scale range remains significant for all
-six models: $p=0.0023$ for Claude Haiku 4.5 and $p=0.0001$ for each of the
+six models: $p=0.0019$ for Claude Haiku 4.5 and $p=0.0001$ for each of the
 other five models, the permutation floor. The ranges are unchanged because the
 analysis only conditions the null on the recorded matching structure.
 
@@ -1120,7 +1120,7 @@ single trailing-zero convention explains the main scale effect.
 The scale labels can also be permuted within each complete game-ID ladder. This
 is a stricter null than the main analysis because it preserves the recorded
 matching across all ten scales. With 10,000 blocked permutations, the observed
-scale range remains significant for every model: $p=0.0023$ for Claude and
+scale range remains significant for every model: $p=0.0019$ for Claude and
 $p=0.0001$ for each of GPT, Gemini 3.1, Gemini 3.5, Grok and Qwen. The ranges
 are unchanged because the test changes only the null assignment. The complete
 results are included in the released analysis tables.
@@ -1181,16 +1181,15 @@ transcript corpus, applies the completeness guard of
 on the synthetic corpus. \texttt{s02\_readout} applies the rule base and the
 classifier to the transcripts. \texttt{s03\_stats} and
 \texttt{s04\_strategy\_stats} compute every statistic reported here.
-\texttt{s05\_figures} and \texttt{s05b\_appendix\_figures} draw the figures
-directly into the manuscript directory. \texttt{s06\_tables} and
-\texttt{s07\_supplementary} render the tables. The matched-ladder, conditioning
-and review robustness scripts \texttt{s03\_matched\_block\_robustness},
-\texttt{s12\_conditioning\_ci} and \texttt{s13\_review\_robustness} produce
-the additional robustness ledgers before verification. \texttt{s09\_egt}
-computes the evolutionary grid of \S\ref{appendix:egt}. Finally \texttt{s08\_verify\_paper}
-recomputes the ledger of headline quantities quoted in the manuscript prose
-from the data and fails if any of them disagrees, so that a stale number cannot
-survive an edit.
+The complete artifact is rebuilt by
+\texttt{Analysis/scaling/rebuild\_interface\_focus.py}. This driver encodes the
+dependency order: deterministic data assembly and read-out, primary statistics,
+matched-ladder and reviewer robustness ledgers, evolutionary calculations, the
+current figure modules in \texttt{Analysis/figures}, generated tables and final
+verification. It deliberately does not call the legacy \texttt{s05} figure
+drivers. The verifier recomputes headline quantities quoted in the manuscript
+prose from the data and fails if any of them disagrees, so that a stale number
+cannot survive an edit.
 
 The collection uses base sampling seed 12345 where supported by the serving
 interface. Classifier training uses seed 1234. Primary bootstrap and permutation

@@ -77,21 +77,15 @@ pip install -r requirements.txt
 
 # rebuild the current manuscript's figures and tables from Dataset/
 cd Analysis/scaling
-python s00_build.py && python s01_train_lstm.py && python s02_readout.py
-python s03_stats.py && python s04_strategy_stats.py
-python s03_matched_block_robustness.py && python s12_conditioning_ci.py
-python s13_review_robustness.py
-python s05_figures.py && python s05b_appendix_figures.py
-python s06_tables.py && python s07_supplementary.py && python s09_egt.py
-python s08_verify_paper.py     # checks the headline numerical ledger
+python rebuild_interface_focus.py  # dependency-ordered, current artifact rebuild
 
 # the older three-scale study
 python Analysis/run_all.py
 ```
 
-`s08_verify_paper.py` is the guard worth knowing about: it recomputes every
-quantity the manuscript quotes and exits non-zero if any of them disagrees with
-the data.
+`s08_verify_paper.py` is the guard worth knowing about: it recomputes the
+manuscript's headline numerical ledger and exits non-zero if any checked value
+disagrees with the data.
 
 To send the pipeline at a different manuscript, set `PD_PAPER_DIR` and
 `PD_FIGDIR`; unset, both resolve to `papers/interface-focus`.

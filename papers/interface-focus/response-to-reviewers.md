@@ -137,9 +137,9 @@ future analysis.
 The public README and data card now match the 20-page main manuscript and
 23-page supplement, including the fallback, decoding and matched-seed caveats.
 Generated tables and figures remain pipeline outputs.
-The verification script checks 197 headline quantities, including the three
-strategic-polarity correlations and the matched-block robustness results; the
-final run reports that all values match the data.
+The verification ledger checks the manuscript's headline numerical quantities,
+including the three strategic-polarity correlations and the matched-block
+robustness results; the final run reports `all match`.
 
 We appreciate the reviewers’ suggestions. The revised manuscript now makes
 the supported contribution sharper while stating the endpoint, prompt,

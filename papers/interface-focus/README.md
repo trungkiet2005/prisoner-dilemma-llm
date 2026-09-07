@@ -51,22 +51,22 @@ resolves to **this** directory, so no export is needed:
 ```bash
 cd ../../Analysis/scaling
 
-python s05_figures.py            # f1..f8, the main-text figures
-python s05b_appendix_figures.py  # fa1..fa4, the appendix figures
-python s06_tables.py             # tables_auto.tex
-python s03_matched_block_robustness.py
-python s12_conditioning_ci.py
-python s13_review_robustness.py
-python s07_supplementary.py      # supp_tables_auto.tex and conditioning_ci_auto.tex
-python s09_egt.py                # the evolutionary grid + egt_tables_auto.tex
+python rebuild_interface_focus.py  # complete dependency-ordered rebuild
 ```
+
+The driver uses the current modules in `../../Analysis/figures/` and does not
+call the legacy `s05` figure drivers. It performs no API calls. The analytical
+EGT steps require `egttools` from the repository requirements; on a machine
+without that optional compiled dependency, use `python rebuild_interface_focus.py
+--skip-egt` to reuse the committed EGT outputs.
 
 `s09_egt.py` recomputes the evolutionary baseline from scratch in 200-digit arithmetic
 and takes about seven seconds. It is analytical and calls no model.
 
-To rebuild the statistics the manuscript quotes, run `s00_build`, `s01_train_lstm`,
-`s02_readout`, `s03_stats` and `s04_strategy_stats` first, then `s08_verify_paper`,
-which recomputes every quoted quantity from the data and fails if any disagrees.
+To rebuild the statistics and artifacts used by the manuscript, run
+`rebuild_interface_focus.py`. It runs the deterministic assembly, read-out,
+statistics, robustness ledgers, current figure modules, generated tables and
+headline verifier in dependency order.
 
 ## Build order
 

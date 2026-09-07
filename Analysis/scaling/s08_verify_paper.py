@@ -6,8 +6,8 @@ actually suffered. Each check below names the claim, recomputes it from the
 parquet or the tables, and compares against what the paper says.
 
 Scope. The corpus holds six models. The Interface Focus manuscript reports five of
-them and `paper_scaling/supplementary.tex` reports all six, so the ledger
-covers both documents: a check whose value is printed only in the electronic
+them and the electronic supplementary material reports all six, so the ledger
+covers both documents: a check whose value is printed only in the supplementary
 supplementary material is named with a leading "ESM ", and a check whose value
 reaches the reader through a generated table rather than through prose is named
 with a leading "T1 ", "T2 " or "T3 ". Everything else is main-text prose.
@@ -314,7 +314,7 @@ chk("ESM G3.1 deduced supra-unit", 26.3, t10.loc[SUPP, "deduced_suprunit"], 0.06
 t18 = pd.read_csv(TAB / "T18_matched_block_sensitivity.csv").set_index("model")
 for mod in t18.index:
     chk(f"blocked draws {mod}", 10000, t18.loc[mod, "n_permutations"], 0)
-chk("blocked Claude p", 0.0023, t18.loc["Claude-Haiku-4.5", "p_block_permutation"], 0.00011)
+chk("blocked Claude p", 0.0019, t18.loc["Claude-Haiku-4.5", "p_block_permutation"], 0.00006)
 for mod in t18.index:
     if mod != "Claude-Haiku-4.5":
         chk(f"blocked floor {mod}", 0.0001, t18.loc[mod, "p_block_permutation"], 0.00001)
