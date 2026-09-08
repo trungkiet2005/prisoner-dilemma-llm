@@ -570,7 +570,7 @@ is positive.}
 \label{fig:supp_model}
 \end{figure}
 
-\subsection{The opening move, in detail}\label{appendix:firstmove_detail}
+\subsection{Opening-move localisation of payoff-scale sensitivity}\label{appendix:firstmove_detail}
 
 Table~\ref{tab:S-firstmove} gives, for all six models, the across-scale range
 of cooperation on the opening move and over rounds 2 to 10, and their ratio.
@@ -580,6 +580,40 @@ is upward-biased, and the ratios are therefore descriptive rather than tests.
 The comparison is still informative because the bias runs the same way in every
 model while the ratio does not, spanning 0.47 in Qwen3 235B-A22B to 3.68 in
 Gemini 3.1 Flash-Lite.
+
+Rescaling stakes could alter how agents interpret ongoing gameplay, or it could
+act immediately on how they read the payoff matrix itself. The opening move
+cleanly isolates these possibilities: at round 1, the agent has seen only the
+matrix and prompt instructions, with zero interactive history.
+
+For four of the five main-text models, the across-scale swing in opening-move
+cooperation matches or exceeds the range over rounds 2 to 10 (table~\ref{tab:S-firstmove}).
+Qwen is the exception. Before observing a single action from its partner, these
+four models already show sensitivity to the nominal magnitude of the printed
+stakes.
+
+The opening-move result localises part of the association to the interpretation
+of the initial matrix and prompt. It does not show that later interaction is
+irrelevant or identify an ex-ante mechanism.
+
+Consistent with an early contribution of the printed matrix, round-by-round
+cooperation curves exhibit similar downward profiles across all ten rounds
+regardless of payoff scale. Games played under micro-stakes and games played
+under massive stakes display similar downward slopes. This pattern is
+consistent with an end-of-game decline, but the design has no unknown-horizon
+condition and therefore does not identify backward induction as its mechanism.
+
+Figure~\ref{fig:firstmove_supp} gives the model-level opening-move comparison
+and the corresponding persona contrast. It isolates the part of the result
+that can be observed before a partner has acted, while the analysis below
+places that result beside the aggregate strategy composition.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures/f_firstmove.pdf}
+\caption{\textbf{Opening-move sensitivity to payoff scale and persona.} At round 1 the agent has observed only the matrix and instructions, with zero interaction history. (a) Opening-move cooperation across payoff scales for the five models reported in the main text. (b) Opening-move cooperation against cooperation over all ten rounds across the 50 model-by-scale cells, with within-model correlations annotated. (c) Opening-move persona effect in the sub-unit and supra-unit regimes.}
+\label{fig:firstmove_supp}
+\end{figure}
 
 Figure~\ref{fig:mechanism} describes how behaviour changes with the payoff
 multiplier. Across the
