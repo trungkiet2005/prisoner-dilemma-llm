@@ -1,33 +1,6 @@
 %% Royal Society Interface Focus submission, RSFS-2026-0050.
 %% Theme issue: "Machine behaviour in the age of large language models:
 %% social, cognitive and evolutionary perspectives".
-%%
-%% MAJOR REVISION, 2026-09-06.  Every result in this file is computed on
-%% Dataset/data_fairgame_frontier_llm, the five-model main-text slice of the
-%% ten-payoff-scale corpus, by the pipeline in Analysis/scaling/s00..s09.  The three tables are
-%% machine-generated into tables_auto.tex and the eight figures are written
-%% into figures/ by s05_figures.py; nothing here is retyped by hand.
-%% The previous version of this article reported an earlier and smaller
-%% collection (three models, three payoff scales, 1,800 games) together with an
-%% open-weight replication; both are superseded and have been removed.
-%%
-%% Build order (the appendix must be built first, or every \ref into it
-%% resolves to ??):
-%%   pdflatex appendix && biber appendix && pdflatex appendix && pdflatex appendix
-%%   pdflatex main     && biber main     && pdflatex main     && pdflatex main
-%% Delete main.bbl and appendix.bbl after editing mybib.bib, or a stale .bbl
-%% will silently produce a stale reference list.
-
-%% Local-toolchain workaround: this machine's MiKTeX pairs a 2026-06-01 LaTeX
-%% kernel with a biblatex that fails to load under it. Rolling the kernel back
-%% to 2025-06-01 restores compatibility. Remove once the local MiKTeX is fully
-%% updated.
-%% The guard is NOT cosmetic. On Overleaf (TeX Live 2025, format 2025-06-01)
-%% the unconditional form patches nothing -- "Current format date selected, no
-%% patches applied" -- yet still rolls INDIVIDUAL packages back to whatever
-%% release best approximates the target: graphics and amsmath both land on
-%% their 2019 versions. Loading it only on a format newer than the rollback
-%% target confines the workaround to the machine that needs it.
 \IfFormatAtLeastTF{2026-01-01}{\RequirePackage[2025-06-01]{latexrelease}}{}
 
 \documentclass[openacc]{rsproca_new}
@@ -45,10 +18,15 @@
 %% appendix sections/figures/tables resolve to the right numbers.
 \usepackage{xr}
 \externaldocument{appendix}
+% The appendix's page-total label is private to that standalone document.
+% Discard the imported copy before this document reads and writes its own.
+\makeatletter
+\expandafter\let\csname r@LastPage\endcsname\relax
+\makeatother
 
 %% Bibliography database (style is fixed by the class: biblatex/biber, phys)
 \addbibresource{mybib.bib}
-\hypersetup{pdftitle={Frontier language models violate payoff-scale invariance and show stronger persistence than reciprocity in the prisoner's dilemma across languages},pdfauthor={The Anh Han, Trung-Kiet Huynh, Dao-Sy Duy-Minh, Thanh-Bang Cao, Phong-Hao Le, Hong-Dan Nguyen, Phu-Quy Nguyen-Lam, Minh-Luan Nguyen-Vo, Hong-Phat Pham, Phu-Hoa Pham, Thien-Kim Than, Chi-Nguyen Tran, Huy Tran, Gia-Thoai Tran-Le, Alessio Buscemi, Le Hong Trang},pdfsubject={Payoff-scale invariance and cooperation in language-model agents},pdfkeywords={machine behaviour, large language models, iterated prisoner's dilemma, payoff scaling, cross-lingual evaluation}}
+\hypersetup{hypertexnames=false,pdftitle={Frontier language models violate payoff-scale invariance and show stronger persistence than reciprocity in the prisoner's dilemma across languages},pdfauthor={The Anh Han, Trung-Kiet Huynh, Dao-Sy Duy-Minh, Thanh-Bang Cao, Phong-Hao Le, Hong-Dan Nguyen, Phu-Quy Nguyen-Lam, Minh-Luan Nguyen-Vo, Hong-Phat Pham, Phu-Hoa Pham, Thien-Kim Than, Chi-Nguyen Tran, Huy Tran, Gia-Thoai Tran-Le, Alessio Buscemi, Le Hong Trang},pdfsubject={Payoff-scale invariance and cooperation in language-model agents},pdfkeywords={machine behaviour, large language models, iterated prisoner's dilemma, payoff scaling, cross-lingual evaluation}}
 
 %% Numeric subsection numbering (2.1, 3.2, ...) instead of the class default
 %% "(a)", "(b)": cross-references such as "Section 3.2" would otherwise print
@@ -84,8 +62,7 @@
 \begin{document}
 
 %%%% Article title
-\title{Frontier language models violate payoff-scale invariance and show stronger
-persistence than reciprocity in the prisoner's dilemma across languages}
+\title{Payoff scaling shapes cooperation in LLM agents across languages}
 
 %%%% Authors ($\dagger$: equal contribution, $\star$: corresponding authors)
 \author{The Anh Han$^{1,\dagger,\star}$, Trung-Kiet Huynh$^{2,4,\dagger}$, Dao-Sy Duy-Minh$^{2,4,\dagger}$, Thanh-Bang Cao$^{3,4}$, Phong-Hao Le$^{3,4}$, Hong-Dan Nguyen$^{3,4}$, Phu-Quy Nguyen-Lam$^{2,4}$, Minh-Luan Nguyen-Vo$^{3,4}$, Hong-Phat Pham$^{3,4}$, Phu-Hoa Pham$^{2,4}$, Thien-Kim Than$^{3,4}$, Chi-Nguyen Tran$^{3,4}$, Huy Tran$^{3,4}$, Gia-Thoai Tran-Le$^{3,4}$, Alessio Buscemi$^{5}$ and Le Hong Trang$^{3,4,\star}$}
@@ -127,7 +104,6 @@ Large language models increasingly act as autonomous agents negotiating and deci
 \maketitle
 
 
-% ===========================================================================
 \section{Introduction}\label{sec:intro}
 
 Large language models are increasingly deployed as \emph{agents} that
@@ -1164,29 +1140,17 @@ an equally cheap test of whether an agent is playing the game it was shown.
 
 %%%%%%%%%% End matter (Royal Society statements) %%%%%%%%%%
 
-\ethics{This work did not involve human participants, animal subjects or
-fieldwork, and did not require ethical approval from a human subject or animal
-welfare committee; all experiments are computational simulations of
-interactions between large language model agents.}
+\ethics{This work did not require ethical approval from a human subject or
+animal welfare committee.}
 
-\dataccess{The corpus of game transcripts, the prompt templates, the trained
-strategy classifier and the complete analysis pipeline that produces every
-figure, table and quoted number in this article are available to the editors,
-reviewers and readers at \url{https://github.com/trungkiet2005/prisoner-dilemma-llm}.
-The transcripts are released under the Creative Commons Attribution 4.0
-International licence and the analysis code under the MIT licence. A versioned
-archive and DOI will be added on publication.}
+\dataccess{The game transcripts, prompt templates, trained strategy classifier
+and analysis code supporting this study are available at
+\url{https://github.com/trungkiet2005/prisoner-dilemma-llm}. A versioned archive
+and DOI will be added on publication.}
 
-\aiuse{Large language models are the
-\emph{object} of study in this article: the corpus consists of transcripts of
-games played by the five models named in \S\ref{sec:protocol}, collected through
-an automated pipeline. Generative AI was additionally used as a coding
-assistant for parts of the analysis and figure code, and for language editing
-of the manuscript. All analyses were designed, run and checked by the authors;
-tables and figures are generated from the archived pipeline, and an automated
-verification ledger checks the manually quoted headline numerical claims
-against the released data. The authors take full
-responsibility for the content of this article.}
+\aiuse{Large language models are the object of study in this article. Generative
+AI was used only as an assistant to identify and fix bugs in code and to edit
+English grammar.}
 
 \aucontribute{%
 T.A.H.: conceptualisation, methodology, supervision, writing (original draft),
@@ -1208,7 +1172,9 @@ accountable for the work performed therein.}
 
 \competing{We declare we have no competing interests.}
 
-\funding{No external funding was received for this study.}
+\funding{T.A.H. is supported by EPSRC (grant EP/Y00857X/1) and also
+acknowledges travel support from HCMUT\text{-}VNUHCM through the Adjunct
+Professorship scheme.}
 
 %%%%%%%%%% Bibliography %%%%%%%%%%
 

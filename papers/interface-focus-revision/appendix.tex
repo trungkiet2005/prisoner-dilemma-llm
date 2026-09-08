@@ -1,21 +1,6 @@
 %% Royal Society Interface Focus submission, RSFS-2026-0050.
 %% Electronic supplementary material for
-%%   "Frontier language models violate payoff-scale invariance and show stronger
-%%    persistence than reciprocity in the prisoner's dilemma across languages".
-%%
-%% MAJOR REVISION, 2026-09-06.  Rebuilt on the six-model by ten-payoff-scale
-%% corpus.  The tables of appendix B are machine-generated into
-%% supp_tables_auto.tex by Analysis/scaling/s07_supplementary.py and the
-%% evolutionary grid of appendix C into egt_tables_auto.tex by
-%% Analysis/scaling/s09_egt.py; neither is edited by hand.
-%%
-%% Compiles STANDALONE.  Build the appendix FIRST, then the main text, because
-%% main.tex pulls these labels in through xr:
-%%   pdflatex appendix && biber appendix && pdflatex appendix && pdflatex appendix
-
-%% Local-toolchain workaround (see main.tex): roll the kernel back so the
-%% installed biblatex loads. Guarded so it stays a no-op on Overleaf/TeX Live,
-%% where the unconditional form rolls graphics and amsmath back to 2019.
+%%   "Payoff scaling shapes cooperation in LLM agents across languages".
 \IfFormatAtLeastTF{2026-01-01}{\RequirePackage[2025-06-01]{latexrelease}}{}
 
 \documentclass[openacc]{rsproca_new}
@@ -34,10 +19,15 @@
 %% cites has moved.
 \usepackage{xr}
 \externaldocument{main}
+% The main article's page-total label is private to that standalone document.
+% Discard the imported copy before this document reads and writes its own.
+\makeatletter
+\expandafter\let\csname r@LastPage\endcsname\relax
+\makeatother
 
 %% Bibliography database (style is fixed by the class: biblatex/biber, phys)
 \addbibresource{mybib.bib}
-\hypersetup{pdftitle={Supplement: frontier language models violate payoff-scale invariance}}
+\hypersetup{hypertexnames=false,pdftitle={Supplement: Payoff scaling shapes cooperation in LLM agents across languages}}
 
 %% Numeric subsection numbering (A.1, B.1.1, ...) instead of the class default
 %% "(a)"/"i": matches how the main text refers to appendix sections.
@@ -58,8 +48,7 @@
 
 \begin{center}
   {\LARGE\bfseries Electronic supplementary material}\\[6pt]
-  {\large\itshape Frontier language models violate payoff-scale invariance and
-   show stronger persistence than reciprocity in the prisoner's dilemma across
+  {\large\itshape Payoff scaling shapes cooperation in LLM agents across
    languages}
 \end{center}
 \vspace{1.0em}
