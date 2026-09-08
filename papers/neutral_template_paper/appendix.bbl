@@ -1,0 +1,156 @@
+\begin{thebibliography}{19}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Buscemi et~al.(2025{\natexlab{a}})Buscemi, Proverbio, Di~Stefano, Han,
+  Castignani, and Li{\`o}]{buscemi2025fairgame}
+Alessio Buscemi, Daniele Proverbio, Alessandro Di~Stefano, The~Anh Han, German
+  Castignani, and Pietro Li{\`o}.
+\newblock {FAIRGAME}: a framework for {AI} agents bias recognition using game
+  theory.
+\newblock In \emph{ECAI 2025 -- Proceedings of the 28th European Conference on
+  Artificial Intelligence}, volume 413 of \emph{Frontiers in Artificial
+  Intelligence and Applications}, pages 4097--4104. IOS Press,
+  2025{\natexlab{a}}.
+\newblock \doi{10.3233/FAIA251300}.
+
+\bibitem[Hochreiter and Schmidhuber(1997)]{lstm}
+Sepp Hochreiter and Jürgen Schmidhuber.
+\newblock Long short-term memory.
+\newblock \emph{Neural Computation}, 9\penalty0 (8):\penalty0 1735--1780, 11
+  1997.
+\newblock ISSN 0899-7667.
+\newblock \doi{10.1162/neco.1997.9.8.1735}.
+\newblock URL \url{https://doi.org/10.1162/neco.1997.9.8.1735}.
+
+\bibitem[Efron and Tibshirani(1993)]{efron1993introduction}
+Bradley Efron and Robert~J. Tibshirani.
+\newblock \emph{An Introduction to the Bootstrap}.
+\newblock Chapman and Hall/CRC, New York, 1993.
+
+\bibitem[Balabanova et~al.(2026)Balabanova, Bashir, Bova, Buscemi, Cimpeanu,
+  da~Fonseca, Di~Stefano, Duong, Fern{\'a}ndez~Domingos, Fernandes, Han,
+  Krellner, Ogbo, Powers, Proverbio, Santos, Shamszaman, and
+  Song]{balabanova2025media}
+Nataliya Balabanova, Adeela Bashir, Paolo Bova, Alessio Buscemi, Theodor
+  Cimpeanu, Henrique~Correia da~Fonseca, Alessandro Di~Stefano, Manh~Hong
+  Duong, Elias Fern{\'a}ndez~Domingos, Ant{\'o}nio~M. Fernandes, The~Anh Han,
+  Marcus Krellner, Ndidi~Bianca Ogbo, Simon~T. Powers, Daniele Proverbio,
+  Fernando~P. Santos, Zia~Ush Shamszaman, and Zhao Song.
+\newblock Media and responsible {AI} governance: a game-theoretic and {LLM}
+  analysis.
+\newblock \emph{Philosophical Transactions of the Royal Society A}, 2026.
+\newblock Accepted/In press.
+
+\bibitem[Buscemi et~al.(2025{\natexlab{b}})Buscemi, Proverbio, Bova,
+  Balabanova, Bashir, Cimpeanu, et~al.]{buscemi2025llms}
+Alessio Buscemi, Daniele Proverbio, Paolo Bova, Nataliya Balabanova, Adeela
+  Bashir, Theodor Cimpeanu, et~al.
+\newblock {Do LLMs trust AI regulation? Emerging behaviour of game-theoretic
+  LLM agents}.
+\newblock \emph{arXiv:2504.08640}, 2025{\natexlab{b}}.
+
+\bibitem[Sigmund(2010)]{sigmund:2010bo}
+K.~Sigmund.
+\newblock \emph{The calculus of selfishness}.
+\newblock Princeton Univ. Press, 2010.
+
+\bibitem[Han et~al.(2021)Han, Perret, and Powers]{han_when_2021}
+The~Anh Han, Cedric Perret, and Simon~T. Powers.
+\newblock When to (or not to) trust intelligent machines: {Insights} from an
+  evolutionary game theory analysis of trust in repeated games.
+\newblock \emph{Cognitive Systems Research}, 68:\penalty0 111--124, August
+  2021.
+\newblock ISSN 1389-0417.
+\newblock \doi{10.1016/j.cogsys.2021.02.003}.
+\newblock URL \url{https://doi.org/10.1016/j.cogsys.2021.02.003}.
+
+\bibitem[Nowak et~al.(2004)Nowak, Sasaki, Taylor, and
+  Fudenberg]{nowak2004emergence}
+Martin~A Nowak, Akira Sasaki, Christine Taylor, and Drew Fudenberg.
+\newblock Emergence of cooperation and evolutionary stability in finite
+  populations.
+\newblock \emph{Nature}, 428\penalty0 (6983):\penalty0 646--650, 2004.
+
+\bibitem[Liu and Chen(2020)]{liu2020evolutionary}
+Linjie Liu and Xiaojie Chen.
+\newblock Evolutionary game dynamics in multiagent systems with prosocial and
+  antisocial exclusion strategies.
+\newblock \emph{Knowledge-Based Systems}, 188:\penalty0 104835, 2020.
+
+\bibitem[Rand et~al.(2013)Rand, Tarnita, Ohtsuki, and Nowak]{rand2013evolution}
+David~G Rand, Corina~E Tarnita, Hisashi Ohtsuki, and Martin~A Nowak.
+\newblock Evolution of fairness in the one-shot anonymous ultimatum game.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 110\penalty0
+  (7):\penalty0 2581--2586, 2013.
+
+\bibitem[Zisis et~al.(2015)Zisis, Di~Guida, Han, Kirchsteiger, and
+  Lenaerts]{zisis2015generosity}
+Ioannis Zisis, Sibilla Di~Guida, The~Anh Han, Georg Kirchsteiger, and Tom
+  Lenaerts.
+\newblock Generosity motivated by acceptance-evolutionary analysis of an
+  anticipation game.
+\newblock \emph{Scientific reports}, 5\penalty0 (1):\penalty0 18076, 2015.
+
+\bibitem[Szab{\'o} and T{\H{o}}ke(1998)]{szabo1998evolutionary}
+Gy{\"o}rgy Szab{\'o} and Csaba T{\H{o}}ke.
+\newblock Evolutionary prisoner’s dilemma game on a square lattice.
+\newblock \emph{Physical Review E}, 58\penalty0 (1):\penalty0 69, 1998.
+
+\bibitem[Domingos et~al.(2023)Domingos, Santos, and
+  Lenaerts]{domingos2023egttools}
+Elias~Fern{\'a}ndez Domingos, Francisco~C Santos, and Tom Lenaerts.
+\newblock Egttools: Evolutionary game dynamics in python.
+\newblock \emph{Iscience}, 26\penalty0 (4), 2023.
+
+\bibitem[Nowak(2006)]{nowak2006five}
+Martin~A. Nowak.
+\newblock Five rules for the evolution of cooperation.
+\newblock \emph{Science}, 314\penalty0 (5805):\penalty0 1560--1563, 2006.
+\newblock \doi{10.1126/science.1133755}.
+
+\bibitem[Kim et~al.(2021)Kim, Choi, and Baek]{kim2021win}
+Minjae Kim, Jung-Kyoo Choi, and Seung~Ki Baek.
+\newblock Win-stay-lose-shift as a self-confirming equilibrium in the iterated
+  {P}risoner's {D}ilemma.
+\newblock \emph{Proceedings of the Royal Society B: Biological Sciences},
+  288\penalty0 (1953):\penalty0 20211021, 2021.
+\newblock \doi{10.1098/rspb.2021.1021}.
+
+\bibitem[Hilbe et~al.(2013)Hilbe, Nowak, and Sigmund]{hilbe2013memory}
+Christian Hilbe, Martin~A. Nowak, and Karl Sigmund.
+\newblock Evolution of extortion in {Iterated Prisoner's Dilemma} games.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 110\penalty0
+  (17):\penalty0 6913--6918, 2013.
+\newblock \doi{10.1073/pnas.1214834110}.
+
+\bibitem[Press and Dyson(2012)]{pressDyson2012}
+William~H. Press and Freeman~J. Dyson.
+\newblock Iterated prisoner's dilemma contains strategies that dominate any
+  evolutionary opponent.
+\newblock \emph{Proceedings of the National Academy of Sciences}, 109\penalty0
+  (26):\penalty0 10409--10413, 2012.
+\newblock \doi{10.1073/pnas.1206569109}.
+
+\bibitem[Fontana et~al.(2025)Fontana, Pierri, and Aiello]{fontana2025nicer}
+Nicol{\'o} Fontana, Francesco Pierri, and Luca~Maria Aiello.
+\newblock Nicer than humans: How do large language models behave in the
+  prisoner's dilemma?
+\newblock In \emph{Proceedings of the International AAAI Conference on Web and
+  Social Media (ICWSM)}, volume~19, pages 522--535, 2025.
+\newblock \doi{10.1609/icwsm.v19i1.35829}.
+\newblock URL \url{https://ojs.aaai.org/index.php/ICWSM/article/view/35829}.
+
+\bibitem[Montero-Porras et~al.(2022)Montero-Porras, Grujić,
+  Fernández~Domingos, and Lenaerts]{inferenceStrategies}
+Eladio Montero-Porras, Jelena Grujić, Elias Fernández~Domingos, and Tom
+  Lenaerts.
+\newblock Inferring strategies from observations in long iterated prisoner’s
+  dilemma experiments.
+\newblock \emph{Scientific Reports}, 12, 05 2022.
+\newblock \doi{10.1038/s41598-022-11654-2}.
+
+\end{thebibliography}
