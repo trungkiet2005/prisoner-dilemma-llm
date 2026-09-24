@@ -132,8 +132,9 @@ def main():
             ax.set_yticks([])
         ax.set_xlabel(S.MODEL_SHORT[m], color=S.MODEL_C[m], fontsize=S.FS_NOTE,
                       fontweight="bold", labelpad=8.0)
-        # the two scales at which every payoff printed is at most one
-        ax.plot([0.006, 1.0], [-0.20, -0.20], color=S.HAIRLINE, lw=2.2,
+        # the two scales at which every payoff printed is at most one, ending
+        # where the shaded band ends in every other figure, not at lambda = 1
+        ax.plot([0.006, S.SUBUNIT_EDGE], [-0.20, -0.20], color=S.HAIRLINE, lw=2.2,
                 solid_capstyle="butt", clip_on=False, zorder=5)
 
     S.panel(tops[0], "a", "the mix moves, model by model")
