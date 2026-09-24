@@ -111,7 +111,7 @@ def main():
     S.strip(axC)
     axC.set_ylim(0, 1.03)
     axC.set_ylabel("share labelled AllD")
-    axC.annotate("frontier models", xy=(1000, float(t15.llm_AllD.iloc[-1])),
+    axC.annotate("LLM agents", xy=(1000, float(t15.llm_AllD.iloc[-1])),
                  xytext=(-4, 9), textcoords="offset points",
                  fontsize=S.FS_NOTE, color=S.STRAT_C["ALLD"], ha="right",
                  va="bottom")

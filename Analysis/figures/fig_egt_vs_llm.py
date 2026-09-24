@@ -57,7 +57,7 @@ def main():
     # --- a, b: the two strategy mixes, drawn the same way ------------------
     for ax, mix, letter, claim in (
         (axA, egt, "a", "evolutionary baseline"),
-        (axB, llm, "b", "frontier models"),
+        (axB, llm, "b", "LLM agents"),
     ):
         base = np.zeros_like(lam)
         for k in S.STRAT_ORDER:
@@ -107,7 +107,7 @@ def main():
                  xytext=(-4, -12), textcoords="offset points",
                  fontsize=S.FS_NOTE, color=S.INK, ha="right", va="top",
                  linespacing=1.15)
-    axC.annotate("frontier models", xy=(1000, llm["ALLD"][-1]),
+    axC.annotate("LLM agents", xy=(1000, llm["ALLD"][-1]),
                  xytext=(-4, 10), textcoords="offset points",
                  fontsize=S.FS_NOTE, color=S.STRAT_C["ALLD"], ha="right",
                  va="bottom")

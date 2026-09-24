@@ -104,7 +104,7 @@ and
 \maketitle
 
 \begin{abstract}
-Large language models (LLMs) increasingly act as autonomous agents negotiating and deciding for human users, making their cooperative dispositions a central question for AI governance. We examine how two fundamental levers shape cooperation: the nominal magnitude of the stakes and the language in which the interaction is framed. In classical game theory, multiplying all payoffs by a positive constant is an invariant transformation that leaves preference rankings, best replies, and equilibria untouched. We show, across five frontier LLMs playing an iterated prisoner's dilemma across ten payoff scales and five languages, this invariance is systematically violated. Rescaling stakes alters cooperation rates dramatically, driving divergent shifts across models that cancel out when averaged. Scale sensitivity also varies across languages. Payoff scale also changes persona compliance: at sub-unit stakes, all five models cooperate more under the selfish than the cooperative persona; in Claude and Gemini this effect reverses sign above the sub-unit regime. Across the evaluated models, own-action conditioning is stronger than partner-action conditioning. These findings show that cooperation metrics cannot be treated as intrinsic model traits without specifying payoff scale and language.
+Large language models (LLMs) increasingly act as autonomous agents negotiating and deciding for human users, making their cooperative dispositions a central question for AI governance. We examine how two fundamental levers shape cooperation: the nominal magnitude of the stakes and the language in which the interaction is framed. In classical game theory, multiplying all payoffs by a positive constant is an invariant transformation that leaves preference rankings, best replies, and equilibria untouched. We show, across five widely adopted commercial LLMs playing an iterated prisoner's dilemma across ten payoff scales and five languages, this invariance is systematically violated. Rescaling stakes alters cooperation rates dramatically, driving divergent shifts across models that cancel out when averaged. Scale sensitivity also varies across languages. Payoff scale also changes persona compliance: at sub-unit stakes, all five models cooperate more under the selfish than the cooperative persona; in Claude and Gemini this effect reverses sign above the sub-unit regime. Across the evaluated models, own-action conditioning is stronger than partner-action conditioning. These findings show that cooperation metrics cannot be treated as intrinsic model traits without specifying payoff scale and language.
 \end{abstract}
 
 \noindent\textbf{Keywords:} machine behaviour; large language models; iterated prisoner's dilemma; payoff scaling; utility invariance; cross-lingual behaviour
@@ -267,8 +267,7 @@ baseline computed on the same grid.
 %Here, we turn a theorem into an instrument. 
 The main contributions of the present
 paper are: \textbf{(i)} A payoff-rescaling protocol whose predicted behavioural
-effect is exactly zero, demonstrating that five frontier language models
-systematically violate scale invariance (Section \ref{sec:payoff_magnitude}), with
+effect is exactly zero, demonstrating that five widely adopted commercial language models systematically violate scale invariance (Section \ref{sec:payoff_magnitude}), with
 cooperation rates shifting substantially across stakes. \textbf{(ii)} A
 per-model analysis revealing that scale departures diverge sharply across
 models to the point of anticorrelation, so that pooled analyses produce
@@ -382,7 +381,7 @@ not model comprehension of the dilemma (appendix~\ref{appendix:corpus}).
 To manipulate the stakes of the game without altering its strategic structure,
 best-reply correspondences, or Nash equilibria, we introduce a positive scalar
 parameter $\lam > 0$ and multiply all four baseline cells by $\lam$
-(figure~\ref{fig:overview}b). In our experiments, we evaluate ten values spanning
+(figure~\ref{fig:overview}). In our experiments, we evaluate ten values spanning
 five orders of magnitude:
 \[
 \lam \in \{0.01,\ 0.10,\ 0.25,\ 0.50,\ 1.0,\ 2.0,\ 5.0,\ 10.0,\ 100.0,\ 1000.0\},
@@ -431,13 +430,13 @@ rational adaptation to changing game-theoretic payoffs.
 \centering
 \includegraphics[width=\linewidth]{figures/prisoners_dilemma_overview.pdf}
 \caption{\textbf{Overview of the repeated prisoner's-dilemma experiment.}
-Two language-model agents from the same provider repeatedly play the stage game across ten payoff scales, with penalties to minimise. The main-text corpus covers five frontier models, five prompt languages, four persona pairings and 10{,}000 dyads (20{,}000 agent-games and 200{,}000 decisions).}
+Two language-model agents from the same provider repeatedly play the stage game across ten payoff scales, with penalties to minimise. The main-text corpus covers five widely adopted commercial models, five prompt languages, four persona pairings and 10{,}000 dyads (20{,}000 agent-games and 200{,}000 decisions).}
 \label{fig:overview}
 \end{figure}
 
 \subsection{Models, prompt languages, personas and protocol}\label{sec:protocol}
 
-Five frontier models were run, each against itself; two different models were
+Five widely adopted commercial models were run, each against itself; two different models were
 never paired. They were Claude Haiku 4.5, GPT-5.4 Nano, Gemini 3.5 Flash-Lite,
 Qwen3 235B-A22B and Grok 4.20. Their model identifiers are listed in
 appendix~\ref{appendix:endpoints}.
@@ -458,10 +457,8 @@ regression covariate rather than as information the agent held.
 
 Every game runs ten rounds with simultaneous moves: both agents see the same
 history, rounds 1 to $r-1$, and the round is scored once both have replied.
-Sampling uses documented matching by game identifier across payoff scales.
-The released tables do not retain the API seed values, so this record verifies
-the matching structure but not provider-specific seed semantics. Decisions are elicited
-as free text and parsed by the protocol's own matcher. A reply it cannot
+Each game is repeated at all ten payoff scales with the same persona pairing
+and the same requested sampling seeds (appendix~\ref{appendix:endpoints}). Decisions are elicited as free text and parsed by the protocol's own matcher. A reply it cannot
 resolve is regenerated, up to two further attempts, and if all three fail the
 decision is recorded as Option~A, which under this framing is defection: the
 fallback can only push a measured cooperation rate down, never up, and it
@@ -548,7 +545,7 @@ best-reply correspondences, and Nash equilibria: an agent playing the game
 should not alter its choices whether payoffs are denominated in cents, dollars,
 or thousands of pounds.
 
-Yet, across five orders of payoff magnitude, every frontier language model
+Yet, across five orders of payoff magnitude, every language model
 evaluated violates this scale invariance (see figure~\ref{fig:landscape}a,c,
 table~\ref{tab:effect}). The shift in strategic behaviour is substantial: across
 the ten-scale ladder, cooperation varies markedly for every model, representing a clear departure from the scale-invariance null (see figure~\ref{fig:landscape}b and
@@ -561,8 +558,7 @@ scale of the stakes. Grok exhibits a behavioural strong shift across payoff scal
 GPT climbs sharply
 from a hesitant baseline before saturating at a stable cooperative tendency.
 Claude’s cooperation rate decreases  at intermediate sub-unit stakes before recovering at larger payoff scales. Gemini maintains a persistently
-elevated cooperative tendency throughout, while Qwen drifts steadily in the
-opposite direction, defecting progressively more often as the stakes increase.
+elevated cooperative tendency throughout, while Qwen becomes modestly less cooperative as the stakes rise, most of the change occurring between $\lam = 0.1$ and $\lam = 1$.
 Because each model follows a distinct behavioural trajectory, machine cooperation cannot be characterised by a single universal behavioural pattern.
 
 The largest departures are concentrated near the low-payoff end of the grid
@@ -575,7 +571,7 @@ identify the mechanism behind the response.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/f_landscape.pdf}
-\caption{\textbf{Cooperation rates as a function of the payoff scale across five frontier models.}
+\caption{\textbf{Cooperation rates as a function of the payoff scale across five models.}
 (a) Model-by-scale cooperation matrix: mean cooperation for each of the five models at each of the ten payoff scales $\lam \in [0.01, 1000]$, with the value shown in each box.
 (b) Within-model cooperation range (maximum minus minimum rate across the ten scales) compared against the pooled five-model range (0.154, vertical dashed line). Confidence intervals are 95\% percentile intervals from 1{,}500 whole-dyad bootstrap resamples.
 (c) Small multiples per model: the focal model is drawn with its designated colour and marker, with the other four models shown behind in grey for context. Shaded bands mark the sub-unit regime ($\lam \leq 0.1$).
@@ -606,9 +602,9 @@ interaction as a prompt-stimulus interaction, not as evidence for a linguistic
 or cultural mechanism.
 
 The central finding is that scale sensitivity itself depends on the prompt
-language. The model-specific max-minus-min ranges over the ten scales vary by
-up to an order of magnitude within a model (electronic supplementary
-table~\ref{tab:S-language}). Figure~\ref{fig:language}b provides the
+language. The max-minus-min range over the ten scales differs between languages by a
+factor of about two within every model, and by an order of magnitude across
+model-language cells (electronic supplementary table~\ref{tab:S-language}). Figure~\ref{fig:language}b provides the
 complementary supra-unit minus sub-unit contrast, and figure~\ref{fig:language}c
 shows that language differences remain after removing their mean levels. Across
 the main-text corpus, the observed sensitivity ranges from near-invariance to
@@ -616,8 +612,8 @@ sweeping behavioural transformations spanning almost the entire probability
 scale.
 
 Crucially, these linguistic biases do not point in a uniform direction across
-models: each model identifies a different language as its most cooperative
-medium and another as its most scale-sensitive. When multilingual evaluations
+models: the most cooperative language differs from model to model, whereas
+English is the most scale-sensitive language for four of the five models. When multilingual evaluations
 pool across models, these opposing model-specific effects are attenuated and
 can obscure substantial model-by-language heterogeneity. In reality, machine
 behaviour depends on the linguistic stimulus used in the prompt. Within this design,
@@ -681,10 +677,8 @@ scales and the eight larger scales, where shown payoffs include values above
 one (Section \ref{sec:gameImportance}). Across all five models, the persona effect
 changes across these two regimes.
 
-In multiple frontier models, the persona instruction reverse their behavioural effect  below the
-unit threshold. In Gemini and Claude, the persona effect reverses sign: under fractional stakes, both models exhibit higher cooperation when explicitly instructed to behave selfishly than when instructed to behave cooperatively. In GPT, the persona
-effect is  extinguished at fractional scales rather than reversed,
-while the remaining models maintain their pattern. This result is a
+In several models, the persona instruction reverses its behavioural effect  below the
+unit threshold. In Gemini and Claude, the persona effect reverses sign: under fractional stakes, both models exhibit higher cooperation when explicitly instructed to behave selfishly than when instructed to behave cooperatively.In GPT, the selfish persona also raises cooperation at fractional stakes, but above them the persona effect disappears instead of reversing, while the remaining models maintain their pattern. This result is a
 boundary-aligned descriptive effect. It does not identify why the prompt
 instruction changes direction at these scales.
 
@@ -722,7 +716,7 @@ identity: across the corpus, the majority of games match no textbook rule
 cleanly (table~\ref{tab:strategy}, appendix~\ref{appendix:readout_full}).
 
 As payoff stakes increases, play moves farther from the four canonical rules in
-most frontier models. Across the scale ladder, the proportion of games adhering
+most models. Across the scale ladder, the proportion of games adhering
 strictly to a single canonical rule declines substantially, while unmatched
 play accumulates (table~\ref{tab:strategy}). This loss of canonical-rule
 conformity is pronounced in Claude, Grok, Qwen, and Gemini, while GPT maintains
@@ -884,7 +878,7 @@ dropped, leaving 212 of 250.}
 
 \section{Concluding remarks and discussion}\label{sec:discussion}
 
-Positive scaling of payoffs is theoretically behaviour-preserving in the (repeated) Prisoner's Dilemma: they leave the strategic structure of the game unchanged and therefore imply no change in predicted outcomes. Against this, our results show systematic departures from scale invariance across all five frontier language models examined. These departures are not reducible to a homogeneous shift in baseline cooperation. Their magnitude varies across prompt languages, their direction and shape differ across models, and they are substantially attenuated by aggregation. 
+Positive scaling of payoffs is theoretically behaviour-preserving in the (repeated) Prisoner's Dilemma: they leave the strategic structure of the game unchanged and therefore imply no change in predicted outcomes. Against this, our results show systematic departures from scale invariance across all five language models examined. These departures are not reducible to a homogeneous shift in baseline cooperation. Their magnitude varies across prompt languages, their direction and shape differ across models, and they are substantially attenuated by aggregation. 
 The resulting pooled trajectory is therefore not an adequate representation of any individual model's behavioural response. 
 Relative to an evolutionary game baseline computed on the same payoff matrices, the pooled corpus also exhibits a declining share of AllD-like behaviour as payoffs increase, moving in the opposite direction from the baseline prediction.
 This comparison quantifies the distance between the incentives encoded by the game and the behaviour produced by the agents, without by itself identifying the mechanism responsible for that distance.
