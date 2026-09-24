@@ -195,10 +195,7 @@ def main():
         ax.set_yticklabels([])
     axC[0].set_ylabel("centred")
     axC[2].set_xlabel(r"payoff scale $\lambda$")
-    S.panel(axC[0], "c", None, pad=7)
-    axC[0].text(0.16, 1.005, "level removed, the shapes still differ",
-                transform=axC[0].transAxes, ha="left", va="bottom",
-                fontsize=S.FS_CLAIM, color=S.INK_2)
+    S.panel(axC[0], "c", "level removed, the shapes still differ", pad=7)
 
     handles = [Line2D([], [], color=S.MODEL_C[m], marker=S.MODEL_M[m], lw=0,
                       ms=3.8, label=S.MODEL_SHORT[m]) for m in S.MODEL_ORDER]
@@ -206,12 +203,6 @@ def main():
                           markerfacecolor=S.INK, label="all five pooled"))
     fig.legend(handles=handles, loc="lower center", ncol=6,
                bbox_to_anchor=(0.5, -0.055), fontsize=S.FS_NOTE)
-    S.caption(fig,
-              f"{len(g):,} agent-games from five models, 400 agent-games per language and payoff "
-              "scale; the interval on each pooled estimate is a 95% percentile "
-              "whole-dyad bootstrap, and the small markers are the five models "
-              "separately",
-              y=-0.095)
 
     S.save(fig, "f_language")
 

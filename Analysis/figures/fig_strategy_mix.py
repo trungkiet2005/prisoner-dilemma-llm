@@ -223,12 +223,6 @@ def main():
         axC.text(x, len(S.STRAT_ORDER) - 1 + 0.44, txt, fontsize=5.9,
                  color=S.INK_2, ha="center", va="bottom")
 
-    S.caption(fig,
-             "five models, ten payoff scales, 400 agent-games per cell, 20,000 in all; "
-             "the grey rule under a marks the scales at which every payoff printed is at most 1;\n"
-             r"b shows net strategy share changes between $\lambda=1000$ and $\lambda=0.01$ with total variation distance in parentheses; "
-             "c shows attribution provenance", y=-0.005)
-
     S.save(fig, "f_strategy_mix")
 
 

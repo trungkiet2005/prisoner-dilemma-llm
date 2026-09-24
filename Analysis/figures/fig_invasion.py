@@ -36,6 +36,7 @@ import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import networkx as nx
 import numpy as np
 from egttools.analytical import PairwiseComparison
 from egttools.games import Matrix2PlayerGameHolder
@@ -88,10 +89,55 @@ def _check(lam, sd):
     return ref
 
 
+def _edge_labels(ax, G, pos, sizes):
+    """The fixation labels, drawn here so the two diagonals do not collide.
+
+    egttools puts every label at the midpoint of its edge.  On the circular
+    layout the TFT-AllC and WSLS-AllD edges cross at the centre, so their two
+    labels land on the same point and one hides the other.  The vertical one
+    is moved down its edge, to where only it runs.
+    """
+    for u, v, d in G.edges(data=True):
+        if d["weight"] <= 1 + 1e-4:
+            continue
+        (x1, y1), (x2, y2) = pos[u], pos[v]
+        lp = 0.5
+        if abs(x1 - x2) < 1e-6:
+            # label_pos runs from the source u (0) to the target v (1), so the
+            # label sits at y1 + lp * (y2 - y1); put it at y = -0.42
+            lp = (-0.42 - y1) / (y2 - y1)
+        nx.draw_networkx_edge_labels(
+            G, pos, edge_labels={(u, v): rf"{d['weight']:.2f}$\rho_N$"},
+            label_pos=lp, font_size=6, node_size=sizes, ax=ax)
+
+
+def _frame(ax, fig, pos, radius_pt, label_pt):
+    """Axes limits wide enough for the largest node and its label.
+
+    Node size is an area in points, not in data units, so the autoscaled
+    limits only enclose the node centres and a large node is cut at the axes
+    edge.  A node of radius r points at distance 1 from the centre fits when
+    the half-span h satisfies 1 + r * 2h / L <= h, with L the axes length in
+    points, which gives h = 1 / (1 - 2r / L).
+    """
+    box = ax.get_position()
+    w_pt = box.width * fig.get_figwidth() * 72
+    h_pt = box.height * fig.get_figheight() * 72
+    hx = hy = 1.0
+    for name, (x, y) in pos.items():
+        r = radius_pt[name] + 2
+        if abs(x) > 0.5:
+            hx = max(hx, 1 / (1 - 2 * r / w_pt))
+        if abs(y) > 0.5:
+            hy = max(hy, 1 / (1 - 2 * (r + label_pt) / h_pt))
+    ax.set_xlim(-hx, hx)
+    ax.set_ylim(-hy, hy)
+
+
 def main():
     expected_payoff_matrix = _load_s09()
 
-    fig, axes = plt.subplots(1, 3, figsize=(S.FULL, 2.42))
+    fig, axes = plt.subplots(1, 3, figsize=(S.FULL, 3.0))
     fig.subplots_adjust(wspace=0.10)
     claims = ["nothing is selected", "the dilemma appears", "AllD takes 96.9%"]
 
@@ -109,30 +155,35 @@ def main():
         # networkx takes a per-node size, so the node area can carry the
         # stationary probability.  Area, not radius: the eye compares areas.
         sizes = [260 + 2400 * float(p) for p in sd]
-        draw_invasion_diagram(
-            [S.STRAT_LABEL[s] for s in STRATS], 1 / Z, rho, sd,
+        labels = [S.STRAT_LABEL[s] for s in STRATS]
+        G = draw_invasion_diagram(
+            labels, 1 / Z, rho, sd,
             node_size=sizes, font_size_node_labels=7,
-            font_size_edge_labels=6, font_size_sd_labels=6,
+            display_edge_labels=False, display_sd_labels=False,
             edge_width=1.4, node_linewidth=0.8, node_edgecolors=S.SURFACE,
             max_displayed_label_letters=4,
             colors=[S.STRAT_C[s] for s in STRATS], ax=ax)
+        pos = nx.circular_layout(G)       # the layout egttools drew with
+        _edge_labels(ax, G, pos, sizes)
+
+        # The stationary probability goes just outside its node, above the top
+        # one and below the rest, offset by the node's radius in points so a
+        # large node cannot swallow its own label.
+        radius = {n: np.sqrt(s) / 2 for n, s in zip(labels, sizes)}
+        for n, p in zip(labels, sd):
+            x, y = pos[n]
+            up = y > 0.5
+            ax.annotate(f"{p:.2f}", xy=(x, y), xytext=(0, (1 if up else -1)
+                                                         * (radius[n] + 1.5)),
+                        textcoords="offset points", ha="center",
+                        va="bottom" if up else "top", fontsize=S.FS_NOTE,
+                        color=S.INK)
+        _frame(ax, fig, pos, radius, label_pt=S.FS_NOTE + 1.5)
         ax.set_axis_off()
-        ax.set_title("")
-        ax.text(0.0, 1.0, letter, transform=ax.transAxes, ha="left",
-                va="bottom", fontsize=S.FS_PANEL, color=S.INK,
-                fontweight="bold")
-        ax.text(0.045, 1.0, rf"$\lambda={lam}$   {claim}",
-                transform=ax.transAxes, ha="left", va="bottom",
-                fontsize=S.FS_CLAIM, color=S.INK_2)
+        S.panel(ax, letter, rf"$\lambda={lam}$   {claim}")
 
         print(f"  lambda={lam:>6s}  stationary "
               + "  ".join(f"{s} {p:.3f}" for s, p in zip(STRATS, sd)))
-
-    fig.text(0.5, 0.005,
-             r"finite population $Z=100$, Fermi rule, $\beta=0.1$, "
-             r"execution error $\epsilon=0.05$; node area is the stationary "
-             r"probability, edges are fixation probabilities above drift $1/Z$",
-             ha="center", va="top", fontsize=S.FS_NOTE, color=S.MUTED)
 
     S.save(fig, "f_invasion")
 

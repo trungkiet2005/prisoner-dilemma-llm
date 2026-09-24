@@ -374,7 +374,9 @@ def fa5_cooperation_distribution(g: pd.DataFrame):
     Claude Haiku 4.5 to 60.4% in Qwen3 235B-A22B.
     """
     fig = plt.figure(figsize=(W2, 2.35))
-    gs = fig.add_gridspec(1, 3, width_ratios=[1.0, 0.95, 1.35], wspace=0.34)
+    # The empty third column is room for panel c's model names, which are long
+    # enough to reach back across panel b in an ordinary wspace.
+    gs = fig.add_gridspec(1, 4, width_ratios=[1.0, 0.95, 0.42, 1.35], wspace=0.34)
 
     # (a) Pooled distribution
     ax0 = fig.add_subplot(gs[0])
@@ -421,10 +423,12 @@ def fa5_cooperation_distribution(g: pd.DataFrame):
     ax1.set_ylim(-0.02, 1.05)
     ax1.set_xticks([0, 0.25, 0.5, 0.75, 1.0])
     hgrid(ax1)
-    ax1.legend(loc="center right", fontsize=5.0)
+    # Upper left is the one corner the step never enters: below cooperation
+    # 0.5 the ECDF is still under 0.5.
+    ax1.legend(loc="upper left", fontsize=5.0)
 
     # (c) Model-level breakdown
-    ax2 = fig.add_subplot(gs[2])
+    ax2 = fig.add_subplot(gs[3])
     panel_tag(ax2, "c", dx=-0.20)
     models = MODEL_ORDER_ALL[::-1]
     y = np.arange(len(models))
@@ -516,17 +520,23 @@ def fa6_scaling_mechanism(g: pd.DataFrame, r: pd.DataFrame):
     # (b) Opposition of the two atoms against log lambda
     ax1 = fig.add_subplot(gs[1])
     panel_tag(ax1, "b", dx=-0.22)
-    ax1.plot(scales, sh["always_C"], "o-", color="#0072b2", lw=1.3, markersize=3.2,
-             label=r"Always-C ($\rho=+0.05$)")
-    ax1.plot(scales, sh["never_C"], "s-", color="#d55e00", lw=1.3, markersize=3.2,
-             label=r"Never-C ($\rho=-0.47$)")
+    ax1.plot(scales, sh["always_C"], "o-", color="#0072b2", lw=1.3, markersize=3.2)
+    ax1.plot(scales, sh["never_C"], "s-", color="#d55e00", lw=1.3, markersize=3.2)
     logscale_axis(ax1)
     ax1.set_ylabel("share of agent-games (\\%)".replace("\\", ""))
     ax1.set_ylim(0, 42)
     hgrid(ax1)
-    ax1.legend(loc="center right", fontsize=5.2)
-    ax1.text(0.04, 0.08, "sub-unit $\\lambda \\leq 0.1$:\nNever-C mass inflates",
-             transform=ax1.transAxes, fontsize=5.2, color=INK)
+    # Direct labels in the three places no line reaches: above the Always-C
+    # peak on the left, in the gap between the two lines on the right, and
+    # under the Never-C floor on the right.  A legend box here sat on a line
+    # wherever it went.
+    # the braces keep mathtext from setting the sign as a binary operator
+    ax1.text(0.01, 36.0, r"Always-C ($\rho={+}0.05$)", fontsize=5.2,
+             color="#0072b2", ha="left", va="bottom")
+    ax1.text(1000, 13.5, r"Never-C ($\rho={-}0.47$)", fontsize=5.2,
+             color="#d55e00", ha="right", va="bottom")
+    ax1.text(1000, 0.8, "sub-unit $\\lambda \\leq 0.1$:\nNever-C mass inflates",
+             fontsize=5.2, color=INK, ha="right", va="bottom")
 
     # (c) Dynamic decay across rounds
     ax2 = fig.add_subplot(gs[2])

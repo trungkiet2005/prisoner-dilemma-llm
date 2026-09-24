@@ -147,11 +147,6 @@ def main():
                           label="textbook rule"))
     fig.legend(handles=handles, loc="lower center", ncol=6,
                bbox_to_anchor=(0.5, 0.04), fontsize=S.FS_NOTE)
-    S.caption(fig,
-              f"{len(c)} cells, one per model, payoff scale and language; "
-              "panel b uses model-level estimates with 95% whole-dyad "
-              "bootstrap intervals from the conditioning table",
-              y=0.005)
 
     S.save(fig, "f_strategy_space")
 

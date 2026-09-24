@@ -195,13 +195,17 @@ def panel(ax, letter, claim=None, *, pad=6, x=0.0, gap=10.5):
     fractions.  An axes fraction is a different distance on a narrow panel than
     on a wide one, which put the claim on top of the letter every time a figure
     had a narrow panel in it.
+
+    The title is set on its baseline `pad` points above the axes, so the claim
+    is too.  Aligning the claim by its bottom instead drops it by the descent
+    of the font, and the claim then sits visibly lower than its letter.
     """
     ax.set_title(letter, loc="left", pad=pad, x=x,
                  fontsize=FS_PANEL, color=INK, fontweight="bold")
     if claim:
         ax.annotate(claim, xy=(x, 1.0), xycoords="axes fraction",
-                    xytext=(gap, pad - 4), textcoords="offset points",
-                    ha="left", va="bottom", fontsize=FS_CLAIM, color=INK_2,
+                    xytext=(gap, pad), textcoords="offset points",
+                    ha="left", va="baseline", fontsize=FS_CLAIM, color=INK_2,
                     annotation_clip=False)
 
 

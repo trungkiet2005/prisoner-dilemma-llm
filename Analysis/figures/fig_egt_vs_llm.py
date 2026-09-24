@@ -112,11 +112,6 @@ def main():
                  fontsize=S.FS_NOTE, color=S.STRAT_C["ALLD"], ha="right",
                  va="bottom")
 
-    S.caption(fig,
-              r"finite population $Z=100$, Fermi pairwise comparison, $\beta=0.1$, execution error $\epsilon=0.05$, ten rounds;" + "\n"
-              r"corpus pooled over five models, five languages and four persona pairings",
-              y=0.01)
-
     S.save(fig, "f_egt_vs_llm")
 
 
