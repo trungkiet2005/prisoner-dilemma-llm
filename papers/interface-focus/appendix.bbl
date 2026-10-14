@@ -433,9 +433,6 @@
            given={Drew},
            giveni={D\bibinitperiod}}}%
       }
-      \list{publisher}{1}{%
-        {Nature Publishing Group UK London}%
-      }
       \strng{namehash}{45ea170db9722389e598df0cd8e6219d}
       \strng{fullhash}{c4495dca9f03c2d4b9447b96de83f0d5}
       \strng{fullhashraw}{c4495dca9f03c2d4b9447b96de83f0d5}
@@ -468,9 +465,6 @@
            familyi={C\bibinitperiod},
            given={Xiaojie},
            giveni={X\bibinitperiod}}}%
-      }
-      \list{publisher}{1}{%
-        {Elsevier}%
       }
       \strng{namehash}{71147cd0604751d55ffb8322da56b06a}
       \strng{fullhash}{71147cd0604751d55ffb8322da56b06a}
@@ -513,9 +507,6 @@
            familyi={N\bibinitperiod},
            given={Martin\bibnamedelima A},
            giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
-      }
-      \list{publisher}{1}{%
-        {National Academy of Sciences}%
       }
       \strng{namehash}{67e62655572130eadd90728ca5b34dbe}
       \strng{fullhash}{e3634b4c4b6b0bd9d745ab8205aec17b}
@@ -565,9 +556,6 @@
            given={Tom},
            giveni={T\bibinitperiod}}}%
       }
-      \list{publisher}{1}{%
-        {Nature Publishing Group UK London}%
-      }
       \strng{namehash}{9877654c7ebbf2acdd7978bb03450229}
       \strng{fullhash}{3e61322cf55dbe392526801f565b9d98}
       \strng{fullhashraw}{3e61322cf55dbe392526801f565b9d98}
@@ -600,9 +588,6 @@
            familyi={T\bibinitperiod},
            given={Csaba},
            giveni={C\bibinitperiod}}}%
-      }
-      \list{publisher}{1}{%
-        {APS}%
       }
       \strng{namehash}{c35936644b1bb51cbb6a1f2a2b1f8764}
       \strng{fullhash}{c35936644b1bb51cbb6a1f2a2b1f8764}
@@ -641,9 +626,6 @@
            familyi={L\bibinitperiod},
            given={Tom},
            giveni={T\bibinitperiod}}}%
-      }
-      \list{publisher}{1}{%
-        {Elsevier}%
       }
       \strng{namehash}{c9d9c9de5d60a249a49f8a63c0961425}
       \strng{fullhash}{2026f3b87ba05002495447f6d9fcc304}
@@ -753,9 +735,6 @@
            given={Karl},
            giveni={K\bibinitperiod}}}%
       }
-      \list{publisher}{1}{%
-        {National Academy of Sciences}%
-      }
       \strng{namehash}{941abd749cb52f5216f80959c1691e31}
       \strng{fullhash}{573f0c777bda908216780cfdbf96074f}
       \strng{fullhashraw}{573f0c777bda908216780cfdbf96074f}
@@ -791,9 +770,6 @@
            familyi={D\bibinitperiod},
            given={Freeman\bibnamedelima J.},
            giveni={F\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
-      }
-      \list{publisher}{1}{%
-        {National Academy of Sciences}%
       }
       \strng{namehash}{3b1671f5c14a1fa00379302af165b24a}
       \strng{fullhash}{3b1671f5c14a1fa00379302af165b24a}

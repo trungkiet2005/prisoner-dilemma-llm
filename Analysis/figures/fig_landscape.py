@@ -14,17 +14,20 @@ Panels
      every tile.  A row is one model read left to right, and the rows plainly
      disagree, in level and in direction.  The row labels carry the model
      colours used by the rest of the paper, so the figure needs no legend.
-  b  Small multiples, one panel per model.  The model that owns the panel is
+  b  The pooling argument reduced to one number per model: the within-model
+     range, meaning the highest minus the lowest cooperation rate across the
+     ten scales.  The five-model average has a range of 0.15, drawn as the
+     vertical rule.
+  c  Small multiples, one panel per model.  The model that owns the panel is
      drawn at full strength with its own marker; the other four sit behind it
      in grey as context.  At most one salient line per panel is what keeps the
      comparison readable, and the facet title in the model's colour is what
      replaces the legend a spaghetti plot would have needed.
-  c  The pooling argument reduced to one number per model: the within-model
-     range, meaning the highest minus the lowest cooperation rate across the
-     ten scales.  The five-model average has a range of 0.15, drawn as the
-     vertical rule.
 
-A caveat the panel c claim is written around.  The pooled range is not smaller
+The letters follow reading order: a and b share the top row, c is the row of
+small multiples below them.
+
+A caveat the panel b claim is written around.  The pooled range is not smaller
 than every within-model range, and the figure does not pretend otherwise.  It
 is smaller than three of the five, and four times smaller than the largest, but
 it is larger than the two flattest models.  The stronger and more defensible
@@ -85,7 +88,7 @@ def main():
     top = outer[0].subgridspec(1, 2, width_ratios=[1.66, 1.0], wspace=0.30)
     bot = outer[1].subgridspec(1, 5, wspace=0.16)
     axA = fig.add_subplot(top[0, 0])
-    axC = fig.add_subplot(top[0, 1])
+    axB = fig.add_subplot(top[0, 1])
     facets = [fig.add_subplot(bot[0, i]) for i in range(5)]
 
     # --- a: the design as a table of colour --------------------------------
@@ -101,34 +104,31 @@ def main():
     axA.tick_params(axis="y", labelsize=S.FS_NOTE)
     S.panel(axA, "a", "every row moves differently")
 
-    # --- c: within-model range against the pooled range --------------------
+    # --- b: within-model range against the pooled range --------------------
     ys = np.arange(len(S.MODEL_ORDER))[::-1]
-    axC.axvline(pooled_range, color=S.INK_2, lw=0.9, linestyle=(0, (3, 2)),
+    axB.axvline(pooled_range, color=S.INK_2, lw=0.9, linestyle=(0, (3, 2)),
                 zorder=2)
-    axC.text(pooled_range + 0.018, -0.72,
+    axB.text(pooled_range + 0.018, -0.72,
              f"five-model average {pooled_range:.2f}", fontsize=S.FS_NOTE,
              color=S.INK_2, ha="left", va="center")
     for y, m, v, a, b in zip(ys, S.MODEL_ORDER, rng_by_model, lo, hi):
-        axC.hlines(y, a, b, color=S.MODEL_C[m], lw=1.1, zorder=3)
-        S.dot(axC, v, y, color=S.MODEL_C[m], marker=S.MODEL_M[m], size=20)
-        axC.text(0.815, y, f"{v:.2f}", fontsize=S.FS_NOTE,
+        axB.hlines(y, a, b, color=S.MODEL_C[m], lw=1.1, zorder=3)
+        S.dot(axB, v, y, color=S.MODEL_C[m], marker=S.MODEL_M[m], size=20)
+        axB.text(0.815, y, f"{v:.2f}", fontsize=S.FS_NOTE,
                  color=S.INK_2, ha="right", va="center")
-    axC.set_yticks(ys)
-    axC.set_yticklabels([S.MODEL_SHORT[m] for m in S.MODEL_ORDER])
-    for t, m in zip(axC.get_yticklabels(), S.MODEL_ORDER):
+    axB.set_yticks(ys)
+    axB.set_yticklabels([S.MODEL_SHORT[m] for m in S.MODEL_ORDER])
+    for t, m in zip(axB.get_yticklabels(), S.MODEL_ORDER):
         t.set_color(S.MODEL_C[m])
-    axC.tick_params(axis="y", length=0, labelsize=S.FS_NOTE)
-    axC.set_ylim(-1.0, 4.7)
-    axC.set_xlim(0, 0.82)
-    axC.set_xticks([0, 0.2, 0.4, 0.6])
-    axC.set_xlabel("cooperation range over the ten scales", labelpad=2)
-    S.strip(axC, grid_axis="x")
-    S.panel(axC, "c")
-    axC.text(0.062, 1.0, "the average is nobody's curve",
-             transform=axC.transAxes, ha="left", va="bottom",
-             fontsize=S.FS_CLAIM, color=S.INK_2)
+    axB.tick_params(axis="y", length=0, labelsize=S.FS_NOTE)
+    axB.set_ylim(-1.0, 4.7)
+    axB.set_xlim(0, 0.82)
+    axB.set_xticks([0, 0.2, 0.4, 0.6])
+    axB.set_xlabel("cooperation range over the ten scales", labelpad=2)
+    S.strip(axB, grid_axis="x")
+    S.panel(axB, "b", "the average is nobody's curve")
 
-    # --- b: one salient line per panel -------------------------------------
+    # --- c: one salient line per panel -------------------------------------
     for i, (ax, m) in enumerate(zip(facets, S.MODEL_ORDER)):
         for j, other in enumerate(S.MODEL_ORDER):
             if j != i:
@@ -152,20 +152,15 @@ def main():
         if i == 2:
             ax.set_xlabel(r"payoff scale $\lambda$", labelpad=1.5)
     # The facet titles already occupy the title line, so the panel letter for
-    # the row is set in figure coordinates just above them.
-    box = facets[0].get_position()
-    fig.text(box.x0, box.y1 + 0.052, "b", ha="left", va="bottom",
-             fontsize=S.FS_PANEL, color=S.INK, fontweight="bold")
-    fig.text(box.x0 + 0.017, box.y1 + 0.052, "no two models agree", ha="left",
-             va="bottom", fontsize=S.FS_CLAIM, color=S.INK_2)
-
-    S.caption(
-        fig,
-        f"{len(g):,} agent-games from 10,000 dyads, 200 dyads (400 agent-games) per model and payoff scale; "
-        "shading in b marks the sub-unit regime; intervals in c are the 95% percentile "
-        "whole-dyad intervals from the main statistical table.",
-        y=-0.07,
-    )
+    # the row is set one line higher, on a shared baseline and with the same
+    # letter-to-claim gap in points that S.panel uses.
+    for s, dx, fs, c, w in (("c", 0, S.FS_PANEL, S.INK, "bold"),
+                            ("no two models agree", 10.5, S.FS_CLAIM, S.INK_2,
+                             "normal")):
+        facets[0].annotate(s, xy=(0, 1), xycoords="axes fraction",
+                           xytext=(dx, 14.5), textcoords="offset points",
+                           ha="left", va="baseline", fontsize=fs, color=c,
+                           fontweight=w, annotation_clip=False)
 
     S.save(fig, "f_landscape")
 

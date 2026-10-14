@@ -114,11 +114,16 @@ def verify(epm):
 
 def main():
     epm = _epm()
-    worst = verify(epm)
+    verify(epm)
     mat = np.array(epm(EPS, LAM, ROUNDS, float), dtype=float)
 
     faces = list(itertools.combinations(range(len(STRATS)), 3))
-    fig, axes = plt.subplots(1, len(faces), figsize=(S.FULL, 1.72))
+    # One equal slot per face across the full width, each triangle centred in
+    # its slot, so the four sit evenly with the same margin at both ends and
+    # room between them for the corner labels.
+    fig = plt.figure(figsize=(S.FULL, 1.75))
+    n = len(faces)
+    axes = [fig.add_axes([i / n, 0.0, 1 / n, 0.76]) for i in range(n)]
 
     for ax, tri in zip(axes, faces):
         sub = mat[np.ix_(tri, tri)]
@@ -140,34 +145,34 @@ def main():
         simplex.draw_stationary_points(roots_xy, stability, zorder=6,
                                        linewidth=0.9)
 
-        for k, (name, corner) in enumerate(zip(names, simplex.corners)):
-            top = k == 2
-            ax.text(corner[0], corner[1] + (0.05 if top else -0.05),
-                    S.STRAT_LABEL[name], ha="center",
-                    va="bottom" if top else "top", fontsize=S.FS_NOTE,
-                    color=S.STRAT_C[name], fontweight="bold", zorder=8)
+        # Simplex2D orders its corners bottom-left, top, bottom-right.  Each
+        # label goes outside its corner, above the apex and below the base,
+        # offset in points so it clears the rest-point marker at the vertex.
+        for name, corner in zip(names, simplex.corners):
+            top = corner[1] > 0.5
+            # the apex label sits on its baseline: a bottom-aligned label
+            # keeps room for descenders these names do not have, and floats
+            ax.annotate(S.STRAT_LABEL[name], xy=corner,
+                        xytext=(0, 3.5 if top else -3), textcoords="offset points",
+                        ha="center", va="baseline" if top else "top",
+                        fontsize=S.FS_NOTE, color=S.STRAT_C[name],
+                        fontweight="bold", zorder=8, annotation_clip=False)
         ax.set_title(f"without {S.STRAT_LABEL[STRATS[dropped]]}",
-                     fontsize=S.FS_NOTE, color=S.INK_2, pad=1)
+                     fontsize=S.FS_NOTE, color=S.INK_2, pad=4)
         ax.set_axis_off()
-        ax.set_aspect("equal")
-        ax.set_xlim(-0.09, 1.09)
-        ax.set_ylim(-0.15, 0.98)
+        ax.set_xlim(-0.2, 1.2)
+        ax.set_ylim(-0.13, 1.0)
+        ax.set_aspect("equal", adjustable="datalim")
 
-    fig.text(0.0, 1.045, "a", ha="left", va="bottom", fontsize=S.FS_PANEL,
-             color=S.INK, fontweight="bold")
-    fig.text(0.028, 1.045,
-             "the deterministic dynamics do not see the payoff scale at all",
-             ha="left", va="bottom", fontsize=S.FS_CLAIM, color=S.INK_2)
-    fig.text(0.5, -0.02,
-             "replicator flow on each face of the three-simplex at "
-             rf"$\lambda=1$, $\epsilon=0.05$, ten rounds; filled circles are "
-             "stable rest points, open circles unstable.  Rescaling the payoffs "
-             "multiplies the field by a constant and moves nothing: over 2000 "
-             f"random states the normalised field agrees to {worst:.0e}",
-             ha="center", va="top", fontsize=S.FS_NOTE, color=S.MUTED,
-             wrap=True)
+    for s, dx, fs, c, w in (
+            ("a", 0, S.FS_PANEL, S.INK, "bold"),
+            ("the deterministic dynamics do not see the payoff scale at all",
+             10.5, S.FS_CLAIM, S.INK_2, "normal")):
+        axes[0].annotate(s, xy=(0, 1), xycoords="axes fraction",
+                         xytext=(dx, 17), textcoords="offset points",
+                         ha="left", va="baseline", fontsize=fs, color=c,
+                         fontweight=w, annotation_clip=False)
 
-    fig.subplots_adjust(wspace=0.04)
     S.save(fig, "f_simplex")
 
 

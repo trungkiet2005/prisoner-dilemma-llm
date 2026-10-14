@@ -155,12 +155,6 @@ def main():
 
     S.panel(axB, "b", "regime shift: sub-unit vs supra-unit", pad=7)
 
-    S.caption(fig,
-              "20,000 agent-games from 10,000 dyads across five models and ten payoff scales; "
-              "shading on a and open markers on b denote the sub-unit regime (lambda <= 0.1);\n"
-              "thick bars on b are 95% bootstrap intervals; values right of markers are the supra minus sub-unit shift",
-              y=-0.01)
-
     S.save(fig, "f_persona")
 
 

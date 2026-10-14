@@ -217,13 +217,6 @@ def main():
     axC.set_xlabel("told cooperative minus told selfish")
     S.panel(axC, "c", "told cooperative opens C less")
 
-    S.caption(fig,
-              "20,000 opening moves, 400 agent-games per model and payoff scale; bands and "
-              "intervals are 95% percentile bootstraps over whole dyads;\n"
-              "shading on a and open markers on c are the sub-unit regime, "
-              "the two scales at which every payoff printed is at most 1",
-              y=0.01)
-
     S.save(fig, "f_firstmove")
 
 

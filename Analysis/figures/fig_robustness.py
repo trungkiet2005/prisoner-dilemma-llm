@@ -111,7 +111,7 @@ def main():
     S.strip(axC)
     axC.set_ylim(0, 1.03)
     axC.set_ylabel("share labelled AllD")
-    axC.annotate("frontier models", xy=(1000, float(t15.llm_AllD.iloc[-1])),
+    axC.annotate("LLM agents", xy=(1000, float(t15.llm_AllD.iloc[-1])),
                  xytext=(-4, 9), textcoords="offset points",
                  fontsize=S.FS_NOTE, color=S.STRAT_C["ALLD"], ha="right",
                  va="bottom")
@@ -121,13 +121,6 @@ def main():
                       label="one evolutionary setting")]
     fig.legend(handles=handles, loc="lower center", ncol=1,
                bbox_to_anchor=(0.5, -0.12), fontsize=S.FS_NOTE)
-    S.caption(fig,
-             rf"{n_set} settings: $Z\in\{{50,100,200,500\}}$, "
-             rf"$\beta\in\{{0.01,0.05,0.1,0.5,1\}}$, "
-             rf"$\epsilon\in\{{0,0.05,0.1,0.2\}}$, ten payoff scales, "
-             "each solved at 200 digits.  The rise is monotone at every "
-             r"positive $\epsilon$; the exceptions are at $\epsilon=0$, "
-             "where the share dips before it rises", y=-0.175)
 
     S.save(fig, "f_robustness")
 
