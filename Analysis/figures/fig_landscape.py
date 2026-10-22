@@ -126,7 +126,7 @@ def main():
     axB.set_xticks([0, 0.2, 0.4, 0.6])
     axB.set_xlabel("cooperation range over the ten scales", labelpad=2)
     S.strip(axB, grid_axis="x")
-    S.panel(axB, "b", "the average is nobody's curve")
+    S.panel(axB, "b", "per-model and pooled ranges")
 
     # --- c: one salient line per panel -------------------------------------
     for i, (ax, m) in enumerate(zip(facets, S.MODEL_ORDER)):

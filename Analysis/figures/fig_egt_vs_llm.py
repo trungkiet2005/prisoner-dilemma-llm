@@ -101,7 +101,9 @@ def main():
     axC.set_yticks([0, 0.25, 0.5, 0.75, 1.0])
     axC.set_yticklabels(["0", "25", "50", "75", "100%"])
     axC.set_ylabel("share labelled AllD")
-    S.panel(axC, "c", "the gap is the result")
+    # A constructed contrast between two different objects, selection among
+    # rules and fixed agents, so the title describes it rather than reading it.
+    S.panel(axC, "c", "AllD share, a constructed contrast")
 
     axC.annotate("evolutionary\nbaseline", xy=(1000, egt["ALLD"][-1]),
                  xytext=(-4, -12), textcoords="offset points",

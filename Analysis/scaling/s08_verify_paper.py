@@ -356,6 +356,35 @@ chk("LOO minimum pooled range", 0.0479, t23.pooled_range.min(), 0.0006)
 chk("LOO maximum pooled range", 0.15925, t23.pooled_range.max(), 0.0006)
 chk("LOO maximum scale p", 0.00781, t23.scale_p.max(), 0.00006)
 
+# ---- revision R1: inference with the matched ladder as the unit -------------
+t24 = pd.read_csv(TAB / "T24_ladder_inference.csv").set_index("model")
+chk("ladders per model", 200, t24.n_ladders.min(), 0)
+chk("largest ladder-test p", 1.8e-6,
+    t24[["fe_p", "friedman_p", "logit_p"]].to_numpy().max(), 0.06e-6)
+chk("largest ladder-test p outside Claude below 1e-8", 1.0,
+    float(t24.drop("Claude-Haiku-4.5")[["fe_p", "friedman_p", "logit_p"]].to_numpy().max() < 1e-8), 0)
+chk("ladder sign flips are Claude and Gemini 3.5 only", 1.0,
+    float(set(t24.index[t24.sign_flip]) == {"Claude-Haiku-4.5", "Gemini-3.5-Flash-Lite"}), 0)
+chk("ladder persona shift positive everywhere", 1.0, float((t24.shift_lo > 0).all()), 0)
+t25 = pd.read_csv(TAB / "T25_ladder_conditioning.csv")
+gap = t25[t25.contrast == "persistence_minus_reciprocity"].set_index("model")
+chk("ladder Claude persistence-reciprocity", 0.046, gap.loc["Claude-Haiku-4.5", "estimate"], 0.0006)
+chk("ladder Claude gap lower bound", 0.001, gap.loc["Claude-Haiku-4.5", "lo"], 0.0006)
+chk("ladder Claude gap upper bound", 0.092, gap.loc["Claude-Haiku-4.5", "hi"], 0.0006)
+chk("ladder gap positive everywhere", 1.0, float((gap.lo > 0).all()), 0)
+t26 = pd.read_csv(TAB / "T26_ladder_pooled.csv").set_index("removed")
+chk("ladder pooled chi2", 211.6, t26.loc["none", "chi2"], 0.06)
+chk("ladder pooled range without Grok", 0.059, t26.loc["Grok-4.20-Non-Reasoning", "pooled_range"], 0.0006)
+chk("ladder pooled chi2 without Grok", 52.0, t26.loc["Grok-4.20-Non-Reasoning", "chi2"], 0.06)
+chk("ladder pooled p without Grok", 4e-8, t26.loc["Grok-4.20-Non-Reasoning", "p"], 0.5e-8)
+chk("ladder pooled all significant", 1.0, float((t26.p < 0.05).all()), 0)
+t27 = pd.read_csv(TAB / "T27_parse_fallback.csv")
+g35 = t27[t27.model == "gemini-3.5-flash-lite"]
+chk("Gemini 3.5 fallback decisions", 40000, g35.decisions.sum(), 0)
+chk("Gemini 3.5 fallback cells", 50, len(g35), 0)
+chk("Gemini 3.5 retries", 0, g35.decisions_with_retry.sum(), 0)
+chk("Gemini 3.5 fallbacks", 0, g35.fallbacks.sum(), 0)
+
 
 def main():
     bad = []

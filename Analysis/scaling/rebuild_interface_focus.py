@@ -32,7 +32,8 @@ def main() -> None:
                  "s03_stats.py", "s04_strategy_stats.py"):
         run(scaling / name)
     for name in ("s03_matched_block_robustness.py", "s12_conditioning_ci.py",
-                 "s13_review_robustness.py"):
+                 "s13_review_robustness.py", "s14_matched_ladder_inference.py",
+                 "s15_parse_fallback.py"):
         run(scaling / name)
     if not args.skip_egt:
         for name in ("s09_egt.py", "s10_egt_robustness.py"):
