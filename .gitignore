@@ -51,3 +51,7 @@ Thumbs.db
 # --- machine-local skills links ---
 .agents/skills/*
 !.agents/skills/write-kaggle-benchmarks
+
+# --- data lớn: lưu trên Kaggle (xem DATA_ON_KAGGLE.md), bản ở máy không commit ---
+Dataset/
+Payoff_Scaling_Analysis/01_data_quality/
