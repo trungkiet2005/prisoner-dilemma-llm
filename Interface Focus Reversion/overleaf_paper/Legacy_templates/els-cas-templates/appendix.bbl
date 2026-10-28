@@ -1,0 +1,57 @@
+\begin{thebibliography}{4}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\href}[2]{#2}
+\providecommand{\path}[1]{#1}
+\providecommand{\DOIprefix}{doi:}
+\providecommand{\ArXivprefix}{arXiv:}
+\providecommand{\URLprefix}{URL: }
+\providecommand{\Pubmedprefix}{pmid:}
+\providecommand{\doi}[1]{\href{http://dx.doi.org/#1}{\path{#1}}}
+\providecommand{\Pubmed}[1]{\href{pmid:#1}{\path{#1}}}
+\providecommand{\bibinfo}[2]{#2}
+\ifx\xfnm\relax \def\xfnm[#1]{\unskip,\space#1}\fi
+%Type = Inproceedings
+\bibitem[{Buscemi et~al.(2025)Buscemi, Proverbio, Di~Stefano, Han, Castignani
+  and Li{\`o}}]{buscemi2025fairgame}
+\bibinfo{author}{Buscemi, A.}, \bibinfo{author}{Proverbio, D.},
+  \bibinfo{author}{Di~Stefano, A.}, \bibinfo{author}{Han, T.A.},
+  \bibinfo{author}{Castignani, G.}, \bibinfo{author}{Li{\`o}, P.},
+  \bibinfo{year}{2025}.
+\newblock \bibinfo{title}{{FAIRGAME}: a framework for {AI} agents bias
+  recognition using game theory}, in: \bibinfo{booktitle}{ECAI 2025 --
+  Proceedings of the 28th European Conference on Artificial Intelligence},
+  \bibinfo{publisher}{IOS Press}. pp. \bibinfo{pages}{4097--4104}.
+\newblock \DOIprefix\doi{10.3233/FAIA251300}.
+%Type = Inproceedings
+\bibitem[{Di~Stefano et~al.(2023)Di~Stefano, Jayne, Angione and
+  Han}]{diStefanoIntention2023}
+\bibinfo{author}{Di~Stefano, A.}, \bibinfo{author}{Jayne, C.},
+  \bibinfo{author}{Angione, C.}, \bibinfo{author}{Han, T.A.},
+  \bibinfo{year}{2023}.
+\newblock \bibinfo{title}{Recognition of behavioural intention in repeated
+  games using machine learning}, in: \bibinfo{booktitle}{Artificial Life
+  Conference Proceedings 35}, \bibinfo{organization}{MIT Press}. p.
+  \bibinfo{pages}{103}.
+%Type = Article
+\bibitem[{Han et~al.(2012)Han, Pereira and Santos}]{Han2012ALIFEjournal}
+\bibinfo{author}{Han, T.A.}, \bibinfo{author}{Pereira, L.M.},
+  \bibinfo{author}{Santos, F.C.}, \bibinfo{year}{2012}.
+\newblock \bibinfo{title}{Corpus-based intention recognition in cooperation
+  dilemmas}.
+\newblock \bibinfo{journal}{Artificial Life} \bibinfo{volume}{18},
+  \bibinfo{pages}{365--383}.
+\newblock \URLprefix \url{https://doi.org/10.1162/ARTL_a_00072},
+  \DOIprefix\doi{10.1162/ARTL_a_00072}.
+%Type = Article
+\bibitem[{Montero-Porras et~al.(2022)Montero-Porras, Grujić,
+  Fernández~Domingos and Lenaerts}]{inferenceStrategies}
+\bibinfo{author}{Montero-Porras, E.}, \bibinfo{author}{Grujić, J.},
+  \bibinfo{author}{Fernández~Domingos, E.}, \bibinfo{author}{Lenaerts, T.},
+  \bibinfo{year}{2022}.
+\newblock \bibinfo{title}{Inferring strategies from observations in long
+  iterated prisoner’s dilemma experiments}.
+\newblock \bibinfo{journal}{Scientific Reports} \bibinfo{volume}{12}.
+\newblock \DOIprefix\doi{10.1038/s41598-022-11654-2}.
+
+\end{thebibliography}

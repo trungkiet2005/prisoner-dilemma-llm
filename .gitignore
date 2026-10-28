@@ -55,3 +55,6 @@ Thumbs.db
 # --- data lớn: lưu trên Kaggle (xem DATA_ON_KAGGLE.md), bản ở máy không commit ---
 Dataset/
 Payoff_Scaling_Analysis/01_data_quality/
+
+# --- revision R1: bản zenodo đã upload lên Zenodo, không commit ---
+Interface Focus Reversion/zenodo_upload/
