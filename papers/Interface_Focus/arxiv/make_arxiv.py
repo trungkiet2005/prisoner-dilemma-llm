@@ -24,6 +24,9 @@ main = main.replace("\\highlightrevisionstrue", "\\highlightrevisionsfalse")
 main = main.replace("\\usepackage{xcolor}",
                     "\\usepackage{xcolor}\n\\usepackage{multirow}\n\\usepackage{chngcntr}", 1)
 
+main = main.replace("electronic supplementary table~", "table~")
+main = main.replace("in the electronic supplementary material", "in the supplementary material")
+
 body = app.split("\\begin{document}", 1)[1]
 body = body.split("\\bibliographystyle{unsrtnat}", 1)[0]
 body = re.sub(r"\\begin\{center\}.*?\\end\{center\}",

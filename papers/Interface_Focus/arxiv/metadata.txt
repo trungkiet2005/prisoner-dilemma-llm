@@ -1,32 +1,23 @@
-TITLE
+REPLACEMENT OF arXiv:2601.19082  (current public version v2, 2026-06-06; this upload becomes v3)
+Submitter of record: Duy Minh Dao Sy. Use "Replace" on that article in the arXiv user page, not "Start New Submission".
+
+TITLE  (unchanged)
 Payoff scaling shapes cooperation in LLM agents across languages
 
-AUTHORS
+AUTHORS  (CHANGED: The Anh Han moves from last to first, matching the accepted article)
 The Anh Han, Trung-Kiet Huynh, Dao-Sy Duy-Minh, Thanh-Bang Cao, Phong-Hao Le, Hong-Dan Nguyen, Phu-Quy Nguyen-Lam, Minh-Luan Nguyen-Vo, Hong-Phat Pham, Phu-Hoa Pham, Thien-Kim Than, Chi-Nguyen Tran, Huy Tran, Gia-Thoai Tran-Le, Alessio Buscemi, Le Hong Trang
 
-ABSTRACT
+ABSTRACT  (CHANGED: replaces the v2 abstract)
 Large language models (LLMs) are increasingly deployed as autonomous agents that negotiate, coordinate, and make decisions on behalf of human users. Understanding how they cooperate is therefore important for AI governance and machine behaviour research. We examine two factors: payoff magnitude and interaction language. Classical game theory predicts that multiplying all payoffs by a positive constant should not change behaviour because the underlying strategic incentives remain unchanged. We test this prediction using five widely adopted commercial LLMs playing an iterated prisoner's dilemma across ten payoff scales and five languages (English, French, Vietnamese, Chinese and Arabic). Contrary to theoretical expectations, changing only the numerical scale of payoffs substantially alters cooperation. Models respond differently, often in opposite directions, meaning that averages across models can conceal important behavioural heterogeneity. Sensitivity to payoff scale also depends strongly on prompt language. Moreover, payoff scale modifies the effects of persona instructions: at sub-unit stakes, where no payoff shown exceeds 1, all five models cooperate more under a selfish than a cooperative persona, whereas Claude and Gemini reverse this pattern at larger scales. These findings show that cooperation measures depend critically on payoff scale and language and should not be treated as fixed model traits.
 
-PRIMARY CATEGORY
-cs.AI
+COMMENTS  (CHANGED)
+Version accepted for publication in Interface Focus (Royal Society). 57 pages, 17 figures, 25 tables, including supplementary material
 
-CROSS-LISTS
-cs.GT cs.MA cs.CL physics.soc-ph
+CATEGORIES  (unchanged; leave as they are)
+Primary cs.AI; cross-lists cs.CL cs.GT cs.LG cs.MA
 
-LICENSE
-CC BY 4.0  (matches the journal's CC-BY open-access licence)
+LICENSE  (unchanged; fixed since v1)
+CC BY 4.0
 
-COMMENTS
-Accepted for publication in Interface Focus (theme issue "Machine behaviour in the age of large language models"). 57 pages, 17 figures, including supplementary material.
-
-JOURNAL-REF
-(leave empty now; add after publication with "Replace" or the journal-ref form, e.g. "Interface Focus 16: 2026xxxx (2026)")
-
-DOI
-(leave empty now; add the 10.1098/rsfs.2026.0050 style DOI once the journal assigns it)
-
-MSC / ACM CLASS
-(optional) ACM: I.2.11; J.4
-
-REPORT NUMBER
-(empty)
+JOURNAL-REF / DOI
+Leave empty now. After the journal publishes, add both from the arXiv user page ("Add journal ref and DOI"); this does not create a new version.
