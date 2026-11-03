@@ -24,6 +24,11 @@ main = main.replace("\\highlightrevisionstrue", "\\highlightrevisionsfalse")
 main = main.replace("\\usepackage{xcolor}",
                     "\\usepackage{xcolor}\n\\usepackage{multirow}\n\\usepackage{chngcntr}", 1)
 
+date_head = "\\date{%\n\\vspace{-1.0em}\n\\footnotesize\n"
+assert main.count(date_head) == 1
+main = main.replace(date_head, date_head +
+                    "Author accepted manuscript. Accepted for publication in "
+                    "\\textit{Interface Focus} (Royal Society).\\\\[2pt]\n")
 main = main.replace("electronic supplementary table~", "table~")
 main = main.replace("in the electronic supplementary material", "in the supplementary material")
 

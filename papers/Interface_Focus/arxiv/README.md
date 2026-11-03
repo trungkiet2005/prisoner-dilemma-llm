@@ -19,15 +19,16 @@ python3 make_arxiv.py
 `build/`, `preview.pdf` and the zip are regenerated outputs and are not tracked.
 Paste-ready form fields are in `metadata.txt`.
 
-## Posting
+## Posting (replacement of arXiv:2601.19082, becomes v3)
 
-1. Log in at https://arxiv.org, choose "Start New Submission".
-2. Licence: CC BY 4.0. Primary category cs.AI, cross-lists in `metadata.txt`.
-3. Upload `arxiv_submission.zip`; arXiv unpacks it and builds with TeX Live.
-4. Paste title, authors, abstract and comments from `metadata.txt`.
+1. Log in at https://arxiv.org as the submitter of record and open the user page.
+2. On 2601.19082 choose "Replace". Do not start a new submission.
+3. Upload `arxiv_submission.zip`.
+4. Update authors (The Anh Han first), abstract and comments from `metadata.txt`;
+   title, categories and licence stay as they are.
 5. Open the PDF arXiv built and check: 57 pages, no `[?]` in citations, no
-   `??` in references, all 17 figures present.
-6. Submit. It appears after the next announcement cycle (about one working day).
+   `??` in references, all 17 figures present, the accepted-manuscript line on page 1.
+6. Submit. The new version appears after the next announcement cycle.
 
-After the journal publishes, add the DOI and journal reference to the arXiv
-record (no new version needed).
+After the journal publishes, add the DOI and journal reference from the arXiv
+user page ("Add journal ref and DOI"); this does not create a new version.
