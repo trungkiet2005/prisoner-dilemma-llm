@@ -1,0 +1,136 @@
+% ---------------------------------------------------------------------------
+% beamerthemeTees.sty
+% A Beamer theme reproducing the look of T. A. Han's PowerPoint talks:
+% white 4:3 canvas, orange centred frame titles over a short orange rule,
+% bold Arial body text, blue and red highlights, no navigation chrome.
+% Compile with XeLaTeX or LuaLaTeX (falls back to Helvetica under pdfLaTeX).
+% ---------------------------------------------------------------------------
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthemeTees}[2026/11/04 Teesside talk theme]
+
+\RequirePackage{iftex}
+\RequirePackage{tikz}
+\RequirePackage{xcolor}
+
+% ---- colours sampled from the reference slides ----------------------------
+\definecolor{TeesOrange}{HTML}{F36F21}  % frame titles and rule
+\definecolor{TeesBlue}{HTML}{0090F0}    % body highlight
+\definecolor{TeesRed}{HTML}{E8231E}     % body highlight / emphasis
+\definecolor{DeepBlue}{HTML}{0038F8}    % title-page highlight
+\definecolor{Navy}{HTML}{000060}        % boxes on the title page
+\definecolor{BoxGrey}{HTML}{D9D9D9}
+\definecolor{TextGrey}{HTML}{6B6B6B}
+
+% ---- fonts -----------------------------------------------------------------
+\ifPDFTeX
+  \RequirePackage[scaled=0.92]{helvet}
+  \newcommand{\titlefont}{\sffamily}
+\else
+  \RequirePackage{fontspec}
+  \IfFontExistsTF{Arial}
+    {\setsansfont{Arial}}
+    {\setsansfont{TeX Gyre Heros}}
+  \IfFontExistsTF{Calibri}
+    {\newfontfamily\titlefont{Calibri}}
+    {\IfFontExistsTF{Carlito}
+      {\newfontfamily\titlefont{Carlito}}
+      {\newfontfamily\titlefont{TeX Gyre Heros}}}
+\fi
+% Beamer's default font theme already sets mathematics in sans serif,
+% which matches the Arial body better than Computer Modern Roman.
+
+% Body text is bold throughout, as in the reference deck.
+\setbeamerfont{normal text}{series=\bfseries}
+\AtBeginDocument{\bfseries}
+\setbeamerfont{itemize/enumerate body}{series=\bfseries}
+\setbeamerfont{itemize/enumerate subbody}{series=\bfseries,size=\small}
+
+% ---- canvas ----------------------------------------------------------------
+\setbeamercolor{background canvas}{bg=white}
+\setbeamercolor{normal text}{fg=black}
+\setbeamertemplate{navigation symbols}{}
+\setbeamersize{text margin left=0.55cm, text margin right=0.55cm}
+
+% ---- frame title: orange, centred, short rule underneath -------------------
+\setbeamertemplate{frametitle}{%
+  \vskip0.28cm%
+  \centering
+  {\titlefont\bfseries\color{TeesOrange}\fontsize{16.5}{19}\selectfont
+   \insertframetitle\par}%
+  \nointerlineskip\vskip0.16cm%
+  \hbox to \hsize{\hss{\color{TeesOrange}%
+    \vrule width 0.30\paperwidth height 0.55pt depth 0pt}\hss}%
+  \vskip0.05cm%
+}
+
+% ---- footline: small grey page number, nothing else ------------------------
+\setbeamertemplate{footline}{%
+  \hfill
+  \usebeamerfont{normal text}\mdseries\fontsize{6.5}{8}\selectfont
+  \color{TextGrey}\insertframenumber\,/\,\inserttotalframenumber
+  \hspace*{0.35cm}\vspace*{0.22cm}}
+
+% ---- lists: plain hyphens, as in the reference deck ------------------------
+\setbeamertemplate{itemize item}{\color{black}\textbf{-}}
+\setbeamertemplate{itemize subitem}{\color{TextGrey}\textbullet}
+\setbeamertemplate{itemize subsubitem}{\color{TextGrey}\textbullet}
+\setbeamertemplate{enumerate item}{\color{black}\insertenumlabel.}
+\setlength{\leftmargini}{1.0em}
+\setlength{\leftmarginii}{1.2em}
+
+% ---- highlight helpers -----------------------------------------------------
+% Colour discipline, as in the reference deck: body text is black; at most
+% one or two key phrases per slide in blue; red only for a slide's single
+% message (\punch), used on a handful of slides.
+\newcommand{\hb}[1]{{\color{TeesBlue}#1}}      % blue highlight
+\newcommand{\hr}[1]{{\color{TeesRed}#1}}       % red highlight
+\newcommand{\hq}[1]{{\titlefont\itshape\color{TeesBlue}#1}} % question style
+
+% Strategy colours, identical to the paper's figures (Analysis/figures/style.py),
+% so a strategy named on a slide has the colour it has in every plot.
+\definecolor{cAllC}{HTML}{1B7837}
+\definecolor{cTFT}{HTML}{3A7EBF}
+\definecolor{cWSLS}{HTML}{E08214}
+\definecolor{cAllD}{HTML}{B2182B}
+\newcommand{\sAllC}{{\color{cAllC}AllC}}
+\newcommand{\sAllD}{{\color{cAllD}AllD}}
+\newcommand{\sTFT}{{\color{cTFT}TFT}}
+\newcommand{\sWSLS}{{\color{cWSLS}WSLS}}
+
+% A citation footnote as in the reference deck: short rule, superscript
+% number, black small type, title in bold. Numbered by hand so the numbers
+% run across the whole talk:  \slidefoot{1}{Authors. \textbf{Title}. Venue.}
+\newcommand{\fn}[1]{\textsuperscript{\mdseries #1}}
+\newcommand{\slidefoot}[2]{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=south west, inner sep=0pt, text width=0.84\paperwidth,
+          align=flush left, font=\mdseries\fontsize{6}{7.2}\selectfont]
+      at ([xshift=0.55cm,yshift=0.42cm]current page.south west)
+      {\hyphenpenalty=10000\exhyphenpenalty=10000%
+       \rule{0.32\paperwidth}{0.4pt}\\[1pt]\textsuperscript{#1}#2};
+  \end{tikzpicture}}
+
+% A centred red-italic punchline, like "Many fields ... same math!!"
+\newcommand{\punch}[1]{%
+  \par\smallskip
+  {\centering\titlefont\bfseries\itshape\color{TeesRed}\large #1\par}%
+  \smallskip}
+
+% Navy and grey label boxes used on the title page.
+\newcommand{\navybox}[1]{%
+  \tikz[baseline=(b.base)]\node[fill=Navy, text=white, inner xsep=10pt,
+    inner ysep=3pt, font=\mdseries\footnotesize](b){#1};}
+\newcommand{\greybox}[1]{%
+  \tikz[baseline=(b.base)]\node[fill=BoxGrey, draw=gray!70, text=TeesRed,
+    inner xsep=10pt, inner ysep=3pt, font=\bfseries\footnotesize](b){#1};}
+
+% A rounded "card" for short definitions (Donor/Receiver style).
+\newcommand{\card}[3][3.3cm]{%
+  \tikz[baseline=(c.north)]\node[draw=TeesBlue!45, rounded corners=4pt,
+    fill=TeesBlue!4, inner sep=5pt](c)
+    {\parbox[t][1.45cm][t]{#1}{\centering
+     {\titlefont\bfseries\color{TeesRed}\large #2}\\[1pt]
+     {\mdseries\itshape\scriptsize\spaceskip=0.24em plus 0.05em\relax #3\par}}};}
+
+\mode<all>
+\endinput
